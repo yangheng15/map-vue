@@ -3,7 +3,10 @@ import App from './App.vue'
 import router from './router'
 import VueAMap from 'vue-amap';
 import store from './store/index';
+import Vant from 'vant';
 import 'vant/lib/index.css';
+
+Vue.use(Vant);
 
 Vue.use(VueAMap);
 
