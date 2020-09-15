@@ -1,10 +1,6 @@
 <template>
   <div class="public_nav">
-    <van-nav-bar>
-      <template #title>
-        <h4 style="color:#fff">{{title}}</h4>
-      </template>
-    </van-nav-bar>
+    <van-nav-bar :title="title"></van-nav-bar>
   </div>
 </template>
 
@@ -24,7 +20,9 @@ export default {
 .van-nav-bar {
   background-color: rgb(61, 66, 94);
 }
-.van-nav-bar__title {
+.van-nav-bar >>> .van-nav-bar__title {
   color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 600;
 }
 </style>

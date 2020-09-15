@@ -1,9 +1,6 @@
 <template>
   <div class="public_nav">
-    <van-nav-bar>
-      <template #title>
-        <h4 style="color:#fff">{{title}}</h4>
-      </template>
+    <van-nav-bar :title="title">
       <template #right>
         <img @click="$router.push('/remind')" src="../../assets/images/remind.svg" alt />
       </template>
@@ -12,14 +9,11 @@
 </template>
 
 <script>
-// import { Button } from 'vant';
 export default {
   name: "CustomNav",
   props:['title'],
   data () {
-    return{
-
-    }
+    return{}
   }
 };
 </script>
@@ -27,7 +21,9 @@ export default {
 .van-nav-bar {
   background-color: rgb(61, 66, 94);
 }
-.van-nav-bar__title {
+.van-nav-bar >>> .van-nav-bar__title {
   color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 600;
 }
 </style>
