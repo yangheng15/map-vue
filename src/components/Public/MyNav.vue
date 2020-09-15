@@ -1,10 +1,6 @@
 <template>
   <div class="public_nav">
-    <van-nav-bar>
-      <template #title>
-        <h4 style="color:#fff">{{title}}</h4>
-      </template>
-    </van-nav-bar>
+    <van-nav-bar :title="title"></van-nav-bar>
   </div>
 </template>
 
@@ -12,11 +8,19 @@
 // import { Button } from 'vant';
 export default {
   name: "MyNav",
-  props:['title'],
+  props: {
+    title: {
+      default: '',
+      type: String
+    }
+  },
   data () {
     return{
 
     }
+  },
+  created() {
+    console.log(this.title);
   }
 };
 </script>

@@ -45,23 +45,23 @@ export default {
       this.zoom = 15;
     },
   },
-  data: function () {
-    let self = this;
-    const center = [121.59996, 31.197646];
+  // data: function () {
+  //   let self = this;
+  //   const center = [121.59996, 31.197646];
 
-    return {
-      zoom: 12,
-      center,
-      markers: [],
-      count: 0,
-      slotStyle: {
-        padding: "2px 8px",
-        background: "#eee",
-        color: "#333",
-        border: "1px solid #aaa",
-      },
-    };
-  },
+  //   return {
+  //     zoom: 12,
+  //     center,
+  //     markers: [],
+  //     count: 0,
+  //     slotStyle: {
+  //       padding: "2px 8px",
+  //       background: "#eee",
+  //       color: "#333",
+  //       border: "1px solid #aaa",
+  //     },
+  //   };
+  // },
 
   methods: {
     onClick() {
