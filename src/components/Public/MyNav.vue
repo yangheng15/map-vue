@@ -8,11 +8,19 @@
 // import { Button } from 'vant';
 export default {
   name: "MyNav",
-  props:['title'],
+  props: {
+    title: {
+      default: '',
+      type: String
+    }
+  },
   data () {
     return{
 
     }
+  },
+  created() {
+    console.log(this.title);
   }
 };
 </script>

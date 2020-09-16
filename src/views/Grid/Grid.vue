@@ -53,7 +53,7 @@ export default {
     const center = [114.65, 33.37];
     return {
       title: "网格",
-      zoom: 11,
+      zoom: 12,
       center,
       markers: [],
       count: 0,
@@ -197,7 +197,7 @@ export default {
 <style lang='scss'>
 .amap-page-container {
   .amap-demo {
-    height: 90vh;
+    height: 77vh;
   }
 }
 .introduce_body {
