@@ -937,7 +937,10 @@ export default {
 </script>
 
 
-<style lang='scss'>
+<style scoped lang='scss'>
+.grid{
+  padding-top: 46px;
+}
 .amap-page-container {
   .amap-demo {
     height: 77vh;

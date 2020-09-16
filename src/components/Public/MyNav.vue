@@ -25,6 +25,12 @@ export default {
 };
 </script>
 <style scoped>
+.public_nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
 .van-nav-bar {
   background-color: rgb(61, 66, 94);
 }

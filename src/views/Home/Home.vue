@@ -11,10 +11,10 @@
             </li>
             <li>
               <p class="total_money">{{statistic.num}}万</p>
-              <p style="color:#3CC8AB;margin:0;">
+              <p :class="statistic.state?'up_color':'down_color'">
                 {{statistic.money}}万
                 <img
-                  style="width:1rem;margin-top:0.2rem;vertical-align: bottom;"
+                  style="width:15px;vertical-align: text-top;"
                   :src="statistic.up_down"
                   alt
                 />
@@ -82,7 +82,7 @@
               <li>
                 {{item.telephone}}
                 <img
-                  style="width:1.2rem"
+                  style="width:16px"
                   src="../../assets/home/md-phone.svg"
                   alt
                 />
@@ -223,6 +223,7 @@ export default {
           num: "10",
           money: "21",
           up_down: up,
+          state:true,
         },
         {
           img: cunkuane,
@@ -230,6 +231,7 @@ export default {
           num: "100",
           money: "20",
           up_down: up,
+          state:true,
         },
         {
           img: daikuane,
@@ -237,6 +239,7 @@ export default {
           num: "100",
           money: "21",
           up_down: down,
+          state:false,
         },
         {
           img: licaie,
@@ -244,6 +247,7 @@ export default {
           num: "100",
           money: "20",
           up_down: up,
+          state:true,
         },
       ],
     };
@@ -261,10 +265,13 @@ export default {
 };
 </script>
 <style scoped lang='scss'>
+.home{
+  padding-top: 46px;
+}
 .cur {
   color: #df0f0f;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 14px;
   position: relative;
 }
 .cur::after {
@@ -273,12 +280,11 @@ export default {
   top: 65%;
   left: 3%;
   width: 92%;
-  height: 0.05rem;
+  height: 1px;
   background: #df0f0f;
 }
 .page-content {
   padding-top: 0px;
-  margin-bottom: 44px !important;
 }
 
 .data_img {
@@ -292,27 +298,36 @@ export default {
     border: 1px solid #e1e1e1;
     background-color: #f2f2f2;
     display: flex;
-    border-radius: 0.5rem;
+    border-radius: 5px;
 
     .img_content {
-      width: 3rem;
-      border-radius: 0.5rem;
+      width: 45px;
+      border-radius: 5px;
     }
     .text_content {
       width: 100%;
       display: flex;
       flex-wrap: wrap;
-      padding: 0.5rem;
-    }
-    .text_content li {
-      width: 50%;
-      text-align: center;
-      color: #000;
+      padding: 5px;
+
+      li {
+        width: 50%;
+        text-align: center;
+        color: #000;
+        .up_color {
+          color: #3cc8ab;
+          margin:0;
+        }
+        .down_color {
+          color: #df0f0f;
+          margin:0;
+        }
+      }
     }
     .total_money {
-      font-size: 1.1rem;
-      margin-top: 0.2rem;
-      margin-bottom: 0.6rem;
+      font-size: 20px;
+      margin-top: 4px;
+      margin-bottom: 15px;
       color: #000;
     }
   }
@@ -323,28 +338,28 @@ export default {
 }
 .progress_content,
 .progress_content dt {
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
 }
 .progress {
   background-color: rgba(100, 100, 100, 0.2);
   position: relative;
-  height: 1.3rem;
+  height: 26px;
   width: 96%;
   border: 1px solid #cecece;
-  border-radius: 0.5rem;
+  border-radius: 5px;
 }
 .progress-done {
   /* background: linear-gradient(to left, rgb(52, 204, 1), rgb(247, 247, 203)); */
   background: linear-gradient(to left, rgb(242, 112, 156), rgb(245, 212, 103));
   box-shadow: 0 3px 3px -5px rgb(242, 112, 156), 0 2px 5px rgb(242, 112, 156);
-  border-radius: 0.5rem;
-  height: 1.15rem;
+  border-radius: 5px;
+  height: 26px;
   width: 0;
   transition: width 1s ease 0.3s;
   text-align: right;
   color: #fff;
-  padding-right: 0.3rem;
-  line-height: 1.05rem;
+  padding-right: 5px;
+  line-height: 26px;
 }
 .data_display {
   width: 96%;
@@ -355,82 +370,82 @@ export default {
     margin-left: 0;
   }
   li {
-    width: 17.6%;
-    height: 4rem;
-    border-radius: 0.5rem;
+    width: 18.6%;
+    height: 60px;
+    border-radius: 6px;
     background-color: #f2f2f2;
-    margin-left: 0.6rem;
+    margin-left: 7px;
+    font-size: 14px;
 
     p {
       margin: 0;
-      line-height: 2rem;
+      line-height: 30px;
       text-align: center;
     }
   }
 }
 .data_num {
   color: #fa9049;
-  font-size: 1rem;
+  font-size: 16px;
 }
 .tabTitle {
   border-top: 0px;
-  margin-top: 2.5rem;
+  margin-top: 20px;
 }
 .tabList {
   display: flex;
-  height: 4rem;
+  height: 50px;
   width: 100%;
-  line-height: 4rem;
+  line-height: 50px;
   background-color: #f2f2f2;
   justify-content: space-around;
+  font-size: 14px;
 }
 .latest_tasks {
-  margin: 0.5rem;
-  border-bottom: 0.001rem solid #e8e8e8 !important;
+  margin: 10px;
+  font-size: 16px;
+  border-bottom: 1px solid #e8e8e8 !important;
 }
 .latest_tasks ul {
   display: flex;
   justify-content: space-between;
-  margin: 0.5rem;
+  margin:5px;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   .page-content .data_img dt .img_content {
-    width: 2.5rem;
+    width: 40px;
   }
   .page-content .data_img dt .text_content li {
-    font-size: 0.7rem;
+    font-size: 12px;
   }
   .page-content .progress_content dt {
-    font-size: 0.8rem;
+    font-size: 13px;
   }
   .progress {
-    height: 1rem;
+    height: 15px;
   }
   .progress-done {
-    height: 1rem;
+    height: 15px;
   }
   .data_display li p {
-    font-size: 0.8rem;
+    font-size: 13px;
   }
   .tabTitle {
-    margin-top: 2rem;
+    margin-top: 20px;
   }
   .tabList {
-    height: 3rem;
-    font-size: 0.8rem;
-    line-height: 3rem;
+    height: 40px;
+    font-size: 13px;
+    line-height: 40px;
   }
   .cur {
-    font-size: 0.8rem;
+    font-size: 13px;
   }
   .cur::after {
     top: 70%;
   }
   .latest_tasks {
-    font-size: 0.8rem;
-  }
-  .latest_tasks ul {
-    margin: 0.3rem;
+    font-size: 13px;
   }
 }
 </style>

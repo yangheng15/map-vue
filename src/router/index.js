@@ -4,6 +4,8 @@ Vue.use(VueRouter)
 
 const Login = () => import('@/views/Login.vue');
 const Home = () => import('@/views/Home/Home.vue');
+const Remind = () => import('@/views/Home/Remind.vue');
+const Task = () => import('@/views/Task/Task.vue');
 const Grid = () => import('@/views/Grid/Grid.vue');
 const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
 
@@ -16,7 +18,26 @@ const routes = [
   {
     path: '/Home',
     name: 'Home',
-    component: Home
+    component: Home,
+    children: [
+      {
+        path: "/Home/Remind",
+        name: "Remind",
+        component: Remind
+      },
+    ]
+  },
+  {
+    path: '/Task',
+    name: 'Task',
+    component: Task,
+    children: [
+      {
+        path: "/Task/Remind",
+        name: "Remind",
+        component: Remind
+      },
+    ]
   },
   {
     path: '/Grid',
