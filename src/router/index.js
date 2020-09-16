@@ -5,6 +5,7 @@ Vue.use(VueRouter)
 const Login = () => import('@/views/Login.vue');
 const Home = () => import('@/views/Home/Home.vue');
 const Grid = () => import('@/views/Grid/Grid.vue');
+const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
 
 const routes = [
   {
@@ -20,7 +21,14 @@ const routes = [
   {
     path: '/Grid',
     name: 'Grid',
-    component: Grid
+    component: Grid,
+    children: [
+      {
+        path: "/grid/ResourceSelection",
+        name: "ResourceSelection",
+        component: ResourceSelection
+      },
+    ]
   }
 ]
 

@@ -1,20 +1,21 @@
 <template>
   <div class="public_nav">
-    <van-nav-bar :title="title">
-      <template #right>
-        <img @click="$router.push('/remind')" src="../../assets/images/remind.svg" alt />
-      </template>
-    </van-nav-bar>
+    <van-nav-bar :title="title" left-arrow @click-left="onClickLeft" />
   </div>
 </template>
 
 <script>
 export default {
-  name: "CustomNav",
+  name: "ChildNav",
   props:['title'],
   data () {
     return{}
-  }
+  },
+  methods: {
+    onClickLeft() {
+      this.$router.go(-1)
+    },
+  },
 };
 </script>
 <style scoped>

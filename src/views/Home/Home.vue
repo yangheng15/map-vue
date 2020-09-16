@@ -1,60 +1,23 @@
 <template>
   <div class="home">
     <custom-nav :title="title"></custom-nav>
-    <div class="page-content" style="padding-top: 44px;background-color: white">
+    <div class="page-content">
       <dl class="data_img">
-        <dt>
+        <dt v-for="(statistic,index) in my_statistics" :key="index">
           <ul class="text_content">
             <li>
-              <img class="img_content" src="../../assets/home/kehushu.svg" alt />
-              <p style="margin:0;">客户数</p>
+              <img class="img_content" :src="statistic.img" alt />
+              <p style="margin:0;">{{statistic.name}}</p>
             </li>
             <li>
-              <p style="font-size:1.1rem;margin-top:0.2rem;margin-bottom:0.6rem;color:#000">10</p>
-              <p style="color:#3CC8AB;margin:0;">21万
-                <img  style="width:1rem;margin-top:0.2rem;vertical-align: bottom;" src="../../assets/home/arrow-alt-up.svg" alt="">
-              </p>
-            </li>
-          </ul>
-        </dt>
-        <dt>
-          <ul class="text_content">
-            <li>
-              <img class="img_content" src="../../assets/home/cunkuane.svg" alt />
-              <p style="margin:0;">客户数</p>
-            </li>
-            <li>
-              <p style="font-size:1.1rem;margin-top:0.2rem;margin-bottom:0.6rem;color:#000">100</p>
-              <p style="color:#3CC8AB;margin:0;">20万
-                <img  style="width:1rem;margin-top:0.2rem;vertical-align: bottom;" src="../../assets/home/arrow-alt-up.svg" alt="">
-              </p>
-            </li>
-          </ul>
-        </dt>
-        <dt>
-          <ul class="text_content">
-            <li>
-              <img class="img_content" src="../../assets/home/daikuane.svg" alt />
-              <p style="margin:0;">客户数</p>
-            </li>
-            <li>
-              <p style="font-size:1.1rem;margin-top:0.2rem;margin-bottom:0.6rem;color:#000">10</p>
-              <p style="color:#DF0F0F;margin:0;">21万
-                <img  style="width:1rem;margin-top:0.2rem;vertical-align: bottom;" src="../../assets/home/arrow-alt-down.svg" alt="">
-              </p>
-            </li>
-          </ul>
-        </dt>
-        <dt>
-          <ul class="text_content">
-            <li>
-              <img class="img_content" src="../../assets/home/licaie.svg" alt />
-              <p style="margin:0;">客户数</p>
-            </li>
-            <li>
-              <p style="font-size:1.1rem;margin-top:0.2rem;margin-bottom:0.6rem;color:#000">100</p>
-              <p style="color:#3CC8AB;margin:0;">20万
-                <img  style="width:1rem;margin-top:0.2rem;vertical-align: bottom;" src="../../assets/home/arrow-alt-up.svg" alt="">
+              <p class="total_money">{{statistic.num}}万</p>
+              <p style="color:#3CC8AB;margin:0;">
+                {{statistic.money}}万
+                <img
+                  style="width:1rem;margin-top:0.2rem;vertical-align: bottom;"
+                  :src="statistic.up_down"
+                  alt
+                />
               </p>
             </li>
           </ul>
@@ -66,7 +29,7 @@
           <div class="progress">
             <div class="progress-done" data-done="68" style="width: 62%;">62%</div>
           </div>
-        </dd> -->
+        </dd>-->
       </dl>
       <ul class="data_display">
         <li>
@@ -118,7 +81,11 @@
               <li>{{item.name1}}</li>
               <li>
                 {{item.telephone}}
-                <img style="width:1.2rem" src="../../assets/home/md-phone.svg" alt />
+                <img
+                  style="width:1.2rem"
+                  src="../../assets/home/md-phone.svg"
+                  alt
+                />
               </li>
             </ul>
             <ul>
@@ -143,6 +110,12 @@
 <script>
 import CustomNav from "../../components/Public/CustomNav";
 import MyTabbar from "../../components/Public/MyTabbar";
+import kehushu from "../../assets/home/kehushu.svg";
+import cunkuane from "../../assets/home/cunkuane.svg";
+import daikuane from "../../assets/home/daikuane.svg";
+import licaie from "../../assets/home/licaie.svg";
+import up from "../../assets/home/arrow-alt-up.svg";
+import down from "../../assets/home/arrow-alt-down.svg";
 export default {
   name: "Home",
   data() {
@@ -243,38 +216,51 @@ export default {
           date: "2天前",
         },
       ],
+      my_statistics: [
+        {
+          img: kehushu,
+          name: "客户数",
+          num: "10",
+          money: "21",
+          up_down: up,
+        },
+        {
+          img: cunkuane,
+          name: "存款额",
+          num: "100",
+          money: "20",
+          up_down: up,
+        },
+        {
+          img: daikuane,
+          name: "贷款额",
+          num: "100",
+          money: "21",
+          up_down: down,
+        },
+        {
+          img: licaie,
+          name: "理财额",
+          num: "100",
+          money: "20",
+          up_down: up,
+        },
+      ],
     };
   },
   components: {
     CustomNav,
     MyTabbar,
   },
-  methods:{
+  methods: {
     tab(ev) {
       this.tabId = ev;
       localStorage.setItem("indexTabId", this.tabId);
     },
-  }
+  },
 };
 </script>
-<style scoped>
-.divider {
-  margin-top: 0.2rem;
-  width: 100%;
-  height: 0.2rem;
-  background-color: lightgray;
-}
-
-.icon {
-  margin-top: 0.5rem;
-  height: 3.5rem;
-  width: 3.5rem;
-}
-
-span {
-  font-size: 15px;
-}
-
+<style scoped lang='scss'>
 .cur {
   color: #df0f0f;
   font-weight: 500;
@@ -290,162 +276,53 @@ span {
   height: 0.05rem;
   background: #df0f0f;
 }
-.Carousel {
-  height: 30%;
-  position: relative;
-}
-
-.Carousel div {
-  width: 1000px;
-  position: absolute;
-  /* float: left; */
-}
-
-.Carousel div:nth-child(2) {
-  position: absolute;
-  left: 100%;
-}
-
-.Carousel div:nth-child(3) {
-  position: absolute;
-  left: 200%;
-}
-
-.swiper-container {
-  height: 170px;
-}
-.c-read {
-  margin-left: 15px !important;
-}
-.one:last-child {
-  display: none;
-}
-
-.t::after {
-  display: inline;
-  content: "...";
-  font-size: 25px;
-  line-height: 30px;
-}
-.page.has-tabbar .page-content {
-  margin-bottom: 44px !important;
-}
-.page.has-tabbar .page-content {
+.page-content {
   padding-top: 0px;
   margin-bottom: 44px !important;
 }
-.page.has-tabbar .page-content .schedule {
-  background-color: #1abc9c;
-  padding: 0.7rem 1rem;
+
+.data_img {
   display: flex;
   flex-wrap: wrap;
+  margin: 0px;
+
+  dt {
+    width: 45%;
+    margin: 2%;
+    border: 1px solid #e1e1e1;
+    background-color: #f2f2f2;
+    display: flex;
+    border-radius: 0.5rem;
+
+    .img_content {
+      width: 3rem;
+      border-radius: 0.5rem;
+    }
+    .text_content {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0.5rem;
+    }
+    .text_content li {
+      width: 50%;
+      text-align: center;
+      color: #000;
+    }
+    .total_money {
+      font-size: 1.1rem;
+      margin-top: 0.2rem;
+      margin-bottom: 0.6rem;
+      color: #000;
+    }
+  }
 }
-.schedule .schedule_left {
-  display: flex;
-  width: 90%;
-  margin-bottom: 0.2rem;
-}
-.schedule .schedule_left .schedule_name {
-  color: #fff;
-  font-size: 1.3rem;
-  font-weight: 600;
-}
-.schedule .schedule_left .schedule_star {
-  margin: 0 0.5rem 10px;
-}
-.schedule .schedule_left .schedule_star img {
-  width: 1.2rem;
-  vertical-align: middle;
-}
-.schedule .schedule_right {
-  width: 10%;
-}
-.schedule .schedule_right a {
-  color: #fff;
-  font-size: 0.9rem;
-  float: right;
-  padding-top: 0.3rem;
-  text-decoration: none;
-}
-.schedule .schedule_bottom {
-  display: flex;
-}
-.schedule .schedule_bottom li {
-  border: 0.1rem solid #fff;
-  border-radius: 1rem;
-  padding: 0rem 0.6rem 0rem 1.5rem;
-  color: #fff;
-  position: relative;
-}
-.schedule .schedule_bottom li:first-child {
-  margin-right: 1rem;
-}
-.schedule .schedule_bottom li img {
-  width: 1.6rem;
-  position: absolute;
-  top: -0.5rem;
-  left: 0rem;
-}
-.page.has-tabbar .page-content .left_content {
-  float: left;
-  width: 10%;
-}
-.page.has-tabbar .page-content .left_content img {
-  width: 30px;
-  height: 30px;
-}
-.page.has-tabbar .page-content .right_content {
-  float: right;
-  width: 90%;
-  font-size: 0.9rem;
-}
-.page.has-tabbar .page-content .right_content .company {
-  color: #080a83;
-  font-weight: 600;
-}
-.page.has-tabbar .page-content .right_content .time {
-  float: right;
-}
-.page.has-tabbar .page-content .right_content .company_source {
-  display: inline;
-}
-.page.has-tabbar .page-content .data_img {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 0.3rem;
-}
-.page.has-tabbar .page-content .data_img dt {
-  width: 45%;
-  /* height: 3.6rem; */
-  margin: 2%;
-  border: 1px solid #e1e1e1;
-  background-color: #f2f2f2;
-  display: flex;
-  border-radius: 0.5rem;
-}
-.page.has-tabbar .page-content .data_img dt .img_content {
-  width: 3rem;
-  border-radius: 0.5rem;
-}
-.page.has-tabbar .page-content .data_img dt .text_content {
-  /* width: calc(100% - 3.5rem); */
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0.5rem;
-}
-.page.has-tabbar .page-content .data_img dt .text_content li {
-  width: 50%;
-  text-align: center;
-  /* line-height: 1.2rem; */
-  color: #8a8a8a;
-}
-.page.has-tabbar .page-content .progress_content {
+.progress_content {
   margin-left: 2%;
   color: #878787;
 }
-.page.has-tabbar .page-content .progress_content,
-.page.has-tabbar .page-content .progress_content dt {
+.progress_content,
+.progress_content dt {
   margin-bottom: 0.5rem;
 }
 .progress {
@@ -473,21 +350,23 @@ span {
   width: 96%;
   margin-left: 2%;
   display: flex;
-}
-.data_display li:first-child {
-  margin-left: 0;
-}
-.data_display li {
-  width: 17.6%;
-  height: 4rem;
-  border-radius: 0.5rem;
-  background-color: #f2f2f2;
-  margin-left: 0.6rem;
-}
-.data_display li p {
-  margin: 0;
-  line-height: 2rem;
-  text-align: center;
+
+  li:first-child {
+    margin-left: 0;
+  }
+  li {
+    width: 17.6%;
+    height: 4rem;
+    border-radius: 0.5rem;
+    background-color: #f2f2f2;
+    margin-left: 0.6rem;
+
+    p {
+      margin: 0;
+      line-height: 2rem;
+      text-align: center;
+    }
+  }
 }
 .data_num {
   color: #fa9049;
@@ -514,23 +393,14 @@ span {
   justify-content: space-between;
   margin: 0.5rem;
 }
-.remind {
-  position: absolute;
-  top: 0.6rem;
-  right: 1rem;
-  z-index: 100;
-}
 @media screen and (min-width: 320px) and (max-width: 374px) {
-  .page.has-tabbar .page-content .data_img dt .img_content {
+  .page-content .data_img dt .img_content {
     width: 2.5rem;
   }
-  .page.has-tabbar .page-content .data_img dt .text_content li {
+  .page-content .data_img dt .text_content li {
     font-size: 0.7rem;
   }
-  .page.has-tabbar .page-content .data_img dt {
-    /* height: 3.2rem; */
-  }
-  .page.has-tabbar .page-content .progress_content dt {
+  .page-content .progress_content dt {
     font-size: 0.8rem;
   }
   .progress {
@@ -561,12 +431,6 @@ span {
   }
   .latest_tasks ul {
     margin: 0.3rem;
-  }
-  .remind img {
-    width: 1.2rem;
-  }
-  .remind {
-    top: 0.8rem;
   }
 }
 </style>
