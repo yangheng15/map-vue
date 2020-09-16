@@ -1,6 +1,5 @@
 <template>
   <div style="padding-top:50px">
-    <router-view />
     <van-tabbar v-model="active" route active-color="rgb(61, 66, 94)">
       <van-tabbar-item replace to="/grid">
         <span>网络</span>

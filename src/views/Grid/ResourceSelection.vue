@@ -1,60 +1,31 @@
 <template>
-  <div
-    class="c-page page has-navbar"
-    style="position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    z-index:1000000000"
-  >
-  <child-nav :title="title"></child-nav>
-    <!-- <Header class="header_mine" :title="typeCN"></Header> -->
+  <div class="ResourceSelection">
+  <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN=='资源选择'">
-      <div class="screen_content">
-        <img src="../../assets/grid/search.svg" alt />
-        <input type="text" placeholder="资源名称" />
-      </div>
+      <van-search v-model="value" placeholder="网格名称、客户名称、资源名称" />
       <div class="resource_selection">
         <p>任务</p>
         <ul v-for="(thisItem,index) in resource_selection1" :key="index" class="cartItem">
-          <div
-            class="selctBtn"
-            :class="thisItem.checked?'checked':''"
-            @click="selectItem(thisItem)"
-          ></div>
-          <li>
-            <p>{{thisItem.name}}</p>
-          </li>
+          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
+        <van-pagination
+  v-model="currentPage"
+  :total-items="125"
+  :show-page-size="3"
+ 
+  force-ellipses
+/>
       </div>
       <div class="resource_selection new_selection_two">
         <p>客户</p>
         <ul v-for="(thisItem,index) in resource_selection2" :key="index" class="cartItem">
-          <div
-            class="selctBtn"
-            :class="thisItem.checked?'checked':''"
-            @click="selectItem(thisItem)"
-          ></div>
-          <li>
-            <p>{{thisItem.name}}</p>
-          </li>
+          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div>
       <div class="resource_selection new_selection_three">
         <p>资源</p>
         <ul v-for="(thisItem,index) in resource_selection3" :key="index" class="cartItem">
-          <div
-            class="selctBtn"
-            :class="thisItem.checked?'checked':''"
-            @click="selectItem(thisItem)"
-          ></div>
-          <li>
-            <p>{{thisItem.name}}</p>
-          </li>
+          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div>
       <div class="save" @click="$router.push({path:'/grid/',query:{taskChoice:'2'}})">
@@ -161,70 +132,89 @@
 <script>
 import ChildNav from "../../components/Public/ChildNav";
 export default {
-  name: "",
+  name: "ResourceSelection",
   components: {
     ChildNav,
   },
   data() {
     return {
       checkAllFlag: false,
-      title: "资源选择",
       typeCN: "",
+      checked: true,
+      currentPage: 1,
+      value:'',
       resource_selection1: [
         {
           name: "卓越联腾企业贷客户拜访营销",
+          id:1
         },
         {
           name: "某某企业电话营销",
+          id:2
         },
         {
           name: "某某客户理财营销",
+          id:3
         },
       ],
       resource_selection2: [
         {
           name: "个人",
+          id:1
         },
         {
           name: "企业",
+          id:2
         },
       ],
       resource_selection3: [
         {
           name: "小区",
+          id:1
         },
         {
           name: "园区",
+          id:2
         },
         {
           name: "医院",
+          id:3
         },
         {
           name: "学校",
+          id:4
         },
         {
           name: "商超",
+          id:5
         },
         {
           name: "餐饮娱乐",
+          id:6
         },
         {
           name: "酒店",
+          id:7
         },
         {
           name: "社会团体",
+          id:8
         },
         {
           name: "政府机构",
+          id:9
         },
         {
           name: "汽车销售",
+          id:10
         },
         {
           name: "汽车服务",
+          id:11
         },
         {
           name: "建筑装修",
+          id:12
         },
       ],
       grid_selection1: [
@@ -312,6 +302,9 @@ export default {
 </script>
 
 <style scoped>
+.van-pagination{
+  margin-top: 20px;
+}
 .choice_people li .chahao {
   position: absolute;
   background-color: #ff5f72;
@@ -436,6 +429,7 @@ export default {
 }
 .resource_selection p {
   width: 100%;
+  margin:0px 0px 10px 0px;
 }
 .choice_people {
   display: flex;

@@ -7,6 +7,7 @@ const Home = () => import('@/views/Home/Home.vue');
 const Remind = () => import('@/views/Home/Remind.vue');
 const Task = () => import('@/views/Task/Task.vue');
 const Grid = () => import('@/views/Grid/Grid.vue');
+const GridMap = () => import('@/views/Grid/GridMap.vue')
 const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
 
 const routes = [
@@ -45,7 +46,12 @@ const routes = [
     component: Grid,
     children: [
       {
-        path: "/grid/ResourceSelection",
+        path: '/',
+        name: 'GridMap',
+        component: GridMap
+      },
+      {
+        path: "/ResourceSelection",
         name: "ResourceSelection",
         component: ResourceSelection
       },
