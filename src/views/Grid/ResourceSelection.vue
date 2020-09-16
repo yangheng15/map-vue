@@ -1,18 +1,6 @@
 <template>
-  <div
-    class="c-page page has-navbar"
-    style="position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    z-index:1000000000"
-  >
+  <div class="ResourceSelection">
   <child-nav :title="title"></child-nav>
-    <!-- <Header class="header_mine" :title="typeCN"></Header> -->
     <div v-if="typeCN=='资源选择'">
       <div class="screen_content">
         <img src="../../assets/grid/search.svg" alt />
@@ -161,7 +149,7 @@
 <script>
 import ChildNav from "../../components/Public/ChildNav";
 export default {
-  name: "",
+  name: "ResourceSelection",
   components: {
     ChildNav,
   },
