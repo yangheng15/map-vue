@@ -12,6 +12,7 @@ const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
 const WorkBench = () => import('@/views/WorkBench/WorkBench.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
+const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
 
 
 const routes = [
@@ -51,6 +52,11 @@ const routes = [
     path: "/User/MyMedal",
     name: "MyMedal",
     component: MyMedal
+  },
+  {
+    path: "/User/UpdatePassword",
+    name: "UpdatePassword",
+    component: UpdatePassword
   },
   {
     path: '/Grid',

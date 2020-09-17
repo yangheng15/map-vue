@@ -35,20 +35,27 @@
         </p>
         <van-icon name="arrow" />
       </div>
-      <div class="calendar" @click="$router.push('/LGBUserCenter/MyMedal?title=我的足迹');">
+      <router-link tag='div' class="calendar" :to='{ name: "MyMedal", query: { title: "我的足迹" }}'>
         <p>
           <img src="../../assets/User/footprint.svg" alt />
           我的足迹
         </p>
         <van-icon name="arrow" />
-      </div>
-      <div class="calendar" @click="$router.push('/LGBUserCenter/UpdatePassword');">
+      </router-link>
+      <router-link tag='div' class="calendar" :to='{ name: "UpdatePassword", query: { title: "密码修改" }}'>
         <p>
           <img src="../../assets/User/password.svg" alt />
           密码修改
         </p>
         <van-icon name="arrow" />
-      </div>
+      </router-link>
+      <!-- <div class="calendar" @click="$router.push('/LGBUserCenter/UpdatePassword');">
+        <p>
+          <img src="../../assets/User/password.svg" alt />
+          密码修改
+        </p>
+        <van-icon name="arrow" />
+      </div> -->
     </div>
 
     <div style="padding:16px 16px 40px 16px;">
@@ -61,7 +68,6 @@
         color="#3D425E"
       >退出</van-button>
     </div>
-    <router-view></router-view>
     <my-tabbar></my-tabbar>
   </div>
 </template>
@@ -184,6 +190,9 @@ export default {
   display: flex;
   line-height: 27px;
   font-size: 14px;
+}
+.calendar p img{
+  margin-right: 8px;
 }
   .van-button{
       height: 40px;

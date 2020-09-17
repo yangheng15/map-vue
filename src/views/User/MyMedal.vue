@@ -1,7 +1,7 @@
 <template>
   <div class="MyMedal">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="title=='我的勋章'">
+    <div v-if="typeCN=='我的勋章'">
       <div class="customer_list">
         <ul v-for="(thisItem,index) in peasant_household" :key="index">
           <li>
@@ -11,24 +11,14 @@
           </li>
         </ul>
       </div>
-      <div class="end_line">已加载完毕</div>
-      <!-- <div
-        style="margin-left:85%;position: fixed !important;float: right;z-index: 1;align-items: right;bottom: 50px;right:5%"
-      ></div>-->
+      <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
     </div>
-    <div v-if="title=='我的足迹'">
-      <ul class="time_vant" style="margin:0rem">
+    <div v-if="typeCN=='我的足迹'">
+      <ul class="time_vant">
         <li>
           <van-cell title="选择日期区间" :value="date" @click="show = true" />
           <van-calendar v-model="show" type="range" @confirm="onConfirm" />
         </li>
-        <!-- <p class="line">
-          <span></span>
-        </p>
-        <li>
-          <van-cell style="border-radius: 0.3rem;" :value="date1" @click="show1 = true" />
-          <van-calendar v-model="show1" @confirm="onConfirm1" />
-        </li>-->
         <li class="time_search">
           <button>查询</button>
         </li>
@@ -41,11 +31,11 @@
         <ul>
           <li>{{thisItem.local}}</li>
           <li>
-            <img style="width:1.2rem" src="../../assets/User/zuji.svg" alt />
+            <img style="width:19px" src="../../assets/User/zuji.svg" alt />
           </li>
         </ul>
       </div>
-      <div class="end_line">已加载完毕</div>
+      <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
     </div>
   </div>
 </template>
@@ -60,6 +50,7 @@ export default {
   data() {
     return {
       typeCN: "",
+      title: "",
       peasant_household: [
         {
           img: con1,
@@ -202,12 +193,7 @@ export default {
 .c-badge {
   color: #fff;
 }
-.end_line {
-  margin: 0.8rem;
-  text-align: center;
-  color: #c1b9b9;
-  font-size: 1rem;
-}
+
 .triangle-up {
   width: 0;
   height: 0;
@@ -216,58 +202,40 @@ export default {
 }
 .customer_list ul {
   background: #fff;
-  margin-top: 10px;
-  border-bottom: 0.001rem solid #e8e8e8 !important;
+  padding-top: 10px;
+  border-bottom: 1px solid #e8e8e8 !important;
 }
 .customer_list ul li {
   display: flex;
   flex-wrap: wrap;
-  padding: 0.8rem 0.8rem;
+  padding: 15px;
 }
 .customer_list ul li p {
   width: 40%;
-  margin-bottom: 0.3rem;
+  margin: 0;
 }
-.customer_list ul li {
-  text-align: center;
-  margin-left: 0.8rem;
-  /* margin-right: 0.8rem; */
-}
+
 .customer_list ul li p:nth-child(even) {
   text-align: left;
-  margin-left: 0.8rem;
-  /* margin-right: 0.8rem; */
+  margin-left: 13px;
 }
 .customer_list ul li p:last-child {
   text-align: right;
-  margin-left: 0.8rem;
-  /* margin-right: 0.8rem; */
+  margin-left: 13px;
 }
 .customer_list .schedule_star img {
-  width: 1.2rem;
+  width: 30px;
   vertical-align: middle;
 }
 .customer_list ul .li_img {
-  width: 1.3rem;
-  margin-top: -0.5rem;
+  width: 24px;
+  margin-top: -10px;
 }
 .time_vant {
-  margin: 0.5rem !important;
+  padding: 10px;
   display: flex;
 }
-.line {
-  text-align: center;
-  width: 3rem;
-  margin: 0;
-  line-height: 2rem;
-}
-.line span {
-  display: inline-block;
-  width: 3rem;
-  height: 0.05rem;
-  background: #bbb;
-  text-align: center;
-}
+
 .time_vant .time_search {
   width: 30%;
   display: flex;
@@ -276,28 +244,28 @@ export default {
   border: none;
 }
 .time_vant .time_search button {
-  width: 4rem;
-  height: 2rem;
-  line-height: 2rem;
+  width: 64px;
+  height: 32px;
+  line-height: 32px;
   text-align: center;
   background: rgb(61, 66, 94);
   color: #fff;
-  border-radius: 0.3rem;
+  border-radius: 6px;
   border: none;
 }
 .time_vant li {
-  margin: 0rem;
-  border: 0.05rem solid #e8e8e8;
+  margin: 0;
+  border: 1px solid #e8e8e8;
   width: 70%;
 }
 .Footprint_list {
-  margin: 0.5rem;
-  border-bottom: 0.001rem solid #e8e8e8 !important;
+  margin: 8px;
+  border-bottom: 1px solid #e8e8e8 !important;
 }
 .Footprint_list ul {
   display: flex;
   justify-content: space-between;
-  margin: 0.5rem;
+  margin: 8px;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,
@@ -305,30 +273,16 @@ export default {
   input,
   p,
   div {
-    font-size: 0.8rem;
+    font-size: 13px;
+  }
+  .customer_list ul li {
+    padding: 10px;
   }
   .latest_tasks ul li {
-    font-size: 0.7rem;
+    font-size: 13px;
   }
   .latest_tasks ul {
     margin: 0;
-  }
-  .end_line {
-    font-size: 0.8rem;
-  }
-  .two_select select {
-    height: 1.5rem;
-  }
-  .pop_title {
-    font-size: 1rem;
-    height: 2.5rem;
-    line-height: 2.5rem;
-  }
-  .pop_content {
-    padding: 0.5rem;
-  }
-  .save {
-    padding-bottom: 2rem;
   }
 }
 </style>
