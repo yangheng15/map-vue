@@ -22,7 +22,7 @@
           </div>
           <router-link tag='div' class="see_more" :to='{ name: "MyMedal", query: { title: "我的勋章" }}'>
             查看更多
-        </router-link>
+          </router-link>
           <!-- <div class="see_more" @click="$router.push('/LGBUserCenter/MyMedal?title=我的勋章')"></div> -->
         </div>
       </div>
