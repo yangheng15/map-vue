@@ -6,12 +6,16 @@ import store from './store/index';
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import BaiduMap from 'vue-baidu-map'
+
+// 全局注册
+
 Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: 'YOUR_APP_KEY'
 })
 Vue.use(Vant);
-
+import { Dialog } from 'vant';
+Vue.use(Dialog);
 Vue.use(VueAMap);
 
 // //引入地图

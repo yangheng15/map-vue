@@ -13,7 +13,6 @@
             v-for="(thisItem,index) in new_task"
             :key="index"
             @click.native="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-            style="padding:0.5rem;"
           >
             <!-- <div class="left_content">
                 <img src="./iphone.png" />
@@ -22,12 +21,12 @@
               <div class="new_task">
                 <p style="font-weight:550">{{thisItem.company_source}}</p>
                 <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
-                <p style="width: 38%;">{{thisItem.date_start}}</p>
+                <p >{{thisItem.date_start}}</p>
               </div>
               <div class="new_task">
                 <p>{{thisItem.company_introduce}}</p>
                 <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.date}}</p>
-                <p style="width: 38%;">{{thisItem.date_end}}</p>
+                <p>{{thisItem.date_end}}</p>
               </div>
             </div>
           </item>
@@ -40,7 +39,6 @@
             v-for="(thisItem,index) in new_task"
             :key="index"
             @click.native="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-            style="padding:0.5rem;"
           >
             <!-- <div class="left_content">
                 <img src="./iphone.png" />
@@ -48,12 +46,12 @@
             <div class="right_content success_failure">
               <div class="new_task">
                 <p style="font-weight:550">{{thisItem.company_source}}</p>
-                <p style="text-align:center!important;width: 29%!important;">{{thisItem.menoy}}</p>
-                <p style="width: 44%;">{{thisItem.date_start}}</p>
+                <p style="text-align:center!important;">{{thisItem.menoy}}</p>
+                <p >{{thisItem.date_start}}</p>
               </div>
               <div class="new_task">
-                <p style="width: 50%;">{{thisItem.company_introduce}}</p>
-                <p style="width: 49%;">{{thisItem.date_end}}</p>
+                <p>{{thisItem.company_introduce}}</p>
+                <p>{{thisItem.date_end}}</p>
               </div>
 
               <div
@@ -71,7 +69,6 @@
             v-for="(thisItem,index) in new_task"
             :key="index"
             @click.native="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-            style="padding:0.5rem;"
           >
             <!-- <div class="left_content">
                 <img src="./iphone.png" />
@@ -81,12 +78,12 @@
               <div class="new_task">
                 <p style="font-weight:550">{{thisItem.company_source}}</p>
                 <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
-                <p style="width: 48%;">{{thisItem.date_start}}</p>
+                <p>{{thisItem.date_start}}</p>
               </div>
               <div class="new_task">
                 <p>{{thisItem.company_introduce}}</p>
                 <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.be_overdue}}</p>
-                <p style="width: 48%;">{{thisItem.date_end}}</p>
+                <p>{{thisItem.date_end}}</p>
               </div>
             </div>
           </item>
@@ -312,21 +309,19 @@ span {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  width: 100%;
   font-size: 0.9rem;
   color: #000;
-  padding: 0.3rem;
+  padding: 15px;
+  border-bottom: 1px solid #e8e8e8;
 }
 .right_content p {
-  width: 50%;
   color: #000;
+      margin: 5px 0px;
 }
 .new_task {
   width: 100%;
   display: flex;
-}
-.new_task p {
-  width: 30%;
+  justify-content: space-between;
 }
 .right_content p:nth-child(even) {
   text-align: right;
@@ -444,7 +439,7 @@ input:-ms-input-placeholder {
     height: 1.5rem;
   }
   .right_content {
-    padding: 0rem;
+    padding:10px;
   }
   .success_failure .sf_state {
     top: -0.2rem;

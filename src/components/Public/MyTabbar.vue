@@ -19,7 +19,7 @@
           <img :src="props.active ? home.active : home.inactive" />
         </template>
       </van-tabbar-item>
-      <van-tabbar-item replace to="/notice4LGB">
+      <van-tabbar-item replace to="/workBench">
         <span>工作台</span>
         <template #icon="props">
           <img :src="props.active ? calendar.active : calendar.inactive" />

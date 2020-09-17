@@ -9,6 +9,10 @@ const Task = () => import('@/views/Task/Task.vue');
 const Grid = () => import('@/views/Grid/Grid.vue');
 const GridMap = () => import('@/views/Grid/GridMap.vue')
 const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
+const WorkBench = () => import('@/views/WorkBench/WorkBench.vue');
+const User = () => import('@/views/User/User.vue');
+const MyMedal = () => import('@/views/User/MyMedal.vue');
+
 
 const routes = [
   {
@@ -22,7 +26,7 @@ const routes = [
     component: Home,
     children: [
       {
-        path: "/Home/Remind",
+        path: "/Remind",
         name: "Remind",
         component: Remind
       },
@@ -32,11 +36,21 @@ const routes = [
     path: '/Task',
     name: 'Task',
     component: Task,
+  },
+  {
+    path: '/WorkBench',
+    name: 'WorkBench',
+    component: WorkBench,
+  },
+  {
+    path: '/User',
+    name: 'User',
+    component: User,
     children: [
       {
-        path: "/Task/Remind",
-        name: "Remind",
-        component: Remind
+        path: "/MyMedal",
+        name: "MyMedal",
+        component: MyMedal
       },
     ]
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="ResourceSelection">
-  <child-nav :title="typeCN"></child-nav>
+    <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN=='资源选择'">
       <van-search v-model="value" placeholder="网格名称、客户名称、资源名称" />
       <div class="resource_selection">
@@ -9,12 +9,11 @@
           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
         <van-pagination
-  v-model="currentPage"
-  :total-items="125"
-  :show-page-size="3"
- 
-  force-ellipses
-/>
+          v-model="currentPage"
+          :total-items="125"
+          :show-page-size="3"
+          force-ellipses
+        />
       </div>
       <div class="resource_selection new_selection_two">
         <p>客户</p>
@@ -35,40 +34,19 @@
     <div v-if="typeCN=='网格选择'">
       <div class="resource_selection">
         <ul v-for="(thisItem,index) in grid_selection1" :key="index" class="cartItem">
-          <div
-            class="selctBtn"
-            :class="thisItem.checked?'checked':''"
-            @click="selectItem(thisItem)"
-          ></div>
-          <li>
-            <p>{{thisItem.name}}</p>
-          </li>
+           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div>
       <div class="resource_selection" style="margin-top:0.5rem">
         <p>基础网格</p>
         <ul v-for="(thisItem,index) in grid_selection2" :key="index" class="cartItem">
-          <div
-            class="selctBtn"
-            :class="thisItem.checked?'checked':''"
-            @click="selectItem(thisItem)"
-          ></div>
-          <li>
-            <p>{{thisItem.name}}</p>
-          </li>
+           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div>
       <div class="resource_selection" style="margin-top:0.5rem">
         <p>专题网格</p>
         <ul v-for="(thisItem,index) in grid_selection3" :key="index" class="cartItem">
-          <div
-            class="selctBtn"
-            :class="thisItem.checked?'checked':''"
-            @click="selectItem(thisItem)"
-          ></div>
-          <li>
-            <p>{{thisItem.name}}</p>
-          </li>
+           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div>
       <!-- @click="$router.push({path:'/index/grid/',query:{userId:'718346'}})" -->
@@ -78,11 +56,8 @@
       </div>
     </div>
     <div v-if="typeCN=='路径规划'">
-      <div class="screen_content path_search">
-        <img src="../../assets/grid/search.svg" alt />
-        <input type="text" placeholder="请输入客户名称" />
-      </div>
-      <div class="choice_people">
+      <van-search v-model="value" placeholder="请输入客户名称" />
+      <div class="choice_people" style="border-bottom:1px solid #e8e8e8">
         <p>
           已选择
           <span style="color:#ed3632;font-size:1.2rem">{{path_planning.length}}</span>
@@ -105,7 +80,7 @@
         </ul>
       </div>
       <div class="resource_selection selection_people">
-        <ul v-for="(thisItem,index) in path_planning_list" :key="index" class="cartItem">
+        <ul v-for="(thisItem,index) in path_planning_list" :key="index" class="cartItem" style="border-bottom:1px solid #e8e8e8">
           <li>
             <p>
               <img style=" width: 3rem;border-radius: 100%" src="../../assets/grid/men1.jpg" alt />
@@ -115,11 +90,6 @@
               <p>{{thisItem.grade}}</p>
             </div>
           </li>
-          <!-- <div
-            class="selctBtn"
-            :class="thisItem.checked?'checked':''"
-            @click="selectItem(thisItem)"
-          ></div>-->
           <van-checkbox v-model="thisItem.check" @click="selectCheck(thisItem)" shape="square"></van-checkbox>
         </ul>
         <div class="save" @click="$router.push({path:'/grid/',query:{routePlan:'5'}})">
@@ -142,79 +112,79 @@ export default {
       typeCN: "",
       checked: true,
       currentPage: 1,
-      value:'',
+      value: "",
       resource_selection1: [
         {
           name: "卓越联腾企业贷客户拜访营销",
-          id:1
+          id: 1,
         },
         {
           name: "某某企业电话营销",
-          id:2
+          id: 2,
         },
         {
           name: "某某客户理财营销",
-          id:3
+          id: 3,
         },
       ],
       resource_selection2: [
         {
           name: "个人",
-          id:1
+          id: 1,
         },
         {
           name: "企业",
-          id:2
+          id: 2,
         },
       ],
       resource_selection3: [
         {
           name: "小区",
-          id:1
+          id: 1,
         },
         {
           name: "园区",
-          id:2
+          id: 2,
         },
         {
           name: "医院",
-          id:3
+          id: 3,
         },
         {
           name: "学校",
-          id:4
+          id: 4,
         },
         {
           name: "商超",
-          id:5
+          id: 5,
         },
         {
           name: "餐饮娱乐",
-          id:6
+          id: 6,
         },
         {
           name: "酒店",
-          id:7
+          id: 7,
         },
         {
           name: "社会团体",
-          id:8
+          id: 8,
         },
         {
           name: "政府机构",
-          id:9
+          id: 9,
         },
         {
           name: "汽车销售",
-          id:10
+          id: 10,
         },
         {
           name: "汽车服务",
-          id:11
+          id: 11,
         },
         {
           name: "建筑装修",
-          id:12
+          id: 12,
         },
       ],
       grid_selection1: [
@@ -302,7 +272,7 @@ export default {
 </script>
 
 <style scoped>
-.van-pagination{
+.van-pagination {
   margin-top: 20px;
 }
 .choice_people li .chahao {
@@ -413,7 +383,7 @@ export default {
 .resource_selection {
   background: #fff;
   padding: 1rem;
-  border-bottom:0.001rem solid #e8e8e8;
+  border-bottom: 0.001rem solid #e8e8e8;
 }
 .new_selection_two,
 .new_selection_three {
@@ -429,14 +399,14 @@ export default {
 }
 .resource_selection p {
   width: 100%;
-  margin:0px 0px 10px 0px;
+  margin: 0px 0px 10px 0px;
 }
 .choice_people {
   display: flex;
   background: #fff;
   flex-wrap: wrap;
   padding: 0.5rem;
-  border-bottom: 0.001rem solid #e8e8e8;
+  border-bottom: 1px solid #e8e8e8!important;
 }
 .choice_people p {
   width: 100%;
@@ -451,7 +421,7 @@ export default {
   padding: 0.5rem;
 }
 .selection_people ul {
-  border-bottom: 0.001rem solid #e8e8e8;
+  border-bottom: 1px solid #e8e8e8!important;
   padding: 0.5rem 0rem;
   align-items: center;
 }
@@ -542,8 +512,8 @@ export default {
     height: 2.5rem;
     margin: 0.5rem 0.5rem;
   }
-  .selection_people ul{
-    padding:0rem
+  .selection_people ul {
+    padding: 0rem;
   }
 }
 </style>
