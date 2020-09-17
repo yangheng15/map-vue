@@ -46,13 +46,11 @@ const routes = [
     path: '/User',
     name: 'User',
     component: User,
-    children: [
-      {
-        path: "/MyMedal",
-        name: "MyMedal",
-        component: MyMedal
-      },
-    ]
+  },
+  {
+    path: "/User/MyMedal",
+    name: "MyMedal",
+    component: MyMedal
   },
   {
     path: '/Grid',
