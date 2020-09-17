@@ -61,6 +61,7 @@
         color="#3D425E"
       >退出</van-button>
     </div>
+    <router-view></router-view>
     <my-tabbar></my-tabbar>
   </div>
 </template>
