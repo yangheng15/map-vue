@@ -939,6 +939,7 @@
           :key="index"
           @click="$router.push('/ContentManage/ArticleViewBasic/'+thisItem.id+'?title=客户视图')"
         >
+        
           <li>
             <p>{{thisItem.name}}</p>
             <p>{{thisItem.text}}</p>
