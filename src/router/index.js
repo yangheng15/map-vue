@@ -13,6 +13,7 @@ const WorkBench = () => import('@/views/WorkBench/WorkBench.vue');
 const WorkbenchBranch = () => import('@/views/WorkBench/WorkbenchBranch.vue');
 const ArticleViewBasic = () => import('@/views/WorkBench/ArticleViewBasic.vue');
 const PutRecord = () => import('@/views/WorkBench/PutRecord.vue');
+const CustomerView = () => import('@/views/WorkBench/CustomerView.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -59,6 +60,11 @@ const routes = [
     path: '/PutRecord',
     name: 'PutRecord',
     component: PutRecord,
+  },
+  {
+    path: '/CustomerView',
+    name: 'CustomerView',
+    component: CustomerView,
   },
   {
     path: '/User',

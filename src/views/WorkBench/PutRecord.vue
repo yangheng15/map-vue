@@ -336,233 +336,351 @@
       </div>
     </div>
     <div v-if="typeCN=='潜在客户添加'">
-      <div
-        v-show="region_choice"
-        style="position: absolute;z-index:1000;color:red;top:10rem;left:1rem"
-      >djahfks</div>
-      <ul class="stock cw_stock">
-        <li>手机号：</li>
-        <li>
-          <input type="text" placeholder="单行输入" />
-        </li>
-        <li>微信：</li>
-        <li>
-          <input type="text" placeholder="单行输入" />
-        </li>
-        <li>民族：</li>
-        <li>
-          <select name id>
-            <option value="汉族">汉族</option>
-            <option value="蒙族">蒙族</option>
-          </select>
-        </li>
-        <li>婚姻状况：</li>
-        <li>
-          <select name id>
-            <option value="已婚">已婚</option>
-            <option value="未婚">未婚</option>
-          </select>
-        </li>
-        <li>区域网格：</li>
-        <li style="border: 0.05rem solid #bbb;border-radius:0.3rem">
-          <!-- <input placeholder="搜索区域网格" />
-          -->
-          <van-field
-            readonly
-            clickable
-            :value="value"
-            placeholder="搜索区域网格"
-            @click="showPicker = true"
-            style="padding:0"
-          />
-          <van-popup v-model="showPicker" round position="bottom" style="background:#fff">
-            <van-picker
-              show-toolbar
-              :columns="columns"
-              @cancel="showPicker = false"
-              @confirm="onConfirm"
-            />
-          </van-popup>
-          <!-- <img src="./search.svg" alt /> -->
-        </li>
-        <li>工作单位：</li>
-        <li>
-          <input type="text" placeholder="单行输入" />
-        </li>
-        <li>联系地址：</li>
-        <li>
-          <select name id>
-            <option value="工作地址">工作地址</option>
-            <option value="居住地址">居住地址</option>
-          </select>
-        </li>
-        <li>年收入：</li>
-        <li>
-          <input type="text" placeholder="单行输入" />
-        </li>
-        <li>QQ：</li>
-        <li>
-          <input type="text" placeholder="单行输入" />
-        </li>
-        <li>性别：</li>
-        <li>
-          <select name id>
-            <option value="请选择">请选择</option>
-            <option value="博士">博士</option>
-            <option value="硕士">硕士</option>
-            <option value="本科">本科</option>
-            <option value="大专">大专</option>
-            <option value="中专">中专</option>
-            <option value="高中">高中</option>
-            <option value="初中">初中</option>
-            <option value="小学">小学</option>
-          </select>
-        </li>
-        <li>国家：</li>
-        <li>
-          <select name id>
-            <option value="中华人民共和国">中华人民共和国</option>
-          </select>
-        </li>
-        <li>居住地址：</li>
-        <li>
-          <input type="text" placeholder="单行输入" />
-        </li>
-        <li>经纬度：</li>
-        <li>
-          <input type="text" placeholder="点击图标地图选取" />
-          <img src="../../assets/WorkBench/md-room.svg" alt />
-        </li>
-        <li>工作地址：</li>
-        <li>
-          <input type="text" placeholder="单行输入" />
-        </li>
-        <li>健康状况：</li>
-        <li>
-          <select name id>
-            <option value="请选择">请选择</option>
-            <option value="健康">健康</option>
-          </select>
-        </li>
-        <li>车牌号：</li>
-        <li>
-          <input type="text" placeholder="单行输入" />
-        </li>
-      </ul>
+      <van-field
+        v-model="phone_number"
+        name="手机号："
+        label="手机号："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写手机号' }]"
+      />
+      <van-field
+        v-model="weChat"
+        name="微信："
+        label="微信："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写微信' }]"
+      />
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="nation_txt"
+        label="民族："
+        placeholder="点击选择民族"
+        @click="nation = true"
+      />
+      <van-popup v-model="nation" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="nation_list"
+          @confirm="onNation"
+          @cancel="nation = false"
+        />
+      </van-popup>
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="marital_status_txt"
+        label="婚姻状况："
+        placeholder="点击选择婚姻状况"
+        @click="marital_status = true"
+      />
+      <van-popup v-model="marital_status" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="marital_status_list"
+          @confirm="onMarital_status"
+          @cancel="marital_status = false"
+        />
+      </van-popup>
+
+      <van-field
+        readonly
+        clickable
+        name="area"
+        :value="regional_grid_txt"
+        label="区域网格："
+        placeholder="点击选择区域网格"
+        @click="regional_grid = true"
+      />
+      <van-popup v-model="regional_grid" position="bottom">
+        <van-area :area-list="areaList" @confirm="onRegional_grid" @cancel="regional_grid = false" />
+      </van-popup>
+      <van-field
+        v-model="work_unit"
+        name="工作单位："
+        label="工作单位："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写工作单位' }]"
+      />
+      <van-field
+        v-model="contact_address"
+        name="联系地址："
+        label="联系地址："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写联系地址' }]"
+      />
+      <van-field
+        v-model="annual_income"
+        name="年收入："
+        label="年收入："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写年收入' }]"
+      />
+      <van-field
+        v-model="qq_number"
+        name="QQ："
+        label="QQ："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写QQ' }]"
+      />
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="education_level_txt"
+        label="学历："
+        placeholder="点击选择学历"
+        @click="education_level = true"
+      />
+      <van-popup v-model="education_level" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="education_level_list"
+          @confirm="onEducation_level"
+          @cancel="education_level = false"
+        />
+      </van-popup>
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="country_txt"
+        label="国家："
+        placeholder="点击选择国家"
+        @click="country = true"
+      />
+      <van-popup v-model="country" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="country_list"
+          @confirm="onCountry"
+          @cancel="country = false"
+        />
+      </van-popup>
+
+      <van-field
+        v-model="residential_address"
+        name="居住地址："
+        label="居住地址："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写居住地址' }]"
+      />
+      <van-field
+        v-model="user_positioning"
+        name="定位："
+        label="定位："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写定位（经纬度）' }]"
+      />
+      <van-field
+        v-model="work_address"
+        name="工作地址："
+        label="工作地址："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写工作地址' }]"
+      />
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="health_txt"
+        label="健康状况："
+        placeholder="点击选择健康状况"
+        @click="health = true"
+      />
+      <van-popup v-model="health" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="health_list"
+          @confirm="onHealth"
+          @cancel="health = false"
+        />
+      </van-popup>
+      <van-field
+        v-model="car_number"
+        name="车牌号："
+        label="车牌号："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写车牌号' }]"
+      />
       <div class="save">
-        <button @click="prev()">保存</button>
+        <van-button round block type="primary" @click="prev()">保存</van-button>
       </div>
     </div>
     <div v-if="typeCN=='潜在客户详情'">
-      <ul class="stock cw_stock">
-        <li>手机号：</li>
-        <li>
-          <input type="text" value="15287956478" placeholder="单行输入" />
-        </li>
-        <li>微信：</li>
-        <li>
-          <input type="text" value="5478542416" placeholder="单行输入" />
-        </li>
-        <li>民族：</li>
-        <li>
-          <select name id>
-            <option value="汉族">汉族</option>
-            <option value="蒙族">蒙族</option>
-          </select>
-        </li>
-        <li>婚姻状况：</li>
-        <li>
-          <select name id>
-            <option value="已婚">已婚</option>
-            <option value="未婚">未婚</option>
-          </select>
-        </li>
-        <li>区域网格：</li>
-        <li style="border: 0.05rem solid #bbb;border-radius:0.3rem">
-          <!-- <input placeholder="搜索区域网格" />
-          -->
-          <van-field
-            readonly
-            clickable
-            :value="value"
-            placeholder="搜索区域网格"
-            @click="showPicker = true"
-            style="padding:0"
-          />
-          <van-popup v-model="showPicker" round position="bottom" style="background:#fff">
-            <van-picker
-              show-toolbar
-              :columns="columns"
-              @cancel="showPicker = false"
-              @confirm="onConfirm"
-            />
-          </van-popup>
-          <!-- <img src="./search.svg" alt /> -->
-        </li>
-        <li>工作单位：</li>
-        <li>
-          <input type="text" value="北京卓越联腾科技有限公司" placeholder="单行输入" />
-        </li>
-        <li>联系地址：</li>
-        <li>
-          <select name id>
-            <option value="工作地址">工作地址</option>
-            <option value="居住地址">居住地址</option>
-          </select>
-        </li>
-        <li>年收入：</li>
-        <li>
-          <input type="text" value="10(万元)" placeholder="单行输入" />
-        </li>
-        <li>QQ：</li>
-        <li>
-          <input type="text" value="1534857561" placeholder="单行输入" />
-        </li>
-        <li>最高学历：</li>
-        <li>
-          <select name id>
-            <option value="博士">博士</option>
-            <option value="硕士">硕士</option>
-            <option value="本科">本科</option>
-            <option value="大专">大专</option>
-            <option value="中专">中专</option>
-            <option value="高中">高中</option>
-            <option value="初中">初中</option>
-            <option value="小学">小学</option>
-          </select>
-        </li>
-        <li>国家：</li>
-        <li>
-          <select name id>
-            <option value="中华人民共和国">中华人民共和国</option>
-          </select>
-        </li>
-        <li>居住地址：</li>
-        <li>
-          <input type="text" value="周口市北集镇" placeholder="单行输入" />
-        </li>
-        <li>经纬度：</li>
-        <li>
-          <input type="text" value="133.47, 33.7" placeholder="点击图标地图选取" />
-          <img src="../../assets/WorkBench/md-room.svg" alt />
-        </li>
-        <li>工作地址：</li>
-        <li>
-          <input type="text" value="周口市卓越大厦" placeholder="单行输入" />
-        </li>
-        <li>健康状况：</li>
-        <li>
-          <select name id>
-            <option value="健康">健康</option>
-          </select>
-        </li>
-        <li>车牌号：</li>
-        <li>
-          <input type="text" value="E12332" placeholder="单行输入" />
-        </li>
-      </ul>
+      <van-field
+        v-model="phone_number"
+        name="手机号："
+        label="手机号："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写手机号' }]"
+      />
+      <van-field
+        v-model="weChat"
+        name="微信："
+        label="微信："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写微信' }]"
+      />
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="nation_txt"
+        label="民族："
+        placeholder="点击选择民族"
+        @click="nation = true"
+      />
+      <van-popup v-model="nation" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="nation_list"
+          @confirm="onNation"
+          @cancel="nation = false"
+        />
+      </van-popup>
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="marital_status_txt"
+        label="婚姻状况："
+        placeholder="点击选择婚姻状况"
+        @click="marital_status = true"
+      />
+      <van-popup v-model="marital_status" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="marital_status_list"
+          @confirm="onMarital_status"
+          @cancel="marital_status = false"
+        />
+      </van-popup>
+
+      <van-field
+        readonly
+        clickable
+        name="area"
+        :value="regional_grid_txt"
+        label="区域网格："
+        placeholder="点击选择区域网格"
+        @click="regional_grid = true"
+      />
+      <van-popup v-model="regional_grid" position="bottom">
+        <van-area :area-list="areaList" @confirm="onRegional_grid" @cancel="regional_grid = false" />
+      </van-popup>
+      <van-field
+        v-model="work_unit"
+        name="工作单位："
+        label="工作单位："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写工作单位' }]"
+      />
+      <van-field
+        v-model="contact_address"
+        name="联系地址："
+        label="联系地址："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写联系地址' }]"
+      />
+      <van-field
+        v-model="annual_income"
+        name="年收入："
+        label="年收入："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写年收入' }]"
+      />
+      <van-field
+        v-model="qq_number"
+        name="QQ："
+        label="QQ："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写QQ' }]"
+      />
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="education_level_txt"
+        label="学历："
+        placeholder="点击选择学历"
+        @click="education_level = true"
+      />
+      <van-popup v-model="education_level" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="education_level_list"
+          @confirm="onEducation_level"
+          @cancel="education_level = false"
+        />
+      </van-popup>
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="country_txt"
+        label="国家："
+        placeholder="点击选择国家"
+        @click="country = true"
+      />
+      <van-popup v-model="country" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="country_list"
+          @confirm="onCountry"
+          @cancel="country = false"
+        />
+      </van-popup>
+
+      <van-field
+        v-model="residential_address"
+        name="居住地址："
+        label="居住地址："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写居住地址' }]"
+      />
+      <van-field
+        v-model="user_positioning"
+        name="定位："
+        label="定位："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写定位（经纬度）' }]"
+      />
+      <van-field
+        v-model="work_address"
+        name="工作地址："
+        label="工作地址："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写工作地址' }]"
+      />
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="health_txt"
+        label="健康状况："
+        placeholder="点击选择健康状况"
+        @click="health = true"
+      />
+      <van-popup v-model="health" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="health_list"
+          @confirm="onHealth"
+          @cancel="health = false"
+        />
+      </van-popup>
+      <van-field
+        v-model="car_number"
+        name="车牌号："
+        label="车牌号："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写车牌号' }]"
+      />
       <div class="save">
-        <button @click="prev()">保存</button>
+        <van-button round block type="primary" @click="prev()">保存</van-button>
       </div>
     </div>
     <div v-if="typeCN=='筛选'">
@@ -785,6 +903,29 @@ export default {
     return {
       title: "",
       typeCN: "",
+      phone_number: "",
+      weChat: "",
+      nation_txt: "汉族",
+      nation_list: ["汉族"],
+      nation: false,
+      marital_status_txt: "已婚",
+      marital_status_list: ["已婚", "未婚"],
+      marital_status: false,
+      work_unit: "",
+      contact_address: "",
+      annual_income: "",
+      qq_number: "",
+      country_txt: "",
+      country_list: ["中国"],
+      country: false,
+      residential_address: "",
+      user_positioning: "",
+      work_address: "",
+      health_txt: "",
+      health_list: ["请选择", "健康"],
+      health: false,
+      car_number: "",
+
       region_choice: false,
       active: false,
       screen_name: "",
@@ -823,65 +964,65 @@ export default {
       organization: false,
       regional_grid_txt: "",
       areaList: {
-  province_list: {
-    110000: '川汇区',
-    120000: '项城市',
-    130000: '扶沟县',
-    140000: '西华县',
-    150000: '商水县',
-    160000: '沈丘县',
-  },
-  city_list: {
-    110100: '陈州回族街道',
-    110200: '七一路街道',
-    110300: '荷花路街道',
-    110400: '人和街道',
-    110500: '小桥街道',
-    110600: '李埠口乡',
+        province_list: {
+          110000: "川汇区",
+          120000: "项城市",
+          130000: "扶沟县",
+          140000: "西华县",
+          150000: "商水县",
+          160000: "沈丘县",
+        },
+        city_list: {
+          110100: "陈州回族街道",
+          110200: "七一路街道",
+          110300: "荷花路街道",
+          110400: "人和街道",
+          110500: "小桥街道",
+          110600: "李埠口乡",
 
-    120100: '花园街道',
-    120200: '水寨街道',
-    120300: '东方街道',
-    120400: '莲花街道',
-    120500: '千佛阁街道',
-    120600: '光武街',
+          120100: "花园街道",
+          120200: "水寨街道",
+          120300: "东方街道",
+          120400: "莲花街道",
+          120500: "千佛阁街道",
+          120600: "光武街",
 
-    130100: '桐丘街道',
-    130200: '扶亭街道',
-    130300: '崔桥镇',
-    130400: '江村镇',
-    130500: '白潭镇',
-    130600: '韭园镇',
-  },
-  county_list: {
-    110101: '城关村',
-    110102: '化河村',
-    110205: '王店村',
-    110206: '许湾村',
-    110301: '城关村',
-    110302: '城郊村',
-    110401: '王皮溜镇',
-    110402: '太清宫镇',
-    110505: '迟营村',
-    110506: '田口村',
-    110601: '胡集村',
-    110702: '古郊村',
+          130100: "桐丘街道",
+          130200: "扶亭街道",
+          130300: "崔桥镇",
+          130400: "江村镇",
+          130500: "白潭镇",
+          130600: "韭园镇",
+        },
+        county_list: {
+          110101: "城关村",
+          110102: "化河村",
+          110205: "王店村",
+          110206: "许湾村",
+          110301: "城关村",
+          110302: "城郊村",
+          110401: "王皮溜镇",
+          110402: "太清宫镇",
+          110505: "迟营村",
+          110506: "田口村",
+          110601: "胡集村",
+          110702: "古郊村",
 
-    120101: '南顿村',
-    120102: '高寺村',
-    120203: '官会村',
-    120204: '丁集村',
-    120305: '郑郭村',
-    120306: '范集村',
+          120101: "南顿村",
+          120102: "高寺村",
+          120203: "官会村",
+          120204: "丁集村",
+          120305: "郑郭村",
+          120306: "范集村",
 
-    130101: '包屯村',
-    130102: '曹里村',
-    130203: '大李村',
-    130204: '练寺村',
-    130305: '汴岗村',
-    130306: '范集村',
-  }
-},
+          130101: "包屯村",
+          130102: "曹里村",
+          130203: "大李村",
+          130204: "练寺村",
+          130305: "汴岗村",
+          130306: "范集村",
+        },
+      },
       regional_grid: false,
       screen_age: "",
       circlePath: {
@@ -1205,9 +1346,25 @@ export default {
     // this.$previewRefresh();
   },
   methods: {
+    onNation(value) {
+      this.nation_txt = value;
+      this.nation = false;
+    },
+    onMarital_status(value) {
+      this.marital_status_txt = value;
+      this.marital_status = false;
+    },
     onKey_customers(value) {
       this.key_customers_txt = value;
       this.key_customers = false;
+    },
+    onCountry(value) {
+      this.country_txt = value;
+      this.country = false;
+    },
+    onHealth(value) {
+      this.health_txt = value;
+      this.health = false;
     },
     onCustome_level(value) {
       this.custome_level_txt = value;
@@ -1234,7 +1391,7 @@ export default {
       this.products_held = false;
     },
     onRegional_grid(values) {
-      this.regional_grid_txt = values.map((item) => item.name).join('/');
+      this.regional_grid_txt = values.map((item) => item.name).join("/");
       this.regional_grid = false;
     },
     onSubmit(values) {

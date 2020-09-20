@@ -32,7 +32,7 @@
           :name="item.name"
           :address="item.address"
           :img="item.img"
-          ref="clickTouch"
+          ref="clickTouchq"
           @touch="clickTouch(item)"
         ></my-overlay>
       </template>

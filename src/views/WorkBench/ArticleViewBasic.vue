@@ -90,11 +90,14 @@
           <p class="customer_view_name">
             张岩
             <img src="../../assets/WorkBench/sex.svg" alt />
-            <img
+            <router-link tag="span" :to="{ name: 'CustomerView', query: { title: '客户视图' }}">
+              <img src="../../assets/WorkBench/folder.svg" alt />
+            </router-link>
+            <!-- <img
               src="../../assets/WorkBench/folder.svg"
               alt
               @click="$router.push('/ContentManage/CustomerView/?title=客户视图')"
-            />
+            />-->
           </p>
         </div>
         <p class="customer_view_num">30</p>
@@ -105,13 +108,13 @@
           <span class="left_title">客户星级：</span>
           <p class="schedule_star">
             <van-rate
-                v-model="start_txt"
-                :size="18"
-                color="#0078D7"
-                void-icon="star"
-                void-color="#eee"
-                readonly
-              />
+              v-model="start_txt"
+              :size="18"
+              color="#0078D7"
+              void-icon="star"
+              void-color="#eee"
+              readonly
+            />
           </p>
         </li>
         <li>
@@ -123,11 +126,18 @@
           <span class="right_txt">110242199702125858</span>
         </li>
         <li>
-          <span class="left_title">年<span style="display:inline-block;width:32px"></span>龄：</span>
+          <span class="left_title">
+            年
+            <span style="display:inline-block;width:32px"></span>龄：
+          </span>
           <span class="right_txt">24</span>
         </li>
         <li>
-          <span class="left_title">手<span style="display:inline-block;width:8px"></span>机<span style="display:inline-block;width:8px"></span>号：</span>
+          <span class="left_title">
+            手
+            <span style="display:inline-block;width:8px"></span>机
+            <span style="display:inline-block;width:8px"></span>号：
+          </span>
           <span class="right_txt">15840991076</span>
         </li>
         <li>
@@ -162,23 +172,23 @@
             <div class="save">
               <button @click="multiple_choice_no()">保存</button>
             </div>
-          </div> -->
+          </div>-->
           <van-field
-          readonly
-          clickable
-          name="area"
-          :value="regional_grid_txt"
-          placeholder="点击选择"
-          @click="regional_grid = true"
-        />
-           <van-popup v-model="regional_grid" position="bottom">
-          <van-picker
-             show-toolbar
-            :columns="regional_grid_list"
-            @confirm="onRegional_grid"
-            @cancel="regional_grid = false"
+            readonly
+            clickable
+            name="area"
+            :value="regional_grid_txt"
+            placeholder="点击选择"
+            @click="regional_grid = true"
           />
-        </van-popup>
+          <van-popup v-model="regional_grid" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="regional_grid_list"
+              @confirm="onRegional_grid"
+              @cancel="regional_grid = false"
+            />
+          </van-popup>
         </li>
       </ul>
       <div class="tabTitle" style="border-top:0px;padding-top:0rem">
@@ -253,37 +263,37 @@ import ChildNav from "../../components/Public/ChildNav";
 export default {
   data() {
     return {
-      typeCN:"",
+      typeCN: "",
       check_content: false,
       // chosenTopics: [],
-      inpuVal:'',
+      inpuVal: "",
       // topics: ["小微企业主", "大企业主", "个体", "农户", "工薪阶层"],
       regional_grid_txt: "",
       regional_grid_list: [
         {
-          values: [' ','小微企业主'],
+          values: [" ", "小微企业主"],
           defaultIndex: 2,
         },
         {
-          values: [' ','个体'],
+          values: [" ", "个体"],
           defaultIndex: 3,
         },
         {
-          values: [' ','大企业主'],
+          values: [" ", "大企业主"],
           defaultIndex: 1,
         },
         {
-          values: [' ','农户'],
+          values: [" ", "农户"],
           defaultIndex: 4,
         },
         {
-          values: [' ','工薪阶层'],
+          values: [" ", "工薪阶层"],
           defaultIndex: 5,
         },
       ],
       regional_grid: false,
       value: "",
-      start_txt:1,
+      start_txt: 1,
       showPicker: false,
       columns: [
         {
@@ -617,11 +627,11 @@ export default {
 };
 </script>
 <style scoped>
-.ArticleViewBasic{
+.ArticleViewBasic {
   padding-top: 46px;
   background-color: #f5f5f5;
 }
-*{
+* {
   font-size: 14px;
 }
 .save {
@@ -671,12 +681,12 @@ export default {
 /* .mission_details li span {
   margin-left: 1.5rem;
 } */
-.left_title{
+.left_title {
   display: inline-block;
   width: 27%;
 }
-.right_txt{
-display: inline-block;
+.right_txt {
+  display: inline-block;
   width: 73%;
 }
 .marketing_record {
@@ -809,7 +819,7 @@ display: inline-block;
   z-index: 100000000000;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
-  *{
+  * {
     font-size: 13px;
   }
 }

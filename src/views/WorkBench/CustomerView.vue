@@ -1,0 +1,2172 @@
+<template>
+  <div class="CustomerView">
+    <child-nav :title="typeCN"></child-nav>
+    <div v-if="typeCN=='客户视图'">
+      <div class="tabTitle" style="border-top:0px;padding-top:0rem">
+        <ul
+          class="tabList"
+          style="display:flex;height:3rem;line-height:3rem;background:#fff;border-bottom:0.001rem solid #e8e8e8;padding: 0rem 1rem;justify-content: space-between;"
+        >
+          <li @click="tab(0)" :class="tabId==0?'cur':'ordinary'">基本信息</li>
+          <li @click="tab(1)" :class="tabId==1?'cur':'ordinary'">联系方式</li>
+          <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">学历</li>
+          <li @click="tab(3)" :class="tabId==3?'cur':'ordinary'">工作</li>
+        </ul>
+        <div v-show="tabId===0">
+          <van-form @submit="onSubmit">
+            <van-field
+              v-model="customer_number"
+              name="客户编号："
+              label="客户编号："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写客户编号' }]"
+            />
+            <van-field
+              v-model="customer_rating"
+              name="客户等级："
+              label="客户等级："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写客户等级' }]"
+            />
+            <van-field
+              readonly
+              clickable
+              name="picker"
+              :value="choose_gender_txt"
+              label="性别："
+              placeholder="点击选择性别"
+              @click="choose_gender = true"
+            />
+            <van-popup v-model="choose_gender" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="choose_gender_list"
+                @confirm="onChoose_gender"
+                @cancel="choose_gender = false"
+              />
+            </van-popup>
+            <van-field
+              v-model="religious_belief"
+              name="宗教信仰："
+              label="宗教信仰："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写宗教信仰' }]"
+            />
+            <van-field
+              readonly
+              clickable
+              name="picker"
+              :value="education_level_txt"
+              label="教育程度："
+              placeholder="点击选择教育程度"
+              @click="education_level = true"
+            />
+            <van-popup v-model="education_level" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="education_level_list"
+                @confirm="onEducation_level"
+                @cancel="education_level = false"
+              />
+            </van-popup>
+            <van-field
+              v-model="screen_name"
+              name="客户名称："
+              label="客户名称："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写客户名称' }]"
+            />
+            <van-field
+              readonly
+              clickable
+              name="picker"
+              :value="marital_status_txt"
+              label="婚姻状况："
+              placeholder="点击选择婚姻状况"
+              @click="marital_status = true"
+            />
+            <van-popup v-model="marital_status" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="marital_status_list"
+                @confirm="onMarital_status"
+                @cancel="marital_status = false"
+              />
+            </van-popup>
+            <van-field
+              v-model="customer_hobby"
+              name="兴趣爱好："
+              label="兴趣爱好："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写兴趣爱好' }]"
+            />
+            <van-field
+              v-model="customer_id"
+              name="身份证号："
+              label="身份证号："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写身份证号' }]"
+            />
+            <van-field
+              readonly
+              clickable
+              name="picker"
+              :value="nation_txt"
+              label="民族："
+              placeholder="点击选择民族"
+              @click="nation = true"
+            />
+            <van-popup v-model="nation" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="nation_list"
+                @confirm="onNation"
+                @cancel="nation = false"
+              />
+            </van-popup>
+            <van-field
+              readonly
+              clickable
+              name="calendar"
+              :value="date_of_birth"
+              label="出生日期"
+              placeholder="点击选择出生日期"
+              @click="showDateBirth = true"
+            />
+            <van-calendar v-model="showDateBirth" @confirm="onDateBirth" />
+            <van-field
+              readonly
+              clickable
+              name="picker"
+              :value="childrenStatus_txt"
+              label="子女状况："
+              placeholder="点击选择子女状况"
+              @click="childrenStatus = true"
+            />
+            <van-popup v-model="childrenStatus" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="childrenStatus_list"
+                @confirm="onChildrenStatus"
+                @cancel="childrenStatus = false"
+              />
+            </van-popup>
+            <van-field
+              v-model="occupation"
+              name="职业："
+              label="职业："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写职业' }]"
+            />
+            <div class="save">
+              <van-button round block type="primary" @click="prev()">保存</van-button>
+            </div>
+          </van-form>
+        </div>
+        <div v-show="tabId===1">
+          <van-field
+            v-model="phone_number"
+            name="手机号码："
+            label="手机号码："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写手机号码' }]"
+          />
+          <van-field
+            v-model="residential_address"
+            name="居住地址："
+            label="居住地址："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写居住地址' }]"
+          />
+          <van-field
+            v-model="work_address"
+            name="工作地址："
+            label="工作地址："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写工作地址' }]"
+          />
+          <van-field
+            v-model="qq_number"
+            name="QQ："
+            label="QQ："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写QQ' }]"
+          />
+          <van-field
+            readonly
+            clickable
+            name="area"
+            :value="regional_grid_txt"
+            label="区域网格："
+            placeholder="点击选择区域网格"
+            @click="regional_grid = true"
+          />
+          <van-popup v-model="regional_grid" position="bottom">
+            <van-area
+              :area-list="areaList"
+              @confirm="onRegional_grid"
+              @cancel="regional_grid = false"
+            />
+          </van-popup>
+          <van-field
+            v-model="work_unit"
+            name="工作单位："
+            label="工作单位："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写工作单位' }]"
+          />
+          <van-field
+            v-model="weChat"
+            name="微信："
+            label="微信："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写微信' }]"
+          />
+          <van-field
+            v-model="user_positioning"
+            name="定位："
+            label="定位："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写定位（经纬度）' }]"
+          />
+          <van-field
+            v-model="contact_address"
+            name="联系地址："
+            label="联系地址："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写联系地址' }]"
+          />
+
+          <div style="width:99%;margin:0.5rem auto;">
+            <baidu-map
+              class="bm-view"
+              :center="{lng:114.65, lat: 33.37}"
+              :zoom="12"
+              ak="YOUR_APP_KEY"
+            >
+              <bm-marker
+                :position="{lng:114.73, lat: 33.33}"
+                :icon="{url: con1, size: {width: 50, height: 50}}"
+              ></bm-marker>
+            </baidu-map>
+          </div>
+          <div class="save">
+            <van-button round block type="primary" @click="prev()">保存</van-button>
+          </div>
+        </div>
+        <div v-show="tabId===2">
+          <div class="stock stock_education" v-for="(thisItem,index) in education" :key="index">
+            <div>
+              <p>{{thisItem.university}}</p>
+              <p>{{thisItem.education}}</p>
+              <p>{{thisItem.date}}</p>
+            </div>
+            <p>{{thisItem.major}}</p>
+            <p class="delete">删除</p>
+          </div>
+          <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
+          <span class="add_record" @click="showPopupEducation()">+</span>
+          <div
+            v-show="isPopupVisibleEducation"
+            style="position: fixed;z-index: 100;top:0px;left:0rem;width:100%;height:100vh;padding:0.5rem 0.5rem;background:rgba(193, 185, 185, .7);"
+          >
+            <div
+              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 77%;background: rgb(255, 255, 255);border-radius: 0.5rem;"
+            >
+              <p class="pop_title">学历添加</p>
+              <van-field
+                v-model="school"
+                name="学校"
+                label="学校"
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写学校' }]"
+              />
+              <van-field
+                v-model="major"
+                name="专业"
+                label="专业"
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写专业' }]"
+              />
+              <van-field
+                readonly
+                clickable
+                name="calendar"
+                :value="admission_time"
+                label="入学时间"
+                placeholder="点击选择入学时间"
+                @click="showAdmission_time = true"
+              />
+              <van-calendar v-model="showAdmission_time" @confirm="onAdmission_time" />
+              <van-field
+                readonly
+                clickable
+                name="calendar"
+                :value="graduation_time"
+                label="毕业时间"
+                placeholder="点击选择毕业时间"
+                @click="showGraduation_time = true"
+              />
+              <van-calendar v-model="showGraduation_time" @confirm="onGraduation_time" />
+              <van-field
+                readonly
+                clickable
+                name="picker"
+                :value="education_level_txt"
+                label="学历："
+                placeholder="点击选择学历"
+                @click="education_level = true"
+              />
+              <van-popup v-model="education_level" position="bottom">
+                <van-picker
+                  show-toolbar
+                  :columns="education_level_list"
+                  @confirm="onEducation_level"
+                  @cancel="education_level = false"
+                />
+              </van-popup>
+              <div style="margin-top:3rem" class="save_pop">
+                <van-button
+                  style="margin-right:1rem"
+                  round
+                  type="primary"
+                  @click="closePopupEducation()"
+                >保存</van-button>
+                <van-button round type="primary" @click="closePopupEducation()">取消</van-button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-show="tabId===3">
+          <div class="stock stock_education" v-for="(thisItem,index) in work" :key="index">
+            <div>
+              <p>{{thisItem.university}}</p>
+              <p>{{thisItem.date}}</p>
+            </div>
+            <p>{{thisItem.major}}</p>
+            <p class="delete">删除</p>
+          </div>
+          <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
+          <span class="add_record" @click="showPopupWork()">+</span>
+          <div
+            v-show="isPopupVisibleWork"
+            style="position: fixed;z-index: 100;top:0px;left:0rem;width:100%;height:100vh;padding:0.5rem 0.5rem;background:rgba(193, 185, 185, .7);"
+          >
+            <div
+              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 77%;background: rgb(255, 255, 255);border-radius: 0.5rem;"
+            >
+              <p class="pop_title">工作添加</p>
+              <van-field
+                v-model="corporate_name"
+                name="公司名称"
+                label="公司名称"
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写公司名称' }]"
+              />
+              <van-field
+                v-model="position"
+                name="职位"
+                label="职位"
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写职位' }]"
+              />
+              <div style="margin-top:3rem" class="save_pop">
+                <van-button
+                  style="margin-right:1rem"
+                  round
+                  type="primary"
+                  @click="closePopupWork()"
+                >保存</van-button>
+                <van-button round type="primary" @click="closePopupWork()">取消</van-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="typeCN=='农户'">
+      <div>
+        <ul
+          class="tabList"
+          style="display:flex;height:3rem;line-height:3rem;background:#fff;border-bottom:0.001rem solid #e8e8e8;justify-content: space-between;padding: 0rem 1rem;"
+        >
+          <li @click="tab(0)" :class="tabId==0?'cur':'ordinary'">基本</li>
+          <li @click="tab(1)" :class="tabId==1?'cur':'ordinary'">联系</li>
+          <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">三有三无</li>
+          <li @click="tab(3)" :class="tabId==3?'cur':'ordinary'">成员</li>
+          <li @click="tab(4)" :class="tabId==4?'cur':'ordinary'">资产</li>
+          <li @click="tab(5)" :class="tabId==5?'cur':'ordinary'">收支</li>
+        </ul>
+        <div v-show="tabId===0" class="household_base">
+          <van-field
+            v-model="family_number"
+            name="家庭户号："
+            label="家庭户号："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写家庭户号' }]"
+          />
+          <van-field
+            readonly
+            clickable
+            name="picker"
+            :value="family_type_txt"
+            label="家庭类型："
+            placeholder="点击选择家庭类型"
+            @click="family_type = true"
+          />
+          <van-popup v-model="family_type" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="family_type_list"
+              @confirm="onFamily_type"
+              @cancel="family_type = false"
+            />
+          </van-popup>
+          <van-field
+            readonly
+            clickable
+            name="picker"
+            :value="property_situation_txt"
+            label="家庭拥有房产情况："
+            placeholder="点击选择家庭拥有房产情况"
+            @click="property_situation = true"
+          />
+          <van-popup v-model="property_situation" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="property_situation_list"
+              @confirm="onProperty_situation"
+              @cancel="property_situation = false"
+            />
+          </van-popup>
+          <van-field
+            readonly
+            clickable
+            name="picker"
+            :value="vehicle_condition_txt"
+            label="家庭自用车辆情况："
+            placeholder="点击选择家庭自用车辆情况"
+            @click="vehicle_condition = true"
+          />
+          <van-popup v-model="vehicle_condition" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="vehicle_condition_list"
+              @confirm="onVehicle_condition"
+              @cancel="vehicle_condition = false"
+            />
+          </van-popup>
+          <van-field
+            v-model="credit_epresentative"
+            name="授信代表："
+            label="授信代表："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写授信代表' }]"
+          />
+          <van-field
+            v-model="credit_amount"
+            name="授信金额："
+            label="授信金额："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写授信金额' }]"
+          />
+          <van-field
+            v-model="credit_amount"
+            name="用信金额："
+            label="用信金额："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写用信金额' }]"
+          />
+          <van-field
+            v-model="family_num"
+            name="家庭人数："
+            label="家庭人数："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写家庭人数' }]"
+          />
+          <van-field
+            v-model="business_opening"
+            rows="2"
+            autosize
+            label="家庭业务开通情况"
+            type="textarea"
+            maxlength="50"
+            placeholder="请输入家庭业务开通情况"
+            show-word-limit
+          />
+          <van-field
+            v-model="mainEvaluation"
+            rows="2"
+            autosize
+            label="对家庭及主要成员的评价"
+            type="textarea"
+            maxlength="50"
+            placeholder="请输入对家庭及主要成员的评价"
+            show-word-limit
+          />
+          <div class="save">
+            <van-button round block type="primary" @click="prev()">保存</van-button>
+          </div>
+        </div>
+        <div v-show="tabId===1">
+          <van-field
+            v-model="detailed_address"
+            name="详细地址："
+            label="详细地址："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写详细地址' }]"
+          />
+          <van-field
+            v-model="contacts"
+            name="联系人："
+            label="联系人："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写联系人' }]"
+          />
+          <van-field
+            v-model="phone_number"
+            name="手机号："
+            label="手机号："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写手机号' }]"
+          />
+          <van-field
+            readonly
+            clickable
+            name="area"
+            :value="regional_grid_txt"
+            label="区域网格："
+            placeholder="点击选择区域网格"
+            @click="regional_grid = true"
+          />
+          <van-popup v-model="regional_grid" position="bottom">
+            <van-area
+              :area-list="areaList"
+              @confirm="onRegional_grid"
+              @cancel="regional_grid = false"
+            />
+          </van-popup>
+          <van-field
+            v-model="user_positioning"
+            name="位置："
+            label="位置："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写位置（经纬度）' }]"
+          />
+          <div style="width:99%;margin:0.5rem auto;">
+            <baidu-map
+              class="bm-view"
+              :center="{lng:114.65, lat: 33.37}"
+              :zoom="12"
+              ak="YOUR_APP_KEY"
+            >
+              <bm-marker
+                :position="{lng:114.73, lat: 33.380}"
+                :icon="{url: con1, size: {width: 50, height: 50}}"
+              ></bm-marker>
+            </baidu-map>
+          </div>
+          <div class="save">
+            <van-button round block type="primary" @click="prev()">保存</van-button>
+          </div>
+          <div
+            v-show="isPopupVisible"
+            style="position: fixed;z-index: 10;top:0px;left:0rem;width:100%;height:100vh;padding:0.5rem 0.5rem;background:#fff"
+          >
+            <input
+              style="border:0.05rem solid #bbb;width:100%;padding:0rem 0.5rem"
+              type="text"
+              placeholder="网格名称"
+            />
+            <select
+              style="border:0.05rem solid #bbb;width:100%;padding:0.3rem 0.5rem;background:#fff;border-radius:0.3rem;margin-top:0.5rem"
+              name
+              id
+            >
+              <option value="网格类型">网格类型</option>
+              <option value="自定义">自定义</option>
+              <option value="行政区域">行政区域</option>
+            </select>
+            <select
+              style="border:0.05rem solid #bbb;width:100%;padding:0.3rem 0.5rem;background:#fff;border-radius:0.3rem;margin-top:0.5rem"
+              name
+              id
+            >
+              <option value="网格专题">网格专题</option>
+              <option value="自定义">自定义</option>
+              <option value="行政区域">行政区域</option>
+            </select>
+            <dl>
+              <dt
+                style="display: flex;background:#E6E3E3;border:0.05rem solid #bbb;justify-content: space-around;line-height:2rem;margin-top:1rem"
+              >
+                <p style="margin:0rem">编号</p>
+                <p style="margin:0rem">名称</p>
+              </dt>
+              <dd
+                style="display: flex;flex-flow: row;position: relative;"
+                v-for="(thisItem,index) in customer_pool"
+                :key="index"
+              >
+                <div
+                  style="width: 1.2rem;height: 1.2rem;border: 0.05rem solid #000;margin: 1rem 0rem 0rem 1.2rem; cursor: pointer;border-radius: 100%;"
+                  :class="thisItem.checked?'checked':''"
+                  @click="selectItem(thisItem)"
+                ></div>
+                <li
+                  style="width:90%;list-style-type:none;display: flex;justify-content: space-around;align-items: flex-end;"
+                  class="newCustomerList"
+                >
+                  <p style="margin:0rem">{{thisItem.name}}</p>
+                  <p style="margin:0rem">{{thisItem.text}}</p>
+                </li>
+              </dd>
+            </dl>
+            <div style="margin-top:10rem" class="save">
+              <button @click="closePopup()">确定</button>
+            </div>
+          </div>
+        </div>
+        <div v-show="tabId===2" class="household_have">
+          <van-field name="radio" label="有无固定场所：">
+            <template #input>
+              <van-radio-group v-model="radio" direction="horizontal">
+                <van-radio name="1">有</van-radio>
+                <van-radio name="2">无</van-radio>
+              </van-radio-group>
+            </template>
+          </van-field>
+          <van-field name="radio" label="有无不良资信：">
+            <template #input>
+              <van-radio-group v-model="radio" direction="horizontal">
+                <van-radio name="1">有</van-radio>
+                <van-radio name="2">无</van-radio>
+              </van-radio-group>
+            </template>
+          </van-field>
+          <van-field name="radio" label="有无稳定工作：">
+            <template #input>
+              <van-radio-group v-model="radio" direction="horizontal">
+                <van-radio name="1">有</van-radio>
+                <van-radio name="2">无</van-radio>
+              </van-radio-group>
+            </template>
+          </van-field>
+          <van-field name="radio" label="有无过度融资：">
+            <template #input>
+              <van-radio-group v-model="radio" direction="horizontal">
+                <van-radio name="1">有</van-radio>
+                <van-radio name="2">无</van-radio>
+              </van-radio-group>
+            </template>
+          </van-field>
+          <van-field name="radio" label="有无和睦家庭：">
+            <template #input>
+              <van-radio-group v-model="radio" direction="horizontal">
+                <van-radio name="1">有</van-radio>
+                <van-radio name="2">无</van-radio>
+              </van-radio-group>
+            </template>
+          </van-field>
+          <van-field name="radio" label="有无不良嗜好：">
+            <template #input>
+              <van-radio-group v-model="radio" direction="horizontal">
+                <van-radio name="1">有</van-radio>
+                <van-radio name="2">无</van-radio>
+              </van-radio-group>
+            </template>
+          </van-field>
+          <div class="save" style="padding-top:2rem">
+            <van-button round block type="primary" @click="prev()">保存</van-button>
+          </div>
+        </div>
+        <div v-show="tabId===3">
+          <div class="stock stock_education" v-for="(thisItem,index) in family_member" :key="index">
+            <div style="margin-bottom: 0.5rem;">
+              <p style="color:#000;font-weight:550;width: 40%;">
+                {{thisItem.name}}
+                <span class="approval_Passed">户主</span>
+              </p>
+              <p>{{thisItem.age}}</p>
+              <p>{{thisItem.income}}</p>
+            </div>
+            <div>
+              <p>{{thisItem.telephone}}</p>
+              <p class="delete">删除</p>
+            </div>
+          </div>
+          <span class="add_record" @click="showPopupFamily()">+</span>
+          <div
+            v-show="isPopupVisibleFamily"
+            style="position: fixed;z-index: 100;top:0px;left:0rem;width:100%;height:100vh;background:rgba(193, 185, 185, .7);"
+          >
+            <div
+              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 85%;background: rgb(255, 255, 255);border-radius: 0.5rem;"
+            >
+              <p class="pop_title">农户成员添加</p>
+              <van-field
+                v-model="household_name"
+                name="姓名"
+                label="姓名"
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写姓名' }]"
+              />
+              <van-field
+                v-model="household_age"
+                name="年龄"
+                label="年龄"
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写年龄' }]"
+              />
+              <van-field
+                readonly
+                clickable
+                name="picker"
+                :value="relationship_householder_txt"
+                label="与户主关系："
+                placeholder="点击选择与户主关系"
+                @click="relationship_householder = true"
+              />
+              <van-popup v-model="relationship_householder" position="bottom">
+                <van-picker
+                  show-toolbar
+                  :columns="relationship_householder_list"
+                  @confirm="onRelationship_householder"
+                  @cancel="relationship_householder = false"
+                />
+              </van-popup>
+              <van-field
+                v-model="customer_id"
+                name="身份证号："
+                label="身份证号："
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写身份证号' }]"
+              />
+              <van-field
+                v-model="phone_number"
+                name="手机号码："
+                label="手机号码："
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写手机号码' }]"
+              />
+              <van-field
+                v-model="annual_income"
+                name="年收入："
+                label="年收入："
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写年收入' }]"
+              />
+              <div style="margin-top:3rem" class="save_pop">
+                <van-button
+                  style="margin-right:1rem"
+                  round
+                  type="primary"
+                  @click="closePopupFamily()"
+                >保存</van-button>
+                <van-button round type="primary" @click="closePopupFamily()">取消</van-button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-show="tabId===4">
+          <div class="stock stock_education" v-for="(thisItem,index) in assets" :key="index">
+            <div style="margin-bottom:0.5rem">
+              <p style="color:#000;font-weight:550">{{thisItem.name}}</p>
+              <p>{{thisItem.date}}</p>
+            </div>
+            <p>{{thisItem.menoy}}</p>
+            <p class="delete">删除</p>
+            <span v-if="thisItem.id===1" class="approval_Passed">资产</span>
+            <span v-if="thisItem.id===2" class="approval_Passed1">负债</span>
+          </div>
+          <span class="add_record" @click="showPopupAssets()">+</span>
+          <div
+            v-show="isPopupVisibleAssets"
+            style="position: fixed;z-index: 100;top:0px;left:0rem;width:100%;height:100vh;background:rgba(193, 185, 185, .7);"
+          >
+            <div
+              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 91%;background: rgb(255, 255, 255);border-radius: 0.5rem;"
+            >
+              <p class="pop_title">资产添加</p>
+              <van-field
+                readonly
+                clickable
+                name="picker"
+                :value="select_type_txt"
+                label="类型："
+                placeholder="点击选择类型"
+                @click="select_type = true"
+              />
+              <van-popup v-model="select_type" position="bottom">
+                <van-picker
+                  show-toolbar
+                  :columns="select_type_list"
+                  @confirm="onSelect_type"
+                  @cancel="select_type = false"
+                />
+              </van-popup>
+              <van-field
+                readonly
+                clickable
+                name="picker"
+                :value="asset_type_txt"
+                label="资产类型："
+                placeholder="点击选择资产类型"
+                @click="asset_type = true"
+              />
+              <van-popup v-model="asset_type" position="bottom">
+                <van-picker
+                  show-toolbar
+                  :columns="asset_type_list"
+                  @confirm="onAsset_type"
+                  @cancel="asset_type = false"
+                />
+              </van-popup>
+              <van-field
+                readonly
+                clickable
+                name="picker"
+                :value="debt_type_txt"
+                label="负债类型："
+                placeholder="点击选择负债类型"
+                @click="debt_type = true"
+              />
+              <van-popup v-model="debt_type" position="bottom">
+                <van-picker
+                  show-toolbar
+                  :columns="debt_type_list"
+                  @confirm="onDebt_type"
+                  @cancel="debt_type = false"
+                />
+              </van-popup>
+              <van-field
+                v-model="evaluation_value"
+                name="评估价值："
+                label="评估价值："
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写评估价值' }]"
+              />
+              <van-field
+                v-model="amount_liabilities"
+                name="负债金额："
+                label="负债金额："
+                placeholder="单行输入"
+                :rules="[{ required: true, message: '请填写负债金额' }]"
+              />
+              <van-field
+                v-model="message_income"
+                rows="2"
+                autosize
+                label="描述"
+                type="textarea"
+                maxlength="50"
+                placeholder="请输入年收入"
+                show-word-limit
+              />
+              <div style="margin-top:3rem" class="save_pop">
+                <van-button
+                  style="margin-right:1rem"
+                  round
+                  type="primary"
+                  @click="closePopupAssets()"
+                >保存</van-button>
+                <van-button round type="primary" @click="closePopupAssets()">取消</van-button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-show="tabId===5">
+          <ul class="cw_stock yes_no income_expenditure">
+            <p>基本信息</p>
+            <li class="ie_left">合计（自动计算）（万元）：</li>
+            <li>
+              <input type="text" disabled value="20" placeholder="单行输入" />
+            </li>
+            <p>收入信息</p>
+            <li class="ie_left">总收入（自动计算）（万元）：</li>
+            <li>
+              <input type="text" disabled value="100" placeholder="单行输入" />
+            </li>
+            <li class="ie_left">家庭年收入（万元）：</li>
+            <li>
+              <input type="text" value="40" placeholder="单行输入" />
+            </li>
+            <li class="ie_left">其他收入（万元）：</li>
+            <li>
+              <input type="text" value="60" placeholder="单行输入" />
+            </li>
+            <p>支出信息</p>
+            <li class="ie_left">总支出（自动计算）（万元）：</li>
+            <li>
+              <input type="text" disabled value="80" placeholder="单行输入" />
+            </li>
+            <li class="ie_left">按揭（万元）：</li>
+            <li class="search_currency">
+              <input type="text" value="2" placeholder="单行输入" />
+            </li>
+
+            <li class="ie_left">经营性支出（万元）：</li>
+            <li class="search_currency">
+              <input type="text" value="50" placeholder="单行输入" />
+            </li>
+            <li class="ie_left">水电气（万元）：</li>
+            <li class="search_currency">
+              <input type="text" value="10" placeholder="单行输入" />
+            </li>
+            <li class="ie_left">教育医疗（万元）：</li>
+            <li class="search_currency">
+              <input type="text" value="15" placeholder="单行输入" />
+            </li>
+            <li class="ie_left">其他支出（万元）：</li>
+            <li class="search_currency">
+              <input type="text" value="3" placeholder="单行输入" />
+            </li>
+          </ul>
+          <div class="save" style="padding-top:2rem">
+            <van-button block round type="primary" @click="prev()">保存</van-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="typeCN=='知识库详情'">
+      <div class="knowledge">
+        <h1 class="knowledge_title">营销网格</h1>
+        <p class="knowledge_date">发布时间:2020-08-24</p>
+        <div class="knowledge_body">
+          <!-- <img class="knowledge_img" src="./knowledge.jpg" alt /> -->
+          <p
+            class="knowledge_text"
+          >网格化营销，21世纪的市场营销环境面临着几个重大的变化，首先是市场极度细分，消费群体进一步分化，不同消费群体的数量逐渐变小，消费群体的划分趋向更细致；其次是个人网络服务的发展，尤其是以博客为代表的个人媒体大范围普及兴起，使得信息、广告、媒体向着以个人为单位的方向发展；另外，以快速消费品、电子产品、家居用品为代表的多个市场产品品种极大丰富，新技术的应用导致不断快速地出现新产品、新品牌，市场竞争日趋白热化,广告、渠道、促销等营销工具的张力大大降低，在这方面的投资收益比越来越差，企业和消费者共同面临广告、渠道、促销疲劳症状。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import ChildNav from "../../components/Public/ChildNav";
+import con from "../../assets/grid/location_map.svg";
+export default {
+  components: {
+    ChildNav,
+  },
+  data() {
+    return {
+      radio: "2",
+      customer_number: "112346546",
+      customer_rating: "二级",
+      choose_gender_txt: "男",
+      choose_gender_list: ["男", "女"],
+      choose_gender: false,
+      religious_belief: "无",
+      education_level_txt: "博士",
+      education_level_list: [
+        "博士",
+        "硕士",
+        "本科",
+        "大专",
+        "中专",
+        "高中",
+        "初中",
+        "小学",
+      ],
+      education_level: false,
+      marital_status_txt: "已婚",
+      marital_status_list: ["已婚", "未婚"],
+      marital_status: false,
+      screen_name: "陈晓坛",
+      nation_txt: "汉族",
+      nation_list: ["汉族"],
+      nation: false,
+      childrenStatus_txt: "有",
+      childrenStatus_list: ["有", "无"],
+      childrenStatus: false,
+      customer_hobby: "无",
+      customer_id: "110242199702125858",
+      date_of_birth: "9/20",
+      showDateBirth: false,
+      occupation: "程序员",
+      phone_number: "15840991076",
+      residential_address: "郑州周口市",
+      work_address: "郑州周口市",
+      qq_number: "2548456723",
+      work_unit: "北京卓越联腾",
+      weChat: "45483567953",
+      user_positioning: "175.255,33.71",
+      contact_address: "北京卓越联腾",
+
+      regional_grid_txt: "川汇区/陈州回族街道/城关村",
+      areaList: {
+        province_list: {
+          110000: "川汇区",
+          120000: "项城市",
+          130000: "扶沟县",
+          140000: "西华县",
+          150000: "商水县",
+          160000: "沈丘县",
+        },
+        city_list: {
+          110100: "陈州回族街道",
+          110200: "七一路街道",
+          110300: "荷花路街道",
+          110400: "人和街道",
+          110500: "小桥街道",
+          110600: "李埠口乡",
+
+          120100: "花园街道",
+          120200: "水寨街道",
+          120300: "东方街道",
+          120400: "莲花街道",
+          120500: "千佛阁街道",
+          120600: "光武街",
+
+          130100: "桐丘街道",
+          130200: "扶亭街道",
+          130300: "崔桥镇",
+          130400: "江村镇",
+          130500: "白潭镇",
+          130600: "韭园镇",
+        },
+        county_list: {
+          110101: "城关村",
+          110102: "化河村",
+          110205: "王店村",
+          110206: "许湾村",
+          110301: "城关村",
+          110302: "城郊村",
+          110401: "王皮溜镇",
+          110402: "太清宫镇",
+          110505: "迟营村",
+          110506: "田口村",
+          110601: "胡集村",
+          110702: "古郊村",
+
+          120101: "南顿村",
+          120102: "高寺村",
+          120203: "官会村",
+          120204: "丁集村",
+          120305: "郑郭村",
+          120306: "范集村",
+
+          130101: "包屯村",
+          130102: "曹里村",
+          130203: "大李村",
+          130204: "练寺村",
+          130305: "汴岗村",
+          130306: "范集村",
+        },
+      },
+      regional_grid: false,
+      school: "",
+      major: "",
+      admission_time: "",
+      showAdmission_time: false,
+      graduation_time: "",
+      showGraduation_time: false,
+      corporate_name: "",
+      position: "",
+
+      family_number: "154235945121",
+      family_type_txt: "经营型",
+      family_type_list: ["务工，务农", "经营型"],
+      family_type: false,
+      property_situation_txt: "商品房",
+      property_situation_list: ["无房", "自建", "商品房"],
+      property_situation: false,
+      vehicle_condition_txt: "一辆",
+      vehicle_condition_list: ["无车", "一辆", "两辆", "三辆以上"],
+      vehicle_condition: false,
+      credit_epresentative: "张军",
+      credit_amount: "600",
+      credit_amount: "1000",
+      family_num: "4",
+      business_opening:
+        "活期存款、定期存款、网上银行、手机银行、支付宝支付、信用卡",
+      mainEvaluation: "大家都非常好",
+      detailed_address: "吉林省白城市大安市安广镇大田村",
+      contacts: "张军",
+      household_name: "",
+      household_age: "",
+      annual_income: "",
+      relationship_householder_txt: "",
+      relationship_householder_list: ["户主", "夫妻", "父女", "父子"],
+      relationship_householder: false,
+      select_type_txt: "",
+      select_type_list: ["资产", "贷款"],
+      select_type: false,
+      asset_type_txt: "",
+      asset_type_list: ["房产", "汽车"],
+      asset_type: false,
+      debt_type_txt: "",
+      debt_type_list: ["房产", "汽车"],
+      debt_type: false,
+      evaluation_value: "",
+      amount_liabilities: "",
+      message_income: "",
+      con1: con,
+      active: false,
+      circlePath: {
+        center: {
+          lng: 114.65,
+          lat: 33.37,
+        },
+        radius: 5000,
+      },
+      tabId: 0,
+      token: "",
+      title: "详情",
+      textTitle: "--",
+      content: "",
+      deliverTime: "",
+      deliverDepartment: "",
+      deliverPerson: "",
+      articleId: "",
+      isPlaying: false,
+      dataURL: "",
+      pictureId: undefined,
+      isLGB: true,
+      tpxw: {},
+      isEdit: false,
+      marketing_record: [
+        {
+          id: 1,
+          name: "上门拜访，与负责领导洽谈一些事项",
+          date: "刚刚",
+        },
+        {
+          id: 2,
+          name: "客户出差，电话沟通，等待电话沟通",
+          date: "2020-08-12 9:00",
+        },
+        {
+          id: 3,
+          name: "上门拜访，初步达成意向想去上门拜访",
+          date: "2020-08-10 16:00",
+        },
+      ],
+      show1: false,
+      show2: false,
+      show3: false,
+      show4: false,
+      show5: false,
+      value1: "",
+      value2: "",
+      value3: "",
+      value4: "",
+      value5: "",
+      stock: [
+        {
+          menoy_name: "存款余额",
+          menoy: "500,000.00",
+        },
+        {
+          menoy_name: "活期存款余额",
+          menoy: "500,000.00",
+        },
+        {
+          menoy_name: "定期存款余额",
+          menoy: "500,000.00",
+        },
+        {
+          menoy_name: "大额存单余额",
+          menoy: "500,000.00",
+        },
+        {
+          menoy_name: "贷款余额",
+          menoy: "500,000.00",
+        },
+        {
+          menoy_name: "历史贷款类型",
+          menoy: "抵押贷",
+        },
+        {
+          menoy_name: "最近放贷时间",
+          menoy: "2020-01-01",
+        },
+        {
+          menoy_name: "存贷比",
+          menoy: "50%",
+        },
+      ],
+      education: [
+        {
+          university: "上海交通大学",
+          date: "2005~2008",
+          education: "硕士",
+          major: "计算机科学",
+        },
+        {
+          university: "上海交通大学",
+          date: "2001~2005",
+          education: "本科",
+          major: "计算机科学",
+        },
+      ],
+      work: [
+        {
+          university: "XXXX商贸公司",
+          date: "2005~2008",
+          major: "副总经理",
+        },
+        {
+          university: "XXX外贸公司",
+          date: "2001~2005",
+          major: "职员",
+        },
+      ],
+      family_member: [
+        {
+          name: "张军",
+          age: "年龄：30",
+          relationship: "与户主关系：户主",
+          id: "身份证：110115198008086654",
+          telephone: "电话：18612287876",
+          income: "年收入：40万",
+        },
+      ],
+      assets: [
+        {
+          name: "房产",
+          date: "清查日期：2020-01-01",
+          menoy: "评估价值（万元）：100",
+          id: 1,
+        },
+        {
+          name: "贷款",
+          date: "清查日期：2020-01-01",
+          menoy: "负债金额（万元）：100",
+          id: 2,
+        },
+      ],
+      customer_pool: [
+        {
+          name: "20001",
+          text: "XXXX-网格",
+          id: 0,
+        },
+        {
+          name: "10001",
+          text: "XXXX-网格",
+          id: 1,
+        },
+      ],
+      isPopupVisible: false,
+      showPicker: false,
+      columns: [
+        {
+          text: "川汇区",
+          children: [
+            {
+              text: "陈州回族街道",
+              children: [{ text: "城关村" }, { text: "化河村" }],
+            },
+            {
+              text: "七一路街道",
+              children: [{ text: "王店村" }, { text: "许湾村" }],
+            },
+            {
+              text: "荷花路街道",
+              children: [{ text: "城关村" }, { text: "城郊村" }],
+            },
+            {
+              text: "人和街道",
+              children: [{ text: "王皮溜镇" }, { text: "太清宫镇" }],
+            },
+            {
+              text: "小桥街道",
+              children: [{ text: "迟营村" }, { text: "田口村" }],
+            },
+            {
+              text: "李埠口乡",
+              children: [{ text: "胡集村" }, { text: "古郊村" }],
+            },
+          ],
+        },
+        {
+          text: "淮阳区",
+          children: [
+            {
+              text: "柳湖街道",
+              children: [{ text: "豆门村" }, { text: "冯塘村" }],
+            },
+            {
+              text: "城关回族镇",
+              children: [{ text: "刘振村" }, { text: "许湾村" }],
+            },
+            {
+              text: "新站镇",
+              children: [{ text: "城关村" }, { text: "黄集村" }],
+            },
+            {
+              text: "鲁台镇",
+              children: [{ text: "齐老镇" }, { text: "曹河镇" }],
+            },
+            {
+              text: "四通镇",
+              children: [{ text: "迟营村" }, { text: "田口村" }],
+            },
+            {
+              text: "临蔡镇",
+              children: [{ text: "胡集村" }, { text: "古郊村" }],
+            },
+          ],
+        },
+        {
+          text: "项城市",
+          children: [
+            {
+              text: "花园街道",
+              children: [{ text: "南顿村" }, { text: "高寺村" }],
+            },
+            {
+              text: "水寨街道",
+              children: [{ text: "官会村" }, { text: "丁集村" }],
+            },
+            {
+              text: "东方街道",
+              children: [{ text: "郑郭村" }, { text: "范集村" }],
+            },
+            {
+              text: "莲花街道",
+              children: [{ text: "三店镇" }, { text: "永丰镇" }],
+            },
+            {
+              text: "千佛阁街道",
+              children: [{ text: "迟营村" }, { text: "田口村" }],
+            },
+            {
+              text: "光武街",
+              children: [{ text: "胡集村" }, { text: "古郊村" }],
+            },
+          ],
+        },
+        {
+          text: "扶沟县",
+          children: [
+            {
+              text: "桐丘街道",
+              children: [{ text: "包屯村" }, { text: "曹里村" }],
+            },
+            {
+              text: "扶亭街道",
+              children: [{ text: "大李村" }, { text: "练寺村" }],
+            },
+            {
+              text: "崔桥镇",
+              children: [{ text: "汴岗村" }, { text: "范集村" }],
+            },
+            {
+              text: "江村镇",
+              children: [{ text: "三店镇" }, { text: "永丰镇" }],
+            },
+            {
+              text: "白潭镇",
+              children: [{ text: "迟营村" }, { text: "田口村" }],
+            },
+            {
+              text: "韭园镇",
+              children: [{ text: "胡集村" }, { text: "古郊村" }],
+            },
+          ],
+        },
+        {
+          text: "西华县",
+          children: [
+            {
+              text: "昆山",
+              children: [{ text: "红花村" }, { text: "聂堆村" }],
+            },
+            {
+              text: "娲城",
+              children: [{ text: "东夏村" }, { text: "迟营村" }],
+            },
+            {
+              text: "箕子台个街道",
+              children: [{ text: "叶埠村" }, { text: "皮营" }],
+            },
+            {
+              text: "西夏亭",
+              children: [{ text: "三店镇" }, { text: "永丰镇" }],
+            },
+            {
+              text: "逍遥",
+              children: [{ text: "迟营村" }, { text: "田口村" }],
+            },
+            {
+              text: "奉母",
+              children: [{ text: "胡集村" }, { text: "古郊村" }],
+            },
+          ],
+        },
+        {
+          text: "商水县",
+          children: [
+            {
+              text: "柳湖街道",
+              children: [{ text: "豆门村" }, { text: "冯塘村" }],
+            },
+            {
+              text: "城关回族镇",
+              children: [{ text: "刘振村" }, { text: "许湾村" }],
+            },
+            {
+              text: "新站镇",
+              children: [{ text: "城关村" }, { text: "黄集村" }],
+            },
+            {
+              text: "鲁台镇",
+              children: [{ text: "齐老镇" }, { text: "曹河镇" }],
+            },
+            {
+              text: "四通镇",
+              children: [{ text: "迟营村" }, { text: "田口村" }],
+            },
+            {
+              text: "临蔡镇",
+              children: [{ text: "胡集村" }, { text: "古郊村" }],
+            },
+          ],
+        },
+        {
+          text: "沈丘县",
+          children: [
+            {
+              text: "桐丘街道",
+              children: [{ text: "包屯村" }, { text: "曹里村" }],
+            },
+            {
+              text: "扶亭街道",
+              children: [{ text: "大李村" }, { text: "练寺村" }],
+            },
+            {
+              text: "崔桥镇",
+              children: [{ text: "汴岗村" }, { text: "范集村" }],
+            },
+            {
+              text: "江村镇",
+              children: [{ text: "三店镇" }, { text: "永丰镇" }],
+            },
+            {
+              text: "白潭镇",
+              children: [{ text: "迟营村" }, { text: "田口村" }],
+            },
+            {
+              text: "韭园镇",
+              children: [{ text: "胡集村" }, { text: "古郊村" }],
+            },
+          ],
+        },
+      ],
+      isPopupVisibleFamily: false,
+      isPopupVisibleAssets: false,
+      isPopupVisibleEducation: false,
+      isPopupVisibleWork: false,
+    };
+  },
+  created() {
+    this.typeCN = this.$route.query.title;
+    if (localStorage.getItem("indexTabId")) {
+      this.tabId = Number(localStorage.getItem("indexTabId"));
+      localStorage.removeItem("indexTabId");
+    }
+    this.token = localStorage.getItem("token");
+    this.articleId = this.$route.params.id;
+    this.title = this.$route.query.title;
+    this.isLGB = localStorage.getItem("isLgbWorker") == "0";
+    this.height = 400 * (document.documentElement.clientWidth / 750) + "";
+  },
+
+  methods: {
+    onFamily_type(value) {
+      this.family_type_txt = value;
+      this.family_type = false;
+    },
+    onProperty_situation(value) {
+      this.property_situation_txt = value;
+      this.property_situation = false;
+    },
+    onrelationship_householder(value) {
+      this.relationship_householder_txt = value;
+      this.relationship_householder = false;
+    },
+    onSelect_type(value) {
+      this.select_type_txt = value;
+      this.select_type = false;
+    },
+    onAsset_type(value) {
+      this.asset_type_txt = value;
+      this.asset_type = false;
+    },
+    onDebt_type(value) {
+      this.debt_type_txt = value;
+      this.debt_type = false;
+    },
+    onVehicle_condition(value) {
+      this.vehicle_condition_txt = value;
+      this.vehicle_condition = false;
+    },
+    onSubmit(values) {
+      console.log("submit", values);
+    },
+    onChoose_gender(value) {
+      this.choose_gender_txt = value;
+      this.choose_gender = false;
+    },
+    onEducation_level(value) {
+      this.education_level_txt = value;
+      this.education_level = false;
+    },
+    onMarital_status(value) {
+      this.marital_status_txt = value;
+      this.marital_status = false;
+    },
+    onNation(value) {
+      this.nation_txt = value;
+      this.nation = false;
+    },
+    onChildrenStatus(value) {
+      this.childrenStatus_txt = value;
+      this.childrenStatus = false;
+    },
+    onDateBirth(date) {
+      this.date_of_birth = `${date.getMonth() + 1}/${date.getDate()}`;
+      this.showDateBirth = false;
+    },
+    onAdmission_time(date) {
+      this.admission_time = `${date.getMonth() + 1}/${date.getDate()}`;
+      this.showAdmission_time = false;
+    },
+    onGraduation_time(date) {
+      this.graduation_time = `${date.getMonth() + 1}/${date.getDate()}`;
+      this.showGraduation_time = false;
+    },
+    onRegional_grid(values) {
+      this.regional_grid_txt = values.map((item) => item.name).join("/");
+      this.regional_grid = false;
+    },
+
+    prev() {
+      this.$router.go(-1);
+    },
+    onConfirm(value) {
+      this.value = value;
+      this.showPicker = false;
+    },
+    handler({ BMap, map }) {
+      console.log(BMap, map);
+      this.center.lng = 116.404;
+      this.center.lat = 39.915;
+      this.zoom = 15;
+    },
+    tab(ev) {
+      this.tabId = ev;
+      localStorage.setItem("indexTabId", this.tabId);
+    },
+    openValue1() {
+      this.show1 = !this.show1;
+    },
+    openValue2() {
+      this.show2 = !this.show2;
+    },
+    openValue3() {
+      this.show3 = !this.show3;
+    },
+    openValue4() {
+      this.show4 = !this.show4;
+    },
+    openValue5() {
+      this.show5 = !this.show5;
+    },
+    getvalue1(index, item) {
+      this.value1 = item.name;
+      this.show1 = false;
+    },
+    getvalue2(index, item) {
+      this.value2 = item.name;
+      this.show2 = false;
+    },
+    getvalue3(index, item) {
+      this.value3 = item.name;
+      this.show3 = false;
+    },
+    getvalue4(index, item) {
+      this.value4 = item.name;
+      this.show4 = false;
+    },
+    getvalue5(index, item) {
+      this.value5 = item.name;
+      this.show5 = false;
+    },
+
+    showPopup() {
+      this.isPopupVisible = true;
+    },
+    closePopup() {
+      this.isPopupVisible = false;
+    },
+    handleChange(value) {
+      console.log(`selected ${value}`);
+    },
+    //选中一个item
+    selectItem(thisItem) {
+      if (typeof thisItem.checked == "undefined") {
+        this.$set(thisItem, "checked", true);
+      } else {
+        thisItem.checked = !thisItem.checked;
+      }
+    },
+    showPopupFamily() {
+      this.isPopupVisibleFamily = true;
+    },
+    closePopupFamily() {
+      this.isPopupVisibleFamily = false;
+    },
+    showPopupAssets() {
+      this.isPopupVisibleAssets = true;
+    },
+    closePopupAssets() {
+      this.isPopupVisibleAssets = false;
+    },
+    showPopupEducation() {
+      this.isPopupVisibleEducation = true;
+    },
+    closePopupEducation() {
+      this.isPopupVisibleEducation = false;
+    },
+    showPopupWork() {
+      this.isPopupVisibleWork = true;
+    },
+    closePopupWork() {
+      this.isPopupVisibleWork = false;
+    },
+  },
+  beforeDestroy() {
+    cancel();
+  },
+};
+</script>
+<style scoped>
+.household_base .van-cell >>> .van-field__label {
+  width: 9em;
+}
+.household_have .van-cell >>> .van-field__label {
+  width: 7.5em;
+}
+.CustomerView {
+  padding-top: 46px;
+}
+.padding_lr {
+  padding: 0rem 1rem !important;
+}
+/* 知识库 */
+.knowledge {
+  padding: 1rem;
+  text-align: center;
+}
+.knowledge_title {
+  font-size: 1.3rem;
+  margin: 0rem;
+}
+.knowledge_date {
+  margin: 1.2rem 0rem;
+}
+.knowledge_body {
+  border-top: 0.08rem dotted #bbb;
+  padding-top: 1rem;
+}
+.knowledge_img {
+  width: 100%;
+}
+.knowledge_text {
+  text-indent: 25px;
+  line-height: 1.8rem;
+  text-align: left;
+}
+input {
+  border-radius: 0.3rem;
+}
+.save_pop {
+  background: #fff;
+  text-align: center;
+  padding-bottom: 50px;
+}
+.save_pop button {
+  border: 0.05rem solid #bbb;
+  background: rgb(61, 66, 94);
+  border-radius: 0.4rem;
+  color: #fff;
+  font-size: 14px;
+  width: 6rem;
+  height: 2rem;
+}
+.pop_title {
+  background: rgb(61, 66, 94);
+  text-align: center;
+  font-size: 16px;
+  height: 3rem;
+  line-height: 3rem;
+  color: #fff;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  margin: 0;
+}
+.peasant_households {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+}
+.peasant_households li {
+  width: 35%;
+  height: 2rem;
+  line-height: 2rem;
+  margin-top: 0.5rem;
+}
+.peasant_households li:nth-child(even) {
+  width: 65%;
+}
+.peasant_households li input,
+.peasant_households li textarea,
+.peasant_households li select {
+  border: 0.05rem solid #bbb;
+  border-radius: 0.3rem;
+  width: 100%;
+  padding: 0.2rem 0.5rem;
+}
+.bm-view {
+  width: 100%;
+  height: 15rem;
+}
+.bm-view1 {
+  width: 100%;
+  height: 23rem;
+}
+.checked::before {
+  position: absolute;
+  content: "";
+  width: 0.8rem;
+  height: 0.8rem;
+  top: 0.1rem;
+  background: rgb(61, 66, 94);
+  left: 0.1rem;
+  border-radius: 100%;
+}
+.checked {
+  position: relative;
+  background: #fff;
+  border: 0.1rem solid rgb(61, 66, 94) !important;
+  border-radius: 100%;
+}
+.cell_dashed {
+  border-bottom: 0.001rem dashed #e8e8e8;
+  height: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.mission_details {
+  background: #fff;
+  padding-top: 0.5rem;
+  position: relative;
+}
+.mission_details li {
+  margin-bottom: 0.7rem;
+  padding-left: 0.5rem;
+}
+.mission_details li img {
+  width: 1.4rem;
+  vertical-align: bottom;
+  margin: 0rem 0rem 0rem 2rem;
+}
+.mission_details li a {
+  text-decoration: none;
+  float: right;
+  margin-right: 1rem;
+}
+.mission_details li .telephone {
+  float: right;
+  margin-right: 1rem;
+}
+.mission_details li:last-child {
+  padding-bottom: 0.5rem;
+}
+.marketing_record {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 0.5rem 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8;
+}
+.marketing_record .marketing_record_date {
+  width: 30%;
+  margin: 0rem 0rem 0rem 0rem;
+}
+.marketing_record .marketing_record_name {
+  margin: 0rem;
+  width: 50%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.marketing_record img {
+  float: right;
+}
+.add_record {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 100%;
+  background-color: rgb(61, 66, 94);
+  color: #fff;
+}
+.mission_details .schedule_star {
+  display: inline-block;
+  margin: 0rem 0rem 0rem 1.6rem;
+}
+.mission_details .schedule_star img {
+  width: 1.2rem;
+  margin: 0rem;
+}
+.cur {
+  color: #df0f0f;
+  position: relative;
+}
+.stock {
+  padding: 0rem;
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.stock p {
+  margin: 0.5rem 0rem 0rem;
+}
+.stock:last-child {
+  padding-bottom: 0.5rem;
+}
+.stock_have p {
+  width: 33.3%;
+}
+
+.stock li {
+  width: 60%;
+  /* text-align: right; */
+  margin: 0.5rem 0rem;
+}
+.stock li:nth-child(odd) {
+  width: 38%;
+}
+.stock li input,
+.stock li select {
+  border: 0.05rem solid #bbb;
+  background-color: #fff;
+  height: 2rem;
+  border-radius: 0.3rem;
+  padding-left: 0.5rem;
+  width: 100%;
+}
+textarea {
+  border: 0.05rem solid #bbb;
+  background-color: #fff;
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+}
+.cw_stock {
+  line-height: 2rem;
+}
+.save {
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.5rem;
+  padding-bottom: 50px;
+}
+.save button {
+  border: 0.05rem solid #bbb;
+  background: #fff;
+  color: #000;
+  width: 6rem;
+  height: 2rem;
+  border-radius: 0.4rem;
+}
+.save1 {
+  background: #fff;
+  text-align: center;
+  padding-bottom: 50px;
+}
+.save1 button {
+  border: 0.05rem solid #bbb;
+  background: rgb(61, 66, 94);
+  border-radius: 0.4rem;
+  color: #fff;
+  width: 6rem;
+  line-height: 2rem;
+}
+.cw_stock1 li {
+  text-align: left;
+}
+.stock_education {
+  position: relative;
+  padding: 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8;
+}
+.end_line {
+  margin: 1rem;
+  text-align: center;
+  color: #c1b9b9;
+  font-size: 1rem;
+}
+.stock_education div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.stock_education .delete {
+  color: #1432e3;
+  cursor: pointer;
+}
+.add_record {
+  position: fixed;
+  bottom: 3rem;
+  right: 2rem;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 100%;
+  background-color: rgb(61, 66, 94);
+  color: #fff;
+  font-size: 1.5rem;
+}
+.text_area {
+  background: #fff;
+  width: 100%;
+  text-align: center;
+  padding: 0.5rem 1rem;
+}
+.text_area p {
+  padding-top: 0.5rem;
+}
+.text_area textarea {
+  border: 0.05rem solid #bbb;
+  width: 100%;
+}
+.contact {
+  background: #fff;
+}
+.contact li {
+  width: 100%;
+  padding: 0.5rem 0rem;
+}
+.contact li input {
+  width: 58%;
+  border-radius: 0.3rem;
+  border: 0.05rem solid #bbb;
+  height: 2rem;
+  padding-left: 0.5rem;
+  display: inline-block;
+}
+.contact li p {
+  width: 58%;
+  height: 2rem;
+  padding-left: 0.5rem;
+  display: inline-block;
+  position: relative;
+}
+.contact li p input {
+  width: 100%;
+}
+.contact li p img {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  width: 1.2rem;
+}
+.yes_no li input,
+.yes_no li select {
+  border-radius: 0.4rem;
+}
+.search_currency {
+  position: relative;
+}
+.search_currency img {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  width: 1.2rem;
+}
+.approval_Passed {
+  position: absolute;
+  text-align: center;
+  width: 4.5rem;
+  line-height: 1.5rem;
+  border: 1px solid #3cc8ab;
+  top: 1rem;
+  color: #3cc8ab;
+  font-size: 0.8rem;
+  left: 17%;
+}
+.approval_Passed1 {
+  position: absolute;
+  text-align: center;
+  width: 4.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border: 1px solid #7e4a46;
+  top: 1rem;
+  color: #7e4a46;
+  font-size: 0.8rem;
+  left: 17%;
+}
+.income_expenditure {
+  padding: 0rem 1rem;
+  background: #fff;
+  width: calc(100% - 4rem);
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.income_expenditure p {
+  width: 100%;
+  color: #000;
+  font-size: 0.9rem;
+  font-weight: 550;
+  margin: 0;
+}
+.income_expenditure .ie_left {
+  width: calc(60% - 2rem);
+  text-align: right;
+  margin-right: 2rem;
+}
+.income_expenditure li {
+  width: 40%;
+  margin-bottom: 0.5rem;
+}
+.income_expenditure li input {
+  width: 100%;
+  border: 0.05rem solid #bbb;
+  border-radius: 0;
+  padding: 0rem 0.5rem;
+  border-radius: 0.3rem;
+}
+.have_popup {
+  position: relative;
+}
+.have_popup img {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.2rem;
+  width: 1.5rem;
+}
+.save {
+  text-align: center;
+  padding-bottom: 50px;
+}
+.save button {
+  border: 0.05rem solid #bbb;
+  background: rgb(61, 66, 94);
+  color: #fff;
+  width: 6rem;
+  height: 2rem;
+  border-radius: 0.3rem;
+}
+@media screen and (min-width: 320px) and (max-width: 374px) {
+  li,
+  select,
+  input,
+  p,
+  div,
+  span {
+    font-size: 0.8rem;
+  }
+  /*placeholder样式-开始*/
+  input::-webkit-input-placeholder {
+    font-size: 0.8rem !important;
+  }
+  input::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    font-size: 0.8rem !important;
+  }
+  input:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    font-size: 0.8rem !important;
+  }
+  input:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    font-size: 0.8rem !important;
+  }
+  .tabTitle .tabList {
+    border-bottom: 0.001rem solid #e8e8e8 !important;
+  }
+  .cur {
+    font-size: 0.8rem;
+  }
+  .task_management {
+    line-height: 1.6rem;
+    width: 5rem;
+    height: 1.6rem;
+    top: 0.5rem;
+    font-size: 0.8rem;
+    right: 1rem;
+  }
+  .screen_content input {
+    height: 2rem;
+  }
+  .customer_list ul li {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem !important;
+  }
+  .approval .approval_Passed {
+    height: 1.7rem;
+    line-height: 1.5rem;
+  }
+  .approval .approval_Passed1 {
+    height: 1.7rem;
+    line-height: 1.5rem;
+  }
+  .end_line {
+    font-size: 0.7rem;
+  }
+  .add_record {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+  .mission_details li a,
+  .mission_details li p {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+  .mission_details li {
+    margin-bottom: 0.5rem;
+  }
+  .stock li {
+    margin: 0.3rem 0rem;
+  }
+  .save1 button {
+    font-size: 0.8rem;
+    line-height: 1.8rem;
+    height: 1.8rem;
+    width: 5rem;
+  }
+  .pop_title {
+    font-size: 1rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+  }
+  .save_pop button {
+    font-size: 0.8rem;
+    line-height: 1.8rem;
+    height: 1.8rem;
+    width: 5rem;
+  }
+  .save_pop {
+    margin-top: 2rem !important;
+    padding-bottom: 2.5rem;
+  }
+  .stock_education {
+    padding: 0.5rem;
+  }
+}
+</style>

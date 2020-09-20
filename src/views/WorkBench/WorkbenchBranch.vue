@@ -15,8 +15,8 @@
           <li class="newCustomerList" style="width:100%">
             <router-link
               tag="p"
-              style="width:98%;margin:0"
-              :to='{ name: "ArticleViewBasic", query: { title: "客户视图" }}'
+              style="width:98%;margin:4px 0px"
+              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' }}"
             >{{thisItem.name}}</router-link>
             <p style="width:1%"></p>
             <p class="schedule_star">
@@ -229,8 +229,8 @@
               </dd>
             </dl>
             <div style="margin-top:2rem" class="save">
-              <button style="margin-right:1rem" @click="closePopup()">确定</button>
-              <button @click="closePopup()">取消</button>
+              <van-button style="margin-right:1rem" round type="primary" @click="closePopup()">保存</van-button>
+              <van-button round type="primary" @click="closePopup()">取消</van-button>
             </div>
           </div>
         </div>
@@ -238,22 +238,19 @@
     </div>
     <div v-if="typeCN=='客户'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input type="text" placeholder="客户名称" />
-        <button @click="$router.push('/ContentManage/PutRecord/?title=筛选')">筛选</button>-->
-        <van-search v-model="value" show-action placeholder="客户名称" @search="onSearch">
+        <van-search v-model="search_txt" show-action placeholder="客户名称" @search="onSearch">
           <template #action>
-            <div @click="onSearch">筛选</div>
+            <div @click="$router.push('/PutRecord/?title=筛选')">筛选</div>
           </template>
         </van-search>
-        <!-- @click="showPopupScreen()" -->
       </div>
       <div class="customer_list">
         <ul v-for="(thisItem,index) in newCustomerList" :key="index">
           <li class="newCustomerList">
-            <p
-              @click="$router.push('/ContentManage/ArticleViewBasic/'+thisItem.id+'?title=客户视图')"
-            >{{thisItem.name}}</p>
+            <router-link
+              tag="p"
+              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' }}"
+            >{{thisItem.name}}</router-link>
             <p>
               <span v-if="thisItem.business1" class="business1">{{thisItem.business1}}</span>
               <span v-if="thisItem.business2" class="business2">{{thisItem.business2}}</span>
@@ -262,7 +259,7 @@
             <p class="schedule_star">
               <van-rate
                 v-model="value"
-                :size="25"
+                :size="14"
                 color="blue"
                 void-icon="star"
                 void-color="#eee"
@@ -415,29 +412,21 @@
     </div>
     <div v-if="typeCN=='黑名单'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input style="width: 98%;" type="text" placeholder="客户名称" />-->
         <van-search v-model="search_txt" placeholder="客户名称" />
         <!-- <button>筛选</button> -->
       </div>
       <div class="customer_list">
-        <ul
-          v-for="(thisItem,index) in black_list"
-          :key="index"
-          @click="$router.push('/ContentManage/ArticleViewBasic/'+thisItem.id+'?title=客户视图')"
-        >
-          <li>
-            <p>{{thisItem.name}}</p>
+        <ul>
+          <li v-for="(thisItem,index) in black_list" :key="index">
+            <router-link
+              tag="p"
+              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' }}"
+            >{{thisItem.name}}</router-link>
             <p>{{thisItem.date}}</p>
             <p v-if="thisItem.have==2" class="schedule_star">
-              <!-- <img src="./blue_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />-->
               <van-rate
                 v-model="value"
-                :size="25"
+                :size="14"
                 color="#ffd21e"
                 void-icon="star"
                 void-color="#eee"
@@ -451,8 +440,6 @@
     </div>
     <div v-if="typeCN=='成员轨迹'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input style="width: 98%;" type="text" placeholder="用户名称" />-->
         <van-search v-model="search_txt" placeholder="用户名称" />
         <!-- <button>筛选</button> -->
       </div>
@@ -539,9 +526,6 @@
     </div>
     <div v-if="typeCN=='任务管理'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input type="text" placeholder />
-        <button>高级</button>-->
         <van-search v-model="search_txt" show-action placeholder="客户名称" @search="onSearch">
           <template #action>
             <div @click="onSearch">高级</div>
@@ -549,32 +533,29 @@
         </van-search>
       </div>
       <div class="customer_list success">
-        <list>
-          <item
-            v-for="(thisItem,index) in new_task"
-            :key="index"
-            @click.native="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-            style="padding:0.5rem;"
-          >
-            <div class="right_content success_failure">
-              <div class="new_task">
-                <p style="font-weight:550">{{thisItem.company_source}}</p>
-                <p style="text-align:center!important;width: 38%!important;">{{thisItem.menoy}}</p>
-                <p style="width: 38%;">{{thisItem.date_start}}</p>
-              </div>
-              <div class="new_task">
-                <p>{{thisItem.company_introduce}}</p>
-                <p style="text-align:center!important;width: 38%!important;">{{thisItem.name}}</p>
-                <p style="width: 38%;">{{thisItem.date_end}}</p>
-              </div>
-
-              <div
-                v-if="thisItem.success_failure"
-                :class="thisItem.sf_state==1 ? 'sf_state' : 'sf_states'"
-              >{{thisItem.success_failure}}</div>
+        <router-link
+          tag="div"
+          :to="{ name: 'PutRecord', query: { title: '任务详情' }}"
+          style="padding:0.5rem;"
+        >
+          <div v-for="(thisItem,index) in new_task" :key="index" class="success_failure">
+            <div class="new_task">
+              <p style="font-weight:550">{{thisItem.company_source}}</p>
+              <p style="text-align:center!important;">{{thisItem.menoy}}</p>
+              <p>{{thisItem.date_start}}</p>
             </div>
-          </item>
-        </list>
+            <div class="new_task">
+              <p>{{thisItem.company_introduce}}</p>
+              <p style="text-align:center!important;">{{thisItem.name}}</p>
+              <p>{{thisItem.date_end}}</p>
+            </div>
+
+            <div
+              v-if="thisItem.success_failure"
+              :class="thisItem.sf_state==1 ? 'sf_state' : 'sf_states'"
+            >{{thisItem.success_failure}}</div>
+          </div>
+        </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
         <!-- <ul
           v-for="(thisItem,index) in task_management"
@@ -612,29 +593,20 @@
     </div>
     <div v-if="typeCN=='潜在客户'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input style="width:98%" type="text" placeholder="客户名称" />-->
-        <!-- <button>筛选</button> -->
         <van-search v-model="search_txt" placeholder="客户名称" />
       </div>
       <div class="customer_list">
-        <ul
-          v-for="(thisItem,index) in customer_list"
-          :key="index"
-          @click="$router.push('/ContentManage/PutRecord/?title=潜在客户详情')"
-        >
-          <li>
-            <p>{{thisItem.name}}</p>
+        <ul>
+          <li v-for="(thisItem,index) in customer_list" :key="index">
+            <router-link
+              tag="p"
+              :to="{ name: 'PutRecord', query: { title: '潜在客户详情' }}"
+            >{{thisItem.name}}</router-link>
             <p>{{thisItem.text}}</p>
             <p class="schedule_star">
-              <!-- <img src="./blue_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />-->
               <van-rate
                 v-model="value"
-                :size="25"
+                :size="14"
                 color="#ffd21e"
                 void-icon="star"
                 void-color="#eee"
@@ -649,29 +621,26 @@
       <div
         style="margin-left:85%;position: fixed !important;float: right;z-index: 9999;align-items: right;bottom: 50px;right:5%"
       >
-        <span class="add_record" @click="$router.push('/ContentManage/PutRecord/?title=潜在客户添加')">+</span>
+        <router-link
+          class="add_record"
+          tag="span"
+          :to="{ name: 'PutRecord', query: { title: '潜在客户添加' }}"
+        >+</router-link>
       </div>
     </div>
     <div v-if="typeCN=='农户'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input style="width:98%" type="text" placeholder="客户名称" />-->
-        <!-- <button>筛选</button> -->
         <van-search v-model="search_txt" placeholder="客户名称" />
       </div>
       <div class="customer_list">
-        <ul
-          v-for="(thisItem,index) in peasant_household"
-          :key="index"
-          @click="$router.push('/ContentManage/CustomerView/?title=农户')"
-        >
-          <li>
+        <router-link tag="ul" :to="{ name: 'CustomerView', query: { title: '农户' }}">
+          <li v-for="(thisItem,index) in peasant_household" :key="index">
             <p>{{thisItem.num}}</p>
             <p>{{thisItem.name}}</p>
             <p>{{thisItem.text}}</p>
             <p>{{thisItem.date}}</p>
           </li>
-        </ul>
+        </router-link>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       <div
@@ -683,32 +652,61 @@
         <div class="isPopupVisibleSign_content">
           <p class="pop_title">添加</p>
           <div class="pop_content">
-            <ul class="stock cw_stock peasant_households">
-              <li>*家庭类型：</li>
-              <li>
-                <select name id>
-                  <option value="务工，务农型">务工，务农</option>
-                  <option value="经营型">经营型</option>
-                </select>
-              </li>
-              <li>*区域网格：</li>
-              <li>
-                <input type="text" placeholder="搜索区域网格" />
-                <!-- <img src="./search.svg" alt /> -->
-              </li>
-              <li>居住地址：</li>
-              <li>
-                <input type="text" placeholder="单行输入" />
-              </li>
-              <li>经纬度：</li>
-              <li>
-                <input type="text" placeholder="点击图标地图选取" />
-                <img src="../../assets/WorkBench/md-room.svg" alt />
-              </li>
-            </ul>
+            <van-field
+              readonly
+              clickable
+              name="picker"
+              :value="family_type_txt"
+              label="家庭类型："
+              placeholder="点击选择家庭类型"
+              @click="family_type = true"
+            />
+            <van-popup v-model="family_type" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="family_type_list"
+                @confirm="onFamily_type"
+                @cancel="family_type = false"
+              />
+            </van-popup>
+            <van-field
+              readonly
+              clickable
+              name="area"
+              :value="regional_grid_txt"
+              label="区域网格："
+              placeholder="点击选择区域网格"
+              @click="regional_grid = true"
+            />
+            <van-popup v-model="regional_grid" position="bottom">
+              <van-area
+                :area-list="areaList"
+                @confirm="onRegional_grid"
+                @cancel="regional_grid = false"
+              />
+            </van-popup>
+            <van-field
+              v-model="residential_address"
+              name="居住地址："
+              label="居住地址："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写居住地址' }]"
+            />
+            <van-field
+              v-model="user_positioning"
+              name="经纬度数："
+              label="经纬度数："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写经纬度数' }]"
+            />
             <div style="margin-top:2rem" class="save">
-              <button style="margin-right:1rem" @click="closePopupFamily()">保存</button>
-              <button style="margin-right:1rem" @click="closePopupFamily()">取消</button>
+              <van-button
+                style="margin-right:1rem"
+                round
+                type="primary"
+                @click="closePopupFamily()"
+              >保存</van-button>
+              <van-button round type="primary" @click="closePopupFamily()">取消</van-button>
             </div>
           </div>
         </div>
@@ -716,9 +714,6 @@
     </div>
     <div v-if="typeCN=='客户认领'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input style="width:98%" type="text" placeholder="客户名称" />-->
-        <!-- <button>筛选</button> -->
         <van-search v-model="search_txt" placeholder="客户名称" />
       </div>
       <div class="customer_list">
@@ -727,14 +722,9 @@
             <p style="width:98%">{{thisItem.name}}</p>
             <p style="width:1%"></p>
             <p class="schedule_star">
-              <!-- <img src="./blue_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />-->
               <van-rate
                 v-model="value"
-                :size="25"
+                :size="14"
                 color="#ffd21e"
                 void-icon="star"
                 void-color="#eee"
@@ -745,11 +735,7 @@
               <a style="text-decoration:none;margin-right:0.6rem">认领</a>
             </p>
           </li>
-          <div
-            class="selctBtn"
-            :class="thisItem.checked?'checked':''"
-            @click="selectItem(thisItem)"
-          ></div>
+          <van-checkbox class="selctBtn" v-model="thisItem.id" shape="square"></van-checkbox>
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
@@ -760,30 +746,30 @@
         <div class="isPopupVisibleSign_content">
           <p class="pop_title">批量认领</p>
           <div class="pop_content">
-            <input
-              style="border:0.05rem solid #bbb;width:100%;padding:0rem 0.5rem"
-              type="text"
-              placeholder="网格名称"
+            <van-field
+              v-model="grid_name"
+              name="网格名称"
+              label="网格名称"
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写网格名称' }]"
             />
-            <!-- <select
-              style="border:0.05rem solid #bbb;width:100%;padding:0.3rem 0.5rem;background:#fff;border-radius:0.3rem;margin-top:0.5rem"
-              name
-              id
-            >
-              <option value="网格类型">网格类型</option>
-              <option value="自定义">自定义</option>
-              <option value="行政区域">行政区域</option>
-            </select>-->
-            <select
-              style="border:0.05rem solid #bbb;width:100%;padding:0.3rem 0.5rem;background:#fff;border-radius:0.3rem;margin-top:0.5rem"
-              name
-              id
-            >
-              <option value="网格主题">网格主题</option>
-              <option value="2020特色存款营销">2020特色存款营销</option>
-              <option value="etc开通">etc开通</option>
-              <option value="助农贷款">助农贷款</option>
-            </select>
+            <van-field
+              readonly
+              clickable
+              name="picker"
+              :value="grid_theme_txt"
+              label="网格主题"
+              placeholder="点击选择网格主题"
+              @click="grid_theme = true"
+            />
+            <van-popup v-model="grid_theme" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="grid_theme_list"
+                @confirm="onGrid_theme"
+                @cancel="grid_theme = false"
+              />
+            </van-popup>
             <dl>
               <dt
                 style="display: flex;background:#E6E3E3;border:0.05rem solid #bbb;justify-content: space-around;line-height:2rem;margin-top:1rem"
@@ -792,22 +778,10 @@
                 <p style="margin:0rem">名称</p>
               </dt>
               <dd
-                style="display: flex;flex-flow: row;position: relative;align-items: center;height: 2rem;margin-top: 0.3rem;"
+                style="display: flex;flex-flow: row;position: relative;align-items: center;height: 2rem;margin-top: 0.3rem;margin-left:5px;"
                 v-for="(thisItem,index) in customer_pool_pop"
                 :key="index"
               >
-                <!-- <div
-                  style="width: 1.2rem;height: 1.2rem;border: 0.05rem solid #000;margin: 1rem 0rem 0rem 1.2rem; cursor: pointer;border-radius: 100%;"
-                  :class="thisItem.checked?'checked':''"
-                  @click="selectItem(thisItem)"
-                ></div>
-                <li
-                  style="width:90%;list-style-type:none;display: flex;justify-content: space-around;align-items: flex-end;"
-                  class="newCustomerList"
-                >
-                  <p style="margin:0rem">{{thisItem.name}}</p>
-                  <p style="margin:0rem">{{thisItem.text}}</p>
-                </li>-->
                 <van-radio-group v-model="radio" style>
                   <van-radio :name="thisItem.id" style="width:100%;height:2rem">
                     <li
@@ -821,8 +795,8 @@
               </dd>
             </dl>
             <div style="margin-top:3rem" class="save">
-              <button style="margin-right:1rem" @click="closePopup()">确定</button>
-              <button @click="closePopup()">取消</button>
+              <van-button style="margin-right:1rem" round type="primary" @click="closePopup()">保存</van-button>
+              <van-button round type="primary" @click="closePopup()">取消</van-button>
             </div>
           </div>
         </div>
@@ -830,9 +804,6 @@
     </div>
     <div v-if="typeCN=='客户认领审批'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input style="width:98%" type="text" placeholder="客户名称" />-->
-        <!-- <button>筛选</button> -->
         <van-search v-model="search_txt" placeholder="客户名称" />
       </div>
       <div class="customer_list">
@@ -845,14 +816,9 @@
               <span v-if="thisItem.text==3" class="approval_Passed">已通过</span>
             </p>
             <p class="schedule_star">
-              <!-- <img src="./blue_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />-->
               <van-rate
                 v-model="value"
-                :size="25"
+                :size="14"
                 color="#ffd21e"
                 void-icon="star"
                 void-color="#eee"
@@ -867,9 +833,6 @@
     </div>
     <div v-if="typeCN=='最近联系'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input style="width:98%" type="text" placeholder="客户名称" />-->
-        <!-- <button>筛选</button> -->
         <van-search v-model="search_txt" placeholder="客户名称" />
       </div>
       <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
@@ -878,23 +841,17 @@
         <li @click="tab(2)" :class="tabId==2?'cur':''">两周内</li>
       </ul>
       <div v-show="tabId===0" class="customer_list">
-        <ul
-          v-for="(thisItem,index) in data_customer_list1"
-          :key="index"
-          @click="$router.push('/ContentManage/ArticleViewBasic/'+thisItem.id+'?title=客户视图')"
-        >
-          <li>
-            <p>{{thisItem.name}}</p>
+        <ul>
+          <li v-for="(thisItem,index) in data_customer_list1" :key="index">
+            <router-link
+              tag="p"
+              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' }}"
+            >{{thisItem.name}}</router-link>
             <p>{{thisItem.text}}</p>
             <p class="schedule_star">
-              <!-- <img src="./blue_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />-->
               <van-rate
                 v-model="value"
-                :size="25"
+                :size="14"
                 color="#ffd21e"
                 void-icon="star"
                 void-color="#eee"
@@ -906,23 +863,17 @@
         </ul>
       </div>
       <div v-show="tabId===1" class="customer_list">
-        <ul
-          v-for="(thisItem,index) in data_customer_list2"
-          :key="index"
-          @click="$router.push('/ContentManage/ArticleViewBasic/'+thisItem.id+'?title=客户视图')"
-        >
-          <li>
-            <p>{{thisItem.name}}</p>
+        <ul>
+          <li v-for="(thisItem,index) in data_customer_list2" :key="index">
+            <router-link
+              tag="p"
+              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' }}"
+            >{{thisItem.name}}</router-link>
             <p>{{thisItem.text}}</p>
             <p class="schedule_star">
-              <!-- <img src="./blue_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />-->
               <van-rate
                 v-model="value"
-                :size="25"
+                :size="14"
                 color="#ffd21e"
                 void-icon="star"
                 void-color="#eee"
@@ -934,24 +885,17 @@
         </ul>
       </div>
       <div v-show="tabId===2" class="customer_list">
-        <ul
-          v-for="(thisItem,index) in data_customer_list3"
-          :key="index"
-          @click="$router.push('/ContentManage/ArticleViewBasic/'+thisItem.id+'?title=客户视图')"
-        >
-        
-          <li>
-            <p>{{thisItem.name}}</p>
+        <ul>
+          <li v-for="(thisItem,index) in data_customer_list3" :key="index">
+            <router-link
+              tag="p"
+              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' }}"
+            >{{thisItem.name}}</router-link>
             <p>{{thisItem.text}}</p>
             <p class="schedule_star">
-              <!-- <img src="./blue_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />
-              <img src="./grey_star.svg" alt />-->
               <van-rate
                 v-model="value"
-                :size="25"
+                :size="14"
                 color="#ffd21e"
                 void-icon="star"
                 void-color="#eee"
@@ -962,7 +906,6 @@
           </li>
         </ul>
       </div>
-
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
     </div>
     <div v-if="typeCN=='工作日志'">
@@ -1009,10 +952,7 @@
           <li @click="tab1(3)" :class="tabId==3?'cur':''">上半年</li>
           <li @click="tab1(4)" :class="tabId==4?'cur':''">下半年</li>
         </ul>
-        <ul
-          class="ranking_list"
-          style="background:#f5f5f5;margin:0rem;width:100%;padding:0rem 1rem"
-        >
+        <ul class="ranking_list" style="background:#f5f5f5;margin:0rem;padding:0rem 1rem">
           <li @click="tab2(5)" :class="tabId1==5?'cur':''">存款</li>
           <li @click="tab2(6)" :class="tabId1==6?'cur':''">贷款</li>
           <li @click="tab2(7)" :class="tabId1==7?'cur':''">理财</li>
@@ -1022,7 +962,7 @@
         </ul>
         <ul
           class="ranking_list"
-          style="justify-content: start;background:#f5f5f5;margin:0rem;width:100%;padding:0rem 1rem"
+          style="justify-content: start;background:#f5f5f5;margin:0rem;padding:0rem 1rem"
         >
           <li @click="tab2(11)" :class="tabId1==11?'cur':''" style="margin-right:1.5rem">跑动里程</li>
           <li @click="tab2(12)" :class="tabId1==12?'cur':''" style="margin-right:1.5rem">拜访客户数量</li>
@@ -1036,7 +976,7 @@
               <li>成果</li>
             </ul>
           </dt>
-          <dd>
+          <dd style="margin-left: 0px;">
             <ul
               v-for="(item,index) in achievements_list"
               :key="index"
@@ -1205,6 +1145,73 @@ export default {
     return {
       title: "",
       typeCN: "",
+      family_type_txt: "",
+      family_type_list: ["务工，务农", "经营型"],
+      family_type: false,
+      regional_grid_txt: "",
+      areaList: {
+        province_list: {
+          110000: "川汇区",
+          120000: "项城市",
+          130000: "扶沟县",
+          140000: "西华县",
+          150000: "商水县",
+          160000: "沈丘县",
+        },
+        city_list: {
+          110100: "陈州回族街道",
+          110200: "七一路街道",
+          110300: "荷花路街道",
+          110400: "人和街道",
+          110500: "小桥街道",
+          110600: "李埠口乡",
+
+          120100: "花园街道",
+          120200: "水寨街道",
+          120300: "东方街道",
+          120400: "莲花街道",
+          120500: "千佛阁街道",
+          120600: "光武街",
+
+          130100: "桐丘街道",
+          130200: "扶亭街道",
+          130300: "崔桥镇",
+          130400: "江村镇",
+          130500: "白潭镇",
+          130600: "韭园镇",
+        },
+        county_list: {
+          110101: "城关村",
+          110102: "化河村",
+          110205: "王店村",
+          110206: "许湾村",
+          110301: "城关村",
+          110302: "城郊村",
+          110401: "王皮溜镇",
+          110402: "太清宫镇",
+          110505: "迟营村",
+          110506: "田口村",
+          110601: "胡集村",
+          110702: "古郊村",
+
+          120101: "南顿村",
+          120102: "高寺村",
+          120203: "官会村",
+          120204: "丁集村",
+          120305: "郑郭村",
+          120306: "范集村",
+
+          130101: "包屯村",
+          130102: "曹里村",
+          130203: "大李村",
+          130204: "练寺村",
+          130305: "汴岗村",
+          130306: "范集村",
+        },
+      },
+      regional_grid: false,
+      residential_address: "",
+      user_positioning: "",
       grid_theme: 0,
       grid_theme_txt: "",
       grid_theme_list: ["网格主题", "2020特色存款营销", "etc开通", "助农贷款"],
@@ -1490,34 +1497,6 @@ export default {
           success_failure: "成功",
         },
       ],
-      // task_management: [
-      //   {
-      //     name1: "产品营销",
-      //     date: "2020-08-30日前",
-      //     name2: "企业贷",
-      //     percentage1: "100%",
-      //     color1: "#C1B9B9",
-      //     color2: "#3CC8AB",
-      //     company: "XXXX支行",
-      //     person: "张男",
-      //     target: "目标  100万/100万",
-      //     percentage2: "100%",
-      //     num: 1,
-      //   },
-      //   {
-      //     name1: "资料采集",
-      //     date: "2020-08-30日前",
-      //     name2: "农户家庭",
-      //     percentage1: "50%",
-      //     color1: "#C1B9B9",
-      //     color2: "#D33E42",
-      //     company: "XXXX支行",
-      //     person: "张男",
-      //     target: "目标  10户/30户",
-      //     percentage2: "30%",
-      //     num: 0,
-      //   },
-      // ],
       work_log: [
         {
           name: "对北京卓越联腾科技有限公司进行企业贷产品上门营销",
@@ -1702,6 +1681,14 @@ export default {
     this.typeCN = this.$route.query.title;
   },
   methods: {
+    onFamily_type(value) {
+      this.family_type_txt = value;
+      this.family_type = false;
+    },
+    onRegional_grid(values) {
+      this.regional_grid_txt = values.map((item) => item.name).join("/");
+      this.regional_grid = false;
+    },
     onGrid_theme(value) {
       this.grid_theme_txt = value;
       this.grid_theme = false;
@@ -1922,9 +1909,9 @@ export default {
   },
   mounted() {
     this.drawLine();
-    this.$nextTick(function () {
-      this.drawPie("main");
-    });
+    // this.$nextTick(function () {
+    //   this.drawPie("main");
+    // });
     let myChart = echarts.init(document.getElementById("gaugeContainer"));
     myChart.setOption(option);
   },
@@ -1933,6 +1920,9 @@ export default {
 <style scoped>
 * {
   font-size: 14px;
+}
+.van-checkbox__icon {
+  height: 20px;
 }
 .marter span {
   margin: 0px 2px;
@@ -1954,12 +1944,14 @@ export default {
 .new_task {
   width: 100%;
   display: flex;
+  justify-content: space-between;
 }
 .new_task p {
-  width: 30%;
+  margin: 0.5rem 0;
 }
 .success_failure {
   position: relative;
+  border-bottom: 1px solid #e8e8e8;
 }
 .success_failure .sf_state {
   position: absolute;
@@ -2297,12 +2289,12 @@ export default {
 .customer_list ul {
   background: #fff;
   /* margin-top: 10px; */
-  border-bottom: 0.001rem solid #e8e8e8 !important;
 }
 .customer_list ul li {
   display: flex;
   flex-wrap: wrap;
   padding: 0.5rem 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8 !important;
 }
 .customer_list ul li p {
   width: 60%;
