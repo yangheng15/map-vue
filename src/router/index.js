@@ -10,10 +10,12 @@ const Grid = () => import('@/views/Grid/Grid.vue');
 const GridMap = () => import('@/views/Grid/GridMap.vue')
 const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
 const WorkBench = () => import('@/views/WorkBench/WorkBench.vue');
+const WorkbenchBranch = () => import('@/views/WorkBench/WorkbenchBranch.vue');
+const ArticleViewBasic = () => import('@/views/WorkBench/ArticleViewBasic.vue');
+const PutRecord = () => import('@/views/WorkBench/PutRecord.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
-
 
 const routes = [
   {
@@ -42,6 +44,21 @@ const routes = [
     path: '/WorkBench',
     name: 'WorkBench',
     component: WorkBench,
+  },
+  {
+    path: '/WorkbenchBranch',
+    name: 'WorkbenchBranch',
+    component: WorkbenchBranch,
+  },
+  {
+    path: '/ArticleViewBasic',
+    name: 'ArticleViewBasic',
+    component: ArticleViewBasic,
+  },
+  {
+    path: '/PutRecord',
+    name: 'PutRecord',
+    component: PutRecord,
   },
   {
     path: '/User',

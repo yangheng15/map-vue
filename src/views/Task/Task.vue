@@ -8,86 +8,80 @@
         <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">待评价</li>
       </ul>
       <div v-show="tabId===0">
-        <list>
-          <item
-            v-for="(thisItem,index) in new_task"
-            :key="index"
-            @click.native="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-          >
-            <!-- <div class="left_content">
+        <div
+          v-for="(thisItem,index) in new_task"
+          :key="index"
+          @click="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
+        >
+          <!-- <div class="left_content">
                 <img src="./iphone.png" />
-            </div>-->
-            <div class="right_content">
-              <div class="new_task">
-                <p style="font-weight:550">{{thisItem.company_source}}</p>
-                <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
-                <p >{{thisItem.date_start}}</p>
-              </div>
-              <div class="new_task">
-                <p>{{thisItem.company_introduce}}</p>
-                <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.date}}</p>
-                <p>{{thisItem.date_end}}</p>
-              </div>
+          </div>-->
+          <div class="right_content">
+            <div class="new_task">
+              <p style="font-weight:550">{{thisItem.company_source}}</p>
+              <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
+              <p>{{thisItem.date_start}}</p>
             </div>
-          </item>
-        </list>
+            <div class="new_task">
+              <p>{{thisItem.company_introduce}}</p>
+              <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.date}}</p>
+              <p>{{thisItem.date_end}}</p>
+            </div>
+          </div>
+        </div>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
       <div v-show="tabId===1">
-        <list>
-          <item
-            v-for="(thisItem,index) in new_task"
-            :key="index"
-            @click.native="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-          >
-            <!-- <div class="left_content">
+        <div
+          v-for="(thisItem,index) in new_task"
+          :key="index"
+          @click="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
+        >
+          <!-- <div class="left_content">
                 <img src="./iphone.png" />
-            </div>-->
-            <div class="right_content success_failure">
-              <div class="new_task">
-                <p style="font-weight:550">{{thisItem.company_source}}</p>
-                <p style="text-align:center!important;">{{thisItem.menoy}}</p>
-                <p >{{thisItem.date_start}}</p>
-              </div>
-              <div class="new_task">
-                <p>{{thisItem.company_introduce}}</p>
-                <p>{{thisItem.date_end}}</p>
-              </div>
-
-              <div
-                v-if="thisItem.success_failure"
-                :class="thisItem.sf_state==1 ? 'sf_state' : 'sf_states'"
-              >{{thisItem.success_failure}}</div>
+          </div>-->
+          <div class="right_content success_failure">
+            <div class="new_task">
+              <p style="font-weight:550">{{thisItem.company_source}}</p>
+              <p style="text-align:center!important;">{{thisItem.menoy}}</p>
+              <p>{{thisItem.date_start}}</p>
             </div>
-          </item>
-        </list>
+            <div class="new_task">
+              <p>{{thisItem.company_introduce}}</p>
+              <p>{{thisItem.date_end}}</p>
+            </div>
+
+            <div
+              v-if="thisItem.success_failure"
+              :class="thisItem.sf_state==1 ? 'sf_state' : 'sf_states'"
+            >{{thisItem.success_failure}}</div>
+          </div>
+        </div>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
       <div v-show="tabId===2">
-        <list>
-          <item
-            v-for="(thisItem,index) in new_task"
-            :key="index"
-            @click.native="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-          >
-            <!-- <div class="left_content">
+        <div
+          v-for="(thisItem,index) in new_task"
+          :key="index"
+          @click="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
+        >
+          <!-- <div class="left_content">
                 <img src="./iphone.png" />
-            </div>-->
-            <!-- be_overdue -->
-            <div class="right_content">
-              <div class="new_task">
-                <p style="font-weight:550">{{thisItem.company_source}}</p>
-                <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
-                <p>{{thisItem.date_start}}</p>
-              </div>
-              <div class="new_task">
-                <p>{{thisItem.company_introduce}}</p>
-                <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.be_overdue}}</p>
-                <p>{{thisItem.date_end}}</p>
-              </div>
+          </div>-->
+          <!-- be_overdue -->
+          <div class="right_content">
+            <div class="new_task">
+              <p style="font-weight:550">{{thisItem.company_source}}</p>
+              <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
+              <p>{{thisItem.date_start}}</p>
             </div>
-          </item>
-        </list>
+            <div class="new_task">
+              <p>{{thisItem.company_introduce}}</p>
+              <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.be_overdue}}</p>
+              <p>{{thisItem.date_end}}</p>
+            </div>
+          </div>
+        </div>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
     </div>
@@ -146,8 +140,8 @@ export default {
 };
 </script>
 <style scoped>
-.tabTitle{
-    width: 100%;
+.tabTitle {
+  width: 100%;
 }
 .tabList {
   display: flex;
@@ -316,7 +310,7 @@ span {
 }
 .right_content p {
   color: #000;
-      margin: 5px 0px;
+  margin: 5px 0px;
 }
 .new_task {
   width: 100%;
@@ -439,7 +433,7 @@ input:-ms-input-placeholder {
     height: 1.5rem;
   }
   .right_content {
-    padding:10px;
+    padding: 10px;
   }
   .success_failure .sf_state {
     top: -0.2rem;

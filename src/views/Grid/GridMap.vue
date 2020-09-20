@@ -821,9 +821,10 @@ export default {
       const id = dom.getAttribute("data-id");
       // const index = this.overlay_content1.findIndex(it => it.id === id)
       // console.log(index);
+      this.introduce = false;
       this.overlay_content1[id].show = false;
-      // this.polygon_line[id].strokeColor = '#DF0F0F'
-      this.$set(this.polygon_line[id], "strokeColor", "#DF0F0F");
+      this.polygon_line[id].strokeColor = '#000'
+      // this.$set(this.polygon_line[id], "strokeColor", "#DF0F0F");
       console.log(this.polygon_line);
       // var keyMap = {
       //   name: "newName",
@@ -840,7 +841,7 @@ export default {
       //   }
       // }
       // console.log(this.overlay_content1);
-      this.introduce = false;
+      // this.introduce = false;
     },
     clickClaim() {
       this.introduce = false;
