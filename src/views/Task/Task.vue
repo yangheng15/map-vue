@@ -8,15 +8,8 @@
         <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">待评价</li>
       </ul>
       <div v-show="tabId===0">
-        <div
-          v-for="(thisItem,index) in new_task"
-          :key="index"
-          @click="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-        >
-          <!-- <div class="left_content">
-                <img src="./iphone.png" />
-          </div>-->
-          <div class="right_content">
+        <router-link tag="div" :to="{ name: 'PutRecord', query: { title: '任务详情' }}">
+          <div v-for="(thisItem,index) in new_task" :key="index" class="right_content">
             <div class="new_task">
               <p style="font-weight:550">{{thisItem.company_source}}</p>
               <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
@@ -28,7 +21,7 @@
               <p>{{thisItem.date_end}}</p>
             </div>
           </div>
-        </div>
+        </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
       <div v-show="tabId===1">

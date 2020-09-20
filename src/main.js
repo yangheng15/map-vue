@@ -14,7 +14,9 @@ Vue.use(BaiduMap, {
   ak: 'YOUR_APP_KEY'
 })
 Vue.use(Vant);
-import { Dialog } from 'vant';
+import {
+  Dialog
+} from 'vant';
 Vue.use(Dialog);
 Vue.use(VueAMap);
 
@@ -25,6 +27,9 @@ VueAMap.initAMapApiLoader({
   // 默认高德 sdk 版本为 1.4.4
   v: '1.4.4'
 });
+// 引入echarts画饼状图
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts;
 
 Vue.config.productionTip = false
 
