@@ -51,7 +51,7 @@
       </div>
       <!-- @click="$router.push({path:'/index/grid/',query:{userId:'718346'}})" -->
       <!-- @click="$router.push('/index/grid/')" -->
-      <div class="save" @click="$router.push({path:'/grid/',query:{userId:'718346'}})">
+      <div class="save" @click="$router.push({path:'/grid/',query:{userId:'0'}})">
         <button>确认</button>
       </div>
     </div>

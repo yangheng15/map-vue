@@ -7,7 +7,6 @@ const Home = () => import('@/views/Home/Home.vue');
 const Remind = () => import('@/views/Home/Remind.vue');
 const Task = () => import('@/views/Task/Task.vue');
 const Grid = () => import('@/views/Grid/Grid.vue');
-const GridMap = () => import('@/views/Grid/GridMap.vue')
 const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
 const WorkBench = () => import('@/views/WorkBench/WorkBench.vue');
 const WorkbenchBranch = () => import('@/views/WorkBench/WorkbenchBranch.vue');
@@ -79,19 +78,12 @@ const routes = [
     path: '/Grid',
     name: 'Grid',
     component: Grid,
-    children: [
-      {
-        path: '/',
-        name: 'GridMap',
-        component: GridMap
-      },
-      {
-        path: "/ResourceSelection",
-        name: "ResourceSelection",
-        component: ResourceSelection
-      },
-    ]
-  }
+  },
+  {
+    path: "/Grid/ResourceSelection",
+    name: "ResourceSelection",
+    component: ResourceSelection
+  },
 ]
 
 const router = new VueRouter({

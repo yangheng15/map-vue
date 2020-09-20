@@ -1,6 +1,6 @@
 <template>
   <bm-overlay ref="customOverlay" :class="{sample: true, active}" pane="labelPane" @draw="draw">
-    <div class="introduce_body">
+    <div class="introduce_body" @touchstart="registerEvent">
       <img v-if="show" class="introduce_img" :src="img" alt />
       <p v-if="show && name" class="introduce_name">{{name}}</p>
       <p :class="name && show?'introduce_address':'introduce_address_lv'">{{address}}</p>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  props: ["position", "active", "name", "address", "img", "show"],
+  props: ["position", "active", "name", "address", "img", "show", "touchEvent"],
   watch: {
     position: {
       handler() {
@@ -21,12 +21,12 @@ export default {
     },
   },
   methods: {
-    handleClick() {
-      global.alert("Well done.");
+    registerEvent() {
+      this.$emit('touchEvent');
     },
     draw({ el, BMap, map }) {
       const { lng, lat } = this.position;
-      console.log(lng, lat);
+      // console.log(lng, lat); 
       const pixel = map.pointToOverlayPixel(new BMap.Point(lng, lat));
       el.style.left = pixel.x - 60 + "px";
       el.style.top = pixel.y - 20 + "px";
