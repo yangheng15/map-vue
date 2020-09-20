@@ -582,9 +582,8 @@ export default {
         const index = this.map_data.findIndex(
           (it) => it.userId === +userId
         );
-        this.map_data[index].info.show = false;
-        delete this.map_data[index].polylinePath;
-        // console.log(this.polygonDl);
+        this.map_data = this.map_data.filter(it => it.userId === +userId);
+        console.log(this.map_data);
         this.createPolygon(map);
       }else {
         this.createPolygon(map);

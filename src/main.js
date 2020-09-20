@@ -6,6 +6,7 @@ import store from './store/index';
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import BaiduMap from 'vue-baidu-map'
+import { httpPost, httpGet } from '@/axios/http';
 
 // 全局注册
 
@@ -19,7 +20,8 @@ import {
 } from 'vant';
 Vue.use(Dialog);
 Vue.use(VueAMap);
-
+Vue.prototype.$httpGet = httpGet;
+Vue.prototype.$httpPost = httpPost;
 // //引入地图
 VueAMap.initAMapApiLoader({
   key: 'your amap key',

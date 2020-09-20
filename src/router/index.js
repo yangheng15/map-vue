@@ -17,9 +17,29 @@ const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
 
+
+// router.beforeEach((to, from, next) => {
+//   // const token = localStorage.getItem('_token');
+//   // if(!token) {
+//   //   console.log(to);
+//   //   if(to.path === '/login') {
+//   //     next();
+//   //   }else {
+//   //     next('/login')
+//   //   }
+//   // }else {
+//   //   next();
+//   // }
+// })
+
+
 const routes = [
   {
     path: '/',
+    redirect: '/login',
+  },
+  {
+    path: '/login',
     name: 'Login',
     component: Login
   },
@@ -91,11 +111,11 @@ const routes = [
     component: ResourceSelection
   },
 ]
-
 const router = new VueRouter({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes
 })
+
 
 export default router
