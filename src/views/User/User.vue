@@ -23,7 +23,7 @@
           <router-link
             tag="div"
             class="see_more"
-            :to="{ name: "MyMedal", query: { title: "我的勋章" }}"
+            :to="{ name: 'MyMedal', query: { title: '我的勋章' }}"
           >查看更多</router-link>
           <!-- <div class="see_more" @click="$router.push('/LGBUserCenter/MyMedal?title=我的勋章')"></div> -->
         </div>
@@ -37,7 +37,7 @@
         </p>
         <van-icon name="arrow" />
       </div>
-      <router-link tag="div" class="calendar" :to="{ name: "MyMedal", query: { title: "我的足迹" }}">
+      <router-link tag="div" class="calendar" :to="{ name: 'MyMedal', query: { title: '我的足迹' }}">
         <p>
           <img src="../../assets/User/footprint.svg" alt />
           我的足迹
@@ -47,7 +47,7 @@
       <router-link
         tag="div"
         class="calendar"
-        :to="{ name: "UpdatePassword", query: { title: "密码修改" }}"
+        :to="{ name: 'UpdatePassword', query: { title: '密码修改' }}"
       >
         <p>
           <img src="../../assets/User/password.svg" alt />

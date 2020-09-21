@@ -54,7 +54,7 @@
                 :class="thisItem.value3=='成功'?'approval_Passed':'approval_Passed1'"
               >{{thisItem.value3}}</span>
             </p>
-            <p class="schedule_star" style="width:80%">{{thisItem.text}}</p>
+            <p class="schedule_star" style="width:100%">{{thisItem.text}}</p>
           </li>
         </ul>
         <div class="end_line">已加载完毕</div>
