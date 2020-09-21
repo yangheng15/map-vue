@@ -159,49 +159,80 @@
       </router-link>
     </div>
     <div v-show="isPopupVisibleSign" class="isPopupVisibleSign">
-      <div class="isPopupVisibleSign_content">
+      <!-- <div class="isPopupVisibleSign_content"> -->
+      <van-form class="isPopupVisibleSign_content" @failed="onFailed" @submit="onSubmit">
         <p class="pop_title">地图标记</p>
-        <div class="pop_content">
-          <p style="display:flex;align-items: center;">
-            <span class="pop_content_left" style>名称：</span>
-            <input class="pop_content_right" style type="text" placeholder="单行输入" />
-          </p>
-          <p style="display:flex;align-items: center;">
-            <span class="pop_content_left">电话：</span>
-            <input class="pop_content_right" type="text" placeholder="单行输入" />
-          </p>
-          <p style="display:flex;align-items: center;">
-            <span class="pop_content_left">地址：</span>
-            <input class="pop_content_right" type="text" placeholder="单行输入" />
-          </p>
-          <p style="display:flex;align-items: center;">
-            <span class="pop_content_left">标记：</span>
-            <select
-              style="border:0.05rem solid #bbb;width:75%;padding:0.3rem 0.5rem;background:#fff;border-radius:0.3rem;margin-top:0.5rem"
-              name
-              id
-            >
-              <option value="是">是</option>
-              <option value="否">否</option>
-            </select>
-          </p>
-          <p>
-            <span style="display: block;line-height: 2rem;">备注：</span>
-            <textarea
-              name
-              id
-              cols="30"
-              rows="10"
-              style="border:0.05rem solid #bbb;width:98%;padding:0.3rem 0.5rem;height:4rem;border-radius:0.3rem"
-              placeholder="单行输入"
-            ></textarea>
-          </p>
-          <div style="margin-top:2rem" class="save">
-            <button style="margin-right:1rem;border-radius: 0.3rem;" @click="closePopupSign()">保存</button>
-            <button style="border-radius: 0.3rem;" @click="closePopupSign()">取消</button>
-          </div>
+        <van-field
+          v-model="sign_name"
+          name="名称："
+          label="名称："
+          placeholder="单行输入"
+          :rules="[{ required: true, message: '请填写名称' }]"
+        />
+        <van-field
+          v-model="sign_phone"
+          name="电话："
+          label="电话："
+          placeholder="单行输入"
+          :rules="[{ required: true, message: '请填写电话' }]"
+        />
+        <van-field
+          v-model="sign_address"
+          name="地址："
+          label="地址："
+          placeholder="单行输入"
+          :rules="[{ required: true, message: '请填写地址' }]"
+        />
+        <van-field
+          readonly
+          clickable
+          name="picker"
+          :value="resource_type_txt"
+          label="资源类型："
+          placeholder="点击选择资源类型"
+          @click="resource_type = true"
+        />
+        <van-popup v-model="resource_type" position="bottom">
+          <van-picker
+            show-toolbar
+            :columns="resource_type_list"
+            @confirm="onResource_type"
+            @cancel="resource_type = false"
+          />
+        </van-popup>
+        <van-field
+          readonly
+          clickable
+          name="picker"
+          :value="marked_or_not_txt"
+          label="标记："
+          placeholder="点击选择是否标记"
+          @click="marked_or_not = true"
+        />
+        <van-popup v-model="marked_or_not" position="bottom">
+          <van-picker
+            show-toolbar
+            :columns="marked_or_not_list"
+            @confirm="onMarked_or_not"
+            @cancel="marked_or_not = false"
+          />
+        </van-popup>
+        <van-field
+          v-model="sign_remarks"
+          rows="2"
+          autosize
+          label="备注"
+          type="textarea"
+          maxlength="50"
+          placeholder="请输入备注"
+          show-word-limit
+        />
+        <div style="margin:10px 0px" class="save">
+          <van-button style="margin-right:10px" round native-type="submit">保存</van-button>
+          <van-button round type="primary" @click="closePopupSign()">取消</van-button>
         </div>
-      </div>
+        <!-- </div> -->
+      </van-form>
     </div>
     <div v-show="isPopupVisible" class="isPopupVisibleSign">
       <div class="isPopupVisibleSign_content">
@@ -535,9 +566,20 @@ export default {
         { lng: 114.65, lat: 33.43 },
       ],
       value: "",
+      sign_name: "",
+      sign_phone: "",
+      sign_address: "",
+      marked_or_not_txt: "",
+      marked_or_not_list: ["是", "否"],
+      marked_or_not: false,
+      resource_type_txt: "",
+      resource_type_list: ["小区", "园区","医院"],
+      resource_type: false,
+      sign_remarks: "",
     };
   },
   created() {
+    this.token = localStorage.getItem("_token");
     let markers = [];
     let index = 0;
     let basePosition = [114.65, 33.37];
@@ -579,13 +621,11 @@ export default {
       const userId = this.$route.query.userId;
       map.clearOverlays();
       if (userId) {
-        const index = this.map_data.findIndex(
-          (it) => it.userId === +userId
-        );
-        this.map_data = this.map_data.filter(it => it.userId === +userId);
+        const index = this.map_data.findIndex((it) => it.userId === +userId);
+        this.map_data = this.map_data.filter((it) => it.userId === +userId);
         console.log(this.map_data);
         this.createPolygon(map);
-      }else {
+      } else {
         this.createPolygon(map);
       }
     },
@@ -593,18 +633,20 @@ export default {
       let polygonArr = [];
       this.map_data.forEach((line) => {
         polygonArr.push(
-          line.polylinePath && new BMap.Polygon(
-            line.polylinePath.map((position) => {
-              return new BMap.Point(position.lng, position.lat);
-            }),
-            {
-              strokeColor: line.claim ? "#DF0F0F" : "#0FB38F",
-              strokeWeight: 1,
-              strokeOpacity: 1,
-              strokeStyle: "dashed",
-              fillOpacity: 0,
-            }
-          )
+          line.polylinePath &&
+            new BMap.Polygon(
+              line.polylinePath.map((position) => {
+                return new BMap.Point(position.lng, position.lat);
+              }),
+              {
+                strokeColor: line.claim ? "#DF0F0F" : "#0FB38F",
+                strokeWeight: 1,
+                strokeOpacity: 1,
+                strokeStyle: "dashed",
+                fillOpacity: "0",
+                fillColor: " ",
+              }
+            )
         );
       });
       polygonArr.forEach((polygon) => map.addOverlay(polygon));
@@ -624,8 +666,8 @@ export default {
       item.show = false;
       const index = this.map_data.findIndex((it) => it.info === item);
       this.polygonDl[index].setStrokeColor("#0FB38F");
-      this.mapCenter = {...this.mapCenter, lat: this.mapCenter.lat + 0.001}
-      
+      this.mapCenter = { ...this.mapCenter, lat: this.mapCenter.lat + 0.001 };
+
       this.introduce = false; //关闭弹窗
     },
     clickClaim() {
@@ -684,6 +726,40 @@ export default {
     },
     changeValue(index) {
       this.isActive = index;
+    },
+    onMarked_or_not(value) {
+      this.marked_or_not_txt = value;
+      this.marked_or_not = false;
+    },
+    onResource_type(value) {
+      this.resource_type_txt = value;
+      this.resource_type = false;
+    },
+    onFailed(errorInfo) {
+      console.log("failed", errorInfo);
+    },
+    async onSubmit(values) {
+      console.log("submit", values);
+      this.$httpPost({
+        url: "/api/semResource/add",
+        headers: {
+          token: this.token,
+        },
+        data: {
+          name: this.sign_name,
+          telphone: this.sign_phone,
+          address: this.sign_address,
+          mark: this.marked_or_not_txt,
+          description: this.sign_remarks,
+          type:this.resource_type_txt,
+          token: this.token,
+        },
+      }).then((res) => {
+        if (res.access_token) {
+          localStorage.setItem("_token", res.access_token);
+          this.closePopupSign();
+        }
+      });
     },
   },
 };
@@ -808,16 +884,19 @@ export default {
 }
 /* 上面是弹窗 */
 .save {
-  text-align: center;
-  padding-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0rem;
 }
 .save button {
-  border: 0.05rem solid #bbb;
+  border: none;
   background: rgb(61, 66, 94);
-  color: #fff;
-  width: 6rem;
+  width: 5rem;
   height: 2rem;
   border-radius: 0.3rem;
+  line-height: 2rem;
+  text-align: center;
+  color: #fff;
 }
 .map_marker p {
   margin: 1rem 0rem;

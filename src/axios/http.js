@@ -66,7 +66,8 @@ export function httpGet({
 export function httpPost({
   url,
   data = {},
-  params = {}
+  params = {},
+  headers = {},
 }) {
   return new Promise((resolve, reject) => {
     axios({
@@ -74,6 +75,7 @@ export function httpPost({
       method: 'post',
       data: qs.stringify(data),
       params,
+      headers
     }).then(res => {
       resolve(res.data)
     })

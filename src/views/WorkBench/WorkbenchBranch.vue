@@ -535,7 +535,7 @@
       <div class="customer_list success">
         <router-link
           tag="div"
-          :to="{ name: 'PutRecord', query: { title: '任务详情' }}"
+          :to="{ name: 'MissionDetails', query: { title: '任务详情' }}"
           style="padding:0.5rem;"
         >
           <div v-for="(thisItem,index) in new_task" :key="index" class="success_failure">
