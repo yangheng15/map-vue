@@ -624,7 +624,8 @@ export default {
       item.show = false;
       const index = this.map_data.findIndex((it) => it.info === item);
       this.polygonDl[index].setStrokeColor("#0FB38F");
-      this.mapCenter = { lng: 114.65, lat: 33.37001 }; //抖动更新
+      this.mapCenter = {...this.mapCenter, lat: this.mapCenter.lat + 0.001}
+      
       this.introduce = false; //关闭弹窗
     },
     clickClaim() {

@@ -20,11 +20,6 @@ export default {
       deep: true,
     },
   },
-  mounted() {
-    document.getElementsByClassName('introduce_body')[0].ontouchstart = function() {
-      alert('123')
-    }
-  },
   methods: {
     registerEvent() {
       this.$emit('touchEvent');
