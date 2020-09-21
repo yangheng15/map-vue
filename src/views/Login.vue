@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import qs from 'qs'
 import md5 from "js-md5";
 export default {
   name: "login",
@@ -47,7 +48,7 @@ export default {
       console.log("submit", values);
       this.$httpPost({
         url: "/oauth/token",
-        data: {
+        data: qs.stringify({
           username: "yangliu",
           password:
             "$2a$10$p2AmGWEMjWlnavWg3NcgNeFerudpM/iunRWMWdrwdbrULDfKzaisS",
@@ -55,15 +56,13 @@ export default {
           client_id: "test",
           client_secret: "test",
           scope: "all",
-        },
-      }).then(
-        (res) => {
-          if (res.access_token) {
-            localStorage.setItem("_token", res.access_token);
-            this.$router.push('/home');
-          }
+        }),
+      }).then((res) => {
+        if (res.access_token) {
+          localStorage.setItem("_token", res.access_token);
+          this.$router.push("/home");
         }
-      );
+      });
     },
   },
 };

@@ -130,6 +130,7 @@
         @click="showPopupSign()"
         :dragging="true"
         :position="{lng:114.67, lat: 33.4}"
+        @dragend="markerDragend"
         :icon="{url: require('../../assets/grid/location_map.svg'), size: {width: 60, height: 60}}"
       ></bm-marker>
       <!-- 右下角定位的图标 -->
@@ -652,6 +653,9 @@ export default {
       polygonArr.forEach((polygon) => map.addOverlay(polygon));
       console.log(polygonArr);
       this.polygonDl = polygonArr;
+    },
+    markerDragend({type, target, pixel, point}) {
+      console.log(point);
     },
     clear() {
       this.infoWindow.contents = "";
