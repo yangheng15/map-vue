@@ -1056,7 +1056,6 @@
         <div class="divInput" style="width:98%">
           <div class="select_sort" @click="openValue1">
             <input v-model="value1" type="text" placeholder="存款" />
-            <!-- <img src="./jiantou.png" /> -->
           </div>
           <div v-show="show1">
             <ul>
@@ -1068,21 +1067,6 @@
             </ul>
           </div>
         </div>
-        <!-- <div class="divInput">
-          <div class="select_sort" @click="openValue2">
-            <input v-model="value2" type="text" placeholder="客户意向" />
-            <img src="./jiantou.png" alt />
-          </div>
-          <div v-show="show2">
-            <ul>
-              <li
-                @click="getvalue2(index,item)"
-                v-for="(item,index) in tableData2"
-                :key="item.index"
-              >{{ item.name }}</li>
-            </ul>
-          </div>
-        </div>-->
       </div>
       <div class="customer_list">
         <ul

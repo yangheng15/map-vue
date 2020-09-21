@@ -125,7 +125,7 @@
         <router-link
           tag="div"
           class="function_men"
-          :to='{ name: "WorkbenchBranch", query: { title: "产品目录" }}'
+          :to='{ name: "ProductCatalog", query: { title: "产品目录" }}'
         >
           <span class="c-link-card" style="background:#0FB38F">
             <img src="../../assets/WorkBench/mulu.svg" alt />

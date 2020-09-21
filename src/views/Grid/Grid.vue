@@ -752,7 +752,6 @@ export default {
           mark: this.marked_or_not_txt,
           description: this.sign_remarks,
           type:this.resource_type_txt,
-          token: this.token,
         },
       }).then((res) => {
         if (res.access_token) {

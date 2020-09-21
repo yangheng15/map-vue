@@ -16,6 +16,9 @@ const CustomerView = () => import('@/views/WorkBench/CustomerView.vue');
 const MissionDetails = () => import('@/views/WorkBench/MissionDetails.vue');
 const MarketingDetails = () => import('@/views/WorkBench/MarketingDetails.vue');
 const AddMarketingRecord = () => import('@/views/WorkBench/AddMarketingRecord.vue');
+const EditMarketingRecord = () => import('@/views/WorkBench/EditMarketingRecord.vue');
+const ProductIntroduction = () => import('@/views/WorkBench/ProductIntroduction.vue');
+const ProductCatalog = () => import('@/views/WorkBench/ProductCatalog.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -36,8 +39,7 @@ const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
 // })
 
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     redirect: '/login',
   },
@@ -50,13 +52,11 @@ const routes = [
     path: '/Home',
     name: 'Home',
     component: Home,
-    children: [
-      {
-        path: "/Remind",
-        name: "Remind",
-        component: Remind
-      },
-    ]
+    children: [{
+      path: "/Remind",
+      name: "Remind",
+      component: Remind
+    }, ]
   },
   {
     path: '/Task',
@@ -102,6 +102,21 @@ const routes = [
     path: '/AddMarketingRecord',
     name: 'AddMarketingRecord',
     component: AddMarketingRecord,
+  },
+  {
+    path: '/EditMarketingRecord',
+    name: 'EditMarketingRecord',
+    component: EditMarketingRecord,
+  },
+  {
+    path: '/ProductIntroduction',
+    name: 'ProductIntroduction',
+    component: ProductIntroduction,
+  },
+  {
+    path: '/ProductCatalog',
+    name: 'ProductCatalog',
+    component: ProductCatalog,
   },
   {
     path: '/User',

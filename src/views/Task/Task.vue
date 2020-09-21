@@ -8,7 +8,7 @@
         <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">待评价</li>
       </ul>
       <div v-show="tabId===0">
-        <router-link tag="div" :to="{ name: 'PutRecord', query: { title: '任务详情' }}">
+        <router-link tag="div" :to="{ name: 'MissionDetails', query: { title: '任务详情' }}">
           <div v-for="(thisItem,index) in new_task" :key="index" class="right_content">
             <div class="new_task">
               <p style="font-weight:550">{{thisItem.company_source}}</p>

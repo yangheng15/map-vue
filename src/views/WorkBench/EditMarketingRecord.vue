@@ -1,7 +1,7 @@
 <template>
-  <div class="AddMarketingRecord">
+  <div class="EditMarketingRecord">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='添加营销客户'">
+    <div v-if="typeCN=='营销记录'">
       <ul class="mission_details">
         <li>
           客户：北京卓越科技有限公司
@@ -87,10 +87,10 @@
           </div>
         </div>
         <div v-show="tabId===1" style="background:#fff;">
-          <div style="padding:10px;background:#fff;">
-            <van-uploader :after-read="afterRead1" />
-            <van-uploader :after-read="afterRead2" />
-            <van-uploader :after-read="afterRead3" />
+          <div style="padding:10px;background:#fff;display: flex;flex-wrap: wrap;">
+            <van-image width="100px" height="100px" fit="contain" :src="picture" />
+            <van-image width="100px" height="100px" fit="contain" :src="picture" />
+            <van-uploader :after-read="afterRead" />
           </div>
           <div class="save" style="margin-top:20px">
             <van-button type="primary" block @click="prev()">保存</van-button>
@@ -128,6 +128,7 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
+import img from "../../assets/WorkBench/qiyedai.jpg";
 export default {
   data() {
     return {
@@ -140,10 +141,10 @@ export default {
       value1: "",
       value2: "",
       value3: "",
-      result_txt: "",
+      result_txt: "成功",
       columnsResult: ["成功", "未成功", "失败"],
       showResult: false,
-      Customer_intention_txt: "",
+      Customer_intention_txt: "强",
       columnsCustomer_intention: [
         "强",
         "一般",
@@ -154,12 +155,13 @@ export default {
         "同意采集（资料采集类任务）",
       ],
       showCustomer_intention: false,
-      actual_demand: "",
-      remarks: "",
-      customer_feedback: "",
-      competitor: "",
-      competitive_products: "",
-      product_rate: "",
+      actual_demand: "希望获得利益最大化",
+      remarks: "希望获得利益最大化",
+      customer_feedback: "希望更加着重为客户考虑",
+      competitor: "微利贷",
+      competitive_products: "微利贷",
+      product_rate: "0.23%",
+      picture: img,
     };
   },
   components: {
@@ -201,20 +203,14 @@ export default {
       this.Customer_intention_txt = value;
       this.showCustomer_intention = false;
     },
-    afterRead1(file) {
-      console.log(file);
-    },
-    afterRead2(file) {
-      console.log(file);
-    },
-    afterRead3(file) {
+    afterRead(file) {
       console.log(file);
     },
   },
 };
 </script>
 <style scoped>
-.AddMarketingRecord {
+.EditMarketingRecord {
   padding-top: 46px;
 }
 .mission_details {

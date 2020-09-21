@@ -12,20 +12,14 @@
             class="img1"
             :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' }}"
           ></router-link>
-          <!-- <a
-            class="img1"
-            @click="$router.push('/ContentManage/ArticleViewBasic/'+thisItem.id+'?title=客户视图')"
-          ></a>    PutRecord-->
         </li>
         <li>
           <span style="font-weight:600;">营销产品：</span>月生利
-          <router-link tag="a" class="img2" :to="{ name: 'PutRecord', query: { title: '产品介绍' }}"></router-link>
-          <!-- <a class="img2" @click="$router.push('/ContentManage/PutRecord/?title=产品介绍')"></a> -->
+          <router-link tag="a" class="img2" :to="{ name: 'ProductIntroduction', query: { title: '产品介绍' }}"></router-link>
         </li>
         <li>
           <span style="font-weight:600;">客户地址：</span>周口市某某区某某南路4号
           <router-link tag="a" class="img3" :to="{ name: 'PutRecord', query: { title: '地址' }}"></router-link>
-          <!-- <a class="img3" @click="$router.push('/ContentManage/PutRecord/?title=地址')"></a> -->
         </li>
         <li>
           <span style="font-weight:600;">联系方式：</span>18611278765
@@ -37,13 +31,12 @@
       </ul>
       <div>
         <p class="detail_title">营销记录</p>
-        <ul
+        <router-link
+          tag="ul"
           style="background:#fff;"
-          v-for="(thisItem,index) in MarketingRecord"
-          :key="index"
-          @click="$router.push('/ContentManage/MarketingRecord1/'+thisItem.id+'?title=营销记录')"
+          :to="{ name: 'EditMarketingRecord', query: { title: '营销记录' }}"
         >
-          <li class="marked_record">
+          <li v-for="(thisItem,index) in MarketingRecord" :key="index" class="marked_record">
             <p style="width:30%">{{thisItem.date}}</p>
             <p style="width:70%;display:flex" class="approval">
               <span class="approval_Passed">{{thisItem.value1}}</span>
@@ -56,7 +49,7 @@
             </p>
             <p class="schedule_star" style="width:100%">{{thisItem.text}}</p>
           </li>
-        </ul>
+        </router-link>
         <div class="end_line">已加载完毕</div>
       </div>
       <div
