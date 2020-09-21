@@ -21,93 +21,78 @@
           <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">竞争对手</li>
         </ul>
         <div v-show="tabId===0" style="background:#fff;">
-          <dl class="result_list">
-            <dt>结果</dt>
-            <dd>
-              <select name id>
-                <option value="成功">成功</option>
-                <option value="未成功">未成功</option>
-                <option value="失败">失败</option>
-              </select>
-            </dd>
-            <dt style="margin-top:0.5rem">客户意向</dt>
-            <dd style="margin-top:0.5rem">
-              <select name id>
-                <option value="强">强</option>
-                <option value="一般">一般</option>
-                <option value="无">无</option>
-                <option value="已有他行产品">已有他行产品</option>
-                <option value="其他需求">其他需求</option>
-                <option value="直接拒绝">直接拒绝</option>
-                <option value="同意采集（资料采集类任务）">同意采集（资料采集类任务）</option>
-              </select>
-            </dd>
-          </dl>
-          <div>
-            <p style="margin-left:0.5rem;margin-top:0.5rem">实际需求</p>
-            <div>
-              <textarea
-                style="width:calc(100% - 0.7rem);height:3rem;padding:0.6rem;margin: 0rem 0.3rem;border: 0.05rem solid #bbb;"
-                name
-                id
-                cols="30"
-                rows="10"
-                placeholder="填写客户实际需要的产品名称"
-              ></textarea>
-            </div>
-          </div>
-          <div>
-            <p style="margin-left:0.5rem;margin-top:0.5rem">备注</p>
-            <div>
-              <textarea
-                style="width:calc(100% - 0.7rem);height:3rem;padding:0.6rem;margin: 0rem 0.3rem;border: 0.05rem solid #bbb;"
-                name
-                id
-                cols="30"
-                rows="10"
-                placeholder="多行输入"
-              ></textarea>
-            </div>
-          </div>
-          <div>
-            <p style="margin-left:0.5rem">客户反馈意见</p>
-            <div>
-              <textarea
-                style="width:calc(100% - 0.7rem);height:6rem;padding:0.6rem;margin: 0rem 0.3rem;border: 0.05rem solid #bbb;"
-                name
-                id
-                cols="30"
-                rows="10"
-                placeholder="多行输入"
-              ></textarea>
-            </div>
-          </div>
+          <van-field
+            readonly
+            clickable
+            name="picker"
+            :value="result_txt"
+            label="结果"
+            placeholder="点击选择结果"
+            @click="showResult = true"
+          />
+          <van-popup v-model="showResult" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="columnsResult"
+              @confirm="onResult"
+              @cancel="showResult = false"
+            />
+          </van-popup>
+          <van-field
+            readonly
+            clickable
+            name="picker"
+            :value="Customer_intention_txt"
+            label="客户意向"
+            placeholder="点击选择客户意向"
+            @click="showCustomer_intention = true"
+          />
+          <van-popup v-model="showCustomer_intention" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="columnsCustomer_intention"
+              @confirm="onCustomer_intention"
+              @cancel="showCustomer_intention = false"
+            />
+          </van-popup>
+          <van-field
+            v-model="actual_demand"
+            rows="2"
+            autosize
+            label="实际需求"
+            type="textarea"
+            maxlength="50"
+            placeholder="请填写客户实际需要的产品名称"
+            show-word-limit
+          />
+          <van-field
+            v-model="remarks"
+            rows="2"
+            autosize
+            label="备注"
+            type="textarea"
+            maxlength="50"
+            placeholder="多行输入"
+            show-word-limit
+          />
+          <van-field
+            v-model="customer_feedback"
+            rows="2"
+            autosize
+            label="客户反馈意见"
+            type="textarea"
+            maxlength="50"
+            placeholder="请输入客户反馈意见"
+            show-word-limit
+          />
         </div>
         <div v-show="tabId===1" style="background:#fff;">
           <div style="margin-top:0.5rem">
             <div>
               <div style="width:100%;height:20rem;padding:0.6rem;background:#fff;display:flex">
-                <uploaderAlone
-                  ref="actImgeAlone"
-                  @uplodCallBack="smallImgUplodCallBack"
-                  @deleteImage="deleteSmallImage"
-                  isSign="true"
-                  :quality="0.7"
-                ></uploaderAlone>
-                <uploaderAlone
-                  ref="actImgeAlone"
-                  @uplodCallBack="smallImgUplodCallBack"
-                  @deleteImage="deleteSmallImage"
-                  isSign="true"
-                  :quality="0.7"
-                ></uploaderAlone>
-                <uploaderAlone
-                  ref="actImgeAlone"
-                  @uplodCallBack="smallImgUplodCallBack"
-                  @deleteImage="deleteSmallImage"
-                  isSign="true"
-                  :quality="0.7"
-                ></uploaderAlone>
+                <van-uploader :after-read="afterRead1" />
+                <van-uploader :after-read="afterRead2" />
+                <van-uploader :after-read="afterRead3" />
               </div>
             </div>
           </div>
@@ -346,6 +331,23 @@ export default {
           menoy: "手机银行",
         },
       ],
+      result_txt: "",
+      columnsResult: ["成功", "未成功", "失败"],
+      showResult: false,
+      Customer_intention_txt: "",
+      columnsCustomer_intention: [
+        "强",
+        "一般",
+        "无",
+        "已有他行产品",
+        "其他需求",
+        "直接拒绝",
+        "同意采集（资料采集类任务）",
+      ],
+      showCustomer_intention: false,
+      actual_demand: "",
+      remarks:"",
+      customer_feedback:"",
     };
   },
   components: {
@@ -362,82 +364,12 @@ export default {
     this.title = this.$route.query.title;
     this.isLGB = localStorage.getItem("isLgbWorker") == "0";
     this.height = 400 * (document.documentElement.clientWidth / 750) + "";
-    // $loading.show("拼命加载中..");
-    // if (this.articleId == "url") {
-    //   this.dataURL =
-    //     this.$route.query.url +
-    //     (this.$route.query.url.indexOf() == -1 ? "?_s=1" : "") +
-    //     "&token=" +
-    //     this.token;
-    // } else {
-    //   this.dataURL =
-    //     "/lgbsmp/api/v1/generalContent/" +
-    //     this.articleId +
-    //     "?token=" +
-    //     this.token;
-    // }
-    // this.getData();
-    // if (this.allowControl("APP_/ContentManage/ArticleList4Notice/branch")) {
-    //   this.isEdit = true;
-    // }
   },
-  updated() {
-    // this.$seeks.getImgTab();
-    // this.$previewRefresh();
-  },
+  updated() {},
   methods: {
     prev() {
       this.$router.go(-1);
     },
-    // allowControl(str) {
-    //   return this.$seeks.allowControl(str);
-    // },
-    // getData() {
-    //   if (!this.articleId) {
-    //     $loading.hide();
-    //     return;
-    //   }
-    //   if (this.title == "要闻时政详情") {
-    //     this.$axios
-    //       .post(
-    //         "/zzbgxjhpt/gxjh/default.do?method=xwxq&cipherText=3CUnPiZoBpOvavNsrGbvHQ==&guid=" +
-    //           this.articleId
-    //       )
-    //       .then((res) => {
-    //         if (res) {
-    //           this.tpxw = res.xwxq;
-    //           $loading.hide();
-    //         }
-    //       })
-    //       .catch(function (msg) {
-    //         $loading.hide();
-    //       });
-    //   } else {
-    //     this.$axios
-    //       .get(this.dataURL)
-    //       .then((responseData) => {
-    //         if (responseData) {
-    //           var res =
-    //             responseData.id == undefined ? responseData.data : responseData;
-    //           this.deliverTime = res.deliverTime || res.gmtCreate;
-    //           this.deliverTime = moment(this.deliverTime).format("YYYY-MM-DD");
-    //           this.deliverDepartment = res.deliverDepartment;
-    //           this.deliverPerson = res.deliverPerson;
-    //           this.content = res["content"];
-    //           // console.log(this.content);
-    //           this.textTitle = res["subject"] || res["title"] || "--";
-    //           if (res["pictureId"]) {
-    //             this.pictureId =
-    //               "/lgbsmp/api/v1/attachment/download?id=" + res["pictureId"];
-    //           }
-    //         }
-    //         $loading.hide();
-    //       })
-    //       .catch(function (msg) {
-    //         $loading.hide();
-    //       });
-    //   }
-    // },
     tab(ev) {
       this.tabId = ev;
       localStorage.setItem("indexTabId", this.tabId);
@@ -476,6 +408,23 @@ export default {
     getvalue5(index, item) {
       this.value5 = item.name;
       this.show5 = false;
+    },
+    onResult(value) {
+      this.result_txt = value;
+      this.showResult = false;
+    },
+    onCustomer_intention(value) {
+      this.Customer_intention_txt = value;
+      this.showCustomer_intention = false;
+    },
+    afterRead1(file) {
+      console.log(file);
+    },
+    afterRead2(file) {
+      console.log(file);
+    },
+    afterRead3(file) {
+      console.log(file);
     },
   },
 };
