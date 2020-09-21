@@ -127,7 +127,7 @@
       <!-- 点击出现的标记 -->
       <bm-marker
         v-if="markerTure"
-        @click="showPopupSign()"
+        @click="showPopupSign({lng:114.67, lat: 33.4})"
         :dragging="true"
         :position="{lng:114.67, lat: 33.4}"
         @dragend="markerDragend"
@@ -598,10 +598,9 @@ export default {
       // console.log(polygonArr);
       this.polygonDl = polygonArr;
     },
-    markerDragend({ type, target, pixel, point }) {
+    markerDragend({ point }) {
       console.log(point);
-      console.log(123)
-      this.sign_position = point;
+      this.sign_position = `${point.lng},${point.lat}`;
     },
     clear() {
       this.infoWindow.contents = "";
@@ -626,9 +625,10 @@ export default {
     closePopup() {
       this.isPopupVisible = false;
     },
-    showPopupSign() {
+    showPopupSign(point) {
+      console.log(point);
       this.isPopupVisibleSign = true;
-      this.markerDragend();
+      this.sign_position = `${point.lng},${point.lat}`;
     },
     closePopupSign() {
       this.isPopupVisibleSign = false;
