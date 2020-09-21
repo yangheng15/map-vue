@@ -3,7 +3,7 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN=='资源选择'">
       <van-search v-model="value" placeholder="网格名称、客户名称、资源名称" />
-      <div class="resource_selection">
+      <!-- <div class="resource_selection">
         <p>任务</p>
         <ul v-for="(thisItem,index) in resource_selection1" :key="index" class="cartItem">
           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
@@ -20,7 +20,7 @@
         <ul v-for="(thisItem,index) in resource_selection2" :key="index" class="cartItem">
           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
-      </div>
+      </div> -->
       <div class="resource_selection new_selection_three">
         <p>资源</p>
         <ul v-for="(thisItem,index) in resource_selection3" :key="index" class="cartItem">
@@ -272,6 +272,9 @@ export default {
 </script>
 
 <style scoped>
+.ResourceSelection{
+  padding-top: 46px;;
+}
 .van-pagination {
   margin-top: 20px;
 }

@@ -143,15 +143,9 @@
       <router-link tag="p" :to="{ name: 'ResourceSelection', query: { title: '资源选择' }}">
         <img src="../../assets/grid/resource.svg" alt />
       </router-link>
-      <!-- <p @click="$router.push('/grid/ResourceSelection/?title=资源选择')">
-        <img src="../../assets/grid/resource.svg" alt />
-      </p>-->
       <p @click="markerTure = true">
         <img src="../../assets/grid/sign.svg" alt />
       </p>
-      <!-- <p @click="showPopup()">
-          <img src="../../assets/grid/distribution.svg" alt />
-      </p>-->
       <router-link tag="p" :to="{ name: 'ResourceSelection', query: { title: '路径规划' }}">
         <img src="../../assets/grid/path_planning.svg" alt />
       </router-link>
@@ -160,7 +154,6 @@
       </router-link>
     </div>
     <div v-show="isPopupVisibleSign" class="isPopupVisibleSign">
-      <!-- <div class="isPopupVisibleSign_content"> -->
       <van-form class="isPopupVisibleSign_content" @failed="onFailed" @submit="onSubmit">
         <p class="pop_title">地图标记</p>
         <van-field
@@ -183,6 +176,13 @@
           label="地址："
           placeholder="单行输入"
           :rules="[{ required: true, message: '请填写地址' }]"
+        />
+        <van-field
+          v-model="sign_position"
+          name="位置："
+          label="位置："
+          placeholder="单行输入"
+          :rules="[{ required: true, message: '请填写位置' }]"
         />
         <van-field
           readonly
@@ -232,64 +232,7 @@
           <van-button style="margin-right:10px" round native-type="submit">保存</van-button>
           <van-button round type="primary" @click="closePopupSign()">取消</van-button>
         </div>
-        <!-- </div> -->
       </van-form>
-    </div>
-    <div v-show="isPopupVisible" class="isPopupVisibleSign">
-      <div class="isPopupVisibleSign_content">
-        <p class="pop_title">选择负责人</p>
-        <div class="pop_content">
-          <p style="position: relative;">
-            <input
-              style="border:0.05rem solid #bbb;width:100%;padding:0rem 2.5rem 0rem 0.5rem;border-radius: 0.3rem;"
-              type="text"
-              value="张南"
-              placeholder="员工姓名"
-            />
-            <img
-              style="position: absolute;right: 1rem;top: 18%;width: 1.3rem;"
-              src="../../assets/grid/search.svg"
-              alt
-            />
-          </p>
-          <select
-            style="border:0.05rem solid #bbb;width:100%;padding:0.3rem 0.5rem;background:#fff;border-radius:0.3rem;margin-top:0.5rem"
-            name
-            id
-          >
-            <option value="XXX支行">XXX支行</option>
-            <option value="XXX支行">XXX支行</option>
-          </select>
-          <dl>
-            <dt
-              style="display: flex;background:#E6E3E3;border:0.05rem solid #bbb;justify-content: space-around;line-height:2rem;margin-top:1rem"
-            >
-              <p style="margin:0rem">员工号</p>
-              <p style="margin:0rem">姓名</p>
-            </dt>
-            <dd
-              style="display: flex;flex-flow: row;position: relative;align-items: center;height: 2rem;margin-top: 0.3rem;"
-              v-for="(thisItem,index) in customer_pool_pop"
-              :key="index"
-            >
-              <van-radio-group v-model="radio" style="height:1.5rem">
-                <van-radio :name="thisItem.id" style="width:100%;height:1.5rem">
-                  <li
-                    style="width:12rem;list-style-type:none;display: flex;justify-content: space-around;align-items: flex-end;"
-                  >
-                    <p style="margin:0rem;width:55%">{{thisItem.name}}</p>
-                    <p style="margin:0rem;width:20%">{{thisItem.text}}</p>
-                  </li>
-                </van-radio>
-              </van-radio-group>
-            </dd>
-          </dl>
-          <div style="margin-top:2rem" class="save">
-            <button style="margin-right:1rem;border-radius: 0.3rem;" @click="closePopup()">确定</button>
-            <button style="border-radius: 0.3rem;" @click="closePopup()">取消</button>
-          </div>
-        </div>
-      </div>
     </div>
     <my-tabbar></my-tabbar>
   </div>
@@ -574,9 +517,10 @@ export default {
       marked_or_not_list: ["是", "否"],
       marked_or_not: false,
       resource_type_txt: "",
-      resource_type_list: ["小区", "园区","医院"],
+      resource_type_list: ["小区", "园区", "医院"],
       resource_type: false,
       sign_remarks: "",
+      sign_position: "",
     };
   },
   created() {
@@ -651,11 +595,13 @@ export default {
         );
       });
       polygonArr.forEach((polygon) => map.addOverlay(polygon));
-      console.log(polygonArr);
+      // console.log(polygonArr);
       this.polygonDl = polygonArr;
     },
-    markerDragend({type, target, pixel, point}) {
+    markerDragend({ type, target, pixel, point }) {
       console.log(point);
+      console.log(123)
+      this.sign_position = point;
     },
     clear() {
       this.infoWindow.contents = "";
@@ -682,6 +628,7 @@ export default {
     },
     showPopupSign() {
       this.isPopupVisibleSign = true;
+      this.markerDragend();
     },
     closePopupSign() {
       this.isPopupVisibleSign = false;
@@ -755,7 +702,8 @@ export default {
           address: this.sign_address,
           mark: this.marked_or_not_txt,
           description: this.sign_remarks,
-          type:this.resource_type_txt,
+          type: this.resource_type_txt,
+          position: this.sign_position,
         },
       }).then((res) => {
         if (res.access_token) {
