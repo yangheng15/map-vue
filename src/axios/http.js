@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'development') {
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-    token && (config.headers.Authorization = token)
+    token && (config.headers.Authorization = `Bearer ${token}`)
     return config
   },
   error => {
