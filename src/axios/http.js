@@ -1,6 +1,5 @@
 // http.js
 import axios from 'axios'
-import qs from 'qs'
 
 const token = localStorage.getItem('_token');
 // 环境的切换
@@ -22,7 +21,7 @@ axios.interceptors.request.use(
 
 axios.defaults.timeout = 10000
 
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 
 // 响应拦截器
 axios.interceptors.response.use(response => {
@@ -73,7 +72,7 @@ export function httpPost({
     axios({
       url,
       method: 'post',
-      data: qs.stringify(data),
+      data,
       params,
       headers
     }).then(res => {
