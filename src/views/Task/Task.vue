@@ -152,23 +152,6 @@ export default {
 .list {
   margin-bottom: 0;
 }
-.divider {
-  margin-top: 0.2rem;
-  width: 100%;
-  height: 0.2rem;
-  background-color: lightgray;
-}
-
-.icon {
-  margin-top: 0.5rem;
-  height: 3.5rem;
-  width: 3.5rem;
-}
-
-span {
-  font-size: 15px;
-}
-
 .cur {
   color: #df0f0f;
   position: relative;
@@ -179,113 +162,30 @@ span {
   content: "";
   left: 0%;
   width: 97%;
-  height: 0.05rem;
+  height: 1px;
   background: #df0f0f;
 }
 .ordinary {
   color: #000;
 }
-.Carousel {
-  height: 30%;
-  position: relative;
-}
-
-.Carousel div {
-  width: 1000px;
-  position: absolute;
-  /* float: left; */
-}
-
-.Carousel div:nth-child(2) {
-  position: absolute;
-  left: 100%;
-}
-
-.Carousel div:nth-child(3) {
-  position: absolute;
-  left: 200%;
-}
-
-.swiper-container {
-  height: 170px;
-}
-.c-read {
-  margin-left: 15px !important;
-}
 .one:last-child {
   display: none;
 }
-
 .t::after {
   display: inline;
   content: "...";
   font-size: 25px;
   line-height: 30px;
 }
-.swiper-wrapper {
-  transition-timing-function: linear !important;
-}
-
 .c-icon-link {
   padding-top: 10px;
   padding-bottom: 10px;
-  /* border-left:1px solid #f5f5f5; */
-  /* border-top:1px solid #f5f5f5; */
-}
-.c-icon-link-bl {
-  border-left: 0px;
-}
-.c-icon-link-bt {
-  border-top: 0px;
-}
-.c-icon-link-br {
-  border-right: 0px;
-}
-.c-icon-link-bb {
-  border-bottom: 0px;
-}
-.c-icon-link-img {
-  text-align: center;
-}
-.c-icon-link-img img {
-  width: 40px;
-  height: 40px;
-}
-.c-icon-link-text {
-  color: #666666;
-}
-.schedule {
-  background-color: #1abc9c;
-  height: 2.5rem;
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-}
-.schedule a {
-  display: inline-block;
-  border: 1px solid #fff;
-  padding: 0.1rem 0.2rem;
-  color: #fff;
-  margin-right: 0.5rem;
-  text-decoration: none;
-}
-.schedule a i {
-  margin-right: 0.4rem;
-}
-
-.left_content {
-  float: left;
-  width: 10%;
-}
-.left_content img {
-  width: 30px;
-  height: 30px;
 }
 .right_content {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  font-size: 0.9rem;
+  font-size: 14px;
   color: #000;
   padding: 15px;
   border-bottom: 1px solid #e8e8e8;
@@ -305,88 +205,27 @@ span {
 .not_select .divInput {
   width: 33.3%;
 }
-.not_select .divInput ul {
-  width: 33.3%;
-  position: absolute;
-  z-index: 6;
-}
-.not_select .divInput ul li {
-  display: inline-block;
-  list-style: none;
-  width: 8.5rem;
-  font-size: 0.8rem;
-  border-top: 1px solid #fdfbfb;
-  background-color: #ededed;
-  padding: 0.4rem 1rem 0.4rem 0.6rem;
-}
-.not_select .divInput ul li:first-child {
-  border: 0px;
-}
-.not_select .divInput .select_sort {
-  width: 140px;
-  height: 40px;
-  line-height: 40px;
-  padding-left: 10px;
-  position: relative;
-  background-color: #ededed;
-}
-.not_select .divInput .select_sort input {
-  border: none;
-  outline: none;
-  width: 90%;
-  height: 100%;
-  color: #1a1818;
-  background-color: #ededed;
-}
-.not_select .divInput .select_sort img {
-  position: absolute;
-  right: 34px;
-  top: 30%;
-  width: 13%;
-}
-
-input::-webkit-input-placeholder {
-  color: #2d2d2d;
-}
-input::-moz-placeholder {
-  /* Mozilla Firefox 19+ */
-  color: #2d2d2d;
-}
-input:-moz-placeholder {
-  /* Mozilla Firefox 4 to 18 */
-  color: #2d2d2d;
-}
-input:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  color: #2d2d2d;
-}
-.end_line {
-  margin: 1rem;
-  text-align: center;
-  color: #c1b9b9;
-  font-size: 1rem;
-}
 .success_failure {
   position: relative;
 }
 .success_failure .sf_state {
   position: absolute;
-  top: 0rem;
+  top: 10px;
   left: 36%;
-  line-height: 4.8rem;
-  width: 4.5rem;
+  line-height: 69px;
+  width: 64px;
   text-align: center;
-  height: 4rem;
+  height: 69px;
   background: url("../../assets/task/fail.png") no-repeat;
   background-size: cover;
 }
 .success_failure .sf_states {
   position: absolute;
-  top: 1rem;
+  top: 25px;
   color: transparent;
   left: 36%;
-  width: 4.3rem;
-  height: 2.7rem;
+  width: 60px;
+  height: 37px;
   background: url("../../assets/task/success.png") no-repeat;
   background-size: cover;
 }
@@ -396,35 +235,17 @@ input:-ms-input-placeholder {
   input,
   p,
   div {
-    font-size: 0.8rem;
+    font-size: 13px;
   }
   .tabList {
-    height: 2.5rem !important;
-    line-height: 2.5rem !important;
-  }
-  .latest_tasks ul li {
-    font-size: 0.7rem;
-  }
-  .latest_tasks ul {
-    margin: 0;
-  }
-  .end_line {
-    font-size: 0.8rem;
-  }
-  .two_select select {
-    height: 1.5rem;
+    height: 40px !important;
+    line-height: 40px !important;
   }
   .right_content {
     padding: 10px;
   }
   .success_failure .sf_state {
-    top: -0.2rem;
-    left: 36%;
-    width: 4.3rem;
-  }
-  .success_failure .sf_states {
-    width: 3.7rem;
-    height: 2.3rem;
+    top: 0;
   }
 }
 </style>

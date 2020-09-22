@@ -22,8 +22,20 @@ const ProductCatalog = () => import('@/views/WorkBench/ProductCatalog.vue');
 const ProductCatalogDetail = () => import('@/views/WorkBench/ProductCatalogDetail.vue');
 const knowledgeBase = () => import('@/views/WorkBench/knowledgeBase.vue');
 const knowledgeBaseDetail = () => import('@/views/WorkBench/knowledgeBaseDetail.vue');
+// 通讯录
 const TelePhone = () => import('@/views/WorkBench/TelePhone.vue');
+// 黑名单
+const BlackList = () => import('@/views/WorkBench/BlackList.vue');
+// 客户认领
+const CustomerCaim = () => import('@/views/WorkBench/CustomerCaim.vue');
+// 计算器
 const Calculator = () => import('@/views/WorkBench/Calculator.vue');
+// 排行榜
+const RankingList = () => import('@/views/WorkBench/RankingList.vue');
+// 任务完成
+const MissionAccomplished = () => import('@/views/WorkBench/MissionAccomplished.vue');
+// 任务管理
+const TaskManagement = () => import('@/views/WorkBench/TaskManagement/TaskManagement.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -144,9 +156,34 @@ const routes = [{
     component: TelePhone,
   },
   {
+    path: '/BlackList',
+    name: 'BlackList',
+    component: BlackList,
+  },
+  {
+    path: '/CustomerCaim',
+    name: 'CustomerCaim',
+    component: CustomerCaim,
+  },
+  {
     path: '/Calculator',
     name: 'Calculator',
     component: Calculator,
+  },
+  {
+    path: '/RankingList',
+    name: 'RankingList',
+    component: RankingList,
+  },
+  {
+    path: '/MissionAccomplished',
+    name: 'MissionAccomplished',
+    component: MissionAccomplished,
+  },
+  {
+    path: '/TaskManagement',
+    name: 'TaskManagement',
+    component: TaskManagement,
   },
   {
     path: '/User',

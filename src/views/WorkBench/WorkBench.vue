@@ -60,7 +60,7 @@
         <router-link
           tag="div"
           class="function_men"
-          :to="{ name: 'WorkbenchBranch', query: { title: '客户认领' }}"
+          :to="{ name: 'CustomerCaim', query: { title: '客户认领' }}"
         >
           <span class="c-link-card" style="background:#1432E3">
             <img src="../../assets/WorkBench/renling.svg" alt />
@@ -71,7 +71,7 @@
         <router-link
           tag="div"
           class="function_men"
-          :to="{ name: 'WorkbenchBranch', query: { title: '黑名单' }}"
+          :to="{ name: 'BlackList', query: { title: '黑名单' }}"
         >
           <span class="c-link-card" style="background:#D90BB2">
             <img src="../../assets/WorkBench/heimingdan.svg" alt />
@@ -87,7 +87,7 @@
         <router-link
           tag="div"
           class="function_men"
-          :to="{ name: 'WorkbenchBranch', query: { title: '排行榜' }}"
+          :to="{ name: 'RankingList', query: { title: '排行榜' }}"
         >
           <span class="c-link-card" style="background:#D33E42">
             <img src="../../assets/WorkBench/paihangbang.svg" alt />
@@ -98,7 +98,7 @@
         <router-link
           tag="div"
           class="function_men"
-          :to="{ name: 'WorkbenchBranch', query: { title: '任务完成' }}"
+          :to="{ name: 'MissionAccomplished', query: { title: '任务完成' }}"
         >
           <span class="c-link-card" style="background:#E18D25">
             <img src="../../assets/WorkBench/renwuwancheng.svg" alt />
@@ -109,7 +109,7 @@
         <router-link
           tag="div"
           class="function_men"
-          :to="{ name: 'WorkbenchBranch', query: { title: '任务管理' }}"
+          :to="{ name: 'TaskManagement', query: { title: '任务管理' }}"
         >
           <span class="c-link-card" style="background:#DF0F0F">
             <img src="../../assets/WorkBench/renwuguanli.svg" alt />

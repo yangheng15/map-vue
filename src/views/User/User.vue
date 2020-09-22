@@ -25,7 +25,6 @@
             class="see_more"
             :to="{ name: 'MyMedal', query: { title: '我的勋章' }}"
           >查看更多</router-link>
-          <!-- <div class="see_more" @click="$router.push('/LGBUserCenter/MyMedal?title=我的勋章')"></div> -->
         </div>
       </div>
     </div>
@@ -55,13 +54,6 @@
         </p>
         <van-icon name="arrow" />
       </router-link>
-      <!-- <div class="calendar" @click="$router.push('/LGBUserCenter/UpdatePassword');">
-        <p>
-          <img src="../../assets/User/password.svg" alt />
-          密码修改
-        </p>
-        <van-icon name="arrow" />
-      </div>-->
     </div>
 
     <div style="padding:16px 16px 40px 16px;">
@@ -195,11 +187,8 @@ export default {
 }
 
 @media screen and (min-width: 320px) and (max-width: 374px) {
-  li,
-  select,
-  input,
-  p {
-    font-size: 12px;
+  *{
+    font-size: 13px;
   }
   .head_portrait .personal_introduction div,
   .head_portrait .personal_introduction div p {
