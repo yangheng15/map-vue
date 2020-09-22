@@ -59,11 +59,12 @@
           <li @click="tab(1)" :class="tabId==1?'cur':''">最近联系客户</li>
         </ul>
         <div v-show="tabId===0">
-          <div
+          <router-link
             v-for="(item,index) in latest_tasks"
             :key="index"
             class="latest_tasks"
-            @click="$router.push('/ContentManage/ArticleViewBasicNew/'+item.id+'?title=任务详情')"
+            tag="div"
+            :to="{ name: 'MissionDetails', query: { title: '任务详情' }}"
           >
             <ul>
               <li style="font-weight:600">{{item.name1}}</li>
@@ -73,7 +74,7 @@
               <li>{{item.name2}}</li>
               <li>{{item.date}}</li>
             </ul>
-          </div>
+          </router-link>
         </div>
         <div v-show="tabId===1">
           <div v-for="(item,index) in recent_contact" :key="index" class="latest_tasks">
@@ -81,11 +82,7 @@
               <li>{{item.name1}}</li>
               <li>
                 {{item.telephone}}
-                <img
-                  style="width:16px"
-                  src="../../assets/home/md-phone.svg"
-                  alt
-                />
+                <img style="width:16px" src="../../assets/home/md-phone.svg" alt />
               </li>
             </ul>
             <ul>
@@ -223,7 +220,7 @@ export default {
           num: "10",
           money: "21",
           up_down: up,
-          state:true,
+          state: true,
         },
         {
           img: cunkuane,
@@ -231,7 +228,7 @@ export default {
           num: "100",
           money: "20",
           up_down: up,
-          state:true,
+          state: true,
         },
         {
           img: daikuane,
@@ -239,7 +236,7 @@ export default {
           num: "100",
           money: "21",
           up_down: down,
-          state:false,
+          state: false,
         },
         {
           img: licaie,
@@ -247,7 +244,7 @@ export default {
           num: "100",
           money: "20",
           up_down: up,
-          state:true,
+          state: true,
         },
       ],
     };
@@ -265,7 +262,7 @@ export default {
 };
 </script>
 <style scoped lang='scss'>
-.home{
+.home {
   padding-top: 46px;
 }
 .cur {
@@ -316,11 +313,11 @@ export default {
         color: #000;
         .up_color {
           color: #3cc8ab;
-          margin:0;
+          margin: 0;
         }
         .down_color {
           color: #df0f0f;
-          margin:0;
+          margin: 0;
         }
       }
     }
@@ -409,7 +406,7 @@ export default {
 .latest_tasks ul {
   display: flex;
   justify-content: space-between;
-  margin:5px;
+  margin: 5px;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   .page-content .data_img dt .img_content {

@@ -64,7 +64,7 @@ export default {
   padding-top: 46px;
 }
 .latest_tasks {
-  margin: 7px;
+  margin: 0px;
   padding: 7px;
   background: #fff;
   border-bottom: 1px solid #e8e8e8;
@@ -79,6 +79,10 @@ export default {
 }
 .set_up {
   color: #1432e3;
+}
+.van-dropdown-menu >>> .van-dropdown-menu__bar{
+  box-shadow:none;
+  border-bottom: 1px solid #e8e8e8;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   .latest_tasks ul li {

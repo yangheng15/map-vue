@@ -88,8 +88,8 @@
         </div>
         <div v-show="tabId===1" style="background:#fff;">
           <div style="padding:10px;background:#fff;display: flex;flex-wrap: wrap;">
-            <van-image width="100px" height="100px" fit="contain" :src="picture" />
-            <van-image width="100px" height="100px" fit="contain" :src="picture" />
+            <van-image width="80px" height="80px" fit="contain" :src="picture" />
+            <van-image width="80px" height="80px" fit="contain" :src="picture" />
             <van-uploader :after-read="afterRead" />
           </div>
           <div class="save" style="margin-top:20px">

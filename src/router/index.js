@@ -19,6 +19,11 @@ const AddMarketingRecord = () => import('@/views/WorkBench/AddMarketingRecord.vu
 const EditMarketingRecord = () => import('@/views/WorkBench/EditMarketingRecord.vue');
 const ProductIntroduction = () => import('@/views/WorkBench/ProductIntroduction.vue');
 const ProductCatalog = () => import('@/views/WorkBench/ProductCatalog.vue');
+const ProductCatalogDetail = () => import('@/views/WorkBench/ProductCatalogDetail.vue');
+const knowledgeBase = () => import('@/views/WorkBench/knowledgeBase.vue');
+const knowledgeBaseDetail = () => import('@/views/WorkBench/knowledgeBaseDetail.vue');
+const TelePhone = () => import('@/views/WorkBench/TelePhone.vue');
+const Calculator = () => import('@/views/WorkBench/Calculator.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -52,11 +57,11 @@ const routes = [{
     path: '/Home',
     name: 'Home',
     component: Home,
-    children: [{
-      path: "/Remind",
-      name: "Remind",
-      component: Remind
-    }, ]
+  },
+  {
+    path: '/Remind',
+    name: 'Remind',
+    component: Remind,
   },
   {
     path: '/Task',
@@ -117,6 +122,31 @@ const routes = [{
     path: '/ProductCatalog',
     name: 'ProductCatalog',
     component: ProductCatalog,
+  },
+  {
+    path: '/ProductCatalogDetail',
+    name: 'ProductCatalogDetail',
+    component: ProductCatalogDetail,
+  },
+  {
+    path: '/knowledgeBase',
+    name: 'knowledgeBase',
+    component: knowledgeBase,
+  },
+  {
+    path: '/knowledgeBaseDetail',
+    name: 'knowledgeBaseDetail',
+    component: knowledgeBaseDetail,
+  },
+  {
+    path: '/TelePhone',
+    name: 'TelePhone',
+    component: TelePhone,
+  },
+  {
+    path: '/Calculator',
+    name: 'Calculator',
+    component: Calculator,
   },
   {
     path: '/User',

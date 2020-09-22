@@ -25,15 +25,12 @@
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
       <div v-show="tabId===1">
-        <div
-          v-for="(thisItem,index) in new_task"
-          :key="index"
-          @click="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-        >
-          <!-- <div class="left_content">
-                <img src="./iphone.png" />
-          </div>-->
-          <div class="right_content success_failure">
+        <router-link tag="div" :to="{ name: 'MissionDetails', query: { title: '任务详情' }}">
+          <div
+            v-for="(thisItem,index) in new_task"
+            :key="index"
+            class="right_content success_failure"
+          >
             <div class="new_task">
               <p style="font-weight:550">{{thisItem.company_source}}</p>
               <p style="text-align:center!important;">{{thisItem.menoy}}</p>
@@ -49,20 +46,12 @@
               :class="thisItem.sf_state==1 ? 'sf_state' : 'sf_states'"
             >{{thisItem.success_failure}}</div>
           </div>
-        </div>
+        </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
       <div v-show="tabId===2">
-        <div
-          v-for="(thisItem,index) in new_task"
-          :key="index"
-          @click="$router.push('/ContentManage/ArticleViewBasicNew/'+thisItem.id+'?title=任务详情')"
-        >
-          <!-- <div class="left_content">
-                <img src="./iphone.png" />
-          </div>-->
-          <!-- be_overdue -->
-          <div class="right_content">
+        <router-link tag="div" :to="{ name: 'MissionDetails', query: { title: '任务详情' }}">
+          <div class="right_content" v-for="(thisItem,index) in new_task" :key="index">
             <div class="new_task">
               <p style="font-weight:550">{{thisItem.company_source}}</p>
               <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
@@ -74,7 +63,7 @@
               <p>{{thisItem.date_end}}</p>
             </div>
           </div>
-        </div>
+        </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
     </div>
