@@ -127,9 +127,9 @@
       <!-- 点击出现的标记 -->
       <bm-marker
         v-if="markerTure"
-        @click="showPopupSign({lng:114.67, lat: 33.4})"
+        @click="showPopupSign(markerPostion)"
         :dragging="true"
-        :position="{lng:114.67, lat: 33.4}"
+        :position="markerPostion"
         @dragend="markerDragend"
         :icon="{url: require('../../assets/grid/location_map.svg'), size: {width: 60, height: 60}}"
       ></bm-marker>
@@ -521,6 +521,7 @@ export default {
       resource_type: false,
       sign_remarks: "",
       sign_position: "",
+      markerPostion: {lng:114.67, lat: 33.4}
     };
   },
   created() {
@@ -600,7 +601,7 @@ export default {
     },
     markerDragend({ point }) {
       console.log(point);
-      this.sign_position = `${point.lng},${point.lat}`;
+      this.markerPostion = point;
     },
     clear() {
       this.infoWindow.contents = "";
