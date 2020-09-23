@@ -20,11 +20,11 @@
         <ul v-for="(thisItem,index) in resource_selection2" :key="index" class="cartItem">
           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
-      </div> -->
+      </div>-->
       <div class="resource_selection new_selection_three">
         <p>资源</p>
         <ul v-for="(thisItem,index) in resource_selection3" :key="index" class="cartItem">
-          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
+          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.codeText}}</van-checkbox>
         </ul>
       </div>
       <div class="save" @click="$router.push({path:'/grid/',query:{taskChoice:'2'}})">
@@ -34,19 +34,19 @@
     <div v-if="typeCN=='网格选择'">
       <div class="resource_selection">
         <ul v-for="(thisItem,index) in grid_selection1" :key="index" class="cartItem">
-           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
+          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div>
       <div class="resource_selection" style="margin-top:0.5rem">
         <p>基础网格</p>
         <ul v-for="(thisItem,index) in grid_selection2" :key="index" class="cartItem">
-           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
+          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div>
       <div class="resource_selection" style="margin-top:0.5rem">
         <p>专题网格</p>
         <ul v-for="(thisItem,index) in grid_selection3" :key="index" class="cartItem">
-           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
+          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div>
       <!-- @click="$router.push({path:'/index/grid/',query:{userId:'718346'}})" -->
@@ -80,7 +80,12 @@
         </ul>
       </div>
       <div class="resource_selection selection_people">
-        <ul v-for="(thisItem,index) in path_planning_list" :key="index" class="cartItem" style="border-bottom:1px solid #e8e8e8">
+        <ul
+          v-for="(thisItem,index) in path_planning_list"
+          :key="index"
+          class="cartItem"
+          style="border-bottom:1px solid #e8e8e8"
+        >
           <li>
             <p>
               <img style=" width: 3rem;border-radius: 100%" src="../../assets/grid/men1.jpg" alt />
@@ -110,7 +115,7 @@ export default {
     return {
       checkAllFlag: false,
       typeCN: "",
-      checked: true,
+      // checked: false,
       currentPage: 1,
       value: "",
       resource_selection1: [
@@ -138,54 +143,54 @@ export default {
         },
       ],
       resource_selection3: [
-        {
-          name: "小区",
-          id: 1,
-        },
-        {
-          name: "园区",
-          id: 2,
-        },
-        {
-          name: "医院",
-          id: 3,
-        },
-        {
-          name: "学校",
-          id: 4,
-        },
-        {
-          name: "商超",
-          id: 5,
-        },
-        {
-          name: "餐饮娱乐",
-          id: 6,
-        },
-        {
-          name: "酒店",
-          id: 7,
-        },
-        {
-          name: "社会团体",
-          id: 8,
-        },
-        {
-          name: "政府机构",
-          id: 9,
-        },
-        {
-          name: "汽车销售",
-          id: 10,
-        },
-        {
-          name: "汽车服务",
-          id: 11,
-        },
-        {
-          name: "建筑装修",
-          id: 12,
-        },
+        // {
+        //   name: "小区",
+        //   id: 1,
+        // },
+        // {
+        //   name: "园区",
+        //   id: 2,
+        // },
+        // {
+        //   name: "医院",
+        //   id: 3,
+        // },
+        // {
+        //   name: "学校",
+        //   id: 4,
+        // },
+        // {
+        //   name: "商超",
+        //   id: 5,
+        // },
+        // {
+        //   name: "餐饮娱乐",
+        //   id: 6,
+        // },
+        // {
+        //   name: "酒店",
+        //   id: 7,
+        // },
+        // {
+        //   name: "社会团体",
+        //   id: 8,
+        // },
+        // {
+        //   name: "政府机构",
+        //   id: 9,
+        // },
+        // {
+        //   name: "汽车销售",
+        //   id: 10,
+        // },
+        // {
+        //   name: "汽车服务",
+        //   id: 11,
+        // },
+        // {
+        //   name: "建筑装修",
+        //   id: 12,
+        // },
       ],
       grid_selection1: [
         {
@@ -241,6 +246,8 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.token = localStorage.getItem("_token");
+    this.obtainDic();
   },
   methods: {
     remotePlanning(row) {
@@ -266,14 +273,30 @@ export default {
         thisItem.checked = !thisItem.checked;
       }
     },
+    async obtainDic() {
+      this.$httpGet({
+        url: "/dic/type/dic_grid_resource_type",
+        headers: {
+          token: this.token,
+        },
+      }).then((res) => {
+        res.data = res.data.filter(function (item, index) {
+          return item.parentId != null;
+        });
+        this.resource_selection3 = res.data;
+        if (res.access_token) {
+          localStorage.setItem("_token", res.access_token);
+        }
+      });
+    },
   },
   mounted() {},
 };
 </script>
 
 <style scoped>
-.ResourceSelection{
-  padding-top: 46px;;
+.ResourceSelection {
+  padding-top: 46px;
 }
 .van-pagination {
   margin-top: 20px;
@@ -409,7 +432,7 @@ export default {
   background: #fff;
   flex-wrap: wrap;
   padding: 0.5rem;
-  border-bottom: 1px solid #e8e8e8!important;
+  border-bottom: 1px solid #e8e8e8 !important;
 }
 .choice_people p {
   width: 100%;
@@ -424,7 +447,7 @@ export default {
   padding: 0.5rem;
 }
 .selection_people ul {
-  border-bottom: 1px solid #e8e8e8!important;
+  border-bottom: 1px solid #e8e8e8 !important;
   padding: 0.5rem 0rem;
   align-items: center;
 }

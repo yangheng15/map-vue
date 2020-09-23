@@ -517,7 +517,7 @@ export default {
       marked_or_not_list: ["是", "否"],
       marked_or_not: false,
       resource_type_txt: "",
-      resource_type_list: ["小区", "园区", "医院"],
+      resource_type_list: [],
       resource_type: false,
       sign_remarks: "",
       sign_position: "",
@@ -629,6 +629,7 @@ export default {
       console.log(point);
       this.isPopupVisibleSign = true;
       this.sign_position = `${point.lng},${point.lat}`;
+      this.obtainDic();
     },
     closePopupSign() {
       this.isPopupVisibleSign = false;
@@ -689,6 +690,25 @@ export default {
     onFailed(errorInfo) {
       console.log("failed", errorInfo);
     },
+    async obtainDic() {
+      this.$httpGet({
+        url: "/dic/type/dic_grid_resource_type",
+        headers: {
+          token: this.token,
+        },
+      }).then((res) => {
+        res.data = res.data.filter(function (item, index) {
+          return item.parentId != null;
+        });
+        for (var item = 0; item < res.data.length; item++) {
+          // console.log(res.data[item].codeText);
+          this.resource_type_list[item] = res.data[item].codeText;
+        }
+        if (res.access_token) {
+          localStorage.setItem("_token", res.access_token);
+        }
+      });
+    },
     async onSubmit(values) {
       console.log("submit", values);
       this.$httpPost({
@@ -708,8 +728,9 @@ export default {
       }).then((res) => {
         if (res.access_token) {
           localStorage.setItem("_token", res.access_token);
-          this.closePopupSign();
+          
         }
+        this.closePopupSign();
       });
     },
   },

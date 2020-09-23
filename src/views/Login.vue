@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import qs from 'qs'
+import qs from "qs";
 import md5 from "js-md5";
 export default {
   name: "login",
@@ -46,12 +46,18 @@ export default {
     },
     async onSubmit(values) {
       console.log("submit", values);
+      var bcrypt = require("bcryptjs"); //引入bcryptjs库
+      // var salt = bcrypt.genSaltSync(12); //定义密码加密的计算强度,默认10
+      var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
+      console.log(md5(this.password));
+      console.log(bcrypt.hashSync(md5(this.password)));
       this.$httpPost({
         url: "/oauth/token",
         data: qs.stringify({
           username: "yangliu",
-          password:
-            "$2a$10$p2AmGWEMjWlnavWg3NcgNeFerudpM/iunRWMWdrwdbrULDfKzaisS",
+          password:"$2a$10$p2AmGWEMjWlnavWg3NcgNeFerudpM/iunRWMWdrwdbrULDfKzaisS",
+          // username: this.username,
+          // password: bcrypt.hashSync(md5(this.password)),
           grant_type: "password",
           client_id: "test",
           client_secret: "test",
