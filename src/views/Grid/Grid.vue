@@ -573,11 +573,11 @@ export default {
       marked_or_not: false,
       resource_type_txt: "",
       resource_type_list: [],
-      resource_type_code: [],
       resource_type: false,
       sign_remarks: "",
       sign_position: "",
       markerPostion: { lng: 114.655, lat: 33.625 },
+      filterData: []
     };
   },
   created() {
@@ -777,34 +777,26 @@ export default {
     onFailed(errorInfo) {
       console.log("failed", errorInfo);
     },
-    async obtainDic() {
+    obtainDic() {
       this.$httpGet({
         url: "/dic/type/dic_grid_resource_type",
         headers: {
           token: this.token,
         },
       }).then((res) => {
+        console.log(res);
         res.data = res.data.filter(function (item, index) {
           return item.parentId != null;
         });
+        this.filterData = res.data;
         for (var item = 0; item < res.data.length; item++) {
-          console.log(res.data[item]);
-          let shiyishi = res.data[item]
-          let obj = {};
-          shiyishi.map((e) => {
-            obj[e.code] = e.codeText;
-          });
-          console.log(obj)
           this.resource_type_list[item] = res.data[item].codeText;
-          this.resource_type_code[item] = res.data[item].code;
-        }
-        if (res.access_token) {
-          localStorage.setItem("_token", res.access_token);
         }
       });
     },
     async onSubmit(values) {
       // console.log("submit", values);
+      const code = this.filterData.find(it => it.codeText === this.resource_type_txt)['code']
       this.$httpPost({
         url: "/api/semResource/add",
         headers: {
@@ -816,7 +808,7 @@ export default {
           address: this.sign_address,
           mark: this.marked_or_not_txt,
           description: this.sign_remarks,
-          type: this.resource_type_code,
+          type: code,
           position: this.sign_position,
         },
       }).then((res) => {
