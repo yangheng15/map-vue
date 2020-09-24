@@ -2,25 +2,29 @@
   <div class="grid">
     <my-nav :title="title"></my-nav>
     <van-search v-model="value" placeholder="网格名称、客户名称、资源名称" />
-    <baidu-map class="bm-view" @ready="mapReady" :center="mapCenter" :zoom="12" ak="YOUR_APP_KEY">
+    <baidu-map
+      class="bm-view"
+      @ready="mapReady"
+      :center="mapCenter"
+      :zoom="12"
+      ak="YOUR_APP_KEY"
+    >
       <template v-for="(item, index) in map_data">
         <my-overlay
           :key="index"
-          :show="item.info.show"
-          :position="item.info.position"
-          :data-val="JSON.stringify(item.info)"
-          :name="item.info.name"
-          :address="item.info.address"
-          :img="item.info.img"
-          @touchEvent="selfOverlayClick(item.info)"
+          :show="item.status"
+          :position="item.position"
+          :name="item.principalName"
+          :address="item.name"
         ></my-overlay>
       </template>
-
+      <!-- @touchEvent="selfOverlayClick(item)" -->
+      <!-- :data-val="JSON.stringify(item)" -->
       <!-- 弹出的介绍 -->
       <bm-overlay
         v-show="introduce"
         pane="labelPane"
-        :class="{sample: true, active}"
+        :class="{ sample: true, active }"
         @mouseover.native="active = true"
         @mouseleave.native="active = false"
         @draw="draw"
@@ -28,36 +32,45 @@
         <div class="Popup_introduce">
           <p class="pop_title">
             网格信息
-            <img src="../../assets/grid/pop_close.svg" @touchstart="overlayClose()" />
+            <img
+              src="../../assets/grid/pop_close.svg"
+              @touchstart="overlayClose()"
+            />
           </p>
           <div class="pop_content">
-            <p>所属机构：{{table.branch}}</p>
-            <p>网格经理：{{table.men}}</p>
-            <p>认领日期：{{table.time}}</p>
-            <p>客户数量：{{table.customer_num}}</p>
-            <p>人口数量：{{table.population_num}}</p>
-            <p>营销状态：{{table.state}}</p>
+            <p>所属机构：{{ table.branch }}</p>
+            <p>网格经理：{{ table.men }}</p>
+            <p>认领日期：{{ table.time }}</p>
+            <p>客户数量：{{ table.customer_num }}</p>
+            <p>人口数量：{{ table.population_num }}</p>
+            <p>营销状态：{{ table.state }}</p>
           </div>
-          <div style="margin-top:1.5rem" class="save">
+          <div style="margin-top: 1.5rem" class="save">
             <van-button
-              style="margin-right:1rem;border-radius: 0.3rem;background:#DF0F0F"
+              style="
+                margin-right: 1rem;
+                border-radius: 0.3rem;
+                background: #df0f0f;
+              "
               :disabled="Boolean(table.img)"
               type="primary"
               @touchstart="clickClaim()"
-            >认领</van-button>
+              >认领</van-button
+            >
             <van-button
-              style="border-radius: 0.3rem;background:#0FB38F"
+              style="border-radius: 0.3rem; background: #0fb38f"
               :disabled="!Boolean(table.img)"
               ref="goback"
               type="primary"
               @touchstart="clickBack(table)"
-            >归还</van-button>
+              >归还</van-button
+            >
           </div>
         </div>
       </bm-overlay>
 
       <!-- 下面是路径规划出来的图标-->
-      <template v-for="(item,index) in label_line">
+      <template v-for="(item, index) in label_line">
         <bm-label
           :key="index"
           v-if="$route.query.routePlan"
@@ -79,28 +92,38 @@
       <bm-marker
         v-if="$route.query.taskChoice"
         :position="{ lng: 114.625, lat: 33.4 }"
-        :icon="{url: require('../../assets/grid/red_flag1.png'), size: {width: 50, height:50}}"
+        :icon="{
+          url: require('../../assets/grid/red_flag1.png'),
+          size: { width: 50, height: 50 },
+        }"
         @click="infoWindowOpen1"
       >
-        <bm-info-window :show="showText1" @close="infoWindowClose1" @open="infoWindowOpen1">
-          <p style="padding-top:1rem">姓名：卓越联腾企业贷客户拜访营销</p>
+        <bm-info-window
+          :show="showText1"
+          @close="infoWindowClose1"
+          @open="infoWindowOpen1"
+        >
+          <p style="padding-top: 1rem">姓名：卓越联腾企业贷客户拜访营销</p>
           <p>地址：学校</p>
           <p>备注：要去的学校</p>
         </bm-info-window>
       </bm-marker>
       <bm-marker
         v-if="$route.query.taskChoice"
-        :position="{lng:114.66, lat: 33.305}"
-        :icon="{url: require('../../assets/grid/red_flag.png'), size: {width: 50, height: 50}}"
+        :position="{ lng: 114.66, lat: 33.305 }"
+        :icon="{
+          url: require('../../assets/grid/red_flag.png'),
+          size: { width: 50, height: 50 },
+        }"
         @click="infoWindowOpen"
       >
         <bm-info-window
-          style="left:1rem"
+          style="left: 1rem"
           :show="showText"
           @close="infoWindowClose"
           @open="infoWindowOpen"
         >
-          <p style="padding-top:1rem">姓名：卓越联腾企业贷客户拜访营销</p>
+          <p style="padding-top: 1rem">姓名：卓越联腾企业贷客户拜访营销</p>
           <p>类型：产品营销</p>
           <p>产品：特色存款</p>
           <p>目标：10万</p>
@@ -109,17 +132,20 @@
       </bm-marker>
       <bm-marker
         v-if="$route.query.taskChoice"
-        :position="{lng:114.59, lat: 33.3}"
-        :icon="{url: require('../../assets/grid/red_flag2.png'), size: {width: 50, height: 50}}"
+        :position="{ lng: 114.59, lat: 33.3 }"
+        :icon="{
+          url: require('../../assets/grid/red_flag2.png'),
+          size: { width: 50, height: 50 },
+        }"
         @click="infoWindowOpen2"
       >
         <bm-info-window
-          style="left:1rem"
+          style="left: 1rem"
           :show="showText2"
           @close="infoWindowClose2"
           @open="infoWindowOpen2"
         >
-          <p style="padding-top:1rem">姓名：卓越联腾企业贷客户拜访营销</p>
+          <p style="padding-top: 1rem">姓名：卓越联腾企业贷客户拜访营销</p>
           <p>地址：小区</p>
           <p>备注：要去的小区</p>
         </bm-info-window>
@@ -131,30 +157,50 @@
         :dragging="true"
         :position="markerPostion"
         @dragend="markerDragend"
-        :icon="{url: require('../../assets/grid/location_map.svg'), size: {width: 60, height: 60}}"
+        :icon="{
+          url: require('../../assets/grid/location_map.svg'),
+          size: { width: 60, height: 60 },
+        }"
       ></bm-marker>
       <!-- 右下角定位的图标 -->
-      <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
+      <bm-geolocation
+        anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+        :showAddressBar="true"
+        :autoLocation="true"
+      ></bm-geolocation>
     </baidu-map>
     <!-- 搜索框 -->
 
     <!-- 右侧图标 -->
     <div class="resource map_marker">
-      <router-link tag="p" :to="{ name: 'ResourceSelection', query: { title: '资源选择' }}">
+      <router-link
+        tag="p"
+        :to="{ name: 'ResourceSelection', query: { title: '资源选择' } }"
+      >
         <img src="../../assets/grid/resource.svg" alt />
       </router-link>
       <p @click="markerTure = true">
         <img src="../../assets/grid/sign.svg" alt />
       </p>
-      <router-link tag="p" :to="{ name: 'ResourceSelection', query: { title: '路径规划' }}">
+      <router-link
+        tag="p"
+        :to="{ name: 'ResourceSelection', query: { title: '路径规划' } }"
+      >
         <img src="../../assets/grid/path_planning.svg" alt />
       </router-link>
-      <router-link tag="p" :to="{ name: 'ResourceSelection', query: { title: '网格选择' }}">
+      <router-link
+        tag="p"
+        :to="{ name: 'ResourceSelection', query: { title: '网格选择' } }"
+      >
         <img src="../../assets/grid/grid_filtering.svg" alt />
       </router-link>
     </div>
     <div v-show="isPopupVisibleSign" class="isPopupVisibleSign">
-      <van-form class="isPopupVisibleSign_content" @failed="onFailed" @submit="onSubmit">
+      <van-form
+        class="isPopupVisibleSign_content"
+        @failed="onFailed"
+        @submit="onSubmit"
+      >
         <p class="pop_title">地图标记</p>
         <van-field
           v-model="sign_name"
@@ -228,9 +274,13 @@
           placeholder="请输入备注"
           show-word-limit
         />
-        <div style="margin:10px 0px" class="save">
-          <van-button style="margin-right:10px" round native-type="submit">保存</van-button>
-          <van-button round type="primary" @click="closePopupSign()">取消</van-button>
+        <div style="margin: 10px 0px" class="save">
+          <van-button style="margin-right: 10px" round native-type="submit"
+            >保存</van-button
+          >
+          <van-button round type="primary" @click="closePopupSign()"
+            >取消</van-button
+          >
         </div>
       </van-form>
     </div>
@@ -260,80 +310,82 @@ export default {
       table: {},
       mapCenter: { lng: 114.65, lat: 33.37 },
       polygonDl: [],
-      map_data: [
-        {
-          userId: 0,
-          polylinePath: [
-            { lng: 114.73, lat: 33.41 },
-            { lng: 114.74, lat: 33.38 },
-            { lng: 114.7, lat: 33.34 },
-            { lng: 114.66, lat: 33.365 },
-            { lng: 114.68, lat: 33.41 },
-          ],
-          info: {
-            img: require("../../assets/grid/men1.png"),
-            name: "李晓燕",
-            address: "金融街",
-            position: { lng: 114.715, lat: 33.395 },
-            grid_name: "金融街",
-            branch: "金融街支行",
-            men: "李晓燕",
-            time: "2020-08-01",
-            customer_num: "100",
-            population_num: "10000",
-            state: "3日内无营销",
-            show: true,
-          },
-          claim: true,
-        },
-        {
-          userId: 1,
-          polylinePath: [
-            { lng: 114.65, lat: 33.41 },
-            { lng: 114.58, lat: 33.35 },
-            { lng: 114.54, lat: 33.39 },
-            { lng: 114.6, lat: 33.43 },
-          ],
-          info: {
-            img: require("../../assets/grid/user_men.svg"),
-            name: "张松",
-            address: "世纪广场",
-            position: { lng: 114.6, lat: 33.403 },
-            grid_name: "世纪广场",
-            branch: "世纪广场支行",
-            men: "张松",
-            time: "2020-08-01",
-            customer_num: "100",
-            population_num: "10000",
-            state: "6日内无营销",
-            show: true,
-          },
-          claim: true,
-        },
-        {
-          userId: 2,
-          polylinePath: [
-            { lng: 114.67, lat: 33.28 },
-            { lng: 114.6, lat: 33.26 },
-            { lng: 114.56, lat: 33.28 },
-            { lng: 114.62, lat: 33.33 },
-            { lng: 114.66, lat: 33.32 },
-          ],
-          info: {
-            address: "和平家园",
-            position: { lng: 114.64, lat: 33.3 },
-            grid_name: "和平家园",
-            branch: "和平家园支行",
-            men: "无",
-            time: "2020-08-01",
-            customer_num: "100",
-            population_num: "10000",
-            state: "6日内无营销",
-            show: true,
-          },
-          claim: false,
-        },
-      ],
+      map_data: [],
+      map_data_position: {},
+      // map_data: [
+      //   {
+      //     userId: 0,
+      //     polylinePath: [
+      //       { lng: 114.65062558730104, lat: 33.63371252899103 },
+      //       { lng: 114.74, lat: 33.38 },
+      //       { lng: 114.7, lat: 33.34 },
+      //       { lng: 114.66, lat: 33.365 },
+      //       { lng: 114.68, lat: 33.41 },
+      //     ],
+      //     info: {
+      //       img: require("../../assets/grid/men1.png"),
+      //       name: "李晓燕",
+      //       address: "金融街",
+      //       position: { lng: 114.715, lat: 33.395 },
+      //       grid_name: "金融街",
+      //       branch: "金融街支行",
+      //       men: "李晓燕",
+      //       time: "2020-08-01",
+      //       customer_num: "100",
+      //       population_num: "10000",
+      //       state: "3日内无营销",
+      //       show: true,
+      //     },
+      //     claim: true,
+      //   },
+      //   {
+      //     userId: 1,
+      //     polylinePath: [
+      //       { lng: 114.65, lat: 33.41 },
+      //       { lng: 114.58, lat: 33.35 },
+      //       { lng: 114.54, lat: 33.39 },
+      //       { lng: 114.6, lat: 33.43 },
+      //     ],
+      //     info: {
+      //       img: require("../../assets/grid/user_men.svg"),
+      //       name: "张松",
+      //       address: "世纪广场",
+      //       position: { lng: 114.6, lat: 33.403 },
+      //       grid_name: "世纪广场",
+      //       branch: "世纪广场支行",
+      //       men: "张松",
+      //       time: "2020-08-01",
+      //       customer_num: "100",
+      //       population_num: "10000",
+      //       state: "6日内无营销",
+      //       show: true,
+      //     },
+      //     claim: true,
+      //   },
+      //   {
+      //     userId: 2,
+      //     polylinePath: [
+      //       { lng: 114.67, lat: 33.28 },
+      //       { lng: 114.6, lat: 33.26 },
+      //       { lng: 114.56, lat: 33.28 },
+      //       { lng: 114.62, lat: 33.33 },
+      //       { lng: 114.66, lat: 33.32 },
+      //     ],
+      //     info: {
+      //       address: "和平家园",
+      //       position: { lng: 114.64, lat: 33.3 },
+      //       grid_name: "和平家园",
+      //       branch: "和平家园支行",
+      //       men: "无",
+      //       time: "2020-08-01",
+      //       customer_num: "100",
+      //       population_num: "10000",
+      //       state: "6日内无营销",
+      //       show: true,
+      //     },
+      //     claim: false,
+      //   },
+      // ],
       overlay_content: [],
       label_line: [
         {
@@ -521,22 +573,14 @@ export default {
       resource_type: false,
       sign_remarks: "",
       sign_position: "",
-      markerPostion: {lng:114.67, lat: 33.4}
+      markerPostion: { lng: 114.67, lat: 33.4 },
     };
   },
   created() {
-    this.token = localStorage.getItem("_token");
-    let markers = [];
-    let index = 0;
-    let basePosition = [114.65, 33.37];
-    let num = 10;
-
-    for (let i = 0; i < num; i++) {
-      markers.push({
-        position: [basePosition[0], basePosition[1] + i * 0.03],
-      });
+    if (!this.typeIds) {
+      this.typeIds = this.$route.params.typeIds;
     }
-    this.markers = markers;
+    this.mapPlaning();
   },
   methods: {
     handler({ BMap, map }) {
@@ -544,6 +588,17 @@ export default {
       this.center.lng = 116.404;
       this.center.lat = 39.915;
       this.zoom = 15;
+    },
+    async mapPlaning() {
+      this.$httpGet({
+        url: "/api/mapPlaning/query",
+      }).then((res) => {
+        console.log(res.data);
+        this.map_data = res.data;
+        this.map_data.forEach((it) => {
+          it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
+        });
+      });
     },
     onClick() {
       this.count += 1;
@@ -567,8 +622,8 @@ export default {
       const userId = this.$route.query.userId;
       map.clearOverlays();
       if (userId) {
-        const index = this.map_data.findIndex((it) => it.userId === +userId);
-        this.map_data = this.map_data.filter((it) => it.userId === +userId);
+        const index = this.map_data.findIndex((it) => it.id === +id);
+        this.map_data = this.map_data.filter((it) => it.id === +id);
         console.log(this.map_data);
         this.createPolygon(map);
       } else {
@@ -578,10 +633,12 @@ export default {
     createPolygon(map) {
       let polygonArr = [];
       this.map_data.forEach((line) => {
-        polygonArr.push(
-          line.polylinePath &&
+        console.log(line.mapPlaning);
+        line.mapPlaning &&
+          polygonArr.push(
             new BMap.Polygon(
-              line.polylinePath.map((position) => {
+              line.mapPlaning.map((position) => {
+                console.log(position);
                 return new BMap.Point(position.lng, position.lat);
               }),
               {
@@ -593,10 +650,10 @@ export default {
                 fillColor: " ",
               }
             )
-        );
+          );
       });
       polygonArr.forEach((polygon) => map.addOverlay(polygon));
-      // console.log(polygonArr);
+      console.log(polygonArr);
       this.polygonDl = polygonArr;
     },
     markerDragend({ point }) {
@@ -729,7 +786,6 @@ export default {
       }).then((res) => {
         if (res.access_token) {
           localStorage.setItem("_token", res.access_token);
-          
         }
         this.closePopupSign();
       });

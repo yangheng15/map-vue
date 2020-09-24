@@ -1,7 +1,7 @@
 <template>
   <div class="ResourceSelection">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='资源选择'">
+    <div v-if="typeCN == '资源选择'">
       <van-search v-model="value" placeholder="网格名称、客户名称、资源名称" />
       <!-- <div class="resource_selection">
         <p>任务</p>
@@ -23,81 +23,136 @@
       </div>-->
       <div class="resource_selection new_selection_three">
         <p>资源</p>
-        <ul v-for="(thisItem,index) in resource_selection3" :key="index" class="cartItem">
-          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.codeText}}</van-checkbox>
+        <ul
+          v-for="(thisItem, index) in resource_selection3"
+          :key="index"
+          class="cartItem"
+        >
+          <van-checkbox-group v-model="resultArr">
+            <van-checkbox
+              :name="thisItem.code"
+              checked-color="rgb(61, 66, 94)"
+              shape="square"
+              >{{ thisItem.codeText }}</van-checkbox
+            >
+          </van-checkbox-group>
+          <!-- <van-checkbox
+            @change="bianhua"
+            v-model="thisItem.code"
+            checked-color="rgb(61, 66, 94)"
+            shape="square"
+          >{{thisItem.codeText}}</van-checkbox>-->
         </ul>
       </div>
-      <div class="save" @click="$router.push({path:'/grid/',query:{taskChoice:'2'}})">
+      <div class="save" @click="back">
         <button>确认</button>
       </div>
     </div>
-    <div v-if="typeCN=='网格选择'">
+    <div v-if="typeCN == '网格选择'">
       <div class="resource_selection">
-        <ul v-for="(thisItem,index) in grid_selection1" :key="index" class="cartItem">
-          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
+        <ul
+          v-for="(thisItem, index) in grid_selection1"
+          :key="index"
+          class="cartItem"
+        >
+          <van-checkbox v-model="thisItem.id" shape="square">{{
+            thisItem.name
+          }}</van-checkbox>
         </ul>
       </div>
-      <div class="resource_selection" style="margin-top:0.5rem">
+      <div class="resource_selection" style="margin-top: 0.5rem">
         <p>基础网格</p>
-        <ul v-for="(thisItem,index) in grid_selection2" :key="index" class="cartItem">
-          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
+        <ul
+          v-for="(thisItem, index) in grid_selection2"
+          :key="index"
+          class="cartItem"
+        >
+          <van-checkbox v-model="thisItem.id" shape="square">{{
+            thisItem.name
+          }}</van-checkbox>
         </ul>
       </div>
-      <div class="resource_selection" style="margin-top:0.5rem">
+      <div class="resource_selection" style="margin-top: 0.5rem">
         <p>专题网格</p>
-        <ul v-for="(thisItem,index) in grid_selection3" :key="index" class="cartItem">
-          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
+        <ul
+          v-for="(thisItem, index) in grid_selection3"
+          :key="index"
+          class="cartItem"
+        >
+          <van-checkbox v-model="thisItem.id" shape="square">{{
+            thisItem.name
+          }}</van-checkbox>
         </ul>
       </div>
       <!-- @click="$router.push({path:'/index/grid/',query:{userId:'718346'}})" -->
       <!-- @click="$router.push('/index/grid/')" -->
-      <div class="save" @click="$router.push({path:'/grid/',query:{userId:'0'}})">
+      <div
+        class="save"
+        @click="$router.push({ path: '/grid/', query: { userId: '0' } })"
+      >
         <button>确认</button>
       </div>
     </div>
-    <div v-if="typeCN=='路径规划'">
+    <div v-if="typeCN == '路径规划'">
       <van-search v-model="value" placeholder="请输入客户名称" />
-      <div class="choice_people" style="border-bottom:1px solid #e8e8e8">
+      <div class="choice_people" style="border-bottom: 1px solid #e8e8e8">
         <p>
           已选择
-          <span style="color:#ed3632;font-size:1.2rem">{{path_planning.length}}</span>
+          <span style="color: #ed3632; font-size: 1.2rem">{{
+            path_planning.length
+          }}</span>
           人
         </p>
-        <ul v-for="(thisItem,index) in path_planning" :key="index">
+        <ul v-for="(thisItem, index) in path_planning" :key="index">
           <li>
             <span>
-              <img style="width: 3rem;border-radius: 100%" src="../../assets/grid/men1.jpg" alt />
+              <img
+                style="width: 3rem; border-radius: 100%"
+                src="../../assets/grid/men1.jpg"
+                alt
+              />
               <img
                 class="chahao"
-                style="width: 1rem;"
+                style="width: 1rem"
                 src="../../assets/grid/chahao.jpg"
                 @click="remotePlanning(thisItem)"
                 alt
               />
             </span>
-            <p>{{thisItem.name}}</p>
+            <p>{{ thisItem.name }}</p>
           </li>
         </ul>
       </div>
       <div class="resource_selection selection_people">
         <ul
-          v-for="(thisItem,index) in path_planning_list"
+          v-for="(thisItem, index) in path_planning_list"
           :key="index"
           class="cartItem"
-          style="border-bottom:1px solid #e8e8e8"
+          style="border-bottom: 1px solid #e8e8e8"
         >
           <li>
             <p>
-              <img style=" width: 3rem;border-radius: 100%" src="../../assets/grid/men1.jpg" alt />
+              <img
+                style="width: 3rem; border-radius: 100%"
+                src="../../assets/grid/men1.jpg"
+                alt
+              />
             </p>
             <div>
-              <p>{{thisItem.name}}</p>
-              <p>{{thisItem.grade}}</p>
+              <p>{{ thisItem.name }}</p>
+              <p>{{ thisItem.grade }}</p>
             </div>
           </li>
-          <van-checkbox v-model="thisItem.check" @click="selectCheck(thisItem)" shape="square"></van-checkbox>
+          <van-checkbox
+            v-model="thisItem.check"
+            @click="selectCheck(thisItem)"
+            shape="square"
+          ></van-checkbox>
         </ul>
-        <div class="save" @click="$router.push({path:'/grid/',query:{routePlan:'5'}})">
+        <div
+          class="save"
+          @click="$router.push({ path: '/grid/', query: { routePlan: '5' } })"
+        >
           <button>确认</button>
         </div>
       </div>
@@ -142,56 +197,7 @@ export default {
           id: 2,
         },
       ],
-      resource_selection3: [
-        // {
-        //   name: "小区",
-        //   id: 1,
-        // },
-        // {
-        //   name: "园区",
-        //   id: 2,
-        // },
-        // {
-        //   name: "医院",
-        //   id: 3,
-        // },
-        // {
-        //   name: "学校",
-        //   id: 4,
-        // },
-        // {
-        //   name: "商超",
-        //   id: 5,
-        // },
-        // {
-        //   name: "餐饮娱乐",
-        //   id: 6,
-        // },
-        // {
-        //   name: "酒店",
-        //   id: 7,
-        // },
-        // {
-        //   name: "社会团体",
-        //   id: 8,
-        // },
-        // {
-        //   name: "政府机构",
-        //   id: 9,
-        // },
-        // {
-        //   name: "汽车销售",
-        //   id: 10,
-        // },
-        // {
-        //   name: "汽车服务",
-        //   id: 11,
-        // },
-        // {
-        //   name: "建筑装修",
-        //   id: 12,
-        // },
-      ],
+      resource_selection3: [],
       grid_selection1: [
         {
           name: "只看我的",
@@ -242,6 +248,7 @@ export default {
           check: false,
         },
       ],
+      resultArr: [],
     };
   },
   created() {
@@ -250,6 +257,13 @@ export default {
     this.obtainDic();
   },
   methods: {
+    back() {
+      console.log(this.resultArr.join(","));
+      this.$router.push({
+        name: "Grid",
+        params: { typeIds: this.resultArr.join(",") },
+      });
+    },
     remotePlanning(row) {
       row.check = false;
       this.path_planning.splice(
@@ -284,6 +298,12 @@ export default {
           return item.parentId != null;
         });
         this.resource_selection3 = res.data;
+
+        for (var item = 0; item < res.data.length; item++) {
+          // console.log(res.data[item].code);
+          let lalala = res.data[item].code;
+          // this.resource_selection3[item] = res.data[item].code;
+        }
         if (res.access_token) {
           localStorage.setItem("_token", res.access_token);
         }

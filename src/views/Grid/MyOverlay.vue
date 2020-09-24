@@ -25,6 +25,9 @@ export default {
       this.$emit('touchEvent');
     },
     draw({ el, BMap, map }) {
+      if(!this.position) {
+        return;
+      }
       const { lng, lat } = this.position;
       // console.log(lng, lat); 
       const pixel = map.pointToOverlayPixel(new BMap.Point(lng, lat));
