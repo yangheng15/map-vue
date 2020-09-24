@@ -190,7 +190,7 @@
       </router-link>
       <router-link
         tag="p"
-        :to="{ name: 'ResourceSelection', query: { title: '网格选择' } }"
+        :to="{ name: 'GridSelection', query: { title: '网格选择' } }"
       >
         <img src="../../assets/grid/grid_filtering.svg" alt />
       </router-link>
@@ -579,6 +579,10 @@ export default {
   created() {
     if (!this.typeIds) {
       this.typeIds = this.$route.params.typeIds;
+      this.resource_selection();
+    }
+    if (!this.specialSubject) {
+      this.specialSubject = this.$route.params.specialSubject;
     }
     this.mapPlaning();
   },
@@ -592,6 +596,21 @@ export default {
     async mapPlaning() {
       this.$httpGet({
         url: "/api/mapPlaning/query",
+      }).then((res) => {
+        console.log(res.data);
+        this.map_data = res.data;
+        this.map_data.forEach((it) => {
+          it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
+        });
+      });
+    },
+    async resource_selection() {
+      params: {
+        owner: localStorage.getItem("username");
+        specialSubject: this.typeIds;
+      }
+      this.$httpGet({
+        url: "/api/semGridding/selection?params",
       }).then((res) => {
         console.log(res.data);
         this.map_data = res.data;

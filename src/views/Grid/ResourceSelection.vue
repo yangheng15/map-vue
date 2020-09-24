@@ -20,7 +20,7 @@
         <ul v-for="(thisItem,index) in resource_selection2" :key="index" class="cartItem">
           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
-      </div>-->
+      </div> -->
       <div class="resource_selection new_selection_three">
         <p>资源</p>
         <ul
@@ -60,7 +60,7 @@
           }}</van-checkbox>
         </ul>
       </div>
-      <div class="resource_selection" style="margin-top: 0.5rem">
+      <!-- <div class="resource_selection" style="margin-top: 0.5rem">
         <p>基础网格</p>
         <ul
           v-for="(thisItem, index) in grid_selection2"
@@ -71,7 +71,7 @@
             thisItem.name
           }}</van-checkbox>
         </ul>
-      </div>
+      </div> -->
       <div class="resource_selection" style="margin-top: 0.5rem">
         <p>专题网格</p>
         <ul

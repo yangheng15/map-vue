@@ -8,6 +8,7 @@ const Remind = () => import('@/views/Home/Remind.vue');
 const Task = () => import('@/views/Task/Task.vue');
 const Grid = () => import('@/views/Grid/Grid.vue');
 const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
+const GridSelection = () => import('@/views/Grid/GridSelection.vue');
 const WorkBench = () => import('@/views/WorkBench/WorkBench.vue');
 const WorkbenchBranch = () => import('@/views/WorkBench/WorkbenchBranch.vue');
 const ArticleViewBasic = () => import('@/views/WorkBench/ArticleViewBasic.vue');
@@ -209,6 +210,11 @@ const routes = [{
     path: "/Grid/ResourceSelection",
     name: "ResourceSelection",
     component: ResourceSelection
+  },
+  {
+    path: "/Grid/GridSelection",
+    name: "GridSelection",
+    component: GridSelection
   },
 ]
 const router = new VueRouter({

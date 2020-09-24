@@ -21,9 +21,11 @@
         placeholder="请输入密码"
         :rules="[{ required: true, message: '请输入密码' }]"
       />
-      <a href style="margin:10px;display: inline-block">忘记密码</a>
+      <a href style="margin: 10px; display: inline-block">忘记密码</a>
       <div style="margin: 20px 16px 16px 16px">
-        <van-button round block type="info" native-type="submit">提交</van-button>
+        <van-button round block type="info" native-type="submit"
+          >提交</van-button
+        >
       </div>
     </van-form>
   </div>
@@ -46,6 +48,7 @@ export default {
     },
     async onSubmit(values) {
       console.log("submit", values);
+      console.log(values.txtUserName);
       var bcrypt = require("bcryptjs"); //引入bcryptjs库
       // var salt = bcrypt.genSaltSync(12); //定义密码加密的计算强度,默认10
       var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
@@ -54,8 +57,6 @@ export default {
       this.$httpPost({
         url: "/oauth/token",
         data: qs.stringify({
-          // username: "yangliu",
-          // password:"$2a$10$p2AmGWEMjWlnavWg3NcgNeFerudpM/iunRWMWdrwdbrULDfKzaisS",
           username: this.username,
           password: bcrypt.hashSync(md5(this.password)),
           grant_type: "password",
@@ -65,8 +66,12 @@ export default {
         }),
       }).then((res) => {
         if (res.access_token) {
+          console.log(res);
           localStorage.setItem("_token", res.access_token);
           this.$router.push("/home");
+
+          
+          localStorage.setItem("username ", res.username);
         }
       });
     },
