@@ -6,7 +6,7 @@
       class="bm-view"
       @ready="mapReady"
       :center="mapCenter"
-      :zoom="12"
+      :zoom="14"
       ak="YOUR_APP_KEY"
     >
       <template v-for="(item, index) in map_data">
@@ -302,13 +302,13 @@ export default {
   data() {
     return {
       title: "网格",
-      zoom: 12,
+      zoom: 10,
       center: [114.65, 33.37],
       markers: [],
       count: 0,
       lalal: {},
       table: {},
-      mapCenter: { lng: 114.65, lat: 33.37 },
+      mapCenter: { lng: 114.654102, lat: 33.623741 },
       polygonDl: [],
       map_data: [],
       map_data_position: {},
@@ -633,12 +633,13 @@ export default {
     createPolygon(map) {
       let polygonArr = [];
       this.map_data.forEach((line) => {
-        console.log(line.mapPlaning);
+        console.log(line.fillColor);
+        // console.log(line.mapPlaning);
         line.mapPlaning &&
           polygonArr.push(
             new BMap.Polygon(
               line.mapPlaning.map((position) => {
-                console.log(position);
+                // console.log(position);
                 return new BMap.Point(position.lng, position.lat);
               }),
               {
@@ -646,8 +647,8 @@ export default {
                 strokeWeight: 1,
                 strokeOpacity: 1,
                 strokeStyle: "dashed",
-                fillOpacity: "0",
-                fillColor: " ",
+                fillOpacity: "0.2",
+                fillColor: "line.fillColor ",
               }
             )
           );

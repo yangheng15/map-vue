@@ -54,10 +54,10 @@ export default {
       this.$httpPost({
         url: "/oauth/token",
         data: qs.stringify({
-          username: "yangliu",
-          password:"$2a$10$p2AmGWEMjWlnavWg3NcgNeFerudpM/iunRWMWdrwdbrULDfKzaisS",
-          // username: this.username,
-          // password: bcrypt.hashSync(md5(this.password)),
+          // username: "yangliu",
+          // password:"$2a$10$p2AmGWEMjWlnavWg3NcgNeFerudpM/iunRWMWdrwdbrULDfKzaisS",
+          username: this.username,
+          password: bcrypt.hashSync(md5(this.password)),
           grant_type: "password",
           client_id: "test",
           client_secret: "test",
