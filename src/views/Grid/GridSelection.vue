@@ -8,7 +8,7 @@
           :key="index"
           class="cartItem"
         >
-          <van-checkbox v-model="thisItem.id" shape="square">{{
+          <van-checkbox v-model="ownerArr" shape="square">{{
             thisItem.name
           }}</van-checkbox>
         </ul>
@@ -72,6 +72,7 @@ export default {
       ],
       grid_selection3: [],
       resultArr: [],
+      ownerArr: [],
     };
   },
   created() {
@@ -82,9 +83,13 @@ export default {
   methods: {
     back() {
       console.log(this.resultArr.join(","));
+      console.log(this.ownerArr);
       this.$router.push({
         name: "Grid",
-        params: { specialSubject: this.resultArr.join(",") },
+        params: {
+          specialSubject: this.resultArr.join(","),
+          owner: this.ownerArr,
+        },
       });
     },
     async obtainDic() {

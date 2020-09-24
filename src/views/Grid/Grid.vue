@@ -16,11 +16,14 @@
           :position="item.position"
           :name="item.principalName"
           :address="item.name"
+          :data-val="item"
+          @touchEvent="selfOverlayClick(item)"
         ></my-overlay>
       </template>
       <!-- @touchEvent="selfOverlayClick(item)" -->
       <!-- :data-val="JSON.stringify(item)" -->
       <!-- 弹出的介绍 -->
+
       <bm-overlay
         v-show="introduce"
         pane="labelPane"
@@ -38,7 +41,7 @@
             />
           </p>
           <div class="pop_content">
-            <p>所属机构：{{ table.branch }}</p>
+            <p>所属机构：{{ table.branchCode }}</p>
             <p>网格经理：{{ table.men }}</p>
             <p>认领日期：{{ table.time }}</p>
             <p>客户数量：{{ table.customer_num }}</p>
@@ -91,7 +94,7 @@
       ></bm-polygon>
       <bm-marker
         v-if="$route.query.taskChoice"
-        :position="{ lng: 114.625, lat: 33.4 }"
+        :position="{ lng: 114.625, lat: 33.625 }"
         :icon="{
           url: require('../../assets/grid/red_flag1.png'),
           size: { width: 50, height: 50 },
@@ -110,7 +113,7 @@
       </bm-marker>
       <bm-marker
         v-if="$route.query.taskChoice"
-        :position="{ lng: 114.66, lat: 33.305 }"
+        :position="{ lng: 114.66, lat: 33.605 }"
         :icon="{
           url: require('../../assets/grid/red_flag.png'),
           size: { width: 50, height: 50 },
@@ -132,7 +135,7 @@
       </bm-marker>
       <bm-marker
         v-if="$route.query.taskChoice"
-        :position="{ lng: 114.59, lat: 33.3 }"
+        :position="{ lng: 114.59, lat: 33.645 }"
         :icon="{
           url: require('../../assets/grid/red_flag2.png'),
           size: { width: 50, height: 50 },
@@ -390,7 +393,7 @@ export default {
       label_line: [
         {
           content: "1",
-          position: { lng: 114.705, lat: 33.415 },
+          position: { lng: 114.705, lat: 33.615 },
           labelStyle: {
             color: "red",
             fontSize: "1rem",
@@ -403,7 +406,7 @@ export default {
         },
         {
           content: "2",
-          position: { lng: 114.635, lat: 33.385 },
+          position: { lng: 114.635, lat: 33.585 },
           labelStyle: {
             color: "red",
             fontSize: "1rem",
@@ -416,7 +419,7 @@ export default {
         },
         {
           content: "3",
-          position: { lng: 114.685, lat: 33.325 },
+          position: { lng: 114.685, lat: 33.525 },
           labelStyle: {
             color: "red",
             fontSize: "1rem",
@@ -429,7 +432,7 @@ export default {
         },
         {
           content: "4",
-          position: { lng: 114.595, lat: 33.37 },
+          position: { lng: 114.595, lat: 33.57 },
           labelStyle: {
             color: "red",
             fontSize: "1rem",
@@ -442,7 +445,7 @@ export default {
         },
         {
           content: "5",
-          position: { lng: 114.645, lat: 33.435 },
+          position: { lng: 114.645, lat: 33.635 },
           labelStyle: {
             color: "red",
             fontSize: "1rem",
@@ -455,7 +458,7 @@ export default {
         },
         {
           content: "赵四",
-          position: { lng: 114.678, lat: 33.422 },
+          position: { lng: 114.678, lat: 33.622 },
           labelStyle: {
             color: "red",
             fontSize: "0.8rem",
@@ -467,7 +470,7 @@ export default {
         },
         {
           content: "张红",
-          position: { lng: 114.608, lat: 33.393 },
+          position: { lng: 114.608, lat: 33.593 },
           labelStyle: {
             color: "red",
             fontSize: "0.8rem",
@@ -479,7 +482,7 @@ export default {
         },
         {
           content: "王强",
-          position: { lng: 114.658, lat: 33.333 },
+          position: { lng: 114.658, lat: 33.533 },
           labelStyle: {
             color: "red",
             fontSize: "0.8rem",
@@ -491,7 +494,7 @@ export default {
         },
         {
           content: "慕容",
-          position: { lng: 114.568, lat: 33.379 },
+          position: { lng: 114.568, lat: 33.579 },
           labelStyle: {
             color: "red",
             fontSize: "0.8rem",
@@ -503,7 +506,7 @@ export default {
         },
         {
           content: "李四",
-          position: { lng: 114.618, lat: 33.443 },
+          position: { lng: 114.618, lat: 33.643 },
           labelStyle: {
             color: "red",
             fontSize: "0.8rem",
@@ -524,7 +527,7 @@ export default {
       circlePath: {
         center: {
           lng: 114.65,
-          lat: 33.37,
+          lat: 33.67,
         },
         radius: 5000,
       },
@@ -555,11 +558,11 @@ export default {
       ],
 
       polylinePath: [
-        { lng: 114.71, lat: 33.41 },
-        { lng: 114.64, lat: 33.38 },
-        { lng: 114.69, lat: 33.32 },
-        { lng: 114.6, lat: 33.365 },
-        { lng: 114.65, lat: 33.43 },
+        { lng: 114.71, lat: 33.61 },
+        { lng: 114.64, lat: 33.58 },
+        { lng: 114.69, lat: 33.52 },
+        { lng: 114.6, lat: 33.565 },
+        { lng: 114.65, lat: 33.63 },
       ],
       value: "",
       sign_name: "",
@@ -570,19 +573,20 @@ export default {
       marked_or_not: false,
       resource_type_txt: "",
       resource_type_list: [],
+      resource_type_code: [],
       resource_type: false,
       sign_remarks: "",
       sign_position: "",
-      markerPostion: { lng: 114.67, lat: 33.4 },
+      markerPostion: { lng: 114.655, lat: 33.625 },
     };
   },
   created() {
     this.typeIds = this.$route.params.typeIds;
-    if(this.typeIds) {
-
+    if (this.typeIds) {
     }
     this.specialSubject = this.$route.params.specialSubject;
-    if (this.specialSubject) {
+    this.owner = this.$route.params.owner;
+    if (this.specialSubject || this.owner) {
       this.resource_selection();
     }
     this.mapPlaning();
@@ -606,14 +610,18 @@ export default {
       });
     },
     resource_selection() {
-      const _username = localStorage.getItem("username");
-      console.log(_username);
+      if (!this.owner) {
+        var _username = localStorage.getItem("username");
+        console.log(_username);
+      } else {
+        _username = [];
+      }
       this.$httpGet({
         url: "/api/semGridding/selection",
         params: {
           owner: _username,
-          specialSubject: this.specialSubject
-        }
+          specialSubject: this.specialSubject,
+        },
       }).then((res) => {
         console.log(res.data);
         this.map_data = res.data;
@@ -655,18 +663,15 @@ export default {
     createPolygon(map) {
       let polygonArr = [];
       this.map_data.forEach((line) => {
-        console.log(line.fillColor);
-        // console.log(line.mapPlaning);
         line.mapPlaning &&
           polygonArr.push(
             new BMap.Polygon(
               line.mapPlaning.map((position) => {
-                // console.log(position);
                 return new BMap.Point(position.lng, position.lat);
               }),
               {
                 strokeColor: line.claim ? "#DF0F0F" : "#0FB38F",
-                strokeWeight: 1,
+                strokeWeight: 2,
                 strokeOpacity: 1,
                 strokeStyle: "dashed",
                 fillOpacity: "0.2",
@@ -676,11 +681,11 @@ export default {
           );
       });
       polygonArr.forEach((polygon) => map.addOverlay(polygon));
-      console.log(polygonArr);
+      // console.log(polygonArr);
       this.polygonDl = polygonArr;
     },
     markerDragend({ point }) {
-      console.log(point);
+      // console.log(point);
       this.markerPostion = point;
     },
     clear() {
@@ -707,7 +712,7 @@ export default {
       this.isPopupVisible = false;
     },
     showPopupSign(point) {
-      console.log(point);
+      // console.log(point);
       this.isPopupVisibleSign = true;
       this.sign_position = `${point.lng},${point.lat}`;
       this.obtainDic();
@@ -765,6 +770,7 @@ export default {
       this.marked_or_not = false;
     },
     onResource_type(value) {
+      console.log(value);
       this.resource_type_txt = value;
       this.resource_type = false;
     },
@@ -782,8 +788,15 @@ export default {
           return item.parentId != null;
         });
         for (var item = 0; item < res.data.length; item++) {
-          // console.log(res.data[item].codeText);
+          console.log(res.data[item]);
+          let shiyishi = res.data[item]
+          let obj = {};
+          shiyishi.map((e) => {
+            obj[e.code] = e.codeText;
+          });
+          console.log(obj)
           this.resource_type_list[item] = res.data[item].codeText;
+          this.resource_type_code[item] = res.data[item].code;
         }
         if (res.access_token) {
           localStorage.setItem("_token", res.access_token);
@@ -791,7 +804,7 @@ export default {
       });
     },
     async onSubmit(values) {
-      console.log("submit", values);
+      // console.log("submit", values);
       this.$httpPost({
         url: "/api/semResource/add",
         headers: {
@@ -803,7 +816,7 @@ export default {
           address: this.sign_address,
           mark: this.marked_or_not_txt,
           description: this.sign_remarks,
-          type: this.resource_type_txt,
+          type: this.resource_type_code,
           position: this.sign_position,
         },
       }).then((res) => {
@@ -898,8 +911,8 @@ export default {
 }
 .Popup_introduce {
   position: absolute;
-  top: -11rem;
-  left: -5rem;
+  top: -153rem;
+  left: -4rem;
   width: 16rem;
   background: rgb(255, 255, 255);
   border-radius: 0.5rem;
