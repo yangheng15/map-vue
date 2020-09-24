@@ -32,9 +32,11 @@
           :key="index"
           class="cartItem"
         >
-          <van-checkbox v-model="thisItem.code" shape="square">{{
-            thisItem.codeText
-          }}</van-checkbox>
+          <van-checkbox-group v-model="resultArr">
+            <van-checkbox :name="thisItem.code" shape="square">{{
+              thisItem.codeText
+            }}</van-checkbox>
+          </van-checkbox-group>
         </ul>
       </div>
       <div class="save" @click="back">
@@ -88,9 +90,6 @@ export default {
     async obtainDic() {
       this.$httpGet({
         url: "/dic/type/dic_grid_theme_type",
-        headers: {
-          token: this.token,
-        },
       }).then((res) => {
         res.data = res.data.filter(function (item, index) {
           return item.parentId != null;
@@ -146,9 +145,9 @@ export default {
   border: 1px solid #bbb;
   background: rgb(61, 66, 94);
   color: #fff;
-  width:80px;
+  width: 80px;
   height: 30px;
-  border-radius:6px;
+  border-radius: 6px;
 }
 .van-checkbox {
   height: 30px;

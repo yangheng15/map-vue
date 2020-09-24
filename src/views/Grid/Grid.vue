@@ -577,12 +577,13 @@ export default {
     };
   },
   created() {
-    if (!this.typeIds) {
-      this.typeIds = this.$route.params.typeIds;
-      this.resource_selection();
+    this.typeIds = this.$route.params.typeIds;
+    if(this.typeIds) {
+
     }
-    if (!this.specialSubject) {
-      this.specialSubject = this.$route.params.specialSubject;
+    this.specialSubject = this.$route.params.specialSubject;
+    if (this.specialSubject) {
+      this.resource_selection();
     }
     this.mapPlaning();
   },
@@ -593,7 +594,7 @@ export default {
       this.center.lat = 39.915;
       this.zoom = 15;
     },
-    async mapPlaning() {
+    mapPlaning() {
       this.$httpGet({
         url: "/api/mapPlaning/query",
       }).then((res) => {
@@ -604,13 +605,15 @@ export default {
         });
       });
     },
-    async resource_selection() {
-      params: {
-        owner: localStorage.getItem("username");
-        specialSubject: this.typeIds;
-      }
+    resource_selection() {
+      const _username = localStorage.getItem("username");
+      console.log(_username);
       this.$httpGet({
-        url: "/api/semGridding/selection?params",
+        url: "/api/semGridding/selection",
+        params: {
+          owner: _username,
+          specialSubject: this.specialSubject
+        }
       }).then((res) => {
         console.log(res.data);
         this.map_data = res.data;

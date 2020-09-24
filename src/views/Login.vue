@@ -68,10 +68,8 @@ export default {
         if (res.access_token) {
           console.log(res);
           localStorage.setItem("_token", res.access_token);
+          localStorage.setItem("username", res.username);
           this.$router.push("/home");
-
-          
-          localStorage.setItem("username ", res.username);
         }
       });
     },
