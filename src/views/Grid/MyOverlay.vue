@@ -1,6 +1,6 @@
 <template>
   <bm-overlay v-if="position" ref="customOverlay" :class="{sample: true, active}" pane="labelPane" @draw="draw">
-    <div class="introduce_body" @touchstart="registerEvent">
+    <div class="introduce_content" @touchstart="registerEvent">
       <!-- <img v-if="show" class="introduce_img" :src="img" alt /> -->
       <p v-if="name" class="introduce_name">{{name}}</p>
       <p :class="name ?'introduce_address':'introduce_address_lv'">{{address}}</p>
@@ -12,18 +12,6 @@
 <script>
 export default {
   props: ["position", "active", "name", "address", "img", "show", "touchEvent"],
-  watch: {
-    position: {
-      handler() {
-        this.$refs.customOverlay.reload();
-      },
-      deep: true,
-    },
-  },
-  created(){
-    console.log(this.position, this.name, this.address);
-    // console.log(new BMap());
-  },
   methods: {
     registerEvent() {
       this.$emit('touchEvent');
@@ -33,7 +21,6 @@ export default {
         return;
       }
       const { lng, lat } = {lng: this.position.split(',')[0], lat: this.position.split(',')[1]};
-      // console.log(lng, lat); 
       const pixel = map.pointToOverlayPixel(new BMap.Point(lng, lat));
       el.style.left = pixel.x - 60 + "px";
       el.style.top = pixel.y - 20 + "px";
@@ -50,7 +37,7 @@ export default {
   background: rgba(0, 0, 0, 0.75);
   color: #fff;
 }
-.introduce_body {
+.introduce_content {
   text-align: center;
   width: 4rem;
   /* height: 5rem; */
@@ -59,12 +46,12 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.introduce_body .introduce_img {
+.introduce_content .introduce_img {
   width: 1.8rem;
   border-radius: 100%;
   /* width: 100%; */
 }
-.introduce_body .introduce_name {
+.introduce_content .introduce_name {
   color: #fff;
   font-size: 0.8rem;
   font-weight: 600;
@@ -77,7 +64,7 @@ export default {
   margin: 0rem;
   width: 100%;
 }
-.introduce_body .introduce_address {
+.introduce_content .introduce_address {
   color: #df0f0f;
   font-size: 0.8rem;
   font-weight: 600;
@@ -90,7 +77,7 @@ export default {
   width: 100%;
   margin: 0rem;
 }
-.introduce_body .introduce_address_lv {
+.introduce_content .introduce_address_lv {
   color: #0FB38F;
   font-size: 0.8rem;
   font-weight: 600;
