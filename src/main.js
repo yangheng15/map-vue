@@ -22,6 +22,7 @@ Vue.use(Dialog);
 Vue.use(VueAMap);
 Vue.prototype.$httpGet = httpGet;
 Vue.prototype.$httpPost = httpPost;
+Vue.prototype.$httpPut = httpPut;
 // //引入地图
 VueAMap.initAMapApiLoader({
   key: 'your amap key',

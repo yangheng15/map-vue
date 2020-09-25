@@ -80,3 +80,23 @@ export function httpPost({
     })
   })
 }
+
+//put 
+export function httpPut({
+  url,
+  data = {},
+  params = {},
+  headers = {}
+}) {
+  return new Promise((resolve, reject) => {
+    axios({
+      url,
+      method: 'put',
+      data,
+      params,
+      headers
+    }).then(res => {
+      resolve(res.data)
+    })
+  })
+}
