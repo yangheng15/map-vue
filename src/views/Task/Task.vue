@@ -22,7 +22,7 @@
               <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
                 {{ thisItem.targetNum }}万
               </p>
-              <p>创建日期：{{ moment(thisItem.beginTime).format('YYYY-MM-DD') }}</p>
+              <p>创建日期：{{ thisItem.beginTime | transform}}</p>
             </div>
             <div class="new_task">
               <p>{{ thisItem.productCode }}</p>
@@ -101,6 +101,7 @@
 import MyNav from "../../components/Public/MyNav";
 import MyTabbar from "../../components/Public/MyTabbar";
 import moment from 'moment'; 
+
 export default {
   name: "Task",
   components: {
@@ -187,6 +188,11 @@ export default {
       });
     },
   },
+  filters: {
+    transform(val) {
+      return moment(val).format('YYYY-MM-DD')
+    }
+  }
 };
 </script>
 <style scoped>
