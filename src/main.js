@@ -6,7 +6,7 @@ import store from './store/index';
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import BaiduMap from 'vue-baidu-map'
-import { httpPost, httpGet } from '@/axios/http';
+import { httpPost, httpGet, httpPut } from '@/axios/http';
 
 // 全局注册
 

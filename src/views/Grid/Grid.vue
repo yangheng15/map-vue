@@ -20,9 +20,6 @@
           @touchEvent="selfOverlayClick(item)"
         ></my-overlay>
       </template>
-      <!-- @touchEvent="selfOverlayClick(item)" -->
-      <!-- :data-val="JSON.stringify(item)" -->
-      <!-- 弹出的介绍 -->
 
       <bm-overlay
         v-show="introduce"
@@ -57,7 +54,7 @@
               "
               :disabled="Boolean(table.principalName)"
               type="primary"
-              @touchstart="clickClaim()"
+              @touchstart="clickClaim(table)"
               >认领</van-button
             >
             <van-button
@@ -93,8 +90,7 @@
         @lineupdate="updatePolylinePath"
       ></bm-polygon>
       <bm-marker
-        v-if="$route.query.taskChoice"
-        :position="{ lng: 114.625, lat: 33.625 }"
+        :position="{ lng: 114.645, lat: 33.62 }"
         :icon="{
           url: require('../../assets/grid/red_flag1.png'),
           size: { width: 50, height: 50 },
@@ -112,7 +108,6 @@
         </bm-info-window>
       </bm-marker>
       <bm-marker
-        v-if="$route.query.taskChoice"
         :position="{ lng: 114.66, lat: 33.605 }"
         :icon="{
           url: require('../../assets/grid/red_flag.png'),
@@ -187,7 +182,7 @@
       </p>
       <router-link
         tag="p"
-        :to="{ name: 'ResourceSelection', query: { title: '路径规划' } }"
+        :to="{ name: 'PathPlanning', query: { title: '路径规划' } }"
       >
         <img src="../../assets/grid/path_planning.svg" alt />
       </router-link>
@@ -295,6 +290,7 @@
 import MyOverlay from "./MyOverlay";
 import MyNav from "../../components/Public/MyNav";
 import myTabbar from "../../components/Public/MyTabbar";
+import { Toast } from "vant";
 export default {
   name: "Grid",
   components: {
@@ -315,80 +311,6 @@ export default {
       polygonDl: [],
       map_data: [],
       map_data_position: {},
-      // map_data: [
-      //   {
-      //     userId: 0,
-      //     polylinePath: [
-      //       { lng: 114.65062558730104, lat: 33.63371252899103 },
-      //       { lng: 114.74, lat: 33.38 },
-      //       { lng: 114.7, lat: 33.34 },
-      //       { lng: 114.66, lat: 33.365 },
-      //       { lng: 114.68, lat: 33.41 },
-      //     ],
-      //     info: {
-      //       img: require("../../assets/grid/men1.png"),
-      //       name: "李晓燕",
-      //       address: "金融街",
-      //       position: { lng: 114.715, lat: 33.395 },
-      //       grid_name: "金融街",
-      //       branch: "金融街支行",
-      //       men: "李晓燕",
-      //       time: "2020-08-01",
-      //       customer_num: "100",
-      //       population_num: "10000",
-      //       state: "3日内无营销",
-      //       show: true,
-      //     },
-      //     claim: true,
-      //   },
-      //   {
-      //     userId: 1,
-      //     polylinePath: [
-      //       { lng: 114.65, lat: 33.41 },
-      //       { lng: 114.58, lat: 33.35 },
-      //       { lng: 114.54, lat: 33.39 },
-      //       { lng: 114.6, lat: 33.43 },
-      //     ],
-      //     info: {
-      //       img: require("../../assets/grid/user_men.svg"),
-      //       name: "张松",
-      //       address: "世纪广场",
-      //       position: { lng: 114.6, lat: 33.403 },
-      //       grid_name: "世纪广场",
-      //       branch: "世纪广场支行",
-      //       men: "张松",
-      //       time: "2020-08-01",
-      //       customer_num: "100",
-      //       population_num: "10000",
-      //       state: "6日内无营销",
-      //       show: true,
-      //     },
-      //     claim: true,
-      //   },
-      //   {
-      //     userId: 2,
-      //     polylinePath: [
-      //       { lng: 114.67, lat: 33.28 },
-      //       { lng: 114.6, lat: 33.26 },
-      //       { lng: 114.56, lat: 33.28 },
-      //       { lng: 114.62, lat: 33.33 },
-      //       { lng: 114.66, lat: 33.32 },
-      //     ],
-      //     info: {
-      //       address: "和平家园",
-      //       position: { lng: 114.64, lat: 33.3 },
-      //       grid_name: "和平家园",
-      //       branch: "和平家园支行",
-      //       men: "无",
-      //       time: "2020-08-01",
-      //       customer_num: "100",
-      //       population_num: "10000",
-      //       state: "6日内无营销",
-      //       show: true,
-      //     },
-      //     claim: false,
-      //   },
-      // ],
       overlay_content: [],
       label_line: [
         {
@@ -585,6 +507,7 @@ export default {
   created() {
     this.typeIds = this.$route.params.typeIds;
     if (this.typeIds) {
+      this.queryResources();
     }
     this.specialSubject = this.$route.params.specialSubject;
     this.owner = this.$route.params.owner;
@@ -632,8 +555,19 @@ export default {
         });
       });
     },
-    onClick() {
-      this.count += 1;
+    queryResources() {
+      this.$httpGet({
+        url: "/api/resourceType/query",
+        params: {
+          typeIds: this.typeIds,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.map_data = res.data;
+        this.map_data.forEach((it) => {
+          it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
+        });
+      });
     },
     selfOverlayClick(data) {
       this.table = data;
@@ -685,35 +619,59 @@ export default {
     showPopup() {
       this.isPopupVisible = true;
     },
-    handleClick(item) {
-      this.introduce = true;
+    tipsWarn() {
+      Toast({
+        message: "只有当前负责人可以归还",
+        position: "top",
+      });
     },
     clickBack(item) {
       console.log(item);
-      // if(principalName)
       let _username = localStorage.getItem("username");
-      this.$httpPost({
-        url: "/api/semGridding/return",
-        data: {
+      if (item.principalName == _username) {
+        this.$httpPut({
+          url: "/api/semGridding/return",
+          params: {
+            userName: _username,
+            ids: item.id,
+          },
+        }).then((res) => {
+          item.show = false;
+          const index = this.map_data.findIndex((it) => it.info === item);
+          // this.polygonDl[index].setStrokeColor("#0FB38F");需要刷新网格
+          this.mapCenter = {
+            ...this.mapCenter,
+            lat: this.mapCenter.lat + 0.001,
+          };
+          // location.reload();
+          this.$router.go(0);
+          this.introduce = false; //关闭弹窗
+        });
+      } else {
+        this.tipsWarn();
+      }
+    },
+    clickClaim(item) {
+      console.log(item);
+      let _username = localStorage.getItem("username");
+      this.$httpPut({
+        url: "/api/semGridding/claim",
+        params: {
           userName: _username,
-          ids: item.id,
+          id: item.id,
         },
       }).then((res) => {
-        // console.log(res.data);
-        // this.map_data = res.data;
-        // this.map_data.forEach((it) => {
-        //   it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
-        // });
         item.show = false;
         const index = this.map_data.findIndex((it) => it.info === item);
-        // this.polygonDl[index].setStrokeColor("#0FB38F");
-        this.mapCenter = { ...this.mapCenter, lat: this.mapCenter.lat + 0.001 };
-
+        // this.polygonDl[index].setStrokeColor("#0FB38F");需要刷新网格
+        this.mapCenter = {
+          ...this.mapCenter,
+          lat: this.mapCenter.lat + 0.001,
+        };
+        // location.reload();
+        this.$router.go(0);
         this.introduce = false; //关闭弹窗
       });
-    },
-    clickClaim() {
-      this.introduce = false;
     },
     closePopup() {
       this.isPopupVisible = false;
@@ -747,9 +705,6 @@ export default {
     updatePolylinePath(e) {
       this.polylinePath = e.target.getPath();
     },
-    addPolylinePoint() {
-      this.polylinePath.push({ lng: 116.404, lat: 39.915 });
-    },
     infoWindowClose() {
       this.showText = false;
     },
@@ -768,9 +723,6 @@ export default {
     },
     infoWindowOpen2() {
       this.showText2 = true;
-    },
-    changeValue(index) {
-      this.isActive = index;
     },
     onMarked_or_not(value) {
       this.marked_or_not_txt = value;

@@ -1,51 +1,68 @@
 <template>
-  <div class="ResourceSelection">
+  <div class="PathPlanning">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN == '资源选择'">
-      <van-search v-model="value" placeholder="网格名称、客户名称、资源名称" />
-      <!-- <div class="resource_selection">
-        <p>任务</p>
-        <ul v-for="(thisItem,index) in resource_selection1" :key="index" class="cartItem">
-          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
+    <div v-if="typeCN == '路径规划'">
+      <van-search v-model="value" placeholder="请输入客户名称" />
+      <div class="choice_people" style="border-bottom: 1px solid #e8e8e8">
+        <p>
+          已选择
+          <span style="color: #ed3632; font-size: 1.2rem">{{
+            path_planning.length
+          }}</span>
+          人
+        </p>
+        <ul v-for="(thisItem, index) in path_planning" :key="index">
+          <li>
+            <span>
+              <img
+                style="width: 3rem; border-radius: 100%"
+                src="../../assets/grid/men1.jpg"
+                alt
+              />
+              <img
+                class="chahao"
+                style="width: 1rem"
+                src="../../assets/grid/chahao.jpg"
+                @click="remotePlanning(thisItem)"
+                alt
+              />
+            </span>
+            <p>{{ thisItem.name }}</p>
+          </li>
         </ul>
-        <van-pagination
-          v-model="currentPage"
-          :total-items="125"
-          :show-page-size="3"
-          force-ellipses
-        />
       </div>
-      <div class="resource_selection new_selection_two">
-        <p>客户</p>
-        <ul v-for="(thisItem,index) in resource_selection2" :key="index" class="cartItem">
-          <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
-        </ul>
-      </div> -->
-      <div class="resource_selection new_selection_three">
-        <p>资源</p>
+      <div class="resource_selection selection_people">
         <ul
-          v-for="(thisItem, index) in resource_selection3"
+          v-for="(thisItem, index) in path_planning_list"
           :key="index"
           class="cartItem"
+          style="border-bottom: 1px solid #e8e8e8"
         >
-          <van-checkbox-group v-model="resultArr">
-            <van-checkbox
-              :name="thisItem.code"
-              checked-color="rgb(61, 66, 94)"
-              shape="square"
-              >{{ thisItem.codeText }}</van-checkbox
-            >
-          </van-checkbox-group>
-          <!-- <van-checkbox
-            @change="bianhua"
-            v-model="thisItem.code"
-            checked-color="rgb(61, 66, 94)"
+          <li>
+            <p>
+              <img
+                style="width: 3rem; border-radius: 100%"
+                src="../../assets/grid/men1.jpg"
+                alt
+              />
+            </p>
+            <div>
+              <p>{{ thisItem.name }}</p>
+              <p>{{ thisItem.grade }}</p>
+            </div>
+          </li>
+          <van-checkbox
+            v-model="thisItem.check"
+            @click="selectCheck(thisItem)"
             shape="square"
-          >{{thisItem.codeText}}</van-checkbox>-->
+          ></van-checkbox>
         </ul>
-      </div>
-      <div class="save" @click="back">
-        <button>确认</button>
+        <div
+          class="save"
+          @click="$router.push({ path: '/grid/', query: { routePlan: '5' } })"
+        >
+          <button>确认</button>
+        </div>
       </div>
     </div>
   </div>
@@ -53,7 +70,7 @@
 <script>
 import ChildNav from "../../components/Public/ChildNav";
 export default {
-  name: "ResourceSelection",
+  name: "PathPlanning",
   components: {
     ChildNav,
   },
@@ -64,32 +81,29 @@ export default {
       // checked: false,
       currentPage: 1,
       value: "",
-      resource_selection1: [
-        {
-          name: "卓越联腾企业贷客户拜访营销",
-          id: 1,
-        },
-        {
-          name: "某某企业电话营销",
-          id: 2,
-        },
-        {
-          name: "某某客户理财营销",
-          id: 3,
-        },
-      ],
-      resource_selection2: [
-        {
-          name: "个人",
-          id: 1,
-        },
-        {
-          name: "企业",
-          id: 2,
-        },
-      ],
-      resource_selection3: [],
       path_planning: [],
+      path_planning_list: [
+        {
+          name: "曾小贤",
+          grade: "客户等级：一级",
+          check: false,
+        },
+        {
+          name: "曾小贤",
+          grade: "客户等级：一级",
+          check: false,
+        },
+        {
+          name: "曾小贤",
+          grade: "客户等级：一级",
+          check: false,
+        },
+        {
+          name: "曾小贤",
+          grade: "客户等级：一级",
+          check: false,
+        },
+      ],
       resultArr: [],
     };
   },
@@ -106,6 +120,29 @@ export default {
         params: { typeIds: this.resultArr.join(",") },
       });
     },
+    remotePlanning(row) {
+      row.check = false;
+      this.path_planning.splice(
+        this.path_planning.findIndex((it) => it === row),
+        1
+      );
+    },
+    selectCheck(row) {
+      console.log(row);
+      if (row.check) {
+        this.path_planning.push(row);
+      } else {
+        this.path_planning.splice(this.path_planning.indexOf(row), 1);
+      }
+    },
+    selectItem(thisItem) {
+      console.log(thisItem);
+      if (typeof thisItem.checked == "undefined") {
+        this.$set(thisItem, "checked", true);
+      } else {
+        thisItem.checked = !thisItem.checked;
+      }
+    },
     async obtainDic() {
       this.$httpGet({
         url: "/dic/type/dic_grid_resource_type",
@@ -116,12 +153,8 @@ export default {
         res.data = res.data.filter(function (item, index) {
           return item.parentId != null;
         });
-        this.resource_selection3 = res.data;
-
         for (var item = 0; item < res.data.length; item++) {
-          // console.log(res.data[item].code);
           let lalala = res.data[item].code;
-          // this.resource_selection3[item] = res.data[item].code;
         }
         if (res.access_token) {
           localStorage.setItem("_token", res.access_token);
@@ -134,11 +167,8 @@ export default {
 </script>
 
 <style scoped>
-.ResourceSelection {
+.PathPlanning {
   padding-top: 46px;
-}
-.van-pagination {
-  margin-top: 20px;
 }
 .choice_people li .chahao {
   position: absolute;
@@ -156,13 +186,6 @@ export default {
   position: relative;
   margin-top: 0.2rem;
   font-size: 0.9rem;
-}
-.selctBtn {
-  width: 1rem;
-  height: 1rem;
-  border: 1px solid #000;
-  /* margin: 1rem 0rem 0rem 1.2rem; */
-  cursor: pointer;
 }
 .checked::before {
   position: absolute;
@@ -188,79 +211,10 @@ export default {
   width: 76%;
   margin-left: 0.5rem;
 }
-.screen_content {
-  display: flex;
-  position: relative;
-}
-
-.screen_content input {
-  width: calc(100% - 1rem);
-  height: 44px;
-  margin: 1rem 0.5rem;
-  line-height: 20px;
-  padding: 0rem 1rem 0rem 2.3rem;
-  text-align: left;
-  border-radius: 2px 2px 2px 2px;
-  background-color: #fafafa;
-  text-align: center;
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.24);
-  border: 1px solid rgba(255, 0, 0, 0);
-}
-.screen_content img {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  top: 40%;
-  left: 5%;
-  z-index: 100;
-  opacity: 0.5;
-}
-.path_search input {
-  padding: 0rem 2.3rem 0rem 1rem;
-}
-.path_search img {
-  left: auto;
-  right: 5%;
-}
-.screen_content input::-webkit-input-placeholder {
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content input::-moz-placeholder {
-  /* Mozilla Firefox 19+ */
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content input:-moz-placeholder {
-  /* Mozilla Firefox 4 to 18 */
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content input:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content button {
-  border: none;
-  background: none;
-}
 .resource_selection {
   background: #fff;
   padding: 1rem;
   border-bottom: 0.001rem solid #e8e8e8;
-}
-.new_selection_two,
-.new_selection_three {
-  margin-top: 0.5rem;
-  display: flex;
-  flex-wrap: wrap;
-}
-.new_selection_two ul {
-  width: 50%;
-}
-.new_selection_three ul {
-  width: 33.3%;
 }
 .resource_selection p {
   width: 100%;

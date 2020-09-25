@@ -7,8 +7,12 @@ const Home = () => import('@/views/Home/Home.vue');
 const Remind = () => import('@/views/Home/Remind.vue');
 const Task = () => import('@/views/Task/Task.vue');
 const Grid = () => import('@/views/Grid/Grid.vue');
+// 资源选择
 const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
+// 网格选择
 const GridSelection = () => import('@/views/Grid/GridSelection.vue');
+// 路径规划
+const PathPlanning = () => import('@/views/Grid/PathPlanning.vue');
 const WorkBench = () => import('@/views/WorkBench/WorkBench.vue');
 const WorkbenchBranch = () => import('@/views/WorkBench/WorkbenchBranch.vue');
 const ArticleViewBasic = () => import('@/views/WorkBench/ArticleViewBasic.vue');
@@ -215,6 +219,11 @@ const routes = [{
     path: "/Grid/GridSelection",
     name: "GridSelection",
     component: GridSelection
+  },
+  {
+    path: "/Grid/PathPlanning",
+    name: "PathPlanning",
+    component: PathPlanning
   },
 ]
 const router = new VueRouter({
