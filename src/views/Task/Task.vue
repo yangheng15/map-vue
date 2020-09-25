@@ -29,7 +29,7 @@
               <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
                 剩余{{ thisItem.remainingDays }}天
               </p>
-              <p>截止日期：{{ thisItem.endTime }}</p>
+              <p>截止日期：{{ thisItem.endTime | transform }}</p>
             </div>
           </div>
         </router-link>

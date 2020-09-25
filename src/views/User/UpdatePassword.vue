@@ -24,22 +24,22 @@
         placeholder="确认新密码"
         :rules="[{ required: true, message: '请填写确认新密码' }]"
       />
-        <van-button
-          round
-          block
-          type="info"
-          native-type="submit"
-          color="#3D425E"
-          style="margin-top:60px"
-        >
-          提交
-        </van-button>
+      <van-button
+        round
+        block
+        type="info"
+        native-type="submit"
+        color="#3D425E"
+        style="margin-top: 60px"
+      >
+        提交
+      </van-button>
     </van-form>
   </div>
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import { Dialog } from "vant";
+import { Dialog, Toast } from "vant";
 import md5 from "js-md5";
 export default {
   name: "UpdatePassword",
@@ -58,6 +58,12 @@ export default {
     this.typeCN = this.$route.query.title;
   },
   methods: {
+    tipsFail() {
+      Toast({
+        message: "用户名密码错误",
+        position: "top",
+      });
+    },
     onSubmit() {
       if (this.currentPassword == "") {
         Dialog.alert({
@@ -95,22 +101,27 @@ export default {
         return;
       }
       let _username = localStorage.getItem("username");
-      var bcrypt = require("bcryptjs");//引入bcryptjs库
-      var hash = bcrypt.hashSync(md5(this.password));
       this.$httpPut({
         url: "/api/v1/sign/updatePwd",
         params: {
-          oldPwd: bcrypt.hashSync(md5(this.currentPassword)),
-          newPwd: bcrypt.hashSync(md5(this.password1)),
+          oldPwd: md5(this.currentPassword),
+          newPwd: md5(this.password1),
           userName: _username,
         },
       }).then((res) => {
-        Dialog.alert({
-          title: "提示",
-          message: "修改成功！",
-        }).then((rst) => {
-          this.$router.push("/");
-        });
+        if (res.code == 400) {
+          this.tipsFail();
+          return;
+        } else {
+          console.log(res.code);
+          console.log(res.message);
+          Dialog.alert({
+            title: "提示",
+            message: "修改成功！",
+          }).then((rst) => {
+            this.$router.push("/");
+          });
+        }
       });
     },
   },
