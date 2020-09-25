@@ -21,6 +21,7 @@
         ></my-overlay>
       </template>
 
+      <!-- 弹窗 -->
       <bm-overlay
         v-show="introduce"
         pane="labelPane"
@@ -38,7 +39,7 @@
             />
           </p>
           <div class="pop_content">
-            <p>所属机构：{{ table.branchCode }}</p>
+            <p>所属机构：{{ table.orgName }}</p>
             <p>网格经理：{{ table.principalName }}</p>
             <p>认领日期：{{ table.allocateTime }}</p>
             <p>客户数量：{{ table.customer_num }}</p>
@@ -70,9 +71,9 @@
       </bm-overlay>
 
       <!-- 下面是路径规划出来的图标-->
-      <template v-for="(item, index) in label_line">
+      <template v-for="item in label_line">
         <bm-label
-          :key="index"
+          :key="item.id"
           v-if="$route.query.routePlan"
           :content="item.content"
           :position="item.position"
@@ -80,6 +81,7 @@
           title="Hover me"
         />
       </template>
+
       <bm-polygon
         v-if="$route.query.routePlan"
         :path="polylinePath"
@@ -89,6 +91,7 @@
         :stroke-weight="4"
         @lineupdate="updatePolylinePath"
       ></bm-polygon>
+
       <bm-marker
         :position="{ lng: 114.645, lat: 33.62 }"
         :icon="{
@@ -107,6 +110,7 @@
           <p>备注：要去的学校</p>
         </bm-info-window>
       </bm-marker>
+
       <bm-marker
         :position="{ lng: 114.66, lat: 33.605 }"
         :icon="{
@@ -128,6 +132,7 @@
           <p>剩余日期：30天</p>
         </bm-info-window>
       </bm-marker>
+
       <bm-marker
         v-if="$route.query.taskChoice"
         :position="{ lng: 114.59, lat: 33.645 }"
@@ -516,12 +521,6 @@ export default {
     }
   },
   methods: {
-    handler({ BMap, map }) {
-      console.log(BMap, map);
-      this.center.lng = 116.404;
-      this.center.lat = 39.915;
-      this.zoom = 15;
-    },
     mapPlaning(BMap, map) {
       this.$httpGet({
         url: "/api/mapPlaning/query",
@@ -537,7 +536,6 @@ export default {
     resource_selection() {
       if (!this.owner) {
         var _username = localStorage.getItem("username");
-        console.log(_username);
       } else {
         _username = [];
       }
@@ -785,5 +783,5 @@ export default {
 
 
 <style scoped lang='scss'>
-@import url('./Grid.scss');
+@import url("./Grid.scss");
 </style>
