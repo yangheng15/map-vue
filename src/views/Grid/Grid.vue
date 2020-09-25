@@ -505,7 +505,6 @@ export default {
       sign_position: "",
       markerPostion: { lng: 114.655, lat: 33.625 },
       filterData: [],
-      BMap: null,
       map: null,
     };
   },
@@ -575,6 +574,7 @@ export default {
       this.introduce = false;
     },
     mapReady({ BMap, map }) {
+      this.map = map;
       //添加多边形覆盖物
       this.mapPlaning(BMap, map);
     },
@@ -641,8 +641,7 @@ export default {
             ...this.mapCenter,
             lat: this.mapCenter.lat + 0.001,
           };
-          // location.reload();
-          this.$router.go(0);
+          this.map.reset();
           this.introduce = false; //关闭弹窗
         });
       } else {
