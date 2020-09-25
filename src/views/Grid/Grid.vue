@@ -38,7 +38,7 @@
             />
           </p>
           <div class="pop_content">
-            <p>所属机构：{{ table.branchCode }}</p>
+            <p>所属机构：{{ table.orgName }}</p>
             <p>网格经理：{{ table.principalName }}</p>
             <p>认领日期：{{ table.allocateTime }}</p>
             <p>客户数量：{{ table.customer_num }}</p>
