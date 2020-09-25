@@ -8,7 +8,6 @@ import 'vant/lib/index.css';
 // import moment from 'moment'; 
 import BaiduMap from 'vue-baidu-map'
 import { httpPost, httpGet, httpPut } from '@/axios/http';
-
 // 全局注册
 
 Vue.use(BaiduMap, {
