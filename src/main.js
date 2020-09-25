@@ -5,6 +5,7 @@ import VueAMap from 'vue-amap';
 import store from './store/index';
 import Vant from 'vant';
 import 'vant/lib/index.css';
+// import moment from 'moment'; 
 import BaiduMap from 'vue-baidu-map'
 import { httpPost, httpGet, httpPut } from '@/axios/http';
 
@@ -20,6 +21,7 @@ import {
 } from 'vant';
 Vue.use(Dialog);
 Vue.use(VueAMap);
+// Vue.use(moment);
 Vue.prototype.$httpGet = httpGet;
 Vue.prototype.$httpPost = httpPost;
 Vue.prototype.$httpPut = httpPut;

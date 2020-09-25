@@ -3,64 +3,91 @@
     <my-nav :title="title"></my-nav>
     <div class="tabTitle">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId==0?'cur':'ordinary'">新任务</li>
-        <li @click="tab(1)" :class="tabId==1?'cur':'ordinary'">已结束</li>
-        <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">待评价</li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">新任务</li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">已结束</li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">待评价</li>
       </ul>
-      <div v-show="tabId===0">
-        <router-link tag="div" :to="{ name: 'MissionDetails', query: { title: '任务详情' }}">
-          <div v-for="(thisItem,index) in new_task" :key="index" class="right_content">
+      <div v-show="tabId === 0">
+        <router-link
+          tag="div"
+          :to="{ name: 'MissionDetails', query: { title: '任务详情' } }"
+        >
+          <div
+            v-for="(thisItem, index) in new_task"
+            :key="index"
+            class="right_content"
+          >
             <div class="new_task">
-              <p style="font-weight:550">{{thisItem.company_source}}</p>
-              <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
-              <p>{{thisItem.date_start}}</p>
+              <p style="font-weight: 550">{{ thisItem.name }}</p>
+              <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
+                {{ thisItem.targetNum }}万
+              </p>
+              <p>创建日期：{{ moment(thisItem.beginTime).format('YYYY-MM-DD') }}</p>
             </div>
             <div class="new_task">
-              <p>{{thisItem.company_introduce}}</p>
-              <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.date}}</p>
-              <p>{{thisItem.date_end}}</p>
+              <p>{{ thisItem.productCode }}</p>
+              <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
+                剩余{{ thisItem.remainingDays }}天
+              </p>
+              <p>截止日期：{{ thisItem.endTime }}</p>
             </div>
           </div>
         </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
-      <div v-show="tabId===1">
-        <router-link tag="div" :to="{ name: 'MissionDetails', query: { title: '任务详情' }}">
+      <div v-show="tabId === 1">
+        <router-link
+          tag="div"
+          :to="{ name: 'MissionDetails', query: { title: '任务详情' } }"
+        >
           <div
-            v-for="(thisItem,index) in new_task"
+            v-for="(thisItem, index) in new_task1"
             :key="index"
             class="right_content success_failure"
           >
             <div class="new_task">
-              <p style="font-weight:550">{{thisItem.company_source}}</p>
-              <p style="text-align:center!important;">{{thisItem.menoy}}</p>
-              <p>{{thisItem.date_start}}</p>
+              <p style="font-weight: 550">{{ thisItem.company_source }}</p>
+              <p style="text-align: center !important">{{ thisItem.menoy }}</p>
+              <p>{{ thisItem.date_start }}</p>
             </div>
             <div class="new_task">
-              <p>{{thisItem.company_introduce}}</p>
-              <p>{{thisItem.date_end}}</p>
+              <p>{{ thisItem.company_introduce }}</p>
+              <p>{{ thisItem.date_end }}</p>
             </div>
 
             <div
               v-if="thisItem.success_failure"
-              :class="thisItem.sf_state==1 ? 'sf_state' : 'sf_states'"
-            >{{thisItem.success_failure}}</div>
+              :class="thisItem.sf_state == 1 ? 'sf_state' : 'sf_states'"
+            >
+              {{ thisItem.success_failure }}
+            </div>
           </div>
         </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
-      <div v-show="tabId===2">
-        <router-link tag="div" :to="{ name: 'MissionDetails', query: { title: '任务详情' }}">
-          <div class="right_content" v-for="(thisItem,index) in new_task" :key="index">
+      <div v-show="tabId === 2">
+        <router-link
+          tag="div"
+          :to="{ name: 'MissionDetails', query: { title: '任务详情' } }"
+        >
+          <div
+            class="right_content"
+            v-for="(thisItem, index) in new_task2"
+            :key="index"
+          >
             <div class="new_task">
-              <p style="font-weight:550">{{thisItem.company_source}}</p>
-              <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.menoy}}</p>
-              <p>{{thisItem.date_start}}</p>
+              <p style="font-weight: 550">{{ thisItem.company_source }}</p>
+              <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
+                {{ thisItem.menoy }}
+              </p>
+              <p>{{ thisItem.date_start }}</p>
             </div>
             <div class="new_task">
-              <p>{{thisItem.company_introduce}}</p>
-              <p :class="thisItem.sf_state==1?'teshu':'teshu2'">{{thisItem.be_overdue}}</p>
-              <p>{{thisItem.date_end}}</p>
+              <p>{{ thisItem.company_introduce }}</p>
+              <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
+                {{ thisItem.be_overdue }}
+              </p>
+              <p>{{ thisItem.date_end }}</p>
             </div>
           </div>
         </router-link>
@@ -73,6 +100,7 @@
 <script>
 import MyNav from "../../components/Public/MyNav";
 import MyTabbar from "../../components/Public/MyTabbar";
+import moment from 'moment'; 
 export default {
   name: "Task",
   components: {
@@ -89,7 +117,30 @@ export default {
       value1: "",
       value2: "",
       value3: "",
-      new_task: [
+      new_task: [],
+      new_task1: [
+        {
+          company_source: "产品营销",
+          menoy: "30万/100万",
+          company_introduce: "企业贷",
+          date_start: "创建日期：2020-08-01",
+          date_end: "截止日期：2020-09-30",
+          date: "剩余20天",
+          success_failure: "失败",
+          be_overdue: "已过期",
+          sf_state: 1,
+        },
+        {
+          company_source: "资料采集",
+          menoy: "30户/30户",
+          company_introduce: "农户家庭",
+          date_start: "创建日期：2020-08-01",
+          date_end: "截止日期：2020-09-30",
+          date: "剩余20天",
+          success_failure: "成功",
+        },
+      ],
+      new_task2: [
         {
           company_source: "产品营销",
           menoy: "30万/100万",
@@ -113,10 +164,27 @@ export default {
       ],
     };
   },
+  created() {
+    this.queryNewTask();
+  },
   methods: {
     tab(ev) {
       this.tabId = ev;
       localStorage.setItem("indexTabId", this.tabId);
+    },
+    queryNewTask() {
+      let _username = localStorage.getItem("username");
+      this.$httpGet({
+        url: "/api/semTasks/appNewTask",
+        params: {
+          userName: _username,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.new_task = res.data;
+      });
     },
   },
 };
