@@ -25,7 +25,9 @@ const EditMarketingRecord = () => import('@/views/WorkBench/EditMarketingRecord.
 const ProductIntroduction = () => import('@/views/WorkBench/ProductIntroduction.vue');
 const ProductCatalog = () => import('@/views/WorkBench/ProductCatalog.vue');
 const ProductCatalogDetail = () => import('@/views/WorkBench/ProductCatalogDetail.vue');
+//知识库
 const knowledgeBase = () => import('@/views/WorkBench/knowledgeBase.vue');
+//知识库详情
 const knowledgeBaseDetail = () => import('@/views/WorkBench/knowledgeBaseDetail.vue');
 // 通讯录
 const TelePhone = () => import('@/views/WorkBench/TelePhone.vue');
