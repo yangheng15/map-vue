@@ -12,7 +12,7 @@
       <template v-for="(item, index) in map_data">
         <my-overlay
           :key="index"
-          :show="item.status"
+          :show="true"
           :position="item.position"
           :name="item.principalName"
           :address="item.name"
@@ -42,11 +42,11 @@
           </p>
           <div class="pop_content">
             <p>所属机构：{{ table.branchCode }}</p>
-            <p>网格经理：{{ table.men }}</p>
-            <p>认领日期：{{ table.time }}</p>
+            <p>网格经理：{{ table.principalName }}</p>
+            <p>认领日期：{{ table.allocateTime }}</p>
             <p>客户数量：{{ table.customer_num }}</p>
             <p>人口数量：{{ table.population_num }}</p>
-            <p>营销状态：{{ table.state }}</p>
+            <p>营销状态：{{ table.status }}</p>
           </div>
           <div style="margin-top: 1.5rem" class="save">
             <van-button
@@ -55,14 +55,14 @@
                 border-radius: 0.3rem;
                 background: #df0f0f;
               "
-              :disabled="Boolean(table.img)"
+              :disabled="Boolean(table.principalName)"
               type="primary"
               @touchstart="clickClaim()"
               >认领</van-button
             >
             <van-button
               style="border-radius: 0.3rem; background: #0fb38f"
-              :disabled="!Boolean(table.img)"
+              :disabled="!Boolean(table.principalName)"
               ref="goback"
               type="primary"
               @touchstart="clickBack(table)"
@@ -577,7 +577,9 @@ export default {
       sign_remarks: "",
       sign_position: "",
       markerPostion: { lng: 114.655, lat: 33.625 },
-      filterData: []
+      filterData: [],
+      BMap: null,
+      map: null,
     };
   },
   created() {
@@ -589,7 +591,6 @@ export default {
     if (this.specialSubject || this.owner) {
       this.resource_selection();
     }
-    this.mapPlaning();
   },
   methods: {
     handler({ BMap, map }) {
@@ -598,15 +599,16 @@ export default {
       this.center.lat = 39.915;
       this.zoom = 15;
     },
-    mapPlaning() {
+    mapPlaning(BMap, map) {
       this.$httpGet({
         url: "/api/mapPlaning/query",
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.map_data = res.data;
         this.map_data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
+        this.createPolygon(map);
       });
     },
     resource_selection() {
@@ -640,33 +642,22 @@ export default {
     overlayClose() {
       this.introduce = false;
     },
-    chuxian(item) {
-      setTimeout(() => {
-        this.mapReady();
-      }, 0);
-
-      this.introduce = true;
-    },
     mapReady({ BMap, map }) {
       //添加多边形覆盖物
-      const userId = this.$route.query.userId;
-      map.clearOverlays();
-      if (userId) {
-        const index = this.map_data.findIndex((it) => it.id === +id);
-        this.map_data = this.map_data.filter((it) => it.id === +id);
-        console.log(this.map_data);
-        this.createPolygon(map);
-      } else {
-        this.createPolygon(map);
-      }
+      this.mapPlaning(BMap, map);
     },
     createPolygon(map) {
+      console.log(BMap);
       let polygonArr = [];
+      // console.log(this.map_data);
       this.map_data.forEach((line) => {
+        // console.log(line.mapPlaning);
+        // console.log(this.BMap === BMap);
         line.mapPlaning &&
           polygonArr.push(
             new BMap.Polygon(
               line.mapPlaning.map((position) => {
+                // console.log(BMap === this.BMap);
                 return new BMap.Point(position.lng, position.lat);
               }),
               {
@@ -675,7 +666,7 @@ export default {
                 strokeOpacity: 1,
                 strokeStyle: "dashed",
                 fillOpacity: "0.2",
-                fillColor: "line.fillColor ",
+                fillColor: line.fillColor,
               }
             )
           );
@@ -698,12 +689,28 @@ export default {
       this.introduce = true;
     },
     clickBack(item) {
-      item.show = false;
-      const index = this.map_data.findIndex((it) => it.info === item);
-      this.polygonDl[index].setStrokeColor("#0FB38F");
-      this.mapCenter = { ...this.mapCenter, lat: this.mapCenter.lat + 0.001 };
+      console.log(item);
+      // if(principalName)
+      let _username = localStorage.getItem("username");
+      this.$httpPost({
+        url: "/api/semGridding/return",
+        data: {
+          userName: _username,
+          ids: item.id,
+        },
+      }).then((res) => {
+        // console.log(res.data);
+        // this.map_data = res.data;
+        // this.map_data.forEach((it) => {
+        //   it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
+        // });
+        item.show = false;
+        const index = this.map_data.findIndex((it) => it.info === item);
+        // this.polygonDl[index].setStrokeColor("#0FB38F");
+        this.mapCenter = { ...this.mapCenter, lat: this.mapCenter.lat + 0.001 };
 
-      this.introduce = false; //关闭弹窗
+        this.introduce = false; //关闭弹窗
+      });
     },
     clickClaim() {
       this.introduce = false;
@@ -796,7 +803,9 @@ export default {
     },
     async onSubmit(values) {
       // console.log("submit", values);
-      const code = this.filterData.find(it => it.codeText === this.resource_type_txt)['code']
+      const code = this.filterData.find(
+        (it) => it.codeText === this.resource_type_txt
+      )["code"];
       this.$httpPost({
         url: "/api/semResource/add",
         headers: {
@@ -906,6 +915,7 @@ export default {
   top: -153rem;
   left: -4rem;
   width: 16rem;
+  z-index: 2;
   background: rgb(255, 255, 255);
   border-radius: 0.5rem;
 }

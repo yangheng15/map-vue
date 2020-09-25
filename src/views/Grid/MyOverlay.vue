@@ -1,9 +1,9 @@
 <template>
-  <bm-overlay ref="customOverlay" :class="{sample: true, active}" pane="labelPane" @draw="draw">
+  <bm-overlay v-if="position" ref="customOverlay" :class="{sample: true, active}" pane="labelPane" @draw="draw">
     <div class="introduce_body" @touchstart="registerEvent">
-      <img v-if="show" class="introduce_img" :src="img" alt />
-      <p v-if="show && name" class="introduce_name">{{name}}</p>
-      <p :class="name && show?'introduce_address':'introduce_address_lv'">{{address}}</p>
+      <!-- <img v-if="show" class="introduce_img" :src="img" alt /> -->
+      <p v-if="name" class="introduce_name">{{name}}</p>
+      <p :class="name ?'introduce_address':'introduce_address_lv'">{{address}}</p>
     </div>
     <!-- <div v-text="text" @click="handleClick"></div> -->
   </bm-overlay>
@@ -20,6 +20,10 @@ export default {
       deep: true,
     },
   },
+  created(){
+    console.log(this.position, this.name, this.address);
+    // console.log(new BMap());
+  },
   methods: {
     registerEvent() {
       this.$emit('touchEvent');
@@ -28,7 +32,7 @@ export default {
       if(!this.position) {
         return;
       }
-      const { lng, lat } = this.position;
+      const { lng, lat } = {lng: this.position.split(',')[0], lat: this.position.split(',')[1]};
       // console.log(lng, lat); 
       const pixel = map.pointToOverlayPixel(new BMap.Point(lng, lat));
       el.style.left = pixel.x - 60 + "px";
@@ -49,7 +53,7 @@ export default {
 .introduce_body {
   text-align: center;
   width: 4rem;
-  height: 5rem;
+  /* height: 5rem; */
   display: flex;
   flex-wrap: wrap;
   align-items: center;

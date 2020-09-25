@@ -88,7 +88,7 @@
       <!-- @click="$router.push('/index/grid/')" -->
       <div
         class="save"
-        @click="$router.push({ path: '/grid/', query: { userId: '0' } })"
+        @click="$router.push({ name: 'Grid', params: { userId: '0' } })"
       >
         <button>确认</button>
       </div>
