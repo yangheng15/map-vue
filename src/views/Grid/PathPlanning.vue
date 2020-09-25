@@ -2,7 +2,11 @@
   <div class="PathPlanning">
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '路径规划'">
-      <van-search v-model="value" placeholder="请输入客户名称" />
+      <van-search
+        v-model="customers"
+        placeholder="请输入客户名称"
+        @search="onSearch"
+      />
       <div class="choice_people" style="border-bottom: 1px solid #e8e8e8">
         <p>
           已选择
@@ -80,7 +84,7 @@ export default {
       typeCN: "",
       // checked: false,
       currentPage: 1,
-      value: "",
+      customers: "",
       path_planning: [],
       path_planning_list: [
         {
@@ -110,7 +114,7 @@ export default {
   created() {
     this.typeCN = this.$route.query.title;
     this.token = localStorage.getItem("_token");
-    this.obtainDic();
+    this.gridCustomers();
   },
   methods: {
     back() {
@@ -143,22 +147,32 @@ export default {
         thisItem.checked = !thisItem.checked;
       }
     },
-    async obtainDic() {
+    gridCustomers() {
+      let _username = localStorage.getItem("username");
       this.$httpGet({
-        url: "/dic/type/dic_grid_resource_type",
-        headers: {
-          token: this.token,
+        url: "/api/semGridding/custInfo",
+        params: {
+          userName: _username,
+          limit: 10,
+          page: 1,
         },
       }).then((res) => {
-        res.data = res.data.filter(function (item, index) {
-          return item.parentId != null;
-        });
-        for (var item = 0; item < res.data.length; item++) {
-          let lalala = res.data[item].code;
-        }
-        if (res.access_token) {
-          localStorage.setItem("_token", res.access_token);
-        }
+        console.log(res);
+      });
+    },
+    onSearch(val) {
+      console.log(val);
+      let _username = localStorage.getItem("username");
+      this.$httpGet({
+        url: "/api/semGridding/custInfo",
+        params: {
+          userName: _username,
+          limit: 10,
+          page: 1,
+          custName: val,
+        },
+      }).then((res) => {
+        console.log(res);
       });
     },
   },
