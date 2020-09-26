@@ -52,7 +52,7 @@
             </p>
             <div>
               <p>{{ thisItem.name }}</p>
-              <p>{{ thisItem.grade }}</p>
+              <p>客户等级：{{ thisItem.level }}级</p>
             </div>
           </li>
           <van-checkbox
@@ -87,26 +87,26 @@ export default {
       customers: "",
       path_planning: [],
       path_planning_list: [
-        {
-          name: "曾小贤",
-          grade: "客户等级：一级",
-          check: false,
-        },
-        {
-          name: "曾小贤",
-          grade: "客户等级：一级",
-          check: false,
-        },
-        {
-          name: "曾小贤",
-          grade: "客户等级：一级",
-          check: false,
-        },
-        {
-          name: "曾小贤",
-          grade: "客户等级：一级",
-          check: false,
-        },
+        // {
+        //   name: "曾小贤",
+        //   grade: "客户等级：一级",
+        //   check: false,
+        // },
+        // {
+        //   name: "曾小贤",
+        //   grade: "客户等级：一级",
+        //   check: false,
+        // },
+        // {
+        //   name: "曾小贤",
+        //   grade: "客户等级：一级",
+        //   check: false,
+        // },
+        // {
+        //   name: "曾小贤",
+        //   grade: "客户等级：一级",
+        //   check: false,
+        // },
       ],
       resultArr: [],
     };
@@ -158,6 +158,7 @@ export default {
         },
       }).then((res) => {
         console.log(res);
+        this.path_planning_list = res.data
       });
     },
     onSearch(val) {
