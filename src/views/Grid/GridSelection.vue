@@ -8,7 +8,7 @@
           :key="index"
           class="cartItem"
         >
-          <van-checkbox v-model="ownerArr" shape="square">{{
+          <van-checkbox v-model="ownerCheck" shape="square">{{
             thisItem.name
           }}</van-checkbox>
         </ul>
@@ -57,22 +57,11 @@ export default {
       typeCN: "",
       value: "",
       resource_selection3: [],
-      grid_selection1: [
-        {
-          name: "只看我的",
-        },
-      ],
-      grid_selection2: [
-        {
-          name: "行政区划",
-        },
-        {
-          name: "机构权属",
-        },
-      ],
+      grid_selection1: [{ name: "只看我的"}],
+      grid_selection2: [],
       grid_selection3: [],
       resultArr: [],
-      ownerArr: [],
+      ownerCheck: false,
     };
   },
   created() {
@@ -82,13 +71,11 @@ export default {
   },
   methods: {
     back() {
-      console.log(this.resultArr.join(","));
-      console.log(this.ownerArr);
       this.$router.push({
         name: "Grid",
         params: {
           specialSubject: this.resultArr.join(","),
-          owner: this.ownerArr,
+          owner: this.ownerCheck,
         },
       });
     },

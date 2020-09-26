@@ -529,11 +529,12 @@ export default {
         this.map_data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
-        this.createPolygon(map);
+        map && this.createPolygon(map);
+        
       });
     },
     resource_selection() {
-      if (!this.owner) {
+      if (this.owner) {
         var _username = localStorage.getItem("username");
       } else {
         _username = [];
@@ -579,7 +580,7 @@ export default {
       this.mapPlaning(BMap, map);
     },
     createPolygon(map) {
-      console.log(BMap);
+      // console.log(BMap);
       let polygonArr = [];
       // console.log(this.map_data);
       this.map_data.forEach((line) => {
@@ -611,20 +612,12 @@ export default {
       // console.log(point);
       this.markerPostion = point;
     },
-    clear() {
-      this.infoWindow.contents = "";
-    },
     showPopup() {
       this.isPopupVisible = true;
     },
-    tipsWarn() {
-      Toast({
-        message: "只有当前负责人可以归还",
-        position: "top",
-      });
-    },
     clickBack(item) {
       console.log(item);
+      // debugger 
       let _username = localStorage.getItem("username");
       if (item.principal == _username) {
         this.$httpPut({
@@ -634,18 +627,24 @@ export default {
             ids: item.id,
           },
         }).then((res) => {
-          item.show = false;
-          const index = this.map_data.findIndex((it) => it.info === item);
-          // this.polygonDl[index].setStrokeColor("#0FB38F");需要刷新网格
-          this.mapCenter = {
-            ...this.mapCenter,
-            lat: this.mapCenter.lat + 0.001,
-          };
-          this.map.reset();
+          this.mapPlaning();
+          // const index = this.map_data.findIndex((it) => it === item);
+          // console.log(index);
+          // console.log(this.polygonArr);
+          // this.map_data.splice(index, 1)
+          // this.polygonDl[index].setStrokeColor("#0FB38F");
+          // this.mapCenter = {
+          //   ...this.mapCenter,
+          //   lat: this.mapCenter.lat + 0.001,
+          // };
+          // this.map.reset();
           this.introduce = false; //关闭弹窗
         });
       } else {
-        this.tipsWarn();
+          Toast({
+            message: "只有当前负责人可以归还",
+            position: "top",
+          });
       }
     },
     clickClaim(item) {
@@ -658,15 +657,13 @@ export default {
           id: item.id,
         },
       }).then((res) => {
-        item.show = false;
-        const index = this.map_data.findIndex((it) => it.info === item);
-        // this.polygonDl[index].setStrokeColor("#0FB38F");需要刷新网格
-        this.mapCenter = {
-          ...this.mapCenter,
-          lat: this.mapCenter.lat + 0.001,
-        };
-        // location.reload();
-        this.$router.go(0);
+        this.mapPlaning();
+        // const index = this.map_data.findIndex((it) => it.info === item);
+        // this.polygonDl[index].setStrokeColor("#0FB38F");
+        // this.mapCenter = {
+        //   ...this.mapCenter,
+        //   lat: this.mapCenter.lat + 0.001,
+        // };
         this.introduce = false; //关闭弹窗
       });
     },
@@ -681,17 +678,6 @@ export default {
     },
     closePopupSign() {
       this.isPopupVisibleSign = false;
-    },
-    selectItem(thisItem) {
-      if (typeof thisItem.checked == "undefined") {
-        this.$set(thisItem, "checked", true);
-      } else {
-        thisItem.checked = !thisItem.checked;
-      }
-    },
-    updateCirclePath(e) {
-      this.circlePath.center = e.target.getCenter();
-      this.circlePath.radius = e.target.getRadius();
     },
     draw({ el, BMap, map }) {
       // debugger
