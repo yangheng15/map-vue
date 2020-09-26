@@ -1,7 +1,7 @@
 <template>
   <div class="grid">
-    <my-nav :title="title"></my-nav>
-    <van-search v-model="value" placeholder="网格名称、客户名称、资源名称" />
+    <my-nav title="网格"></my-nav>
+    <van-search v-model="searchVal" placeholder="网格名称、客户名称、资源名称" />
     <baidu-map
       class="bm-view"
       @ready="mapReady"
@@ -25,9 +25,7 @@
       <bm-overlay
         v-show="introduce"
         pane="labelPane"
-        :class="{ sample: true, active }"
-        @mouseover.native="active = true"
-        @mouseleave.native="active = false"
+        :class="{ sample: true }"
         @draw="draw"
       >
         <div class="Popup_introduce">
@@ -71,13 +69,21 @@
       </bm-overlay>
 
       <!-- 下面是路径规划出来的图标-->
-      <template v-for="item in label_line">
+      <template v-if="$route.params.pathIds">
         <bm-label
-          :key="item.id"
-          v-if="$route.query.routePlan"
-          :content="item.content"
-          :position="item.position"
-          :labelStyle="item.labelStyle"
+          v-for="(item, index) in $route.params.pathIds"
+          :key="index + 'sign'"
+          :content="item.name"
+          :position="{lng: item.location && item.location.split(',')[0], lat: item.location && item.location.split(',')[1]}"
+          :labelStyle='{
+            color: "red",
+            fontSize: "1rem",
+            width: "1.5rem",
+            height: "1.5rem",
+            lineHeight: "1.5rem",
+            textAlign: "center",
+            borderRadius: "100%",
+          }'
           title="Hover me"
         />
       </template>
@@ -92,24 +98,6 @@
         @lineupdate="updatePolylinePath"
       ></bm-polygon>
 
-      <bm-marker
-        :position="{ lng: 114.645, lat: 33.62 }"
-        :icon="{
-          url: require('../../assets/grid/red_flag1.png'),
-          size: { width: 50, height: 50 },
-        }"
-        @click="infoWindowOpen1"
-      >
-        <bm-info-window
-          :show="showText1"
-          @close="infoWindowClose1"
-          @open="infoWindowOpen1"
-        >
-          <p style="padding-top: 1rem">姓名：卓越联腾企业贷客户拜访营销</p>
-          <p>地址：学校</p>
-          <p>备注：要去的学校</p>
-        </bm-info-window>
-      </bm-marker>
 
       <bm-marker
         :position="{ lng: 114.66, lat: 33.605 }"
@@ -117,13 +105,12 @@
           url: require('../../assets/grid/red_flag.png'),
           size: { width: 50, height: 50 },
         }"
-        @click="infoWindowOpen"
+        @click="showText = true"
       >
         <bm-info-window
           style="left: 1rem"
           :show="showText"
-          @close="infoWindowClose"
-          @open="infoWindowOpen"
+          @close="showText = false"
         >
           <p style="padding-top: 1rem">姓名：卓越联腾企业贷客户拜访营销</p>
           <p>类型：产品营销</p>
@@ -132,27 +119,7 @@
           <p>剩余日期：30天</p>
         </bm-info-window>
       </bm-marker>
-
-      <bm-marker
-        v-if="$route.query.taskChoice"
-        :position="{ lng: 114.59, lat: 33.645 }"
-        :icon="{
-          url: require('../../assets/grid/red_flag2.png'),
-          size: { width: 50, height: 50 },
-        }"
-        @click="infoWindowOpen2"
-      >
-        <bm-info-window
-          style="left: 1rem"
-          :show="showText2"
-          @close="infoWindowClose2"
-          @open="infoWindowOpen2"
-        >
-          <p style="padding-top: 1rem">姓名：卓越联腾企业贷客户拜访营销</p>
-          <p>地址：小区</p>
-          <p>备注：要去的小区</p>
-        </bm-info-window>
-      </bm-marker>
+      
       <!-- 点击出现的标记 -->
       <bm-marker
         v-if="markerTure"
@@ -165,6 +132,7 @@
           size: { width: 60, height: 60 },
         }"
       ></bm-marker>
+      
       <!-- 右下角定位的图标 -->
       <bm-geolocation
         anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
@@ -198,10 +166,10 @@
         <img src="../../assets/grid/grid_filtering.svg" alt />
       </router-link>
     </div>
+    
     <div v-show="isPopupVisibleSign" class="isPopupVisibleSign">
       <van-form
         class="isPopupVisibleSign_content"
-        @failed="onFailed"
         @submit="onSubmit"
       >
         <p class="pop_title">地图标记</p>
@@ -281,12 +249,13 @@
           <van-button style="margin-right: 10px" round native-type="submit"
             >保存</van-button
           >
-          <van-button round type="primary" @click="closePopupSign()"
+          <van-button round type="primary" @click="isPopupVisibleSign = false"
             >取消</van-button
           >
         </div>
       </van-form>
     </div>
+
     <my-tabbar></my-tabbar>
   </div>
 </template>
@@ -305,185 +274,15 @@ export default {
   },
   data() {
     return {
-      title: "网格",
-      zoom: 10,
-      center: [114.65, 33.37],
-      markers: [],
-      count: 0,
-      lalal: {},
       table: {},
       mapCenter: { lng: 114.654102, lat: 33.623741 },
       polygonDl: [],
       map_data: [],
       map_data_position: {},
-      overlay_content: [],
-      label_line: [
-        {
-          content: "1",
-          position: { lng: 114.705, lat: 33.615 },
-          labelStyle: {
-            color: "red",
-            fontSize: "1rem",
-            width: "1.5rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-            borderRadius: "100%",
-          },
-        },
-        {
-          content: "2",
-          position: { lng: 114.635, lat: 33.585 },
-          labelStyle: {
-            color: "red",
-            fontSize: "1rem",
-            width: "1.5rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-            borderRadius: "100%",
-          },
-        },
-        {
-          content: "3",
-          position: { lng: 114.685, lat: 33.525 },
-          labelStyle: {
-            color: "red",
-            fontSize: "1rem",
-            width: "1.5rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-            borderRadius: "100%",
-          },
-        },
-        {
-          content: "4",
-          position: { lng: 114.595, lat: 33.57 },
-          labelStyle: {
-            color: "red",
-            fontSize: "1rem",
-            width: "1.5rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-            borderRadius: "100%",
-          },
-        },
-        {
-          content: "5",
-          position: { lng: 114.645, lat: 33.635 },
-          labelStyle: {
-            color: "red",
-            fontSize: "1rem",
-            width: "1.5rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-            borderRadius: "100%",
-          },
-        },
-        {
-          content: "赵四",
-          position: { lng: 114.678, lat: 33.622 },
-          labelStyle: {
-            color: "red",
-            fontSize: "0.8rem",
-            width: "3rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-          },
-        },
-        {
-          content: "张红",
-          position: { lng: 114.608, lat: 33.593 },
-          labelStyle: {
-            color: "red",
-            fontSize: "0.8rem",
-            width: "3rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-          },
-        },
-        {
-          content: "王强",
-          position: { lng: 114.658, lat: 33.533 },
-          labelStyle: {
-            color: "red",
-            fontSize: "0.8rem",
-            width: "3rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-          },
-        },
-        {
-          content: "慕容",
-          position: { lng: 114.568, lat: 33.579 },
-          labelStyle: {
-            color: "red",
-            fontSize: "0.8rem",
-            width: "3rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-          },
-        },
-        {
-          content: "李四",
-          position: { lng: 114.618, lat: 33.643 },
-          labelStyle: {
-            color: "red",
-            fontSize: "0.8rem",
-            width: "3rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-          },
-        },
-      ],
       introduce: false,
-      isActive: 0,
       showText: false,
-      showText1: false,
-      showText2: false,
-      radio: "1",
-      active: false,
-      circlePath: {
-        center: {
-          lng: 114.65,
-          lat: 33.67,
-        },
-        radius: 5000,
-      },
       isPopupVisibleSign: false,
       markerTure: false,
-      isPopupVisible: false,
-      customer_pool_pop: [
-        {
-          name: "1000001",
-          text: "张南",
-          id: 1,
-        },
-        {
-          name: "1000001",
-          text: "张南",
-          id: 2,
-        },
-        {
-          name: "1000001",
-          text: "张南",
-          id: 3,
-        },
-        {
-          name: "1000001",
-          text: "张南",
-          id: 4,
-        },
-      ],
-
       polylinePath: [
         { lng: 114.71, lat: 33.61 },
         { lng: 114.64, lat: 33.58 },
@@ -491,7 +290,7 @@ export default {
         { lng: 114.6, lat: 33.565 },
         { lng: 114.65, lat: 33.63 },
       ],
-      value: "",
+      searchVal: "",
       sign_name: "",
       sign_phone: "",
       sign_address: "",
@@ -506,18 +305,20 @@ export default {
       markerPostion: { lng: 114.655, lat: 33.625 },
       filterData: [],
       map: null,
+      typeIds: '',
+      specialSubject: '',
+      pathIds: ''
     };
   },
   created() {
     this.typeIds = this.$route.params.typeIds;
+    this.pathIds = this.$route.params.pathIds;
+    console.log(this.pathIds);
     if (this.typeIds) {
       this.queryResources();
     }
     this.specialSubject = this.$route.params.specialSubject;
     this.owner = this.$route.params.owner;
-    if (this.specialSubject || this.owner) {
-      this.resource_selection();
-    }
   },
   methods: {
     mapPlaning(BMap, map) {
@@ -533,7 +334,10 @@ export default {
         
       });
     },
-    resource_selection() {
+    /**
+     * 筛选资源数据
+     */
+    resource_selection(BMap, map) {
       if (this.owner) {
         var _username = localStorage.getItem("username");
       } else {
@@ -551,6 +355,7 @@ export default {
         this.map_data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
+        map && this.createPolygon(map);
       });
     },
     queryResources() {
@@ -575,9 +380,13 @@ export default {
       this.introduce = false;
     },
     mapReady({ BMap, map }) {
-      this.map = map;
       //添加多边形覆盖物
-      this.mapPlaning(BMap, map);
+      if(this.specialSubject || this.owner) {
+        this.resource_selection(BMap, map);
+      }else {
+        this.mapPlaning(BMap, map);
+      }
+
     },
     createPolygon(map) {
       // console.log(BMap);
@@ -611,9 +420,6 @@ export default {
     markerDragend({ point }) {
       // console.log(point);
       this.markerPostion = point;
-    },
-    showPopup() {
-      this.isPopupVisible = true;
     },
     clickBack(item) {
       console.log(item);
@@ -667,17 +473,10 @@ export default {
         this.introduce = false; //关闭弹窗
       });
     },
-    closePopup() {
-      this.isPopupVisible = false;
-    },
     showPopupSign(point) {
-      // console.log(point);
       this.isPopupVisibleSign = true;
       this.sign_position = `${point.lng},${point.lat}`;
       this.obtainDic();
-    },
-    closePopupSign() {
-      this.isPopupVisibleSign = false;
     },
     draw({ el, BMap, map }) {
       // debugger
@@ -688,36 +487,13 @@ export default {
     updatePolylinePath(e) {
       this.polylinePath = e.target.getPath();
     },
-    infoWindowClose() {
-      this.showText = false;
-    },
-    infoWindowOpen(item) {
-      this.lalal = item;
-      this.showText = true;
-    },
-    infoWindowClose1() {
-      this.showText1 = false;
-    },
-    infoWindowOpen1() {
-      this.showText1 = true;
-    },
-    infoWindowClose2() {
-      this.showText2 = false;
-    },
-    infoWindowOpen2() {
-      this.showText2 = true;
-    },
     onMarked_or_not(value) {
       this.marked_or_not_txt = value;
       this.marked_or_not = false;
     },
     onResource_type(value) {
-      console.log(value);
       this.resource_type_txt = value;
       this.resource_type = false;
-    },
-    onFailed(errorInfo) {
-      console.log("failed", errorInfo);
     },
     obtainDic() {
       this.$httpGet({
@@ -726,7 +502,6 @@ export default {
           token: this.token,
         },
       }).then((res) => {
-        console.log(res);
         res.data = res.data.filter(function (item, index) {
           return item.parentId != null;
         });
@@ -759,7 +534,7 @@ export default {
         if (res.access_token) {
           localStorage.setItem("_token", res.access_token);
         }
-        this.closePopupSign();
+        this.isPopupVisibleSign = false;
       });
     },
   },

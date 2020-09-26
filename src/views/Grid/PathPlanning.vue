@@ -36,34 +36,36 @@
         </ul>
       </div>
       <div class="resource_selection selection_people">
-        <ul
-          v-for="(thisItem, index) in path_planning_list"
-          :key="index"
-          class="cartItem"
-          style="border-bottom: 1px solid #e8e8e8"
-        >
-          <li>
-            <p>
-              <img
-                style="width: 3rem; border-radius: 100%"
-                src="../../assets/grid/men1.jpg"
-                alt
-              />
-            </p>
-            <div>
-              <p>{{ thisItem.name }}</p>
-              <p>客户等级：{{ thisItem.level }}级</p>
-            </div>
-          </li>
-          <van-checkbox
-            v-model="thisItem.check"
-            @click="selectCheck(thisItem)"
-            shape="square"
-          ></van-checkbox>
-        </ul>
+        <van-checkbox-group v-model="resultArr">
+          <ul
+            v-for="(thisItem, index) in path_planning_list"
+            :key="index"
+            class="cartItem"
+            style="border-bottom: 1px solid #e8e8e8"
+          >
+            <li>
+              <p>
+                <img
+                  style="width: 3rem; border-radius: 100%"
+                  src="../../assets/grid/men1.jpg"
+                  alt
+                />
+              </p>
+              <div>
+                <p>{{ thisItem.name }}</p>
+                <p>客户等级：{{ thisItem.level }}级</p>
+              </div>
+            </li>
+            <van-checkbox
+              :name="thisItem"
+              @click="selectCheck(thisItem)"
+              shape="square"
+            ></van-checkbox>
+          </ul>
+        </van-checkbox-group>
         <div
           class="save"
-          @click="$router.push({ path: '/grid/', query: { routePlan: '5' } })"
+          @click="back"
         >
           <button>确认</button>
         </div>
@@ -86,28 +88,7 @@ export default {
       currentPage: 1,
       customers: "",
       path_planning: [],
-      path_planning_list: [
-        // {
-        //   name: "曾小贤",
-        //   grade: "客户等级：一级",
-        //   check: false,
-        // },
-        // {
-        //   name: "曾小贤",
-        //   grade: "客户等级：一级",
-        //   check: false,
-        // },
-        // {
-        //   name: "曾小贤",
-        //   grade: "客户等级：一级",
-        //   check: false,
-        // },
-        // {
-        //   name: "曾小贤",
-        //   grade: "客户等级：一级",
-        //   check: false,
-        // },
-      ],
+      path_planning_list: [],
       resultArr: [],
     };
   },
@@ -118,10 +99,10 @@ export default {
   },
   methods: {
     back() {
-      console.log(this.resultArr.join(","));
+      console.log(this.resultArr);
       this.$router.push({
         name: "Grid",
-        params: { typeIds: this.resultArr.join(",") },
+        params: { pathIds: this.resultArr },
       });
     },
     remotePlanning(row) {
@@ -174,6 +155,7 @@ export default {
         },
       }).then((res) => {
         console.log(res);
+        this.path_planning_list = res.data
       });
     },
   },
