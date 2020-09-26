@@ -626,7 +626,7 @@ export default {
     clickBack(item) {
       console.log(item);
       let _username = localStorage.getItem("username");
-      if (item.principalName == _username) {
+      if (item.principal == _username) {
         this.$httpPut({
           url: "/api/semGridding/return",
           params: {
