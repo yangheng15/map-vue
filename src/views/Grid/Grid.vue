@@ -89,7 +89,7 @@
       </template>
 
       <bm-polygon
-        v-if="$route.query.routePlan"
+        v-if="$route.params.pathIds"
         :path="polylinePath"
         stroke-color="#DF0F0F"
         fillColor="transparent"
@@ -283,13 +283,7 @@ export default {
       showText: false,
       isPopupVisibleSign: false,
       markerTure: false,
-      polylinePath: [
-        { lng: 114.71, lat: 33.61 },
-        { lng: 114.64, lat: 33.58 },
-        { lng: 114.69, lat: 33.52 },
-        { lng: 114.6, lat: 33.565 },
-        { lng: 114.65, lat: 33.63 },
-      ],
+      polylinePath: [],
       searchVal: "",
       sign_name: "",
       sign_phone: "",
@@ -313,7 +307,13 @@ export default {
   created() {
     this.typeIds = this.$route.params.typeIds;
     this.pathIds = this.$route.params.pathIds;
-    console.log(this.pathIds);
+    if(this.pathIds) {
+      this.pathIds.forEach(it => {
+        this.polylinePath.push({lng: it.location.split(',')[0], lat: it.location.split(',')[1]})
+      })
+      console.log(this.polylinePath);
+    }
+    // console.log(this.pathIds);
     if (this.typeIds) {
       this.queryResources();
     }
