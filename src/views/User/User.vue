@@ -93,7 +93,7 @@ export default {
           if (res) {
             this.$router.push("/");
             // android.exit(); //告诉安卓退出了
-            localStorage.removeItem("_token");
+            localStorage.clear();
           }
         })
         .catch(() => {});
