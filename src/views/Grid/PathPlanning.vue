@@ -58,7 +58,6 @@
             </li>
             <van-checkbox
               :name="thisItem"
-              @click="selectCheck(thisItem)"
               shape="square"
             ></van-checkbox>
           </ul>
@@ -111,14 +110,6 @@ export default {
         1
       );
     },
-    selectCheck(row) {
-      // console.log(row);
-      if (row.check) {
-        this.path_planning.push(row);
-      } else {
-        this.path_planning.splice(this.path_planning.indexOf(row), 1);
-      }
-    },
     selectItem(thisItem) {
       // console.log(thisItem);
       if (typeof thisItem.checked == "undefined") {
@@ -157,8 +148,7 @@ export default {
         this.path_planning_list = res.data
       });
     },
-  },
-  mounted() {},
+  }
 };
 </script>
 
