@@ -15,7 +15,7 @@
           }}</span>
           人
         </p>
-        <ul v-for="(thisItem, index) in path_planning" :key="index">
+        <ul v-for="(thisItem, index) in resultArr" :key="index">
           <li>
             <span>
               <img
@@ -99,21 +99,20 @@ export default {
   },
   methods: {
     back() {
-      console.log(this.resultArr);
+      // console.log(this.resultArr);
       this.$router.push({
         name: "Grid",
         params: { pathIds: this.resultArr },
       });
     },
     remotePlanning(row) {
-      row.check = false;
-      this.path_planning.splice(
-        this.path_planning.findIndex((it) => it === row),
+      this.resultArr.splice(
+        this.resultArr.findIndex((it) => it === row),
         1
       );
     },
     selectCheck(row) {
-      console.log(row);
+      // console.log(row);
       if (row.check) {
         this.path_planning.push(row);
       } else {
@@ -121,7 +120,7 @@ export default {
       }
     },
     selectItem(thisItem) {
-      console.log(thisItem);
+      // console.log(thisItem);
       if (typeof thisItem.checked == "undefined") {
         this.$set(thisItem, "checked", true);
       } else {
