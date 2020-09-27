@@ -1,7 +1,10 @@
 <template>
   <div class="grid">
     <my-nav title="网格"></my-nav>
-    <van-search v-model="searchVal" placeholder="网格名称、客户名称、资源名称" />
+    <van-search
+      v-model="searchVal"
+      placeholder="网格名称、客户名称、资源名称"
+    />
     <baidu-map
       class="bm-view"
       @ready="mapReady"
@@ -39,7 +42,7 @@
           <div class="pop_content">
             <p>所属机构：{{ table.orgName }}</p>
             <p>网格经理：{{ table.principalName }}</p>
-            <p>认领日期：{{ table.allocateTime }}</p>
+            <p>认领日期：{{ table.allocateTime | transform }}</p>
             <p>客户数量：{{ table.customer_num }}</p>
             <p>人口数量：{{ table.population_num }}</p>
             <p>营销状态：{{ table.status }}</p>
@@ -74,16 +77,18 @@
           v-for="(item, index) in $route.params.pathIds"
           :key="index + 'sign'"
           :content="item.name"
-          :position="{lng: item.location && item.location.split(',')[0], lat: item.location && item.location.split(',')[1]}"
-          :labelStyle='{
-            color: "red",
-            fontSize: "1rem",
-            width: "1.5rem",
-            height: "1.5rem",
-            lineHeight: "1.5rem",
-            textAlign: "center",
-            borderRadius: "100%",
-          }'
+          :position="{
+            lng: item.location && item.location.split(',')[0],
+            lat: item.location && item.location.split(',')[1],
+          }"
+          :labelStyle="{
+            color: 'red',
+            fontSize: '14px',
+            width: '50px',
+            height: '22px',
+            lineHeight: '23px',
+            textAlign: 'center',
+          }"
           title="Hover me"
         />
       </template>
@@ -98,8 +103,7 @@
         @lineupdate="updatePolylinePath"
       ></bm-polygon>
 
-
-      <bm-marker
+      <!-- <bm-marker
         :position="{ lng: 114.66, lat: 33.605 }"
         :icon="{
           url: require('../../assets/grid/red_flag.png'),
@@ -118,8 +122,8 @@
           <p>目标：10万</p>
           <p>剩余日期：30天</p>
         </bm-info-window>
-      </bm-marker>
-      
+      </bm-marker> -->
+
       <!-- 点击出现的标记 -->
       <bm-marker
         v-if="markerTure"
@@ -132,7 +136,7 @@
           size: { width: 60, height: 60 },
         }"
       ></bm-marker>
-      
+
       <!-- 右下角定位的图标 -->
       <bm-geolocation
         anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
@@ -166,12 +170,9 @@
         <img src="../../assets/grid/grid_filtering.svg" alt />
       </router-link>
     </div>
-    
+
     <div v-show="isPopupVisibleSign" class="isPopupVisibleSign">
-      <van-form
-        class="isPopupVisibleSign_content"
-        @submit="onSubmit"
-      >
+      <van-form class="isPopupVisibleSign_content" @submit="onSubmit">
         <p class="pop_title">地图标记</p>
         <van-field
           v-model="sign_name"
@@ -265,6 +266,7 @@ import MyOverlay from "./MyOverlay";
 import MyNav from "../../components/Public/MyNav";
 import myTabbar from "../../components/Public/MyTabbar";
 import { Toast } from "vant";
+import moment from "moment";
 export default {
   name: "Grid",
   components: {
@@ -299,18 +301,21 @@ export default {
       markerPostion: { lng: 114.655, lat: 33.625 },
       filterData: [],
       map: null,
-      typeIds: '',
-      specialSubject: '',
-      pathIds: ''
+      typeIds: "",
+      specialSubject: "",
+      pathIds: "",
     };
   },
   created() {
     this.typeIds = this.$route.params.typeIds;
     this.pathIds = this.$route.params.pathIds;
-    if(this.pathIds) {
-      this.pathIds.forEach(it => {
-        this.polylinePath.push({lng: it.location.split(',')[0], lat: it.location.split(',')[1]})
-      })
+    if (this.pathIds) {
+      this.pathIds.forEach((it) => {
+        this.polylinePath.push({
+          lng: it.location.split(",")[0],
+          lat: it.location.split(",")[1],
+        });
+      });
       console.log(this.polylinePath);
     }
     // console.log(this.pathIds);
@@ -331,7 +336,6 @@ export default {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
         map && this.createPolygon(map);
-        
       });
     },
     /**
@@ -381,12 +385,11 @@ export default {
     },
     mapReady({ BMap, map }) {
       //添加多边形覆盖物
-      if(this.specialSubject || this.owner) {
+      if (this.specialSubject || this.owner) {
         this.resource_selection(BMap, map);
-      }else {
+      } else {
         this.mapPlaning(BMap, map);
       }
-
     },
     createPolygon(map) {
       // console.log(BMap);
@@ -423,7 +426,7 @@ export default {
     },
     clickBack(item) {
       console.log(item);
-      // debugger 
+      // debugger
       let _username = localStorage.getItem("username");
       if (item.principal == _username) {
         this.$httpPut({
@@ -447,10 +450,10 @@ export default {
           this.introduce = false; //关闭弹窗
         });
       } else {
-          Toast({
-            message: "只有当前负责人可以归还",
-            position: "top",
-          });
+        Toast({
+          message: "只有当前负责人可以归还",
+          position: "top",
+        });
       }
     },
     clickClaim(item) {
@@ -536,6 +539,13 @@ export default {
         }
         this.isPopupVisibleSign = false;
       });
+    },
+  },
+  filters: {
+    transform(val) {
+      if (val) {
+        return moment(val).format("YYYY-MM-DD");
+      }
     },
   },
 };

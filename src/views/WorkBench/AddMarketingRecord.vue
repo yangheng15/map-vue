@@ -1,7 +1,7 @@
 <template>
   <div class="AddMarketingRecord">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='添加营销客户'">
+    <div v-if="typeCN=='添加营销记录'">
       <ul class="mission_details">
         <li>
           客户：北京卓越科技有限公司

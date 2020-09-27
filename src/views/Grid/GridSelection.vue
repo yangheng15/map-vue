@@ -57,7 +57,7 @@ export default {
       typeCN: "",
       value: "",
       resource_selection3: [],
-      grid_selection1: [{ name: "只看我的"}],
+      grid_selection1: [{ name: "只看我的" }],
       grid_selection2: [],
       grid_selection3: [],
       resultArr: [],
@@ -139,6 +139,7 @@ export default {
   color: #fff;
   width: 80px;
   height: 30px;
+  line-height: 28px;
   border-radius: 6px;
 }
 .van-checkbox {

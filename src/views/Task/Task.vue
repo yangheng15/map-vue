@@ -9,80 +9,83 @@
       </ul>
       <div v-show="tabId === 0">
         <router-link
+          v-for="(thisItem, index) in new_task"
+          :key="index"
+          class="right_content"
           tag="div"
-          :to="{ name: 'MissionDetails', query: { title: '任务详情' } }"
+          :to="{
+            name: 'MissionDetails',
+            query: { title: '任务详情', id: thisItem.id },
+          }"
         >
-          <div
-            v-for="(thisItem, index) in new_task"
-            :key="index"
-            class="right_content"
-          >
-            <div class="new_task">
-              <p style="font-weight: 550">{{ thisItem.name }}</p>
-              <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
-                {{ thisItem.targetNum }}万
-              </p>
-              <p>创建日期：{{ thisItem.beginTime | transform }}</p>
-            </div>
-            <div class="new_task">
-              <p>{{ thisItem.productCode }}</p>
-              <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
-                剩余{{ thisItem.remainingDays }}天
-              </p>
-              <p>截止日期：{{ thisItem.endTime | transform }}</p>
-            </div>
+          <div class="new_task">
+            <p style="font-weight: 550">{{ thisItem.name }}</p>
+            <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
+              {{ thisItem.targetNum }}万
+            </p>
+            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
+          </div>
+          <div class="new_task">
+            <p>{{ thisItem.productCode }}</p>
+            <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
+              剩余{{ thisItem.remainingDays }}天
+            </p>
+            <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
         </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
       <div v-show="tabId === 1">
         <router-link
+          v-for="(thisItem, index) in new_task1"
+          :key="index"
+          class="right_content success_failure"
           tag="div"
-          :to="{ name: 'MissionDetails', query: { title: '任务详情' } }"
+          :to="{
+            name: 'MissionDetails',
+            query: { title: '任务详情', id: thisItem.id },
+          }"
         >
-          <div
-            v-for="(thisItem, index) in new_task1"
-            :key="index"
-            class="right_content success_failure"
-          >
-            <div class="new_task">
-              <p style="font-weight: 550">{{ thisItem.name }}</p>
-              <p style="text-align: center !important">
-                {{ thisItem.targetNum }}万
-              </p>
-              <p>创建日期：{{ thisItem.beginTime | transform }}</p>
-            </div>
-            <div class="new_task">
-              <p>{{ thisItem.productCode }}</p>
-              <p>截止日期：{{ thisItem.endTime | transform }}</p>
-            </div>
-            <van-tag
-              v-if="thisItem.status == 1"
-              class="status_success"
-              color="#DF0F0F"
-              plain
-              size="large"
-              >完成</van-tag
-            >
-            <van-tag
-              v-if="thisItem.status == 2"
-              class="status_success"
-              color="#201F25"
-              plain
-              size="large"
-              >失败</van-tag
-            >
+          <div class="new_task">
+            <p style="font-weight: 550">{{ thisItem.name }}</p>
+            <p style="text-align: center !important">
+              {{ thisItem.targetNum }}万
+            </p>
+            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
+          <div class="new_task">
+            <p>{{ thisItem.productCode }}</p>
+            <p>截止日期：{{ thisItem.endTime | transform }}</p>
+          </div>
+          <van-tag
+            v-if="thisItem.status == 1"
+            class="status_success"
+            color="#DF0F0F"
+            plain
+            size="large"
+            >完成</van-tag
+          >
+          <van-tag
+            v-if="thisItem.status == 2"
+            class="status_success"
+            color="#201F25"
+            plain
+            size="large"
+            >失败</van-tag
+          >
         </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
       <div v-show="tabId === 2">
         <router-link
-          tag="div"
-          :to="{ name: 'MissionDetails', query: { title: '任务详情' } }"
-          class="right_content"
           v-for="(thisItem, index) in new_task2"
           :key="index"
+          tag="div"
+          :to="{
+            name: 'MissionDetails',
+            query: { title: '任务详情', id: thisItem.id },
+          }"
+          class="right_content"
         >
           <div class="new_task">
             <p style="font-weight: 550">{{ thisItem.name }}</p>
@@ -126,28 +129,7 @@ export default {
       value3: "",
       new_task: [],
       new_task1: [],
-      new_task2: [
-        // {
-        //   company_source: "产品营销",
-        //   menoy: "30万/100万",
-        //   company_introduce: "企业贷",
-        //   date_start: "创建日期：2020-08-01",
-        //   date_end: "截止日期：2020-09-30",
-        //   date: "剩余20天",
-        //   success_failure: "失败",
-        //   be_overdue: "已过期",
-        //   sf_state: 1,
-        // },
-        // {
-        //   company_source: "资料采集",
-        //   menoy: "30户/30户",
-        //   company_introduce: "农户家庭",
-        //   date_start: "创建日期：2020-08-01",
-        //   date_end: "截止日期：2020-09-30",
-        //   date: "剩余20天",
-        //   success_failure: "成功",
-        // },
-      ],
+      new_task2: [],
     };
   },
   created() {
@@ -167,7 +149,7 @@ export default {
             page: 1,
           },
         }).then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.new_task1 = res.data;
         });
       }
@@ -181,7 +163,7 @@ export default {
             page: 1,
           },
         }).then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.new_task2 = res.data;
         });
       }
@@ -196,14 +178,16 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.new_task = res.data;
       });
     },
   },
   filters: {
     transform(val) {
-      return moment(val).format("YYYY-MM-DD");
+      if (val) {
+        return moment(val).format("YYYY-MM-DD");
+      }
     },
   },
 };

@@ -58,7 +58,7 @@
         <router-link
           tag="span"
           class="add_record"
-          :to="{ name: 'AddMarketingRecord', query: { title: '添加营销客户' }}"
+          :to="{ name: 'AddMarketingRecord', query: { title: '添加营销记录' }}"
         >添加记录</router-link>
         <!-- <span
           class="add_record"

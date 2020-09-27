@@ -364,6 +364,7 @@ export default {
   }
   .save button {
     height: 1.7rem;
+    line-height: 1.7rem;
     width: 5rem;
     font-size: 0.8rem;
   }

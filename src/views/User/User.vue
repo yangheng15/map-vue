@@ -1,11 +1,21 @@
 <template>
-  <div class="User" style="    background-color: rgb(245, 245, 245);">
+  <div class="User" style="background-color: rgb(245, 245, 245)">
     <div>
       <div class="head_portrait">
-        <img style="width: 60px;border-radius:50%" src="../../assets/User/men.png" />
-        <div style="font-size:18px;color:#fff;margin-top:4px">李晓云</div>
+        <img
+          style="width: 60px; border-radius: 50%"
+          src="../../assets/User/men.png"
+        />
+        <div style="font-size: 18px; color: #fff; margin-top: 4px">
+          {{ userNameTxt.realName }}
+        </div>
         <div class="have_star">
-          <van-rate v-model="start_num" color="#fff" void-color="#fff" readonly />
+          <van-rate
+            v-model="start_num"
+            color="#fff"
+            void-color="#fff"
+            readonly
+          />
         </div>
         <div class="personal_introduction">
           <div>
@@ -23,20 +33,28 @@
           <router-link
             tag="div"
             class="see_more"
-            :to="{ name: 'MyMedal', query: { title: '我的勋章' }}"
-          >查看更多</router-link>
+            :to="{ name: 'MyMedal', query: { title: '我的勋章' } }"
+            >查看更多</router-link
+          >
         </div>
       </div>
     </div>
     <div class="new_item_body">
-      <div class="calendar" @click="$router.push('/LGBUserCenter/MyMedal?title=我的足迹');">
+      <div
+        class="calendar"
+        @click="$router.push('/LGBUserCenter/MyMedal?title=我的足迹')"
+      >
         <p>
           <img src="../../assets/User/calendar.svg" alt />
           我的日历
         </p>
         <van-icon name="arrow" />
       </div>
-      <router-link tag="div" class="calendar" :to="{ name: 'MyMedal', query: { title: '我的足迹' }}">
+      <router-link
+        tag="div"
+        class="calendar"
+        :to="{ name: 'MyMedal', query: { title: '我的足迹' } }"
+      >
         <p>
           <img src="../../assets/User/footprint.svg" alt />
           我的足迹
@@ -46,7 +64,7 @@
       <router-link
         tag="div"
         class="calendar"
-        :to="{ name: 'UpdatePassword', query: { title: '密码修改' }}"
+        :to="{ name: 'UpdatePassword', query: { title: '密码修改' } }"
       >
         <p>
           <img src="../../assets/User/password.svg" alt />
@@ -56,7 +74,7 @@
       </router-link>
     </div>
 
-    <div style="padding:16px 16px 40px 16px;">
+    <div style="padding: 16px 16px 40px 16px">
       <van-button
         type="primary"
         block
@@ -64,7 +82,8 @@
         class="button button-assertive button-block"
         @click.native="endLogin()"
         color="#3D425E"
-      >退出</van-button>
+        >退出</van-button
+      >
     </div>
     <my-tabbar></my-tabbar>
   </div>
@@ -82,7 +101,11 @@ export default {
   data() {
     return {
       start_num: 3,
+      userNameTxt: [],
     };
+  },
+  created() {
+    this.getRealName();
   },
   methods: {
     endLogin() {
@@ -97,6 +120,18 @@ export default {
           }
         })
         .catch(() => {});
+    },
+    getRealName() {
+      let _username = localStorage.getItem("username");
+      this.$httpGet({
+        url: "/api/personalManagement/info",
+        params: {
+          userName: _username,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.userNameTxt = res.data[0];
+      });
     },
   },
 };
@@ -187,7 +222,7 @@ export default {
 }
 
 @media screen and (min-width: 320px) and (max-width: 374px) {
-  *{
+  * {
     font-size: 13px;
   }
   .head_portrait .personal_introduction div,
