@@ -26,9 +26,9 @@
 
       <!-- 弹窗 -->
       <bm-overlay
-        v-show="introduce"
+        v-if="introduce"
         pane="labelPane"
-        :class="{ sample: true }"
+        :class="{ sampleAlert: true }"
         @draw="draw"
       >
         <div class="Popup_introduce">
@@ -460,9 +460,9 @@ export default {
       console.log(item);
       if (item.principalName) {
         Toast({
-        message: "已分配的网格不允许认领",
-        position: "middle",
-      });
+          message: "已分配的网格不允许认领",
+          position: "middle",
+        });
         return;
       }
       let _username = localStorage.getItem("username");
@@ -489,10 +489,15 @@ export default {
       this.obtainDic();
     },
     draw({ el, BMap, map }) {
-      // debugger
-      const pixel = map.pointToOverlayPixel(new BMap.Point(114.65, 33.35));
-      el.style.left = pixel.x - 60 + "px";
-      el.style.top = pixel.y - 20 + "px";
+      if (this.table && this.table.position) {
+        const position = {
+          lng: this.table.position.split(",")[0],
+          lat: this.table.position.split(",")[1],
+        };
+        const pixel = map.pointToOverlayPixel(new BMap.Point(position.lng, position.lat));
+        el.style.left = pixel.x - 60 + "px";
+        el.style.top = pixel.y - 20 + "px";
+      }
     },
     updatePolylinePath(e) {
       this.polylinePath = e.target.getPath();
