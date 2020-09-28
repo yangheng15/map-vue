@@ -115,7 +115,7 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
-      localStorage.setItem("indexTabId", this.tabId);
+      // localStorage.setItem("indexTabId", this.tabId);
     },
     tab1(ev) {
       this.tabId = ev;

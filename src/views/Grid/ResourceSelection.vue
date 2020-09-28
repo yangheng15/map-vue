@@ -109,9 +109,6 @@ export default {
     async obtainDic() {
       this.$httpGet({
         url: "/dic/type/dic_grid_resource_type",
-        headers: {
-          token: this.token,
-        },
       }).then((res) => {
         res.data = res.data.filter(function (item, index) {
           return item.parentId != null;
@@ -122,9 +119,6 @@ export default {
           // console.log(res.data[item].code);
           let lalala = res.data[item].code;
           // this.resource_selection3[item] = res.data[item].code;
-        }
-        if (res.access_token) {
-          localStorage.setItem("_token", res.access_token);
         }
       });
     },

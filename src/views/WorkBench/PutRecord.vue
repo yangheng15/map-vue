@@ -1299,7 +1299,7 @@ export default {
     // },
     tab(ev) {
       this.tabId = ev;
-      localStorage.setItem("indexTabId", this.tabId);
+      // localStorage.setItem("indexTabId", this.tabId);
     },
     // region_choice(){
     //   this.region_choice=true

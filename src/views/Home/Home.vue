@@ -256,7 +256,7 @@ export default {
   methods: {
     tab(ev) {
       this.tabId = ev;
-      localStorage.setItem("indexTabId", this.tabId);
+      // localStorage.setItem("indexTabId", this.tabId);
     },
   },
 };

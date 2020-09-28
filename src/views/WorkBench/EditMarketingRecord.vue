@@ -184,7 +184,7 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
-      localStorage.setItem("indexTabId", this.tabId);
+      // localStorage.setItem("indexTabId", this.tabId);
     },
     openValue1() {
       this.show1 = !this.show1;

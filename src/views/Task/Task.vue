@@ -138,7 +138,7 @@ export default {
   methods: {
     tab(ev) {
       this.tabId = ev;
-      localStorage.setItem("indexTabId", this.tabId);
+      // localStorage.setItem("indexTabId", this.tabId);
       if (ev == 1) {
         let _username = localStorage.getItem("username");
         this.$httpGet({

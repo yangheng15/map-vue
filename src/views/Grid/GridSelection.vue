@@ -93,9 +93,6 @@ export default {
           let lalala = res.data[item].code;
           // this.resource_selection3[item] = res.data[item].code;
         }
-        if (res.access_token) {
-          localStorage.setItem("_token", res.access_token);
-        }
       });
     },
   },

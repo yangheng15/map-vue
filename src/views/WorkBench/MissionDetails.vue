@@ -72,11 +72,8 @@
           @search="onSearch"
         />
         <div class="customer_list">
-          <router-link
-            tag="ul"
-            :to="{ name: 'MarketingDetails', query: { title: '营销客户详情' } }"
-          >
-            <li v-for="(thisItem, index) in MarketingRecord" :key="index">
+          <ul>
+            <router-link tag="li" :to="{ name: 'MarketingDetails', query: { title: '营销客户详情' } }" v-for="(thisItem, index) in MarketingRecord" :key="index">
               <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
                 {{ thisItem.custName }}
               </p>
@@ -87,7 +84,7 @@
                       ? 'approval_Passed'
                       : 'approval_Passed1'
                   "
-                  >{{thisItem.isSem == '1'?'已营销':'未营销'}}</span
+                  >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
                 >
                 <span
                   :class="
@@ -95,7 +92,7 @@
                       ? 'approval_Passed'
                       : 'approval_Passed1'
                   "
-                  >{{thisItem.intention == '1'?'强':'无需求'}}</span
+                  >{{ thisItem.intention == "1" ? "强" : "无需求" }}</span
                 >
                 <span
                   :class="
@@ -103,7 +100,7 @@
                       ? 'approval_Passed'
                       : 'approval_Passed1'
                   "
-                  >{{thisItem.isSucceed == '1'?'成功':'失败'}}
+                  >{{ thisItem.isSucceed == "1" ? "成功" : "失败" }}
                 </span>
               </p>
               <p v-if="thisItem.text" class="schedule_star" style="width: 80%">
@@ -112,8 +109,8 @@
               <p v-if="thisItem.date" class="schedule_star" style="width: 20%">
                 {{ thisItem.date }}
               </p>
-            </li>
-          </router-link>
+            </router-link>
+          </ul>
         </div>
       </div>
     </div>
@@ -190,7 +187,7 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
-      localStorage.setItem("indexTabId", this.tabId);
+      // localStorage.setItem("indexTabId", this.tabId);
       if (ev == 1) {
         this.getMarketingCustomers();
       }
@@ -224,18 +221,23 @@ export default {
       }).then((res) => {
         console.log(res.data);
         this.MarketingRecord = res.data;
-        this.$httpGet({
-        url: "/api/appMarket/marketRecord",
-        params: {
-          customerCode:this.MarketingRecord.customerCode,
-          limit: 10,
-          gridCode:this.MarketingRecord.gridCode,
-          page: 1,
-        },
-      }).then((res) => {
-        console.log(res.data);
-        this.MarketingRecord1 = res.data;
-      });
+        if (
+          this.MarketingRecord.customerCode &&
+          this.MarketingRecord.gridCode
+        ) {
+          this.$httpGet({
+            url: "/api/appMarket/marketRecord",
+            params: {
+              customerCode: this.MarketingRecord.customerCode,
+              limit: 10,
+              gridCode: this.MarketingRecord.gridCode,
+              page: 1,
+            },
+          }).then((res) => {
+            console.log(res.data);
+            this.MarketingRecord1 = res.data;
+          });
+        }
       });
     },
     onSearch(val) {
@@ -245,7 +247,7 @@ export default {
         params: {
           limit: 10,
           page: 1,
-          userName:val
+          userName: val,
         },
       }).then((res) => {
         console.log(res.data);

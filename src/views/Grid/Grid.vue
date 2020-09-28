@@ -501,9 +501,6 @@ export default {
     obtainDic() {
       this.$httpGet({
         url: "/dic/type/dic_grid_resource_type",
-        headers: {
-          token: this.token,
-        },
       }).then((res) => {
         res.data = res.data.filter(function (item, index) {
           return item.parentId != null;
@@ -534,9 +531,6 @@ export default {
           position: this.sign_position,
         },
       }).then((res) => {
-        if (res.access_token) {
-          localStorage.setItem("_token", res.access_token);
-        }
         this.isPopupVisibleSign = false;
       });
     },
