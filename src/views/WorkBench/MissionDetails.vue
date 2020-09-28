@@ -73,7 +73,7 @@
         />
         <div class="customer_list">
           <ul>
-            <router-link tag="li" :to="{ name: 'MarketingDetails', query: { title: '营销客户详情',custName:thisItem.custName,telephone:thisItem.telephone,intention:thisItem.intention,customerCode:thisItem.customerCode,gridCode:thisItem.gridCode,productCode:taskQuery.productCode } }" v-for="(thisItem, index) in MarketingRecord" :key="index">
+            <router-link tag="li" :to="{ name: 'MarketingDetails', query: { title: '营销客户详情',custName:thisItem.custName,telephone:thisItem.telephone,intention:thisItem.intention,customerCode:thisItem.customerCode,gridCode:thisItem.gridCode,productCode:taskQuery.productCode,id:taskQuery.id } }" v-for="(thisItem, index) in MarketingRecord" :key="index">
               <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
                 {{ thisItem.custName }}
               </p>
@@ -88,11 +88,11 @@
                 >
                 <span
                   :class="
-                    thisItem.intention == '1'
+                    thisItem.intention == '0'
                       ? 'approval_Passed'
                       : 'approval_Passed1'
                   "
-                  >{{ thisItem.intention == "1" ? "强" : "无需求" }}</span
+                  >{{ thisItem.intention == "0" ? "强" : (thisItem.intention == "1"? "一般":(thisItem.intention == "2"?"无":(thisItem.intention == "3"?"已有产品":(thisItem.intention == "4"?"直接拒绝":"同意采集"))))}}</span
                 >
                 <span
                   :class="

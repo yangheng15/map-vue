@@ -85,16 +85,18 @@
             show-word-limit
           />
           <div class="save">
-            <van-button type="primary" block @click="saveResult()"
+            <van-button type="primary" block @click="addResult()"
               >保存</van-button
             >
           </div>
         </div>
         <div v-show="tabId === 1" style="background: #fff">
           <div style="padding: 10px; background: #fff">
-            <van-uploader :after-read="afterRead1" />
-            <van-uploader :after-read="afterRead2" />
-            <van-uploader :after-read="afterRead3" />
+            <van-uploader
+              :after-read="afterRead1"
+              v-model="fileList"
+              multiple
+            />
           </div>
           <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="prev()">保存</van-button>
@@ -123,7 +125,9 @@
             :rules="[{ required: true, message: '请填写产品利率' }]"
           />
           <div class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="prev()">保存</van-button>
+            <van-button type="primary" block @click="addCompetitor()"
+              >保存</van-button
+            >
           </div>
         </div>
       </div>
@@ -172,7 +176,14 @@ export default {
       gridCode: "",
       productCode: "",
       custName: "",
-      resultReturn: "",
+      id: "",
+      resultCode: "",
+      fileList: [
+        { url: "https://img.yzcdn.cn/vant/leaf.jpg" },
+        // Uploader 根据文件后缀来判断是否为图片文件
+        // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
+        { url: "https://cloud-image", isImage: true },
+      ],
     };
   },
   components: {
@@ -184,6 +195,7 @@ export default {
     this.gridCode = this.$route.query.gridCode;
     this.productCode = this.$route.query.productCode;
     this.custName = this.$route.query.custName;
+    this.id = this.$route.query.id;
   },
   updated() {},
   methods: {
@@ -191,33 +203,56 @@ export default {
       this.$router.go(-1);
     },
     tab(ev) {
-      if (ev != 0) {
-        if (!this.resultReturn) {
-          Toast({
-            message: "请先添加结果",
-            position: "middle",
-          });
-          return;
-        }
-      }
+      // if (ev != 0) {
+      //   if (!this.resultCode) {
+      //     Toast({
+      //       message: "请先添加结果",
+      //       position: "middle",
+      //     });
+      //     return;
+      //   }
+      // }
       this.tabId = ev;
     },
-    saveResult() {
+    addResult() {
       this.$httpPost({
         url: "/api/customersRecords/appAddResult",
         data: {
           customerCode: this.customerCode,
           griddingCode: this.gridCode,
-          productCode: this.productCode,
-          result_txt: this.result_txt.index,
-          Customer_intention_txt: this.Customer_intention_txt.index,
-          actual_demand: this.actual_demand,
-          remarks: this.remarks,
-          customer_feedback: this.customer_feedback,
+          products: this.productCode,
+          taskId: this.id,
+          isSucc: this.result_txt.index,
+          intention: this.Customer_intention_txt.index,
+          actualDemand: this.actual_demand,
+          remark: this.remarks,
+          feebback: this.customer_feedback,
         },
       }).then((res) => {
         console.log(res);
-        this.resultReturn = res;
+        this.resultCode = res.data.code;
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
+      });
+    },
+    async addCompetitor() {
+      this.$httpPost({
+        url: "/api/customersRecords/appAddCompetitor",
+        data: {
+          customerCode: this.customerCode,
+          semCode: this.resultCode,
+          rivalName: this.competitor,
+          rivalProduct: this.competitive_products,
+          interestRate: this.product_rate,
+        },
+      }).then((res) => {
+        console.log(res);
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
       });
     },
     openValue1() {
@@ -245,6 +280,19 @@ export default {
     },
     afterRead3(file) {
       console.log(file);
+    },
+    beforeRead(file) {
+      //上传之前校验
+      if (file.type !== "image/jpeg" && file.type !== "image/png") {
+        Toast("只允许上传jpg/png格式的图片！");
+        return false;
+      }
+      return true;
+    },
+    async afterRead(file) {
+      //文件读取完成后的回调函数
+      let uploadImg = await upLoaderImg(file.file); //使用上传的方法。file.file
+      console.log(uploadImg);
     },
   },
 };
