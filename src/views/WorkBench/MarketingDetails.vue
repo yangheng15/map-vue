@@ -3,11 +3,7 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '营销客户详情'">
       <p class="detail_title">客户信息</p>
-      <ul
-        class="mission_details"
-        v-for="(thisItem, index) in tiaozhuan"
-        :key="index"
-      >
+      <ul class="mission_details">
         <li>
           <span style="font-weight: 600"
             >客&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户：</span
@@ -58,27 +54,28 @@
             :key="index"
             class="marked_record"
           >
-            <p style="width: 30%">{{ thisItem.date }}</p>
+            <p style="width: 30%">{{ thisItem.semTime | transform }}</p>
             <p style="width: 70%; display: flex" class="approval">
-              <span class="approval_Passed">{{ thisItem.value1 }}</span>
+              <span class="approval_Passed">已营销</span
+                >
               <span
                 :class="
-                  thisItem.value2 == '强'
+                  thisItem.intention == '0'
                     ? 'approval_Passed'
                     : 'approval_Passed1'
                 "
-                >{{ thisItem.value2 }}</span
+                >{{ thisItem.intention == "0" ? "强" : (thisItem.intention == "1"? "一般":(thisItem.intention == "2"?"无":(thisItem.intention == "3"?"已有产品":(thisItem.intention == "4"?"直接拒绝":"同意采集"))))}}</span
               >
               <span
-                :class="
-                  thisItem.value3 == '成功'
-                    ? 'approval_Passed'
-                    : 'approval_Passed1'
-                "
-                >{{ thisItem.value3 }}</span
-              >
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{ thisItem.isSucc == "1" ? "成功" : "失败" }}
+                </span>
             </p>
-            <p class="schedule_star" style="width: 100%">{{ thisItem.text }}</p>
+            <p class="schedule_star" style="width: 100%">{{ thisItem.remark }}</p>
           </li>
         </router-link>
         <div class="end_line">已加载完毕</div>
@@ -104,7 +101,8 @@
               customerCode: this.customerCode,
               gridCode: this.gridCode,
               productCode:this.productCode,
-              custName:this.custName
+              custName:this.custName,
+              id:this.id
             },
           }"
           >添加记录</router-link
@@ -115,29 +113,11 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
+import moment from "moment";
 export default {
   data() {
     return {
-      MarketingRecord: [
-        {
-          id: 1,
-          name: "李三",
-          text: "暂时没有对该产品的需求，但需要贷款......",
-          date: " 3天前",
-          value1: "已营销",
-          value2: "无需求",
-          value3: "未成功",
-        },
-        {
-          id: 2,
-          name: "张红",
-          text: "没问题，周一来行里办理",
-          date: "  4天前",
-          value1: "已营销",
-          value2: "强",
-          value3: "成功",
-        },
-      ],
+      MarketingRecord: [],
       tabId: 0,
       token: "",
       title: "详情",
@@ -153,23 +133,6 @@ export default {
       isLGB: true,
       tpxw: {},
       isEdit: false,
-      marketing_record: [
-        {
-          id: 1,
-          name: "上门拜访，与负责领导洽谈一些事项",
-          date: "刚刚",
-        },
-        {
-          id: 2,
-          name: "客户出差，电话沟通，等待电话沟通",
-          date: "2020-08-12 9:00",
-        },
-        {
-          id: 3,
-          name: "上门拜访，初步达成意向想去上门拜访",
-          date: "2020-08-10 16:00",
-        },
-      ],
       show1: false,
       show2: false,
       show3: false,
@@ -180,45 +143,6 @@ export default {
       value3: "",
       value4: "",
       value5: "",
-      tiaozhuan: [
-        {
-          id: 1,
-        },
-      ],
-      stock: [
-        {
-          menoy_name: "存款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "活期存款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "定期存款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "大额存单余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "贷款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "历史贷款类型",
-          menoy: "抵押贷",
-        },
-        {
-          menoy_name: "最近放贷时间",
-          menoy: "2020-01-01",
-        },
-        {
-          menoy_name: "存贷比",
-          menoy: "50%",
-        },
-      ],
       channel: [
         {
           menoy_name: "签约情况",
@@ -343,6 +267,7 @@ export default {
       customerCode: "",
       gridCode: "",
       productCode:"",
+      id:"",
     };
   },
   components: {
@@ -356,6 +281,7 @@ export default {
     this.customerCode = this.$route.query.customerCode;
     this.gridCode = this.$route.query.gridCode;
     this.productCode = this.$route.query.productCode;
+    this.id = this.$route.query.id;
     this.getMarkedRecord();
   },
   updated() {},
@@ -375,7 +301,15 @@ export default {
           },
         }).then((res) => {
           console.log(res.data);
+          this.MarketingRecord=res.data
         });
+      }
+    },
+  },
+    filters: {
+    transform(val) {
+      if (val) {
+        return moment(val).format("YYYY-MM-DD");
       }
     },
   },
@@ -494,28 +428,6 @@ export default {
 .mission_details li:last-child {
   padding-bottom: 0.5rem;
 }
-.marketing_record {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #fff;
-  padding: 0.5rem 0.5rem;
-  border-bottom: 0.001rem solid #e8e8e8;
-}
-.marketing_record .marketing_record_date {
-  width: 30%;
-  margin: 0rem 0rem 0rem 0rem;
-}
-.marketing_record .marketing_record_name {
-  margin: 0rem;
-  width: 50%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.marketing_record img {
-  float: right;
-}
 .add_record {
   display: flex;
   justify-content: center;
@@ -548,21 +460,6 @@ export default {
   width: 97%;
   height: 0.05rem;
   background: #df0f0f;
-}
-.stock {
-  padding: 0rem 1rem;
-  background: #fff;
-  display: flex;
-  justify-content: space-between;
-}
-.stock p {
-  margin: 0.5rem 0rem 0rem;
-}
-.stock:last-child {
-  padding-bottom: 0.5rem;
-}
-.stock_have p {
-  width: 33.3%;
 }
 .result_list {
   display: flex;
