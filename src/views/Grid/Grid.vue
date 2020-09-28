@@ -452,12 +452,19 @@ export default {
       } else {
         Toast({
           message: "只有当前负责人可以归还",
-          position: "top",
+          position: "middle",
         });
       }
     },
     clickClaim(item) {
       console.log(item);
+      if (item.principalName) {
+        Toast({
+        message: "已分配的网格不允许认领",
+        position: "middle",
+      });
+        return;
+      }
       let _username = localStorage.getItem("username");
       this.$httpPut({
         url: "/api/semGridding/claim",

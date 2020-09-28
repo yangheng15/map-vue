@@ -1,69 +1,114 @@
 <template>
   <div class="MarketingDetails">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='营销客户详情'">
+    <div v-if="typeCN == '营销客户详情'">
       <p class="detail_title">客户信息</p>
-      <ul class="mission_details" v-for="(thisItem,index) in tiaozhuan" :key="index">
+      <ul
+        class="mission_details"
+        v-for="(thisItem, index) in tiaozhuan"
+        :key="index"
+      >
         <li>
-          <span style="font-weight:600;">客&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户：</span>
-          李三
+          <span style="font-weight: 600"
+            >客&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户：</span
+          >
+          {{ custName }}
           <router-link
             tag="a"
             class="img1"
-            :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' }}"
+            :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
           ></router-link>
         </li>
         <li>
-          <span style="font-weight:600;">营销产品：</span>月生利
-          <router-link tag="a" class="img2" :to="{ name: 'ProductIntroduction', query: { title: '产品介绍' }}"></router-link>
+          <span style="font-weight: 600">营销产品：</span>{{productCode}}
+          <router-link
+            tag="a"
+            class="img2"
+            :to="{ name: 'ProductIntroduction', query: { title: '产品介绍' } }"
+          ></router-link>
         </li>
         <li>
-          <span style="font-weight:600;">客户地址：</span>周口市某某区某某南路4号
-          <router-link tag="a" class="img3" :to="{ name: 'PutRecord', query: { title: '地址' }}"></router-link>
+          <span style="font-weight: 600">客户地址：</span
+          >周口市某某区某某南路4号
+          <router-link
+            tag="a"
+            class="img3"
+            :to="{ name: 'PutRecord', query: { title: '地址' } }"
+          ></router-link>
         </li>
         <li>
-          <span style="font-weight:600;">联系方式：</span>18611278765
-          <a class="img4" :href="'tel:' + 18611278765"></a>
+          <span style="font-weight: 600">联系方式：</span>{{ telephone }}
+          <a class="img4" :href="'tel:' + telephone"></a>
         </li>
         <li>
-          <span style="font-weight:600;">意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向：</span>强
+          <span style="font-weight: 600"
+            >意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向：</span
+          >{{ intention }}
         </li>
       </ul>
       <div>
         <p class="detail_title">营销记录</p>
         <router-link
           tag="ul"
-          style="background:#fff;"
-          :to="{ name: 'EditMarketingRecord', query: { title: '营销记录' }}"
+          style="background: #fff"
+          :to="{ name: 'EditMarketingRecord', query: { title: '营销记录' } }"
         >
-          <li v-for="(thisItem,index) in MarketingRecord" :key="index" class="marked_record">
-            <p style="width:30%">{{thisItem.date}}</p>
-            <p style="width:70%;display:flex" class="approval">
-              <span class="approval_Passed">{{thisItem.value1}}</span>
+          <li
+            v-for="(thisItem, index) in MarketingRecord"
+            :key="index"
+            class="marked_record"
+          >
+            <p style="width: 30%">{{ thisItem.date }}</p>
+            <p style="width: 70%; display: flex" class="approval">
+              <span class="approval_Passed">{{ thisItem.value1 }}</span>
               <span
-                :class="thisItem.value2=='强'?'approval_Passed':'approval_Passed1'"
-              >{{thisItem.value2}}</span>
+                :class="
+                  thisItem.value2 == '强'
+                    ? 'approval_Passed'
+                    : 'approval_Passed1'
+                "
+                >{{ thisItem.value2 }}</span
+              >
               <span
-                :class="thisItem.value3=='成功'?'approval_Passed':'approval_Passed1'"
-              >{{thisItem.value3}}</span>
+                :class="
+                  thisItem.value3 == '成功'
+                    ? 'approval_Passed'
+                    : 'approval_Passed1'
+                "
+                >{{ thisItem.value3 }}</span
+              >
             </p>
-            <p class="schedule_star" style="width:100%">{{thisItem.text}}</p>
+            <p class="schedule_star" style="width: 100%">{{ thisItem.text }}</p>
           </li>
         </router-link>
         <div class="end_line">已加载完毕</div>
       </div>
       <div
-        style="margin-left:85%;position: fixed !important;float: right;z-index: 9999;align-items: right;bottom: 5%;right:5%"
+        style="
+          margin-left: 85%;
+          position: fixed !important;
+          float: right;
+          z-index: 9999;
+          align-items: right;
+          bottom: 5%;
+          right: 5%;
+        "
       >
         <router-link
           tag="span"
           class="add_record"
-          :to="{ name: 'AddMarketingRecord', query: { title: '添加营销记录' }}"
-        >添加记录</router-link>
-        <!-- <span
-          class="add_record"
-          @click="$router.push('/ContentManage/AddMarketingRecord/?title=添加营销客户')"
-        >添加记录</span>-->
+          :to="{
+            name: 'AddMarketingRecord',
+            query: {
+              title: '添加营销记录',
+              customerCode: this.customerCode,
+              gridCode: this.gridCode,
+              productCode:this.productCode,
+              custName:this.custName
+            },
+          }"
+          >添加记录</router-link
+        >
       </div>
     </div>
   </div>
@@ -292,6 +337,12 @@ export default {
           menoy: "手机银行",
         },
       ],
+      custName: "",
+      telephone: "",
+      intention: "",
+      customerCode: "",
+      gridCode: "",
+      productCode:"",
     };
   },
   components: {
@@ -299,126 +350,33 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
-    if (localStorage.getItem("indexTabId")) {
-      this.tabId = Number(localStorage.getItem("indexTabId"));
-      localStorage.removeItem("indexTabId");
-    }
-    this.token = localStorage.getItem("token");
-    this.articleId = this.$route.params.id;
-    this.title = this.$route.query.title;
-    this.isLGB = localStorage.getItem("isLgbWorker") == "0";
-    this.height = 400 * (document.documentElement.clientWidth / 750) + "";
-    // $loading.show("拼命加载中..");
-    // if (this.articleId == "url") {
-    //   this.dataURL =
-    //     this.$route.query.url +
-    //     (this.$route.query.url.indexOf() == -1 ? "?_s=1" : "") +
-    //     "&token=" +
-    //     this.token;
-    // } else {
-    //   this.dataURL =
-    //     "/lgbsmp/api/v1/generalContent/" +
-    //     this.articleId +
-    //     "?token=" +
-    //     this.token;
-    // }
-    // this.getData();
-    // if (this.allowControl("APP_/ContentManage/ArticleList4Notice/branch")) {
-    //   this.isEdit = true;
-    // }
+    this.custName = this.$route.query.custName;
+    this.intention = this.$route.query.intention;
+    this.telephone = this.$route.query.telephone;
+    this.customerCode = this.$route.query.customerCode;
+    this.gridCode = this.$route.query.gridCode;
+    this.productCode = this.$route.query.productCode;
+    this.getMarkedRecord();
   },
-  updated() {
-    // this.$seeks.getImgTab();
-    // this.$previewRefresh();
-  },
+  updated() {},
   methods: {
-    // allowControl(str) {
-    //   return this.$seeks.allowControl(str);
-    // },
-    // getData() {
-    //   if (!this.articleId) {
-    //     $loading.hide();
-    //     return;
-    //   }
-    //   if (this.title == "要闻时政详情") {
-    //     this.$axios
-    //       .post(
-    //         "/zzbgxjhpt/gxjh/default.do?method=xwxq&cipherText=3CUnPiZoBpOvavNsrGbvHQ==&guid=" +
-    //           this.articleId
-    //       )
-    //       .then((res) => {
-    //         if (res) {
-    //           this.tpxw = res.xwxq;
-    //           $loading.hide();
-    //         }
-    //       })
-    //       .catch(function (msg) {
-    //         $loading.hide();
-    //       });
-    //   } else {
-    //     this.$axios
-    //       .get(this.dataURL)
-    //       .then((responseData) => {
-    //         if (responseData) {
-    //           var res =
-    //             responseData.id == undefined ? responseData.data : responseData;
-    //           this.deliverTime = res.deliverTime || res.gmtCreate;
-    //           this.deliverTime = moment(this.deliverTime).format("YYYY-MM-DD");
-    //           this.deliverDepartment = res.deliverDepartment;
-    //           this.deliverPerson = res.deliverPerson;
-    //           this.content = res["content"];
-    //           // console.log(this.content);
-    //           this.textTitle = res["subject"] || res["title"] || "--";
-    //           if (res["pictureId"]) {
-    //             this.pictureId =
-    //               "/lgbsmp/api/v1/attachment/download?id=" + res["pictureId"];
-    //           }
-    //         }
-    //         $loading.hide();
-    //       })
-    //       .catch(function (msg) {
-    //         $loading.hide();
-    //       });
-    //   }
-    // },
     tab(ev) {
       this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
     },
-    openValue1() {
-      this.show1 = !this.show1;
-    },
-    openValue2() {
-      this.show2 = !this.show2;
-    },
-    openValue3() {
-      this.show3 = !this.show3;
-    },
-    openValue4() {
-      this.show4 = !this.show4;
-    },
-    openValue5() {
-      this.show5 = !this.show5;
-    },
-    getvalue1(index, item) {
-      this.value1 = item.name;
-      this.show1 = false;
-    },
-    getvalue2(index, item) {
-      this.value2 = item.name;
-      this.show2 = false;
-    },
-    getvalue3(index, item) {
-      this.value3 = item.name;
-      this.show3 = false;
-    },
-    getvalue4(index, item) {
-      this.value4 = item.name;
-      this.show4 = false;
-    },
-    getvalue5(index, item) {
-      this.value5 = item.name;
-      this.show5 = false;
+    getMarkedRecord() {
+      if (this.customerCode && this.gridCode) {
+        this.$httpGet({
+          url: "/api/appMarket/marketRecord",
+          params: {
+            customerCode: this.customerCode,
+            limit: 10,
+            gridCode: this.gridCode,
+            page: 1,
+          },
+        }).then((res) => {
+          console.log(res.data);
+        });
+      }
     },
   },
 };

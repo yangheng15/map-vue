@@ -1,5 +1,8 @@
 // http.js
 import axios from 'axios'
+import {
+  Toast
+} from "vant";
 
 // 环境的切换
 if (process.env.NODE_ENV === 'development') {
@@ -42,6 +45,14 @@ axios.interceptors.response.use(response => {
   if (error.response.status) {
     // 处理请求失败的情况
     // 对不同返回码对相应处理
+    if (error.response.status == 401) {
+      console.log(error.response.data.error_description);
+      Toast.fail({
+        message: error.response.data.error_description,
+        position: "middle",
+      });
+    }
+
     return Promise.reject(error.response)
   }
 })

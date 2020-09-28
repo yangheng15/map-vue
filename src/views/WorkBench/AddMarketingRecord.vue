@@ -1,28 +1,30 @@
 <template>
   <div class="AddMarketingRecord">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='添加营销记录'">
+    <div v-if="typeCN == '添加营销记录'">
       <ul class="mission_details">
         <li>
-          客户：北京卓越科技有限公司
+          客户：{{ custName }}
           <img src="../../assets/WorkBench/location.svg" alt />
         </li>
         <li>方式：上门</li>
-        <li>营销产品：企业贷</li>
+        <li>营销产品：{{ productCode }}</li>
         <li>执行时间：2020-08-30 9:00</li>
       </ul>
       <div>
         <ul class="tabList">
-          <li @click="tab(0)" :class="tabId==0?'cur':'ordinary'">结果</li>
-          <li @click="tab(1)" :class="tabId==1?'cur':'ordinary'">影像</li>
-          <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">竞争对手</li>
+          <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">结果</li>
+          <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">影像</li>
+          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
+            竞争对手
+          </li>
         </ul>
-        <div v-show="tabId===0" style="background:#fff;">
+        <div v-show="tabId === 0" style="background: #fff">
           <van-field
             readonly
             clickable
             name="picker"
-            :value="result_txt"
+            :value="result_txt.text"
             label="结果"
             placeholder="点击选择结果"
             @click="showResult = true"
@@ -39,7 +41,7 @@
             readonly
             clickable
             name="picker"
-            :value="Customer_intention_txt"
+            :value="Customer_intention_txt.text"
             label="客户意向"
             placeholder="点击选择客户意向"
             @click="showCustomer_intention = true"
@@ -83,20 +85,22 @@
             show-word-limit
           />
           <div class="save">
-            <van-button type="primary" block @click="prev()">保存</van-button>
+            <van-button type="primary" block @click="saveResult()"
+              >保存</van-button
+            >
           </div>
         </div>
-        <div v-show="tabId===1" style="background:#fff;">
-          <div style="padding:10px;background:#fff;">
+        <div v-show="tabId === 1" style="background: #fff">
+          <div style="padding: 10px; background: #fff">
             <van-uploader :after-read="afterRead1" />
             <van-uploader :after-read="afterRead2" />
             <van-uploader :after-read="afterRead3" />
           </div>
-          <div class="save" style="margin-top:20px">
+          <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="prev()">保存</van-button>
           </div>
         </div>
-        <div v-show="tabId===2" style="background:#fff;height:70vh">
+        <div v-show="tabId === 2" style="background: #fff; height: 70vh">
           <van-field
             v-model="competitor"
             name="对手名称："
@@ -118,7 +122,7 @@
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写产品利率' }]"
           />
-          <div class="save" style="margin-top:20px">
+          <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="prev()">保存</van-button>
           </div>
         </div>
@@ -128,6 +132,7 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
+import { Toast } from "vant";
 export default {
   data() {
     return {
@@ -141,17 +146,20 @@ export default {
       value2: "",
       value3: "",
       result_txt: "",
-      columnsResult: ["成功", "未成功", "失败"],
+      columnsResult: [
+        { index: 0, text: "成功" },
+        { index: 1, text: "未成功" },
+        { index: 2, text: "失败" },
+      ],
       showResult: false,
       Customer_intention_txt: "",
       columnsCustomer_intention: [
-        "强",
-        "一般",
-        "无",
-        "已有他行产品",
-        "其他需求",
-        "直接拒绝",
-        "同意采集（资料采集类任务）",
+        { index: 0, text: "强" },
+        { index: 1, text: "一般" },
+        { index: 2, text: "无" },
+        { index: 3, text: "已有他行产" },
+        { index: 4, text: "直接拒绝" },
+        { index: 5, text: "同意采集" },
       ],
       showCustomer_intention: false,
       actual_demand: "",
@@ -160,6 +168,11 @@ export default {
       competitor: "",
       competitive_products: "",
       product_rate: "",
+      customerCode: "",
+      gridCode: "",
+      productCode: "",
+      custName: "",
+      resultReturn: "",
     };
   },
   components: {
@@ -167,13 +180,10 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
-    if (localStorage.getItem("indexTabId")) {
-      this.tabId = Number(localStorage.getItem("indexTabId"));
-      localStorage.removeItem("indexTabId");
-    }
-    this.token = localStorage.getItem("token");
-    this.title = this.$route.query.title;
-    this.height = 400 * (document.documentElement.clientWidth / 750) + "";
+    this.customerCode = this.$route.query.customerCode;
+    this.gridCode = this.$route.query.gridCode;
+    this.productCode = this.$route.query.productCode;
+    this.custName = this.$route.query.custName;
   },
   updated() {},
   methods: {
@@ -181,8 +191,34 @@ export default {
       this.$router.go(-1);
     },
     tab(ev) {
+      if (ev != 0) {
+        if (!this.resultReturn) {
+          Toast({
+            message: "请先添加结果",
+            position: "middle",
+          });
+          return;
+        }
+      }
       this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
+    },
+    saveResult() {
+      this.$httpPost({
+        url: "/api/customersRecords/appAddResult",
+        data: {
+          customerCode: this.customerCode,
+          griddingCode: this.gridCode,
+          productCode: this.productCode,
+          result_txt: this.result_txt.index,
+          Customer_intention_txt: this.Customer_intention_txt.index,
+          actual_demand: this.actual_demand,
+          remarks: this.remarks,
+          customer_feedback: this.customer_feedback,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.resultReturn = res;
+      });
     },
     openValue1() {
       this.show1 = !this.show1;

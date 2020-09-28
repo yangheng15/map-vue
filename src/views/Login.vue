@@ -70,7 +70,9 @@ export default {
           localStorage.setItem("username", res.username);
           this.$router.push("/home");
         }
-      });
+      }).catch(err=> {
+        console.log(err);
+      })
     },
   },
 };
