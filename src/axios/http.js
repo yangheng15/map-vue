@@ -1,10 +1,10 @@
 // http.js
 import axios from 'axios'
 
-const token = localStorage.getItem('_token');
 // 环境的切换
 if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = '/api'
+  // axios.defaults.baseURL = '/api'
+  axios.defaults.baseURL = 'http://39.106.51.28:8091'
 } else if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = 'http://39.106.51.28:8091'
 }
@@ -12,6 +12,7 @@ if (process.env.NODE_ENV === 'development') {
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
+    const token = localStorage.getItem('_token');
     token && (config.headers.Authorization = `Bearer ${token}`)
     return config
   },
