@@ -52,8 +52,7 @@ export default {
       var bcrypt = require("bcryptjs"); //引入bcryptjs库
       // var salt = bcrypt.genSaltSync(12); //定义密码加密的计算强度,默认10
       var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
-      console.log(md5(this.password));
-      console.log(bcrypt.hashSync(md5(this.password)));
+      localStorage.clear();
       this.$httpPost({
         url: "/oauth/token",
         data: qs.stringify({
