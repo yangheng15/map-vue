@@ -93,7 +93,10 @@
         <div v-show="tabId === 1" style="background: #fff">
           <div style="padding: 10px; background: #fff">
             <van-uploader
-              :after-read="afterRead1"
+              :after-read="afterRead"
+              accept="file"
+              upload-text="选择文件"
+              max-count="1"
               v-model="fileList"
               multiple
             />
@@ -137,18 +140,11 @@
 <script>
 import ChildNav from "../../components/Public/ChildNav";
 import { Toast } from "vant";
+import qs from "qs";
 export default {
   data() {
     return {
       tabId: 0,
-      token: "",
-      content: "",
-      show1: false,
-      show2: false,
-      show3: false,
-      value1: "",
-      value2: "",
-      value3: "",
       result_txt: "",
       columnsResult: [
         { index: 0, text: "成功" },
@@ -178,12 +174,7 @@ export default {
       custName: "",
       id: "",
       resultCode: "",
-      fileList: [
-        { url: "https://img.yzcdn.cn/vant/leaf.jpg" },
-        // Uploader 根据文件后缀来判断是否为图片文件
-        // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-        { url: "https://cloud-image", isImage: true },
-      ],
+      fileList: [],
     };
   },
   components: {
@@ -196,6 +187,7 @@ export default {
     this.productCode = this.$route.query.productCode;
     this.custName = this.$route.query.custName;
     this.id = this.$route.query.id;
+    // this./api/semCustomersRecords/appGet/{id}
   },
   updated() {},
   methods: {
@@ -255,15 +247,6 @@ export default {
         });
       });
     },
-    openValue1() {
-      this.show1 = !this.show1;
-    },
-    openValue2() {
-      this.show2 = !this.show2;
-    },
-    openValue3() {
-      this.show3 = !this.show3;
-    },
     onResult(value) {
       this.result_txt = value;
       this.showResult = false;
@@ -272,27 +255,17 @@ export default {
       this.Customer_intention_txt = value;
       this.showCustomer_intention = false;
     },
-    afterRead1(file) {
-      console.log(file);
-    },
-    afterRead2(file) {
-      console.log(file);
-    },
-    afterRead3(file) {
-      console.log(file);
-    },
-    beforeRead(file) {
-      //上传之前校验
-      if (file.type !== "image/jpeg" && file.type !== "image/png") {
-        Toast("只允许上传jpg/png格式的图片！");
-        return false;
-      }
-      return true;
-    },
-    async afterRead(file) {
-      //文件读取完成后的回调函数
-      let uploadImg = await upLoaderImg(file.file); //使用上传的方法。file.file
-      console.log(uploadImg);
+    afterRead(file) {
+      var File = file.file;
+      console.log(File);
+      this.$httpPost({
+        url: "/api/upload/attachment",
+        data: qs.stringify({
+          file: File,
+        }),
+      }).then((res) => {
+        console.log(res);
+      });
     },
   },
 };

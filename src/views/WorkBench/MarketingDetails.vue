@@ -16,7 +16,7 @@
           ></router-link>
         </li>
         <li>
-          <span style="font-weight: 600">营销产品：</span>{{productCode}}
+          <span style="font-weight: 600">营销产品：</span>{{ productCode }}
           <router-link
             tag="a"
             class="img2"
@@ -44,40 +44,61 @@
       </ul>
       <div>
         <p class="detail_title">营销记录</p>
-        <router-link
-          tag="ul"
-          style="background: #fff"
-          :to="{ name: 'EditMarketingRecord', query: { title: '营销记录' } }"
-        >
-          <li
+        <ul style="background: #fff">
+          <router-link
             v-for="(thisItem, index) in MarketingRecord"
             :key="index"
+            tag="li"
+            :to="{
+              name: 'EditMarketingRecord',
+              query: {
+                title: '营销记录',
+                customerCode: thisItem.customerCode,
+                gridCode: thisItem.gridCode,
+                productCode: thisItem.productCode,
+                customerName: thisItem.custName,
+                id: thisItem.id,
+              },
+            }"
             class="marked_record"
           >
             <p style="width: 30%">{{ thisItem.semTime | transform }}</p>
             <p style="width: 70%; display: flex" class="approval">
-              <span class="approval_Passed">已营销</span
-                >
+              <span class="approval_Passed">已营销</span>
               <span
                 :class="
                   thisItem.intention == '0'
                     ? 'approval_Passed'
                     : 'approval_Passed1'
                 "
-                >{{ thisItem.intention == "0" ? "强" : (thisItem.intention == "1"? "一般":(thisItem.intention == "2"?"无":(thisItem.intention == "3"?"已有产品":(thisItem.intention == "4"?"直接拒绝":"同意采集"))))}}</span
+                >{{
+                  thisItem.intention == "0"
+                    ? "强"
+                    : thisItem.intention == "1"
+                    ? "一般"
+                    : thisItem.intention == "2"
+                    ? "无"
+                    : thisItem.intention == "3"
+                    ? "已有产品"
+                    : thisItem.intention == "4"
+                    ? "直接拒绝"
+                    : "同意采集"
+                }}</span
               >
               <span
-                  :class="
-                    thisItem.isSucc == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
-                  >{{ thisItem.isSucc == "1" ? "成功" : "失败" }}
-                </span>
+                :class="
+                  thisItem.isSucc == '1'
+                    ? 'approval_Passed'
+                    : 'approval_Passed1'
+                "
+                >{{ thisItem.isSucc == "1" ? "成功" : "失败" }}
+              </span>
             </p>
-            <p class="schedule_star" style="width: 100%">{{ thisItem.remark }}</p>
-          </li>
-        </router-link>
+            <p class="schedule_star" style="width: 100%">
+              {{ thisItem.remark }}
+            </p>
+          </router-link>
+        </ul>
         <div class="end_line">已加载完毕</div>
       </div>
       <div
@@ -100,9 +121,9 @@
               title: '添加营销记录',
               customerCode: this.customerCode,
               gridCode: this.gridCode,
-              productCode:this.productCode,
-              custName:this.custName,
-              id:this.id
+              productCode: this.productCode,
+              custName: this.custName,
+              id: this.id,
             },
           }"
           >添加记录</router-link
@@ -266,8 +287,8 @@ export default {
       intention: "",
       customerCode: "",
       gridCode: "",
-      productCode:"",
-      id:"",
+      productCode: "",
+      id: "",
     };
   },
   components: {
@@ -301,12 +322,12 @@ export default {
           },
         }).then((res) => {
           console.log(res.data);
-          this.MarketingRecord=res.data
+          this.MarketingRecord = res.data;
         });
       }
     },
   },
-    filters: {
+  filters: {
     transform(val) {
       if (val) {
         return moment(val).format("YYYY-MM-DD");

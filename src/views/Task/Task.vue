@@ -217,7 +217,7 @@ export default {
 }
 .teshu2 {
   text-align: center !important;
-  width: 33% !important;
+  /* width: 33% !important; */
   color: #0fb38f !important;
 }
 .list {

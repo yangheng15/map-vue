@@ -133,14 +133,6 @@ export default {
   data() {
     return {
       tabId: 0,
-      token: "",
-      content: "",
-      show1: false,
-      show2: false,
-      show3: false,
-      value1: "",
-      value2: "",
-      value3: "",
       result_txt: "成功",
       columnsResult: ["成功", "未成功", "失败"],
       showResult: false,
@@ -162,6 +154,7 @@ export default {
       competitive_products: "微利贷",
       product_rate: "0.23%",
       picture: img,
+      id:'',
     };
   },
   components: {
@@ -169,13 +162,7 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
-    if (localStorage.getItem("indexTabId")) {
-      this.tabId = Number(localStorage.getItem("indexTabId"));
-      localStorage.removeItem("indexTabId");
-    }
-    this.token = localStorage.getItem("token");
-    this.title = this.$route.query.title;
-    this.height = 400 * (document.documentElement.clientWidth / 750) + "";
+    this.id = this.$route.query.id;
   },
   updated() {},
   methods: {
@@ -184,16 +171,6 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
-    },
-    openValue1() {
-      this.show1 = !this.show1;
-    },
-    openValue2() {
-      this.show2 = !this.show2;
-    },
-    openValue3() {
-      this.show3 = !this.show3;
     },
     onResult(value) {
       this.result_txt = value;
