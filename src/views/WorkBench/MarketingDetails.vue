@@ -39,7 +39,7 @@
         <li>
           <span style="font-weight: 600"
             >意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向：</span
-          >{{ intention }}
+          >{{ intention == 0? '强': (intention == 1? '一般': (intention == 2? '无': (intention == 3? '已有产品': (intention == 4? '直接拒绝': '同意采集')))) }}
         </li>
       </ul>
       <div>
@@ -53,10 +53,6 @@
               name: 'EditMarketingRecord',
               query: {
                 title: '营销记录',
-                customerCode: thisItem.customerCode,
-                gridCode: thisItem.gridCode,
-                productCode: thisItem.productCode,
-                customerName: thisItem.custName,
                 id: thisItem.id,
               },
             }"

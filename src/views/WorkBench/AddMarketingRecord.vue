@@ -102,7 +102,9 @@
             />
           </div>
           <div class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="prev()">保存</van-button>
+            <van-button type="primary" block @click="addPicture()"
+              >保存</van-button
+            >
           </div>
         </div>
         <div v-show="tabId === 2" style="background: #fff; height: 70vh">
@@ -175,6 +177,7 @@ export default {
       id: "",
       resultCode: "",
       fileList: [],
+      pictureId: "",
     };
   },
   components: {
@@ -195,15 +198,15 @@ export default {
       this.$router.go(-1);
     },
     tab(ev) {
-      // if (ev != 0) {
-      //   if (!this.resultCode) {
-      //     Toast({
-      //       message: "请先添加结果",
-      //       position: "middle",
-      //     });
-      //     return;
-      //   }
-      // }
+      if (ev != 0) {
+        if (!this.resultCode) {
+          Toast({
+            message: "请先添加结果",
+            position: "middle",
+          });
+          return;
+        }
+      }
       this.tabId = ev;
     },
     addResult() {
@@ -218,7 +221,7 @@ export default {
           intention: this.Customer_intention_txt.index,
           actualDemand: this.actual_demand,
           remark: this.remarks,
-          feebback: this.customer_feedback,
+          feedback: this.customer_feedback,
         },
       }).then((res) => {
         console.log(res);
@@ -257,12 +260,31 @@ export default {
     },
     afterRead(file) {
       let formData = new FormData();
-      formData.append('file', file.file);
+      formData.append("file", file.file);
       this.$httpPost({
-        url: '/api/upload/attachment',
-        headers: {'Content-Type':'multipart/form-data'},
-        data: formData
-      })
+        url: "/api/upload/attachment",
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+      }).then((res) => {
+        console.log(res.data.pid);
+        this.pictureId = res.data.pid;
+      });
+    },
+    async addPicture() {
+      this.$httpPost({
+        url: "/api/customersRecords/appAddImage",
+        data: {
+          imageInfo: this.pictureId,
+          customerCode: this.customerCode,
+          semCode: this.resultCode,
+        },
+      }).then((res) => {
+        console.log(res);
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
+      });
     },
   },
 };

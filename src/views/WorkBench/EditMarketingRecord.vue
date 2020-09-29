@@ -1,28 +1,30 @@
 <template>
   <div class="EditMarketingRecord">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='营销记录'">
+    <div v-if="typeCN == '营销记录'">
       <ul class="mission_details">
         <li>
-          客户：北京卓越科技有限公司
+          客户：{{ editRecords.customerName }}
           <img src="../../assets/WorkBench/location.svg" alt />
         </li>
-        <li>方式：上门</li>
-        <li>营销产品：企业贷</li>
-        <li>执行时间：2020-08-30 9:00</li>
+        <li>方式：{{ editRecords.semType }}</li>
+        <li>营销产品：{{ editRecords.products }}</li>
+        <li>执行时间：{{ editRecords.semTime | transform }}</li>
       </ul>
       <div>
         <ul class="tabList">
-          <li @click="tab(0)" :class="tabId==0?'cur':'ordinary'">结果</li>
-          <li @click="tab(1)" :class="tabId==1?'cur':'ordinary'">影像</li>
-          <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">竞争对手</li>
+          <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">结果</li>
+          <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">影像</li>
+          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
+            竞争对手
+          </li>
         </ul>
-        <div v-show="tabId===0" style="background:#fff;">
+        <div v-show="tabId === 0" style="background: #fff">
           <van-field
             readonly
             clickable
             name="picker"
-            :value="result_txt"
+            :value="editRecords.isSucc == 0 ? '成功' : (editRecords.isSucc == 1 ? '未成功' : '失败')"
             label="结果"
             placeholder="点击选择结果"
             @click="showResult = true"
@@ -39,7 +41,19 @@
             readonly
             clickable
             name="picker"
-            :value="Customer_intention_txt"
+            :value="
+              editRecords.intention == 0
+                ? '强'
+                : editRecords.intention == 1
+                ? '一般'
+                : editRecords.intention == 2
+                ? '无'
+                : editRecords.intention == 3
+                ? '已有产品'
+                : editRecords.intention == 4
+                ? '直接拒绝'
+                : '同意采集'
+            "
             label="客户意向"
             placeholder="点击选择客户意向"
             @click="showCustomer_intention = true"
@@ -53,7 +67,7 @@
             />
           </van-popup>
           <van-field
-            v-model="actual_demand"
+            v-model="editRecords.actualDemand"
             rows="2"
             autosize
             label="实际需求"
@@ -63,7 +77,7 @@
             show-word-limit
           />
           <van-field
-            v-model="remarks"
+            v-model="editRecords.remark"
             rows="2"
             autosize
             label="备注"
@@ -73,7 +87,7 @@
             show-word-limit
           />
           <van-field
-            v-model="customer_feedback"
+            v-model="editRecords.feedback"
             rows="2"
             autosize
             label="客户反馈意见"
@@ -83,43 +97,55 @@
             show-word-limit
           />
           <div class="save">
-            <van-button type="primary" block @click="prev()">保存</van-button>
+            <van-button type="primary" block @click="modifyResult()">保存</van-button>
           </div>
         </div>
-        <div v-show="tabId===1" style="background:#fff;">
-          <div style="padding:10px;background:#fff;display: flex;flex-wrap: wrap;">
-            <van-image width="80px" height="80px" fit="contain" :src="picture" />
-            <van-image width="80px" height="80px" fit="contain" :src="picture" />
-            <van-uploader :after-read="afterRead" />
+        <div v-show="tabId === 1" style="background: #fff">
+          <div
+            style="
+              padding: 10px;
+              background: #fff;
+              display: flex;
+              flex-wrap: wrap;
+            "
+          >
+          <!-- <img style="width:100px;height:100px" :src="'data:image/jpg;base64,'+this.pictureData" alt=""> -->
+          <!-- <van-uploader v-model="fileList1" multiple /> -->
+            <van-uploader
+            result-type="dataUrl"
+              :after-read="afterRead"
+              v-model="fileList"
+              multiple
+            />
           </div>
-          <div class="save" style="margin-top:20px">
-            <van-button type="primary" block @click="prev()">保存</van-button>
+          <div class="save" style="margin-top: 20px">
+            <van-button type="primary" block @click="modifyPicture()">保存</van-button>
           </div>
         </div>
-        <div v-show="tabId===2" style="background:#fff;height:70vh">
+        <div v-show="tabId === 2" style="background: #fff; height: 70vh">
           <van-field
-            v-model="competitor"
+            v-model="editRecords.rivalName"
             name="对手名称："
             label="对手名称："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写对手名称' }]"
           />
           <van-field
-            v-model="competitive_products"
+            v-model="editRecords.rivalProduct"
             name="对手产品："
             label="对手产品："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写对手产品' }]"
           />
           <van-field
-            v-model="product_rate"
+            v-model="editRecords.interestRate"
             name="产品利率："
             label="产品利率："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写产品利率' }]"
           />
-          <div class="save" style="margin-top:20px">
-            <van-button type="primary" block @click="prev()">保存</van-button>
+          <div class="save" style="margin-top: 20px">
+            <van-button type="primary" block @click="modifyCompetitor()">保存</van-button>
           </div>
         </div>
       </div>
@@ -128,33 +154,38 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import img from "../../assets/WorkBench/qiyedai.jpg";
+import moment from "moment";
+import { Toast } from "vant";
 export default {
   data() {
     return {
       tabId: 0,
-      result_txt: "成功",
-      columnsResult: ["成功", "未成功", "失败"],
-      showResult: false,
-      Customer_intention_txt: "强",
+      editRecords: [],
+      columnsResult: [
+        { index: 0, text: "成功" },
+        { index: 1, text: "未成功" },
+        { index: 2, text: "失败" },
+      ],
       columnsCustomer_intention: [
-        "强",
-        "一般",
-        "无",
-        "已有他行产品",
-        "其他需求",
-        "直接拒绝",
-        "同意采集（资料采集类任务）",
+        { index: 0, text: "强" },
+        { index: 1, text: "一般" },
+        { index: 2, text: "无" },
+        { index: 3, text: "已有他行产" },
+        { index: 4, text: "直接拒绝" },
+        { index: 5, text: "同意采集" },
       ],
       showCustomer_intention: false,
-      actual_demand: "希望获得利益最大化",
-      remarks: "希望获得利益最大化",
-      customer_feedback: "希望更加着重为客户考虑",
-      competitor: "微利贷",
-      competitive_products: "微利贷",
-      product_rate: "0.23%",
-      picture: img,
-      id:'',
+      showResult: false,
+      id: "",
+      imageInfo:"",
+      resultCode:"",
+      customerCode:"",
+      griddingCode:"",
+      products:"",
+      // pictureData:"",
+      fileList: [
+        { url: "" },
+      ],
     };
   },
   components: {
@@ -163,6 +194,7 @@ export default {
   created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
+    this.editRecord();
   },
   updated() {},
   methods: {
@@ -171,17 +203,130 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
+      if(ev==1){
+        this.editPicture()
+      }
+    },
+    editRecord(val) {
+      console.log(val);
+      this.$httpGet({
+        url: `/api/semCustomersRecords/appGet/${this.id}`,
+        data: {
+          id: this.id,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.editRecords = res.data;
+        this.imageInfo=res.data.imageInfo
+        this.customerCode=res.data.customerCode
+        this.griddingCode=res.data.griddingCode
+        this.products=res.data.products
+      });
     },
     onResult(value) {
-      this.result_txt = value;
+      console.log(value);
+      this.editRecords.isSucc = value.index;
       this.showResult = false;
     },
     onCustomer_intention(value) {
-      this.Customer_intention_txt = value;
+      this.editRecords.intention = value.index;
       this.showCustomer_intention = false;
     },
+    modifyResult() {
+      console.log(this.id);
+      console.log(this.editRecords.code);
+      this.$httpPut({
+        url: "/api/semCustomersRecords/updateRecord",
+        data: {
+          customerCode: this.editRecords.customerCode,
+          griddingCode: this.editRecords.griddingCode,
+          products: this.editRecords.products,
+          code: this.editRecords.code,
+          id: this.id,
+          isSucc: this.editRecords.isSucc,
+          intention: this.editRecords.intention,
+          actualDemand: this.editRecords.actualDemand,
+          remark: this.editRecords.remark,
+          feedback: this.editRecords.feedback,
+        },
+      }).then((res) => {
+        console.log(res);
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
+      });
+    },
+    async modifyCompetitor() {
+      this.$httpPut({
+        url: "/api/semCustomersRecords/updateCompetitor",
+        data: {
+          customerCode: this.editRecords.customerCode,
+          semCode: this.editRecords.code,
+          // semCode: this.resultCode,
+          id: this.editRecords.id,
+          rivalName: this.editRecords.rivalName,
+          rivalProduct: this.editRecords.rivalProduct,
+          interestRate: this.editRecords.interestRate,
+        },
+      }).then((res) => {
+        console.log(res);
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
+      });
+    },
+    async modifyPicture() {
+      this.$httpPut({
+        url: "/api/semCustomersRecords/updateScreenage",
+        data: {
+          customerCode: this.editRecords.customerCode,
+          semCode: this.editRecords.code,
+          // semCode: this.resultCode,
+          id: this.editRecords.id,
+          imageInfo: this.imageInfo,
+        },
+      }).then((res) => {
+        console.log(res);
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
+      });
+    },
+    async editPicture() {
+      console.log(this.imageInfo);
+      this.$httpGet({
+        url: "/api/show/image/base64",
+        params: {
+          id: this.imageInfo,
+        },
+      }).then((res) => {
+        this.fileList[0].url='data:image/jpg;base64,'+res.data;
+        this.fileList[0].isImage=true
+      });
+    },
     afterRead(file) {
+      let formData = new FormData();
+      formData.append("file", file.file);
       console.log(file);
+      this.$httpPost({
+        url: "/api/upload/attachment",
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+      }).then((res) => {
+        console.log(res.data.pid);
+        this.pictureId = res.data.pid;
+      });
+    },
+    
+  },
+    filters: {
+    transform(val) {
+      if (val) {
+        return moment(val).format("YYYY-MM-DD");
+      }
     },
   },
 };
