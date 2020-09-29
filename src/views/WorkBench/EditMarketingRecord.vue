@@ -303,6 +303,7 @@ export default {
           id: this.imageInfo,
         },
       }).then((res) => {
+        console.log(res.data);
         this.fileList[0].url='data:image/jpg;base64,'+res.data;
         this.fileList[0].isImage=true
       });

@@ -94,9 +94,6 @@
           <div style="padding: 10px; background: #fff">
             <van-uploader
               :after-read="afterRead"
-              accept="file"
-              upload-text="选择文件"
-              max-count="1"
               v-model="fileList"
               multiple
             />
@@ -177,7 +174,7 @@ export default {
       id: "",
       resultCode: "",
       fileList: [],
-      pictureId: "",
+      pictureId: [],
     };
   },
   components: {
@@ -267,14 +264,14 @@ export default {
         data: formData,
       }).then((res) => {
         console.log(res.data.pid);
-        this.pictureId = res.data.pid;
+        this.pictureId.push(res.data.pid);
       });
     },
     async addPicture() {
       this.$httpPost({
         url: "/api/customersRecords/appAddImage",
         data: {
-          imageInfo: this.pictureId,
+          imageInfo: this.pictureId.join(','),
           customerCode: this.customerCode,
           semCode: this.resultCode,
         },

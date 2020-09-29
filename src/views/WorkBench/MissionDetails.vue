@@ -170,6 +170,14 @@ export default {
   components: {
     ChildNav,
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      console.log(from);
+      if(from.path === '/MarketingDetails') {
+        vm.tab(1)
+      }
+    })
+  },
   created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
