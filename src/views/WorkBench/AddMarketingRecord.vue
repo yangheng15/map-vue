@@ -256,16 +256,13 @@ export default {
       this.showCustomer_intention = false;
     },
     afterRead(file) {
-      var File = file.file;
-      console.log(File);
+      let formData = new FormData();
+      formData.append('file', file.file);
       this.$httpPost({
-        url: "/api/upload/attachment",
-        data: qs.stringify({
-          file: File,
-        }),
-      }).then((res) => {
-        console.log(res);
-      });
+        url: '/api/upload/attachment',
+        headers: {'Content-Type':'multipart/form-data'},
+        data: formData
+      })
     },
   },
 };
