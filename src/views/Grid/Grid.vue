@@ -24,6 +24,18 @@
         ></my-overlay>
       </template>
 
+      <template v-for="(item, index) in typeIdsData">
+        <my-overlay
+          :key="index + 'type'"
+          :show="true"
+          :position="item.position"
+          :name="item.principalName"
+          :address="item.name"
+          :data-val="item"
+          @touchEvent="showTypeIds(item)"
+        ></my-overlay>
+      </template>
+
       <!-- 弹窗 -->
       <bm-overlay
         v-if="introduce"
@@ -70,6 +82,18 @@
           </div>
         </div>
       </bm-overlay>
+
+      <!-- <bm-info-window
+          :position="typeIdsItem.position"
+          :show='typeIdsAlert'
+          @click="typeIdsAlert = false;"
+        >
+          <p style="padding-top: 1rem">姓名：卓越联腾企业贷客户拜访营销</p>
+          <p>类型：产品营销</p>
+          <p>产品：特色存款</p>
+          <p>目标：10万</p>
+          <p>剩余日期：30天</p>
+        </bm-info-window> -->
 
       <!-- 下面是路径规划出来的图标-->
       <template v-if="$route.params.pathIds">
@@ -304,6 +328,9 @@ export default {
       typeIds: "",
       specialSubject: "",
       pathIds: "",
+      typeIdsData: [],
+      typeIdsItem: {},
+      typeIdsAlert: false,
     };
   },
   created() {
@@ -362,7 +389,7 @@ export default {
         map && this.createPolygon(map);
       });
     },
-    queryResources() {
+    queryResources(BMap, map) {
       this.$httpGet({
         url: "/api/resourceType/query",
         params: {
@@ -370,15 +397,62 @@ export default {
         },
       }).then((res) => {
         console.log(res.data);
-        this.map_data = res.data;
-        this.map_data.forEach((it) => {
+        this.typeIdsData = res.data;
+        this.typeIdsData.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
+        map && this.createPolygon(map);
+        //创建infowindow
+        map && this.createInfoWindow(map);
       });
+    },
+    createInfoWindow(map) {
+      console.log(this.typeIdsData);
+      map.centerAndZoom(new BMap.Point(114.664477, 33.640232), 15);
+      var data_info = this.typeIdsData;
+      var opts = {
+        width: 250, // 信息窗口宽度
+        height: 80, // 信息窗口高度
+        title: "信息窗口", // 信息窗口标题
+        enableMessage: true, //设置允许信息窗发送短息
+      };
+      for (var i = 0; i < data_info.length; i++) {
+        var marker = new BMap.Marker(
+          new BMap.Point(...data_info[i]["position"].split(","))
+        ); // 创建标注
+        map.addOverlay(marker); // 将标注添加到地图中
+        const content = `
+          <p style="padding-top: 1rem">姓名：${data_info[i]['name']}</p>
+          <p>类型：产品营销</p>
+          <p>产品：特色存款</p>
+          <p>目标：10万</p>
+          <p>剩余日期：30天</p>
+        `;
+        addClickHandler(content, marker);
+      }
+      function addClickHandler(content, marker) {
+        marker.addEventListener("click", function (e) {
+          openInfo(content, e);
+        });
+      }
+      function openInfo(content, e) {
+        var p = e.target;
+        var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+        var infoWindow = new BMap.InfoWindow(content); // 创建信息窗口对象
+        map.openInfoWindow(infoWindow, point); //开启信息窗口
+      }
     },
     selfOverlayClick(data) {
       this.table = data;
       this.introduce = true;
+    },
+    showTypeIds(data) {
+      console.log(data);
+      this.typeIdsItem = { ...data };
+      const positionArr =
+        this.typeIdsItem.position && this.typeIdsItem.position.split(",");
+      this.typeIdsItem.position = { lng: positionArr[0], lat: positionArr[1] };
+      this.typeIdsAlert = true;
     },
     overlayClose() {
       this.introduce = false;
@@ -387,6 +461,8 @@ export default {
       //添加多边形覆盖物
       if (this.specialSubject || this.owner) {
         this.resource_selection(BMap, map);
+      } else if (this.typeIds) {
+        this.queryResources(BMap, map);
       } else {
         this.mapPlaning(BMap, map);
       }
@@ -494,7 +570,9 @@ export default {
           lng: this.table.position.split(",")[0],
           lat: this.table.position.split(",")[1],
         };
-        const pixel = map.pointToOverlayPixel(new BMap.Point(position.lng, position.lat));
+        const pixel = map.pointToOverlayPixel(
+          new BMap.Point(position.lng, position.lat)
+        );
         el.style.left = pixel.x - 60 + "px";
         el.style.top = pixel.y - 20 + "px";
       }

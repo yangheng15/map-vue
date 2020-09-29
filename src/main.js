@@ -25,12 +25,12 @@ Vue.prototype.$httpGet = httpGet;
 Vue.prototype.$httpPost = httpPost;
 Vue.prototype.$httpPut = httpPut;
 // //引入地图
-VueAMap.initAMapApiLoader({
-  key: 'your amap key',
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'MarkerClusterer'],
-  // 默认高德 sdk 版本为 1.4.4
-  v: '1.4.4'
-});
+// VueAMap.initAMapApiLoader({
+//   key: 'your amap key',
+//   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'MarkerClusterer'],
+//   // 默认高德 sdk 版本为 1.4.4
+//   v: '1.4.4'
+// });
 // 引入echarts画饼状图
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts;
