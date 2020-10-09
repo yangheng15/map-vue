@@ -11,7 +11,7 @@
         </div>
         <div class="have_star">
           <van-rate
-            v-model="start_num"
+            v-model="userNameTxt.level"
             color="#fff"
             void-color="#fff"
             readonly
@@ -100,7 +100,6 @@ export default {
   },
   data() {
     return {
-      start_num: 3,
       userNameTxt: [],
     };
   },
@@ -124,13 +123,11 @@ export default {
     getRealName() {
       let _username = localStorage.getItem("username");
       this.$httpGet({
-        url: "/api/personalManagement/info",
-        params: {
-          userName: _username,
-        },
+        url: `/api/v1/user/byname/${_username}`,
       }).then((res) => {
-        console.log(res.data);
-        this.userNameTxt = res.data[0];
+        console.log(res.row);
+        this.userNameTxt = res.row;
+        this.userNameTxt.level =parseInt(res.row.level);
       });
     },
   },

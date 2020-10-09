@@ -114,6 +114,7 @@
             <van-uploader
             result-type="dataUrl"
               :after-read="afterRead"
+              :max-count="1"
               v-model="fileList"
               multiple
             />

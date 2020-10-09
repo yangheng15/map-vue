@@ -23,7 +23,7 @@
           </li> -->
           <li>
             <span style="font-weight: 600">营销产品：</span
-            >{{ taskQuery.productCode }}
+            >{{productName }}
           </li>
           <li>
             <span style="font-weight: 600">截止日期：</span
@@ -55,16 +55,31 @@
           ak="YOUR_APP_KEY"
         >
           <bm-marker
-            :position="{ lng: 114.654102, lat: 33.623741 }"
+            :position="{ 
+            lng: this.polymerizationLocation && this.polymerizationLocation.split(',')[0],
+            lat: this.polymerizationLocation && this.polymerizationLocation.split(',')[1],
+             }"
             :dragging="true"
           ></bm-marker>
         </baidu-map>
       </div>
       <div v-show="tabId === 1">
         <van-dropdown-menu>
-          <van-dropdown-item v-model="marketed" :options="marketed_option" />
-          <van-dropdown-item v-model="intention" :options="intention_option" />
-          <van-dropdown-item v-model="marketing" :options="marketing_option" />
+          <van-dropdown-item
+            v-model="marketed"
+            :options="marketed_option"
+            @change="marketChange"
+          />
+          <van-dropdown-item
+            v-model="intention"
+            :options="intention_option"
+            @change="intentionChange"
+          />
+          <van-dropdown-item
+            v-model="marketing"
+            :options="marketing_option"
+            @change="marketingChange"
+          />
         </van-dropdown-menu>
         <van-search
           v-model="serchCustomer"
@@ -73,7 +88,26 @@
         />
         <div class="customer_list">
           <ul>
-            <router-link tag="li" :to="{ name: 'MarketingDetails', query: { title: '营销客户详情',custName:thisItem.custName,telephone:thisItem.telephone,intention:thisItem.intention,customerCode:thisItem.customerCode,gridCode:thisItem.gridCode,productCode:taskQuery.productCode,id:taskQuery.id } }" v-for="(thisItem, index) in MarketingRecord" :key="index">
+            <router-link
+              tag="li"
+              :to="{
+                name: 'MarketingDetails',
+                query: {
+                  title: '营销客户详情',
+                  custName: thisItem.custName,
+                  telephone: thisItem.telephone,
+                  intention: thisItem.intention,
+                  customerCode: thisItem.customerCode,
+                  gridCode: thisItem.gridCode,
+                  telphone: thisItem.telphone,
+                  address: thisItem.address,
+                  productName: productName,
+                  id: taskQuery.id,
+                },
+              }"
+              v-for="(thisItem, index) in MarketingRecord"
+              :key="index"
+            >
               <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
                 {{ thisItem.custName }}
               </p>
@@ -92,22 +126,34 @@
                       ? 'approval_Passed'
                       : 'approval_Passed1'
                   "
-                  >{{ thisItem.intention == "0" ? "强" : (thisItem.intention == "1"? "一般":(thisItem.intention == "2"?"无":(thisItem.intention == "3"?"已有产品":(thisItem.intention == "4"?"直接拒绝":"同意采集"))))}}</span
+                  >{{
+                    thisItem.intention == "0"
+                      ? "强"
+                      : thisItem.intention == "1"
+                      ? "一般"
+                      : thisItem.intention == "2"
+                      ? "无"
+                      : thisItem.intention == "3"
+                      ? "已有产品"
+                      : thisItem.intention == "4"
+                      ? "直接拒绝"
+                      : "同意采集"
+                  }}</span
                 >
                 <span
                   :class="
-                    thisItem.isSucceed == '1'
+                    thisItem.isSucceed == '0'
                       ? 'approval_Passed'
                       : 'approval_Passed1'
                   "
-                  >{{ thisItem.isSucceed == "1" ? "成功" : "失败" }}
+                  >{{ thisItem.isSucceed == "0" ? "成功" : "失败" }}
                 </span>
               </p>
-              <p v-if="thisItem.text" class="schedule_star" style="width: 80%">
-                {{ thisItem.text }}
+              <p v-if="thisItem.remark" class="schedule_star" style="width: 80%">
+                {{ thisItem.remark }}
               </p>
-              <p v-if="thisItem.date" class="schedule_star" style="width: 20%">
-                {{ thisItem.date }}
+              <p v-if="thisItem.lastTime" class="schedule_star" style="width: 20%">
+                {{ thisItem.lastTime }}
               </p>
             </router-link>
           </ul>
@@ -160,27 +206,30 @@ export default {
         { text: "同意采集", value: 5 },
       ],
       marketing_option: [
-        { text: "营销成功", value: 1 },
-        { text: "尚未成功", value: 0 },
+        { text: "营销成功", value: 0 },
+        { text: "营销失败", value: 2 },
       ],
       taskQuery: {},
       id: "",
-    };
+      productName:"",
+      polymerizationLocation:""    
+      };
   },
   components: {
     ChildNav,
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
       console.log(from);
-      if(from.path === '/MarketingDetails') {
-        vm.tab(1)
+      if (from.path === "/MarketingDetails") {
+        vm.tab(1);
       }
-    })
+    });
   },
   created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
+    this.productName = this.$route.query.productName;
     console.log(this.id);
     this.getTaskQuery();
     // $loading.show("拼命加载中..");
@@ -215,8 +264,12 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        console.log(res.data);
         this.taskQuery = res.data;
+        console.log(res.data.custList);
+        res.data.custList.forEach((it) => {
+          this.polymerizationLocation = it.location
+          console.log(this.polymerizationLocation);
+        });
       });
     },
     getMarketingCustomers() {
@@ -255,7 +308,48 @@ export default {
         params: {
           limit: 10,
           page: 1,
-          userName: val,
+          custInfo: val,
+        },
+      }).then((res) => {
+        this.MarketingRecord = res.data;
+      });
+    },
+    marketChange(val) {
+      console.log(val);
+      this.$httpGet({
+        url: "/api/appMarket/custInfo",
+        params: {
+          limit: 10,
+          page: 1,
+          isSem: val,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.MarketingRecord = res.data;
+      });
+    },
+    intentionChange(val) {
+      console.log(val);
+      this.$httpGet({
+        url: "/api/appMarket/custInfo",
+        params: {
+          limit: 10,
+          page: 1,
+          intention: val,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.MarketingRecord = res.data;
+      });
+    },
+    marketingChange(val) {
+      console.log(val);
+      this.$httpGet({
+        url: "/api/appMarket/custInfo",
+        params: {
+          limit: 10,
+          page: 1,
+          isSucceed: val,
         },
       }).then((res) => {
         console.log(res.data);

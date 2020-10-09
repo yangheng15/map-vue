@@ -94,6 +94,7 @@
           <div style="padding: 10px; background: #fff">
             <van-uploader
               :after-read="afterRead"
+              :max-count="1"
               v-model="fileList"
               multiple
             />

@@ -17,7 +17,7 @@
         <router-link
           tag="div"
           class="function_men"
-          :to="{ name: 'WorkbenchBranch', query: { title: '潜在客户' }}"
+          :to="{ name: 'PotentialCustomers', query: { title: '潜在客户' }}"
         >
           <span class="c-link-card" style="background:#E18D25">
             <img src="../../assets/WorkBench/qianzai.svg" alt />

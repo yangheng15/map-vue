@@ -15,7 +15,7 @@
           tag="div"
           :to="{
             name: 'MissionDetails',
-            query: { title: '任务详情', id: thisItem.id },
+            query: { title: '任务详情', id: thisItem.id, productName:thisItem.productName},
           }"
         >
           <div class="new_task">
@@ -23,14 +23,14 @@
             <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
               {{ thisItem.targetNum }}万
             </p>
-            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
+            <p>创建日期：{{ thisItem.createdTime | transform }}</p>
           </div>
           <div class="new_task">
-            <p>{{ thisItem.productCode }}</p>
+            <p>{{ thisItem.productName }}</p>
             <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
               剩余{{ thisItem.remainingDays }}天
             </p>
-            <p>截止日期：{{ thisItem.endTime | transform }}</p>
+            <p>截止日期：{{ thisItem.updatedTime | transform }}</p>
           </div>
         </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
@@ -43,7 +43,7 @@
           tag="div"
           :to="{
             name: 'MissionDetails',
-            query: { title: '任务详情', id: thisItem.id },
+            query: { title: '任务详情', id: thisItem.id, productName:thisItem.productName },
           }"
         >
           <div class="new_task">
@@ -54,7 +54,7 @@
             <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
           <div class="new_task">
-            <p>{{ thisItem.productCode }}</p>
+            <p>{{ thisItem.productName }}</p>
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
           <van-tag
@@ -83,7 +83,7 @@
           tag="div"
           :to="{
             name: 'MissionDetails',
-            query: { title: '任务详情', id: thisItem.id },
+            query: { title: '任务详情', id: thisItem.id, productName:thisItem.productName },
           }"
           class="right_content"
         >
@@ -95,7 +95,7 @@
             <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
           <div class="new_task">
-            <p>{{ thisItem.productCode }}</p>
+            <p>{{ thisItem.productName }}</p>
             <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">已过期</p>
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>

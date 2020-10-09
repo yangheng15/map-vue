@@ -16,7 +16,7 @@
           ></router-link>
         </li>
         <li>
-          <span style="font-weight: 600">营销产品：</span>{{ productCode }}
+          <span style="font-weight: 600">营销产品：</span>{{ productName }}
           <router-link
             tag="a"
             class="img2"
@@ -25,7 +25,7 @@
         </li>
         <li>
           <span style="font-weight: 600">客户地址：</span
-          >周口市某某区某某南路4号
+          >{{address}}
           <router-link
             tag="a"
             class="img3"
@@ -33,8 +33,8 @@
           ></router-link>
         </li>
         <li>
-          <span style="font-weight: 600">联系方式：</span>{{ telephone }}
-          <a class="img4" :href="'tel:' + telephone"></a>
+          <span style="font-weight: 600">联系方式：</span>{{ telphone }}
+          <a class="img4" :href="'tel:' + telphone"></a>
         </li>
         <li>
           <span style="font-weight: 600"
@@ -83,11 +83,11 @@
               >
               <span
                 :class="
-                  thisItem.isSucc == '1'
+                  thisItem.isSucc == '0'
                     ? 'approval_Passed'
                     : 'approval_Passed1'
                 "
-                >{{ thisItem.isSucc == "1" ? "成功" : "失败" }}
+                >{{ thisItem.isSucc == "0" ? "成功" : "失败" }}
               </span>
             </p>
             <p class="schedule_star" style="width: 100%">
@@ -285,6 +285,9 @@ export default {
       gridCode: "",
       productCode: "",
       id: "",
+      productName:"",
+      telphone:"",
+      address:""
     };
   },
   components: {
@@ -298,6 +301,9 @@ export default {
     this.customerCode = this.$route.query.customerCode;
     this.gridCode = this.$route.query.gridCode;
     this.productCode = this.$route.query.productCode;
+    this.productName = this.$route.query.productName;
+    this.address = this.$route.query.address;
+    this.telphone = this.$route.query.telphone;
     this.id = this.$route.query.id;
     this.getMarkedRecord();
   },

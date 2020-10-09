@@ -9,7 +9,7 @@
         :to="{ name: 'knowledgeBaseDetail', query: { title: '知识库详情' }}"
       >
         <li class="knowledge" v-for="(item,index) in knowledge" :key="index">
-          <p style="font-size:1rem;">{{item.name}}</p>
+          <p>{{item.name}}</p>
           <p>{{item.date}}</p>
           <p class="right_cursor">
             <van-icon name="arrow" />
@@ -50,6 +50,7 @@ export default {
           id: 2,
         },
       ],
+      search_txt:"",
     };
   },
   created() {

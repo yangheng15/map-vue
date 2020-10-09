@@ -410,10 +410,9 @@
         </div>
       </div>
     </div>
-    <div v-if="typeCN=='黑名单'">
+    <!-- <div v-if="typeCN=='黑名单'">
       <div class="screen_content">
         <van-search v-model="search_txt" placeholder="客户名称" />
-        <!-- <button>筛选</button> -->
       </div>
       <div class="customer_list">
         <ul>
@@ -437,7 +436,7 @@
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
-    </div>
+    </div> -->
     <div v-if="typeCN=='成员轨迹'">
       <div class="screen_content">
         <van-search v-model="search_txt" placeholder="用户名称" />
@@ -524,7 +523,7 @@
         </baidu-map>
       </div>
     </div>
-    <div v-if="typeCN=='任务管理'">
+    <!-- <div v-if="typeCN=='任务管理'">
       <div class="screen_content">
         <van-search v-model="search_txt" show-action placeholder="客户名称" @search="onSearch">
           <template #action>
@@ -557,41 +556,9 @@
           </div>
         </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
-        <!-- <ul
-          v-for="(thisItem,index) in task_management"
-          :key="index"
-          @click="$router.push('/ContentManage/PutRecord/?title=任务详情')"
-        >
-          <div v-if="thisItem.num==1" class="task_management">已成功</div>
-          <li>
-            <p>{{thisItem.name1}}</p>
-            <p>{{thisItem.date}}</p>
-            <p>{{thisItem.name2}}</p>
-            <div class="schedule_star progress">
-              <div
-                class="progress-done"
-                data-done="68"
-                :style="{width:thisItem.percentage1,background:thisItem.color1}"
-              >{{thisItem.percentage1}}</div>
-            </div>
-            <p></p>
-            <p style="display:flex;justify-content: space-between;">
-              <span>{{thisItem.company}}</span>
-              <span>{{thisItem.person}}</span>
-            </p>
-            <p>{{thisItem.target}}</p>
-            <div class="schedule_star progress">
-              <div
-                class="progress-done"
-                data-done="68"
-                :style="{width:thisItem.percentage2,background:thisItem.color2}"
-              >{{thisItem.percentage2}}</div>
-            </div>
-          </li>
-        </ul>-->
       </div>
-    </div>
-    <div v-if="typeCN=='潜在客户'">
+    </div> -->
+    <!-- <div v-if="typeCN=='潜在客户'">
       <div class="screen_content">
         <van-search v-model="search_txt" placeholder="客户名称" />
       </div>
@@ -627,7 +594,7 @@
           :to="{ name: 'PutRecord', query: { title: '潜在客户添加' }}"
         >+</router-link>
       </div>
-    </div>
+    </div> -->
     <div v-if="typeCN=='农户'">
       <div class="screen_content">
         <van-search v-model="search_txt" placeholder="客户名称" />
@@ -712,7 +679,7 @@
         </div>
       </div>
     </div>
-    <div v-if="typeCN=='客户认领'">
+    <!-- <div v-if="typeCN=='客户认领'">
       <div class="screen_content">
         <van-search v-model="search_txt" placeholder="客户名称" />
       </div>
@@ -801,7 +768,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div v-if="typeCN=='客户认领审批'">
       <div class="screen_content">
         <van-search v-model="search_txt" placeholder="客户名称" />
@@ -943,7 +910,7 @@
 
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
     </div>
-    <div v-if="typeCN=='排行榜'">
+    <!-- <div v-if="typeCN=='排行榜'">
       <div style="background:#fff">
         <ul class="ranking_list" style="height:2.5rem;line-height:2.5rem">
           <li @click="tab1(0)" :class="tabId==0?'cur':''">本月</li>
@@ -996,8 +963,8 @@
           <div id="main" style="width: 100%;height: 200px;"></div>
         </div>
       </div>
-    </div>
-    <div v-if="typeCN=='任务完成'">
+    </div> -->
+    <!-- <div v-if="typeCN=='任务完成'">
       <div>
         <ul class="ranking_list" style="border-bottom: 0.01rem solid #e8e8e8 !important;">
           <li @click="tab1(0)" :class="tabId==0?'cur':''">本月</li>
@@ -1039,7 +1006,6 @@
           </div>
           <ul>
             <li>{{text}}目标：123,222</li>
-            <!-- <li>人均：234.00</li> -->
           </ul>
           <div style="background:#fff;border-bottom: 0.01rem solid #e8e8e8 !important;">
             <div id="gaugeContainer" style="width:100%; height:10rem;"></div>
@@ -1050,8 +1016,8 @@
           <div id="myChart" style="width: 100%;height: 15rem;background-color:#fff"></div>
         </div>
       </div>
-    </div>
-    <div v-if="typeCN=='产品目录'">
+    </div> -->
+    <!-- <div v-if="typeCN=='产品目录'">
       <div class="not_select">
         <div class="divInput" style="width:98%">
           <div class="select_sort" @click="openValue1">
@@ -1083,12 +1049,9 @@
           </li>
         </ul>
       </div>
-    </div>
-    <div v-if="typeCN=='知识库'">
+    </div> -->
+    <!-- <div v-if="typeCN=='知识库'">
       <div class="screen_content">
-        <!-- <img src="./search.svg" alt />
-        <input style="width:98%" type="text" placeholder="请输入标题" />-->
-        <!-- <button>筛选</button> -->
         <van-search v-model="search_txt" placeholder="请输入标题" />
       </div>
       <div class="knowledge">
@@ -1101,14 +1064,13 @@
             <p style="font-size:1rem;">{{item.name}}</p>
             <p>{{item.date}}</p>
             <p class="right_cursor">
-              <!-- <img src="./arrow_right.svg" alt /> -->
               <van-icon name="arrow" />
             </p>
           </li>
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>

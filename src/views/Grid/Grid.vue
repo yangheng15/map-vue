@@ -56,7 +56,7 @@
             <p>网格经理：{{ table.principalName }}</p>
             <p>认领日期：{{ table.allocateTime | transform }}</p>
             <p>客户数量：{{ table.customer_num }}</p>
-            <p>人口数量：{{ table.population_num }}</p>
+            <!-- <p>人口数量：{{ table.population_num }}</p> -->
             <p>营销状态：{{ table.status }}</p>
           </div>
           <div style="margin-top: 1.5rem" class="save">
@@ -357,7 +357,7 @@ export default {
       this.$httpGet({
         url: "/api/mapPlaning/query",
       }).then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         this.map_data = res.data;
         this.map_data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);

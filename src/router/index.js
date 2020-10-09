@@ -43,6 +43,8 @@ const RankingList = () => import('@/views/WorkBench/RankingList.vue');
 const MissionAccomplished = () => import('@/views/WorkBench/MissionAccomplished.vue');
 // 任务管理
 const TaskManagement = () => import('@/views/WorkBench/TaskManagement/TaskManagement.vue');
+// 潜在客户
+const PotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/PotentialCustomers.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -191,6 +193,11 @@ const routes = [{
     path: '/TaskManagement',
     name: 'TaskManagement',
     component: TaskManagement,
+  },
+  {
+    path: '/PotentialCustomers',
+    name: 'PotentialCustomers',
+    component: PotentialCustomers,
   },
   {
     path: '/User',
