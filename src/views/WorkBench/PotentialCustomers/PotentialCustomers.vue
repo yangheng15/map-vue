@@ -2,17 +2,23 @@
   <div class="PotentialCustomers">
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '潜在客户'">
-      <div class="screen_content">
-        <van-search v-model="search_txt" placeholder="客户名称" />
-      </div>
+      <van-search
+        v-model="search_txt"
+        placeholder="客户名称"
+        @search="onSearch"
+      />
       <div class="customer_list">
         <ul>
-          <li v-for="(thisItem, index) in customer_list" :key="index">
-            <router-link
-              tag="p"
-              :to="{ name: 'PutRecord', query: { title: '潜在客户详情' } }"
-              >{{ thisItem.name }}</router-link
-            >
+          <router-link
+            tag="li"
+            v-for="(thisItem, index) in customer_list"
+            :key="index"
+            :to="{
+              name: 'EditPotentialCustomers',
+              query: { title: '潜在客户详情', id: thisItem.id },
+            }"
+          >
+            <p>{{ thisItem.name }}</p>
             <p>上次联系</p>
             <p class="schedule_star">
               <van-rate
@@ -25,7 +31,7 @@
               />
             </p>
             <p>{{ thisItem.updatedTime | transform }}</p>
-          </li>
+          </router-link>
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
@@ -43,7 +49,10 @@
         <router-link
           class="add_record"
           tag="span"
-          :to="{ name: 'PutRecord', query: { title: '潜在客户添加' } }"
+          :to="{
+            name: 'AddPotentialCustomers',
+            query: { title: '潜在客户添加' },
+          }"
           >+</router-link
         >
       </div>
@@ -64,8 +73,7 @@ export default {
       typeCN: "",
       value: 1,
       search_txt: "",
-      customer_list: [
-      ],
+      customer_list: [],
     };
   },
   created() {
@@ -82,11 +90,24 @@ export default {
         },
       }).then((res) => {
         console.log(res.data);
-        this.customer_list=res.data
+        this.customer_list = res.data;
+      });
+    },
+    onSearch(val) {
+      console.log(val);
+      this.$httpGet({
+        url: "/api/customersPotential/app",
+        params: {
+          limit: 10,
+          page: 1,
+          name: val,
+        },
+      }).then((res) => {
+        this.customer_list = res.data;
       });
     },
   },
-    filters: {
+  filters: {
     transform(val) {
       if (val) {
         return moment(val).format("YYYY-MM-DD");
@@ -106,55 +127,7 @@ export default {
 .PotentialCustomers {
   padding-top: 46px;
 }
-.screen_content {
-  display: flex;
-  position: relative;
-}
-.screen_content input {
-  width: 83%;
-  height: 44px;
-  margin: 4px;
-  line-height: 20px;
-  padding: 0rem 1rem 0rem 2.3rem;
-  text-align: left;
-  border-radius: 2px 2px 2px 2px;
-  background-color: #fafafa;
-  text-align: center;
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.24);
-  border: 1px solid rgba(255, 0, 0, 0);
-}
-.screen_content img {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  top: 40%;
-  left: 5%;
-  z-index: 100;
-  opacity: 0.5;
-}
-.screen_content input::-webkit-input-placeholder {
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content input::-moz-placeholder {
-  /* Mozilla Firefox 19+ */
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content input:-moz-placeholder {
-  /* Mozilla Firefox 4 to 18 */
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content input:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content button {
-  border: none;
-  background: none;
-}
+
 .customer_list ul {
   background: #fff;
   /* margin-top: 10px; */

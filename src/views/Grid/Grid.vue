@@ -181,12 +181,12 @@
       <p @click="markerTure = true">
         <img src="../../assets/grid/sign.svg" alt />
       </p>
-      <router-link
+      <!-- <router-link
         tag="p"
         :to="{ name: 'PathPlanning', query: { title: '路径规划' } }"
       >
         <img src="../../assets/grid/path_planning.svg" alt />
-      </router-link>
+      </router-link> -->
       <router-link
         tag="p"
         :to="{ name: 'GridSelection', query: { title: '网格选择' } }"
@@ -422,7 +422,7 @@ export default {
         ); // 创建标注
         map.addOverlay(marker); // 将标注添加到地图中
         const content = `
-          <p style="padding-top: 1rem">姓名：${data_info[i]['name']}</p>
+          <p style="padding-top: 1rem">姓名：${data_info[i]["name"]}</p>
           <p>类型：产品营销</p>
           <p>产品：特色存款</p>
           <p>目标：10万</p>

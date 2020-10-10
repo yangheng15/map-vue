@@ -1,45 +1,69 @@
 <template>
-  <div class="CustomerCaim">
+  <div class="CustomerPool">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN == '客户认领'">
-      <van-search v-model="search_txt" placeholder="客户名称" />
+    <div v-if="typeCN == '客户池'">
+      <van-search
+        v-model="search_txt"
+        show-action
+        placeholder="客户名称"
+        @search="onSearch"
+      >
+        <template #action>
+          <div @click="$router.push('/PutRecord/?title=筛选')">筛选</div>
+        </template>
+      </van-search>
       <div class="customer_list">
         <ul
-          v-for="(thisItem, index) in customer_list"
+          v-for="(thisItem, index) in customer_pool"
           :key="index"
           class="cartItem"
         >
-          <li style="width: 100%">
-            <p style="width: 98%">{{ thisItem.name }}</p>
+          <!-- <van-checkbox
+            class="selctBtn"
+            v-model="thisItem.id"
+            shape="square"
+          ></van-checkbox> -->
+          <li class="newCustomerList" style="width: 100%">
+            <router-link
+              tag="p"
+              style="width: 98%; margin: 4px 0px"
+              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
+              >{{ thisItem.name }}</router-link
+            >
             <p style="width: 1%"></p>
             <p class="schedule_star">
               <van-rate
                 v-model="value"
-                :size="14"
-                color="#ffd21e"
+                :size="18"
+                color="#0078D7"
                 void-icon="star"
                 void-color="#eee"
                 readonly
               />
             </p>
-            <p>
-              <a style="text-decoration: none; margin-right: 0.6rem">认领</a>
+            <p style="color: #df0f0f">{{ thisItem.text }}</p>
+            <p style="color: #1badf2">{{ thisItem.platinum_customers }}</p>
+            <p class="marter">
+              <span v-if="thisItem.business1" class="business1">{{
+                thisItem.business1
+              }}</span>
+              <span v-if="thisItem.business2" class="business2">{{
+                thisItem.business2
+              }}</span>
+              <span v-if="thisItem.business3" class="business3">{{
+                thisItem.business3
+              }}</span>
             </p>
           </li>
-          <van-checkbox
-            class="selctBtn"
-            v-model="thisItem.id"
-            shape="square"
-          ></van-checkbox>
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
-      <div class="save" style="margin-top: 10rem">
-        <button @click="showPopup()">批量认领</button>
-      </div>
+      <!-- <div class="save" style="margin-top:50px">
+        <van-button type="primary" size="small" color="rgb(61, 66, 94)" @click="showPopup()">批量分配</van-button>
+      </div> -->
       <div v-show="isPopupVisible" class="isPopupVisibleSign">
         <div class="isPopupVisibleSign_content">
-          <p class="pop_title">批量认领</p>
+          <p class="pop_title">批量分配</p>
           <div class="pop_content">
             <van-field
               v-model="grid_name"
@@ -92,14 +116,11 @@
                 v-for="(thisItem, index) in customer_pool_pop"
                 :key="index"
               >
-                <van-radio-group v-model="radio" style>
-                  <van-radio
-                    :name="thisItem.id"
-                    style="width: 100%; height: 2rem"
-                  >
+                <van-radio-group v-model="radio">
+                  <van-radio :name="thisItem.id" style="height: 2rem">
                     <li
                       style="
-                        width: 11rem;
+                        width: 12rem;
                         list-style-type: none;
                         display: flex;
                         justify-content: space-around;
@@ -117,7 +138,7 @@
                 </van-radio-group>
               </dd>
             </dl>
-            <div style="margin-top: 3rem" class="save">
+            <div style="margin-top: 2rem" class="save">
               <van-button
                 style="margin-right: 1rem"
                 round
@@ -136,9 +157,9 @@
   </div>
 </template>
 <script>
-import ChildNav from "../../components/Public/ChildNav";
+import ChildNav from "../../../components/Public/ChildNav";
 export default {
-  name: "CustomerCaim",
+  name: "CustomerPool",
   components: {
     ChildNav,
   },
@@ -146,6 +167,7 @@ export default {
     return {
       title: "",
       typeCN: "",
+      user_positioning: "",
       grid_theme: 0,
       grid_theme_txt: "",
       grid_theme_list: ["网格主题", "2020特色存款营销", "etc开通", "助农贷款"],
@@ -155,15 +177,25 @@ export default {
       value: 1,
       radio: "1",
       search_txt: "",
+      show: false,
+      show_back: false,
       isPopupVisible: false,
-      customer_list: [
+      isPopupVisibleScreen: false,
+      isPopupVisibleFamily: false,
+      text: "本季度",
+      newCustomerList: [
         {
           name: "北京卓越联腾科技有限公司",
-          text: "上次联系",
-          date: "三个月前",
+          date: "上次联系 三个月前",
+          business1: "存款",
+          business2: "贷款",
+          business3: "理财",
+          text: "AUM:300万",
           id: 1,
+          platinum_customers: "铂金客户",
+          key_customers: "重点客户 ",
+          back: "退回",
         },
-        { name: "刘莎莎", text: "上次联系", date: "三个月前", id: 2 },
       ],
       customer_pool_pop: [
         {
@@ -177,6 +209,25 @@ export default {
           id: 1,
         },
       ],
+      customer_pool: [
+        {
+          name: "北京卓越联腾科技有限公司",
+          business1: "存款",
+          business2: "贷款",
+          business3: "理财",
+          text: "AUM:300万",
+          id: 0,
+          platinum_customers: "铂金客户",
+        },
+        {
+          name: "刘莎莎",
+          business1: "存款",
+          business3: "理财",
+          text: "AUM:300万",
+          id: 1,
+          platinum_customers: "普惠金融",
+        },
+      ],
     };
   },
   created() {
@@ -187,6 +238,9 @@ export default {
       this.grid_theme_txt = value;
       this.grid_theme = false;
     },
+    onSearch(val) {
+      Toast(val);
+    },
     showPopup() {
       this.isPopupVisible = true;
     },
@@ -194,17 +248,22 @@ export default {
       this.isPopupVisible = false;
     },
   },
-  mounted() {},
 };
 </script>
 <style scoped>
 * {
   font-size: 14px;
 }
+.van-checkbox__icon {
+  height: 20px;
+}
+.marter span {
+  margin: 0px 2px;
+}
 .van-search {
   width: 100%;
 }
-.CustomerCaim {
+.CustomerPool {
   padding-top: 46px;
 }
 /* 下面是弹窗 */
@@ -244,6 +303,13 @@ export default {
 
 /* 上面是弹窗 */
 
+.bm-view {
+  width: 100%;
+  height: 78vh;
+}
+.c-row-label {
+  width: 70px;
+}
 .customer_list ul {
   background: #fff;
   /* margin-top: 10px; */
@@ -266,18 +332,45 @@ export default {
   width: 1.2rem;
   vertical-align: middle;
 }
+.newCustomerList .business1 {
+  display: inline-block;
+  border: 0.05rem solid #0fb38f;
+  color: #0fb38f;
+  padding: 0.1rem 0.3rem;
+}
+.newCustomerList .business2 {
+  display: inline-block;
+  border: 0.05rem solid #1432e3;
+  color: #1432e3;
+  padding: 0.1rem 0.3rem;
+}
+.newCustomerList .business3 {
+  display: inline-block;
+  border: 0.05rem solid #ecd14a;
+  color: #ecd14a;
+  padding: 0.1rem 0.3rem;
+}
 .cartItem {
   display: flex;
   flex-flow: row;
   position: relative;
 }
 .selctBtn {
+  /* width: 1.2rem;
+  height: 1.2rem; */
+  /* border: 1px solid #000; */
   margin: 1rem 0rem 0rem 1.2rem;
   position: absolute;
   top: -0.3rem;
   right: 1rem;
+  /* cursor: pointer; */
 }
-
+.checked {
+  position: absolute;
+  background: rgb(61, 66, 94);
+  border: 1px solid rgb(61, 66, 94);
+  color: #fff;
+}
 .cartItem li {
   width: 90%;
 }
@@ -303,6 +396,13 @@ export default {
   }
   .customer_list ul li p:nth-child(even) {
     width: 43%;
+  }
+
+  .end_line {
+    font-size: 0.8rem;
+  }
+  .two_select select {
+    height: 1.5rem;
   }
   .pop_title {
     font-size: 1rem;

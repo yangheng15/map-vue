@@ -223,7 +223,7 @@
         </div>
       </div>
     </div>
-    <div v-if="typeCN=='潜在客户添加'">
+    <!-- <div v-if="typeCN=='潜在客户添加'">
       <van-field
         v-model="phone_number"
         name="手机号："
@@ -278,8 +278,8 @@
         clickable
         name="area"
         :value="regional_grid_txt"
-        label="区域网格："
-        placeholder="点击选择区域网格"
+        label="所属网格："
+        placeholder="点击选择所属网格"
         @click="regional_grid = true"
       />
       <van-popup v-model="regional_grid" position="bottom">
@@ -396,7 +396,7 @@
       <div class="save">
         <van-button round block type="primary" @click="prev()">保存</van-button>
       </div>
-    </div>
+    </div> -->
     <div v-if="typeCN=='潜在客户详情'">
       <van-field
         v-model="phone_number"
@@ -452,8 +452,8 @@
         clickable
         name="area"
         :value="regional_grid_txt"
-        label="区域网格："
-        placeholder="点击选择区域网格"
+        label="所属网格："
+        placeholder="点击选择所属网格"
         @click="regional_grid = true"
       />
       <van-popup v-model="regional_grid" position="bottom">
@@ -732,8 +732,8 @@
           clickable
           name="area"
           :value="regional_grid_txt"
-          label="区域网格："
-          placeholder="点击选择区域网格"
+          label="所属网格："
+          placeholder="点击选择所属网格"
           @click="regional_grid = true"
         />
         <van-popup v-model="regional_grid" position="bottom">
@@ -757,9 +757,9 @@
             <option value="经营型">经营型</option>
           </select>
         </li>
-        <li>*区域网格：</li>
+        <li>*所属网格：</li>
         <li>
-          <input type="text" placeholder="搜索区域网格" />
+          <input type="text" placeholder="搜索所属网格" />
           <!-- <img src="./search.svg" alt /> -->
         </li>
         <li>居住地址：</li>

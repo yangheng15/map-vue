@@ -194,7 +194,7 @@
       <div class="tabTitle" style="border-top:0px;padding-top:0rem">
         <ul
           class="tabList"
-          style="display:flex;height:2rem;width:100%;line-height:2rem;background:#fff"
+          style="display:flex;height:2rem;width:100%;line-height:2rem;background:#fff;border"
         >
           <li
             style="width:150px;margin-left:0px;text-align:center;"

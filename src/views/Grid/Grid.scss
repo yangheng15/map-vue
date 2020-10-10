@@ -1,467 +1,542 @@
 .grid {
-    padding-top: 46px;
+  padding-top: 46px;
+}
+
+.amap-page-container {
+  .amap-demo {
+    height: 77vh;
   }
-  .amap-page-container {
-    .amap-demo {
-      height: 77vh;
-    }
-  }
-  .introduce_body {
-    text-align: center;
-    width: 60px;
-    height: 75px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    .introduce_img {
-      width: 26px;
-      border-radius: 100%;
-    }
-    .introduce_name {
-      color: #fff;
-      font-size: 12px;
-      font-weight: 600;
-      height: 24px;
-      line-height: 24px;
-      background: #df0f0f;
-      text-align: center;
-      border: none;
-      margin: 0px;
-      width: 100%;
-    }
-    .introduce_address {
-      color: #df0f0f;
-      font-size: 12px;
-      font-weight: 600;
-      height: 22px;
-      line-height: 22px;
-      text-align: center;
-      background: transparent;
-      border: 1px solid #df0f0f;
-      width: 100%;
-      margin: 0px;
-    }
-    .introduce_address_lv {
-      color: #0fb38f;
-      font-size: 12px;
-      font-weight: 600;
-      height: 22px;
-      line-height: 22px;
-      background: #fff;
-      width: 100%;
-      text-align: center;
-      border: 1px solid #0fb38f;
-    }
-  }
-  .van-search {
-    padding: 6px;
-  }
-  .van-search >>> .van-cell {
-    padding: 0px 8px 0px 0;
-  }
-  .introduce_body {
-    text-align: center;
-    width: 4rem;
+}
+
+.introduce_body {
+  text-align: center;
+  width: 60px;
+  height: 75px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  .introduce_img {
+    width: 26px;
+    border-radius: 100%;
   }
 
-  /* 下面是弹窗 */
-  .isPopupVisibleSign {
-    position: fixed;
-    z-index: 100;
-    top: 0px;
-    left: 0rem;
-    width: 100%;
-    height: 100vh;
-    padding: 0.5rem 0.5rem;
-    background: rgba(193, 185, 185, 0.7);
-  }
-  .Popup_introduce {
-    width: 220px;
-    background: rgb(255, 255, 255);
-    border-radius: 0.5rem;
-  }
-  .isPopupVisibleSign_content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 77%;
-    background: rgb(255, 255, 255);
-    border-radius: 0.5rem;
-  }
-  .pop_content {
-    padding: 1rem 1rem 1rem 1rem;
-  }
-  .pop_title {
-    text-align: center;
-    background: rgb(61, 66, 94);
+  .introduce_name {
     color: #fff;
-    font-size: 1rem;
-    height: 2.5em;
-    line-height: 2.5rem;
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
-    margin: 0rem;
-    position: relative;
-  }
-  .pop_title img {
-    position: absolute;
-    right: 3%;
-    top: 25%;
-    width: 1.3rem;
-  }
-  /* 上面是弹窗 */
-  .save {
-    display: flex;
-    justify-content: center;
-    padding: 0.5rem 0rem;
-  }
-  .save button {
-    border: none;
-    background: rgb(61, 66, 94);
-    width: 5rem;
-    height: 2rem;
-    border-radius: 0.3rem;
-    line-height: 2rem;
-    text-align: center;
-    color: #fff;
-  }
-  .map_marker p {
-    margin: 1rem 0rem;
-  }
-  .map_marker p img {
-    width: 1.8rem;
-  }
-  .active_sample_square {
-    background: #fd7522 !important;
-    border: 1rem solid red;
-  }
-  .van-radio__label {
-    display: inline-block !important;
-    width: 100%;
-  }
-  .sampleAlert {
-    width: 300px;
-    height: 400px;
-    position: absolute;
-  }
-  .labelStyle_name {
-    color: #fff;
-    font-size: 0.8rem;
+    font-size: 12px;
     font-weight: 600;
-    width: 4rem;
-    height: 1.5rem;
-    line-height: 1.5rem;
+    height: 24px;
+    line-height: 24px;
     background: #df0f0f;
     text-align: center;
     border: none;
-    margin: 0rem;
+    margin: 0px;
+    width: 100%;
   }
-  .labelStyle_address {
+
+  .introduce_address {
     color: #df0f0f;
-    font-size: 0.8rem;
+    font-size: 12px;
     font-weight: 600;
-    width: 4rem;
-    height: 1.5rem;
-    line-height: 1.5rem;
+    height: 22px;
+    line-height: 22px;
     text-align: center;
     background: transparent;
-    border: 0.01rem solid #df0f0f;
-    margin: 0rem;
+    border: 1px solid #df0f0f;
+    width: 100%;
+    margin: 0px;
   }
-  .labelStyle_img {
-    width: 1.8rem;
-    border-radius: 100%;
-  }
-  .sample.active {
-    background: rgba(0, 0, 0, 0.75);
-    color: #fff;
-  }
-  .sample_circular {
-    width: 13rem;
-    height: 13rem;
-    background: rgba(63, 172, 245, 0.6);
-    overflow: hidden;
-    color: #fff;
-    text-align: center;
-    padding: 1rem 1.5rem;
-    font-size: 1.1rem;
+
+  .introduce_address_lv {
+    color: #0fb38f;
+    font-size: 12px;
     font-weight: 600;
-    border-radius: 100%;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    display: flex;
-    align-items: center;
-  }
-  .sample_circular p {
-    margin: 0;
-    margin-top: 1rem;
-    width: 100%;
-  }
-  .sample_circular img {
-    border-radius: 100%;
-    margin-right: 0.5rem;
-    display: inline-block;
-    width: 2.5rem;
-    vertical-align: middle;
-  }
-  .sample_square {
-    width: 13rem;
-    background: rgba(145, 176, 235, 0.5);
-    overflow: hidden;
-    color: #fff;
-    text-align: center;
-    padding: 1rem 1.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-  }
-  .sample_square p {
-    margin: 0;
-    margin-top: 1rem;
-    display: inline-flex;
-  }
-  .bm-view {
-    width: 100%;
-    height: 83vh;
-  }
-  .fixed_menu {
-    position: fixed;
-    bottom: 2.7rem;
-    left: 0rem;
-    width: 100%;
-    padding-top: 0.5rem;
+    height: 22px;
+    line-height: 22px;
     background: #fff;
-  }
-  .fixed_menu ul {
     width: 100%;
-    font-size: 0;
-  }
-  .fixed_menu ul li {
-    display: inline-block;
     text-align: center;
-    width: 25%;
-    font-size: 1rem;
+    border: 1px solid #0fb38f;
   }
-  .fixed_menu ul li p {
-    margin-top: 0.5rem;
+}
+
+.van-search {
+  padding: 6px;
+}
+
+.van-search>>>.van-cell {
+  padding: 0px 8px 0px 0;
+}
+
+.introduce_body {
+  text-align: center;
+  width: 4rem;
+}
+
+/* 下面是弹窗 */
+.isPopupVisibleSign {
+  position: fixed;
+  z-index: 100;
+  top: 0px;
+  left: 0rem;
+  width: 100%;
+  height: 100vh;
+  padding: 0.5rem 0.5rem;
+  background: rgba(193, 185, 185, 0.7);
+}
+
+.Popup_introduce {
+  width: 220px;
+  background: rgb(255, 255, 255);
+  border-radius: 0.5rem;
+}
+
+.isPopupVisibleSign_content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 77%;
+  background: rgb(255, 255, 255);
+  border-radius: 0.5rem;
+}
+
+.pop_content {
+  padding: 1rem 1rem 1rem 1rem;
+}
+
+.pop_title {
+  text-align: center;
+  background: rgb(61, 66, 94);
+  color: #fff;
+  font-size: 1rem;
+  height: 2.5em;
+  line-height: 2.5rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  margin: 0rem;
+  position: relative;
+}
+
+.pop_title img {
+  position: absolute;
+  right: 3%;
+  top: 25%;
+  width: 1.3rem;
+}
+
+/* 上面是弹窗 */
+.save {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0rem;
+}
+
+.save button {
+  border: none;
+  background: rgb(61, 66, 94);
+  width: 5rem;
+  height: 2rem;
+  border-radius: 0.3rem;
+  line-height: 2rem;
+  text-align: center;
+  color: #fff;
+}
+
+.map_marker p {
+  margin: 1rem 0rem;
+}
+
+.map_marker p img {
+  width: 1.8rem;
+}
+
+.active_sample_square {
+  background: #fd7522 !important;
+  border: 1rem solid red;
+}
+
+.van-radio__label {
+  display: inline-block !important;
+  width: 100%;
+}
+
+.sampleAlert {
+  width: 300px;
+  height: 400px;
+  position: absolute;
+}
+
+.labelStyle_name {
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 4rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  background: #df0f0f;
+  text-align: center;
+  border: none;
+  margin: 0rem;
+}
+
+.labelStyle_address {
+  color: #df0f0f;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 4rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  text-align: center;
+  background: transparent;
+  border: 0.01rem solid #df0f0f;
+  margin: 0rem;
+}
+
+.labelStyle_img {
+  width: 1.8rem;
+  border-radius: 100%;
+}
+
+.sample.active {
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+}
+
+.sample_circular {
+  width: 13rem;
+  height: 13rem;
+  background: rgba(63, 172, 245, 0.6);
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 100%;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+}
+
+.sample_circular p {
+  margin: 0;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.sample_circular img {
+  border-radius: 100%;
+  margin-right: 0.5rem;
+  display: inline-block;
+  width: 2.5rem;
+  vertical-align: middle;
+}
+
+.sample_square {
+  width: 13rem;
+  background: rgba(145, 176, 235, 0.5);
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.sample_square p {
+  margin: 0;
+  margin-top: 1rem;
+  display: inline-flex;
+}
+
+.bm-view {
+  width: 100%;
+  height: 83vh;
+}
+
+.fixed_menu {
+  position: fixed;
+  bottom: 2.7rem;
+  left: 0rem;
+  width: 100%;
+  padding-top: 0.5rem;
+  background: #fff;
+}
+
+.fixed_menu ul {
+  width: 100%;
+  font-size: 0;
+}
+
+.fixed_menu ul li {
+  display: inline-block;
+  text-align: center;
+  width: 25%;
+  font-size: 1rem;
+}
+
+.fixed_menu ul li p {
+  margin-top: 0.5rem;
+}
+
+.resource {
+  position: fixed;
+  top: 8rem;
+  right: 1rem;
+}
+
+.checked::before {
+  position: absolute;
+  content: "";
+  width: 0.8rem;
+  height: 0.8rem;
+  top: 0.1rem;
+  background: #0078d7;
+  left: 0.1rem;
+  border-radius: 100%;
+}
+
+.checked {
+  position: relative;
+  background: #fff;
+  border: 0.001rem solid #0078d7 !important;
+  border-radius: 100%;
+}
+
+.screen_content {
+  position: fixed;
+  z-index: 100;
+  top: 3rem;
+  left: 0rem;
+  width: 100%;
+}
+
+.screen_content input {
+  width: calc(100% - 1rem);
+  height: 44px;
+  margin: 1rem 0.5rem;
+  line-height: 20px;
+  padding: 0rem 1rem 0rem 3rem;
+  text-align: left;
+  border-radius: 2px 2px 2px 2px;
+  background-color: #fafafa;
+  text-align: center;
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 0, 0, 0);
+}
+
+.screen_content img {
+  position: absolute;
+  width: 1.2rem;
+  top: 40%;
+  left: 5%;
+  z-index: 100;
+  opacity: 0.5;
+}
+
+.screen_content input::-webkit-input-placeholder {
+  text-align: left;
+  font-size: 14px;
+}
+
+.screen_content input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  text-align: left;
+  font-size: 14px;
+}
+
+.screen_content input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  text-align: left;
+  font-size: 14px;
+}
+
+.screen_content input:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  text-align: left;
+  font-size: 14px;
+}
+
+.pop_content p .pop_content_left {
+  display: inline-block;
+  width: 25%;
+  line-height: 2rem;
+}
+
+.pop_content p .pop_content_right {
+  border: 0.05rem solid #bbb;
+  width: 75%;
+  padding: 0rem 0.5rem;
+  border-radius: 0.3rem;
+}
+
+/* 圆形覆盖物 */
+.circular_covering {
+  position: absolute;
+  top: 3rem;
+  left: 2rem;
+}
+
+.circular_covering1 {
+  position: absolute;
+  top: 3rem;
+  left: 2rem;
+}
+
+.circular_covering_num {
+  width: 1.2rem;
+  height: 1.2rem;
+  background: #fff;
+  border: 0.01rem solid #df0f0f;
+  border-radius: 100%;
+  text-align: center;
+  line-height: 1.2rem;
+}
+
+.circular_covering_text {
+  width: 3.5rem;
+  height: 1.6rem;
+  background: #fff;
+  border: 0.01rem solid #df0f0f;
+  line-height: 1.6rem;
+  text-align: center;
+}
+
+.circular_covering1 .circular_covering_num {
+  position: absolute;
+  position: absolute;
+  top: 1.2rem;
+  left: -0.5rem;
+}
+
+.circular_covering1 .circular_covering_text {
+  position: absolute;
+  top: -0.3rem;
+  left: -3.8rem;
+}
+
+.circular_covering2 .circular_covering_num {
+  position: absolute;
+  top: -7.2rem;
+  left: 5.4rem;
+}
+
+.circular_covering2 .circular_covering_text {
+  position: absolute;
+  top: -8.6rem;
+  left: 2rem;
+}
+
+.circular_covering3 .circular_covering_num {
+  position: absolute;
+  top: -4.2rem;
+  left: 12.2rem;
+}
+
+.circular_covering3 .circular_covering_text {
+  position: absolute;
+  top: -5.7rem;
+  left: 9rem;
+}
+
+.circular_covering4 .circular_covering_num {
+  position: absolute;
+  top: -0.2rem;
+  left: 4.2rem;
+}
+
+.circular_covering4 .circular_covering_text {
+  position: absolute;
+  top: -1.6rem;
+  left: 0.8rem;
+}
+
+.circular_covering5 .circular_covering_num {
+  position: absolute;
+  top: 7.5rem;
+  left: 9.7rem;
+}
+
+.circular_covering5 .circular_covering_text {
+  position: absolute;
+  top: 6.1rem;
+  left: 6.4rem;
+}
+
+/*  */
+@media screen and (min-width: 320px) and (max-width: 374px) {
+
+  li,
+  select,
+  input,
+  p,
+  div {
+    font-size: 0.8rem;
   }
-  .resource {
-    position: fixed;
-    top: 8rem;
-    right: 1rem;
+
+  .latest_tasks ul li {
+    font-size: 0.7rem;
   }
-  .checked::before {
-    position: absolute;
-    content: "";
-    width: 0.8rem;
-    height: 0.8rem;
-    top: 0.1rem;
-    background: #0078d7;
-    left: 0.1rem;
-    border-radius: 100%;
+
+  .latest_tasks ul {
+    margin: 0;
   }
-  .checked {
-    position: relative;
-    background: #fff;
-    border: 0.001rem solid #0078d7 !important;
-    border-radius: 100%;
+
+  .end_line {
+    font-size: 0.8rem;
   }
-  .screen_content {
-    position: fixed;
-    z-index: 100;
-    top: 3rem;
-    left: 0rem;
-    width: 100%;
+
+  .two_select select {
+    height: 1.5rem;
   }
-  
-  .screen_content input {
-    width: calc(100% - 1rem);
-    height: 44px;
-    margin: 1rem 0.5rem;
-    line-height: 20px;
-    padding: 0rem 1rem 0rem 3rem;
-    text-align: left;
-    border-radius: 2px 2px 2px 2px;
-    background-color: #fafafa;
-    text-align: center;
-    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.24);
-    border: 1px solid rgba(255, 0, 0, 0);
-  }
-  .screen_content img {
-    position: absolute;
-    width: 1.2rem;
-    top: 40%;
-    left: 5%;
-    z-index: 100;
-    opacity: 0.5;
-  }
-  .screen_content input::-webkit-input-placeholder {
-    text-align: left;
-    font-size: 14px;
-  }
-  .screen_content input::-moz-placeholder {
-    /* Mozilla Firefox 19+ */
-    text-align: left;
-    font-size: 14px;
-  }
-  .screen_content input:-moz-placeholder {
-    /* Mozilla Firefox 4 to 18 */
-    text-align: left;
-    font-size: 14px;
-  }
-  .screen_content input:-ms-input-placeholder {
-    /* Internet Explorer 10-11 */
-    text-align: left;
-    font-size: 14px;
-  }
-  .pop_content p .pop_content_left {
-    display: inline-block;
-    width: 25%;
+
+  .pop_title {
+    height: 2em;
     line-height: 2rem;
   }
+
+  .pop_content {
+    padding: 0.5rem;
+  }
+
+  /*placeholder样式-开始*/
+  input::-webkit-input-placeholder {
+    font-size: 0.8rem !important;
+  }
+
+  input::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    font-size: 0.8rem !important;
+  }
+
+  input:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    font-size: 0.8rem !important;
+  }
+
+  input:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    font-size: 0.8rem !important;
+  }
+
+  .van-radio__icon {
+    height: 1.2rem !important;
+  }
+
+  .save button {
+    height: 1.7rem;
+    width: 5rem;
+    font-size: 0.8rem;
+  }
+
   .pop_content p .pop_content_right {
-    border: 0.05rem solid #bbb;
-    width: 75%;
-    padding: 0rem 0.5rem;
-    border-radius: 0.3rem;
+    height: 1.5rem;
   }
-  /* 圆形覆盖物 */
-  .circular_covering {
-    position: absolute;
-    top: 3rem;
-    left: 2rem;
+
+  .map_marker p img {
+    width: 1.5rem;
   }
-  .circular_covering1 {
-    position: absolute;
-    top: 3rem;
-    left: 2rem;
-  }
-  .circular_covering_num {
-    width: 1.2rem;
-    height: 1.2rem;
-    background: #fff;
-    border: 0.01rem solid #df0f0f;
-    border-radius: 100%;
-    text-align: center;
-    line-height: 1.2rem;
-  }
-  .circular_covering_text {
-    width: 3.5rem;
-    height: 1.6rem;
-    background: #fff;
-    border: 0.01rem solid #df0f0f;
-    line-height: 1.6rem;
-    text-align: center;
-  }
-  .circular_covering1 .circular_covering_num {
-    position: absolute;
-    position: absolute;
-    top: 1.2rem;
-    left: -0.5rem;
-  }
-  .circular_covering1 .circular_covering_text {
-    position: absolute;
-    top: -0.3rem;
-    left: -3.8rem;
-  }
-  .circular_covering2 .circular_covering_num {
-    position: absolute;
-    top: -7.2rem;
-    left: 5.4rem;
-  }
-  .circular_covering2 .circular_covering_text {
-    position: absolute;
-    top: -8.6rem;
-    left: 2rem;
-  }
-  .circular_covering3 .circular_covering_num {
-    position: absolute;
-    top: -4.2rem;
-    left: 12.2rem;
-  }
-  .circular_covering3 .circular_covering_text {
-    position: absolute;
-    top: -5.7rem;
-    left: 9rem;
-  }
-  .circular_covering4 .circular_covering_num {
-    position: absolute;
-    top: -0.2rem;
-    left: 4.2rem;
-  }
-  .circular_covering4 .circular_covering_text {
-    position: absolute;
-    top: -1.6rem;
-    left: 0.8rem;
-  }
-  .circular_covering5 .circular_covering_num {
-    position: absolute;
-    top: 7.5rem;
-    left: 9.7rem;
-  }
-  .circular_covering5 .circular_covering_text {
-    position: absolute;
-    top: 6.1rem;
-    left: 6.4rem;
-  }
-  
-  /*  */
-  @media screen and (min-width: 320px) and (max-width: 374px) {
-    li,
-    select,
-    input,
-    p,
-    div {
-      font-size: 0.8rem;
-    }
-    .latest_tasks ul li {
-      font-size: 0.7rem;
-    }
-    .latest_tasks ul {
-      margin: 0;
-    }
-    .end_line {
-      font-size: 0.8rem;
-    }
-    .two_select select {
-      height: 1.5rem;
-    }
-    .pop_title {
-      height: 2em;
-      line-height: 2rem;
-    }
-    .pop_content {
-      padding: 0.5rem;
-    }
-    /*placeholder样式-开始*/
-    input::-webkit-input-placeholder {
-      font-size: 0.8rem !important;
-    }
-    input::-moz-placeholder {
-      /* Mozilla Firefox 19+ */
-      font-size: 0.8rem !important;
-    }
-    input:-moz-placeholder {
-      /* Mozilla Firefox 4 to 18 */
-      font-size: 0.8rem !important;
-    }
-    input:-ms-input-placeholder {
-      /* Internet Explorer 10-11 */
-      font-size: 0.8rem !important;
-    }
-    .van-radio__icon {
-      height: 1.2rem !important;
-    }
-    .save button {
-      height: 1.7rem;
-      width: 5rem;
-      font-size: 0.8rem;
-    }
-    .pop_content p .pop_content_right {
-      height: 1.5rem;
-    }
-    .map_marker p img {
-      width: 1.5rem;
-    }
-  }
+}

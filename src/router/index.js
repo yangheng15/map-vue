@@ -13,17 +13,28 @@ const ResourceSelection = () => import('@/views/Grid/ResourceSelection.vue');
 const GridSelection = () => import('@/views/Grid/GridSelection.vue');
 // 路径规划
 const PathPlanning = () => import('@/views/Grid/PathPlanning.vue');
+//工作台
 const WorkBench = () => import('@/views/WorkBench/WorkBench.vue');
+//我的客户
 const WorkbenchBranch = () => import('@/views/WorkBench/WorkbenchBranch.vue');
+//任务详情
 const ArticleViewBasic = () => import('@/views/WorkBench/ArticleViewBasic.vue');
 const PutRecord = () => import('@/views/WorkBench/PutRecord.vue');
+//客户视图、农户
 const CustomerView = () => import('@/views/WorkBench/CustomerView.vue');
+//任务详情
 const MissionDetails = () => import('@/views/WorkBench/MissionDetails.vue');
+//营销客户详情
 const MarketingDetails = () => import('@/views/WorkBench/MarketingDetails.vue');
+//添加营销记录
 const AddMarketingRecord = () => import('@/views/WorkBench/AddMarketingRecord.vue');
+//营销记录详情
 const EditMarketingRecord = () => import('@/views/WorkBench/EditMarketingRecord.vue');
+//产品介绍
 const ProductIntroduction = () => import('@/views/WorkBench/ProductIntroduction.vue');
+//产品目录
 const ProductCatalog = () => import('@/views/WorkBench/ProductCatalog.vue');
+//产品目录详情
 const ProductCatalogDetail = () => import('@/views/WorkBench/ProductCatalogDetail.vue');
 //知识库
 const knowledgeBase = () => import('@/views/WorkBench/knowledgeBase.vue');
@@ -39,12 +50,22 @@ const CustomerCaim = () => import('@/views/WorkBench/CustomerCaim.vue');
 const Calculator = () => import('@/views/WorkBench/Calculator.vue');
 // 排行榜
 const RankingList = () => import('@/views/WorkBench/RankingList.vue');
+// 最近联系
+const RecentContact = () => import('@/views/WorkBench/RecentContact.vue');
 // 任务完成
 const MissionAccomplished = () => import('@/views/WorkBench/MissionAccomplished.vue');
 // 任务管理
 const TaskManagement = () => import('@/views/WorkBench/TaskManagement/TaskManagement.vue');
 // 潜在客户
 const PotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/PotentialCustomers.vue');
+// 添加潜在客户
+const AddPotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/AddPotentialCustomers.vue');
+// 修改潜在客户
+const EditPotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/EditPotentialCustomers.vue');
+// 客户池
+const CustomerPool = () => import('@/views/WorkBench/CustomerPool/CustomerPool.vue');
+// 农户
+const PeasantHousehold = () => import('@/views/WorkBench/PeasantHousehold/PeasantHousehold.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -185,6 +206,11 @@ const routes = [{
     component: RankingList,
   },
   {
+    path: '/RecentContact',
+    name: 'RecentContact',
+    component: RecentContact,
+  },
+  {
     path: '/MissionAccomplished',
     name: 'MissionAccomplished',
     component: MissionAccomplished,
@@ -198,6 +224,26 @@ const routes = [{
     path: '/PotentialCustomers',
     name: 'PotentialCustomers',
     component: PotentialCustomers,
+  },
+  {
+    path: '/AddPotentialCustomers',
+    name: 'AddPotentialCustomers',
+    component: AddPotentialCustomers,
+  },
+  {
+    path: '/EditPotentialCustomers',
+    name: 'EditPotentialCustomers',
+    component: EditPotentialCustomers,
+  },
+  {
+    path: '/CustomerPool',
+    name: 'CustomerPool',
+    component: CustomerPool,
+  },
+  {
+    path: '/PeasantHousehold',
+    name: 'PeasantHousehold',
+    component: PeasantHousehold,
   },
   {
     path: '/User',

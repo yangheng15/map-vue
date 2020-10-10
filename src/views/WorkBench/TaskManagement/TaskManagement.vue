@@ -1,36 +1,45 @@
 <template>
   <div class="TaskManagement">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='任务管理'">
-      <div class="screen_content">
-        <van-search v-model="search_txt" show-action placeholder="客户名称" @search="onSearch">
-          <template #action>
-            <div @click="onSearch">高级</div>
-          </template>
-        </van-search>
-      </div>
+    <div v-if="typeCN == '任务管理'">
+      <van-search
+        v-model="search_txt"
+        show-action
+        placeholder="客户名称"
+        @search="onSearch"
+      >
+        <template #action>
+          <div @click="onSearch">高级</div>
+        </template>
+      </van-search>
       <div class="customer_list success">
         <router-link
           tag="div"
-          :to="{ name: 'MissionDetails', query: { title: '任务详情' }}"
-          style="padding:0.5rem;"
+          :to="{ name: 'MissionDetails', query: { title: '任务详情' } }"
+          style="padding: 0.5rem"
         >
-          <div v-for="(thisItem,index) in new_task" :key="index" class="success_failure">
+          <div
+            v-for="(thisItem, index) in new_task"
+            :key="index"
+            class="success_failure"
+          >
             <div class="new_task">
-              <p style="font-weight:550">{{thisItem.company_source}}</p>
-              <p style="text-align:center!important;">{{thisItem.menoy}}</p>
-              <p>{{thisItem.date_start}}</p>
+              <p style="font-weight: 550">{{ thisItem.company_source }}</p>
+              <p style="text-align: center !important">{{ thisItem.menoy }}</p>
+              <p>{{ thisItem.date_start }}</p>
             </div>
             <div class="new_task">
-              <p>{{thisItem.company_introduce}}</p>
-              <p style="text-align:center!important;">{{thisItem.name}}</p>
-              <p>{{thisItem.date_end}}</p>
+              <p>{{ thisItem.company_introduce }}</p>
+              <p style="text-align: center !important">{{ thisItem.name }}</p>
+              <p>{{ thisItem.date_end }}</p>
             </div>
 
             <div
               v-if="thisItem.success_failure"
-              :class="thisItem.sf_state==1 ? 'sf_state' : 'sf_states'"
-            >{{thisItem.success_failure}}</div>
+              :class="thisItem.sf_state == 1 ? 'sf_state' : 'sf_states'"
+            >
+              {{ thisItem.success_failure }}
+            </div>
           </div>
         </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
@@ -134,55 +143,6 @@ export default {
   background-size: cover;
 }
 
-.screen_content {
-  display: flex;
-  position: relative;
-}
-.screen_content input {
-  width: 83%;
-  height: 44px;
-  margin: 4px;
-  line-height: 20px;
-  padding: 0rem 1rem 0rem 2.3rem;
-  text-align: left;
-  border-radius: 2px 2px 2px 2px;
-  background-color: #fafafa;
-  text-align: center;
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.24);
-  border: 1px solid rgba(255, 0, 0, 0);
-}
-.screen_content img {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  top: 40%;
-  left: 5%;
-  z-index: 100;
-  opacity: 0.5;
-}
-.screen_content input::-webkit-input-placeholder {
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content input::-moz-placeholder {
-  /* Mozilla Firefox 19+ */
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content input:-moz-placeholder {
-  /* Mozilla Firefox 4 to 18 */
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content input:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  text-align: left;
-  font-size: 14px;
-}
-.screen_content button {
-  border: none;
-  background: none;
-}
 .customer_list ul {
   background: #fff;
   /* margin-top: 10px; */

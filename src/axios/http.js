@@ -52,6 +52,13 @@ axios.interceptors.response.use(response => {
         position: "middle",
       });
     }
+    if (error.response.status == 400) {
+      console.log(error.response.data.resultMsg);
+      Toast.fail({
+        message: error.response.data.resultMsg,
+        position: "middle",
+      });
+    }
 
     return Promise.reject(error.response)
   }

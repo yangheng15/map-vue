@@ -22,8 +22,7 @@
             城关镇世纪广场
           </li> -->
           <li>
-            <span style="font-weight: 600">营销产品：</span
-            >{{productName }}
+            <span style="font-weight: 600">营销产品：</span>{{ productName }}
           </li>
           <li>
             <span style="font-weight: 600">截止日期：</span
@@ -51,14 +50,18 @@
         <baidu-map
           class="bm-view"
           :center="{ lng: 114.654102, lat: 33.623741 }"
-          :zoom="11"
+          :zoom="7"
           ak="YOUR_APP_KEY"
         >
           <bm-marker
-            :position="{ 
-            lng: this.polymerizationLocation && this.polymerizationLocation.split(',')[0],
-            lat: this.polymerizationLocation && this.polymerizationLocation.split(',')[1],
-             }"
+            :position="{
+              lng:
+                this.polymerizationLocation &&
+                this.polymerizationLocation.split(',')[0],
+              lat:
+                this.polymerizationLocation &&
+                this.polymerizationLocation.split(',')[1],
+            }"
             :dragging="true"
           ></bm-marker>
         </baidu-map>
@@ -149,10 +152,18 @@
                   >{{ thisItem.isSucceed == "0" ? "成功" : "失败" }}
                 </span>
               </p>
-              <p v-if="thisItem.remark" class="schedule_star" style="width: 80%">
+              <p
+                v-if="thisItem.remark"
+                class="schedule_star"
+                style="width: 80%"
+              >
                 {{ thisItem.remark }}
               </p>
-              <p v-if="thisItem.lastTime" class="schedule_star" style="width: 20%">
+              <p
+                v-if="thisItem.lastTime"
+                class="schedule_star"
+                style="width: 20%"
+              >
                 {{ thisItem.lastTime }}
               </p>
             </router-link>
@@ -211,9 +222,9 @@ export default {
       ],
       taskQuery: {},
       id: "",
-      productName:"",
-      polymerizationLocation:""    
-      };
+      productName: "",
+      polymerizationLocation: "",
+    };
   },
   components: {
     ChildNav,
@@ -266,10 +277,12 @@ export default {
       }).then((res) => {
         this.taskQuery = res.data;
         console.log(res.data.custList);
-        res.data.custList.forEach((it) => {
-          this.polymerizationLocation = it.location
-          console.log(this.polymerizationLocation);
-        });
+        if (res.data.custList) {
+          res.data.custList.forEach((it) => {
+            this.polymerizationLocation = it.location;
+            console.log(this.polymerizationLocation);
+          });
+        }
       });
     },
     getMarketingCustomers() {

@@ -2,19 +2,20 @@
   <div class="home">
     <custom-nav :title="title"></custom-nav>
     <div class="page-content">
+      <h4 class="task_execution">本月任务执行</h4>
       <dl class="data_img">
-        <dt v-for="(statistic,index) in my_statistics" :key="index">
+        <dt v-for="(statistic, index) in my_statistics" :key="index">
           <ul class="text_content">
             <li>
               <img class="img_content" :src="statistic.img" alt />
-              <p style="margin:0;">{{statistic.name}}</p>
+              <p style="margin: 0">{{ statistic.name }}</p>
             </li>
             <li>
-              <p class="total_money">{{statistic.num}}万</p>
-              <p :class="statistic.state?'up_color':'down_color'">
-                {{statistic.money}}万
+              <p class="total_money">{{ statistic.num }}万</p>
+              <p :class="statistic.state ? 'up_color' : 'down_color'">
+                {{ statistic.money }}万
                 <img
-                  style="width:15px;vertical-align: text-top;"
+                  style="width: 15px; vertical-align: text-top"
                   :src="statistic.up_down"
                   alt
                 />
@@ -24,7 +25,7 @@
         </dt>
       </dl>
       <dl class="progress_content">
-        <dt>本月任务执行</dt>
+        <!-- <dt>本月任务执行</dt> -->
         <!-- <dd>
           <div class="progress">
             <div class="progress-done" data-done="68" style="width: 62%;">62%</div>
@@ -55,39 +56,54 @@
       </ul>
       <div class="tabTitle">
         <ul class="tabList">
-          <li @click="tab(0)" :class="tabId==0?'cur':''">最新任务</li>
-          <li @click="tab(1)" :class="tabId==1?'cur':''">最近联系客户</li>
+          <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">最新任务</li>
+          <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">最近联系客户</li>
         </ul>
-        <div v-show="tabId===0">
+        <div v-show="tabId === 0">
           <router-link
-            v-for="(item,index) in latest_tasks"
+            v-for="(item, index) in latest_tasks"
             :key="index"
             class="latest_tasks"
             tag="div"
-            :to="{ name: 'MissionDetails', query: { title: '任务详情' }}"
+            :to="{
+              name: 'MissionDetails',
+              query: {
+                title: '任务详情',
+                id: item.id,
+                productName: item.productName,
+              },
+            }"
           >
             <ul>
-              <li style="font-weight:600">{{item.name1}}</li>
-              <li>{{item.menoy}}</li>
+              <li style="font-weight: 600">{{ item.name }}</li>
+              <li>{{ item.targetNum }}万</li>
             </ul>
             <ul>
-              <li>{{item.name2}}</li>
-              <li>{{item.date}}</li>
+              <li>{{ item.productName }}</li>
+              <li>{{ item.updatedTime | transform }}前</li>
             </ul>
           </router-link>
         </div>
-        <div v-show="tabId===1">
-          <div v-for="(item,index) in recent_contact" :key="index" class="latest_tasks">
+        <div v-show="tabId === 1">
+          <div
+            v-for="(item, index) in recent_contact"
+            :key="index"
+            class="latest_tasks"
+          >
             <ul>
-              <li>{{item.name1}}</li>
+              <li>{{ item.name1 }}</li>
               <li>
-                {{item.telephone}}
-                <img style="width:16px" src="../../assets/home/md-phone.svg" alt />
+                {{ item.telephone }}
+                <img
+                  style="width: 16px"
+                  src="../../assets/home/md-phone.svg"
+                  alt
+                />
               </li>
             </ul>
             <ul>
-              <li>{{item.name2}}</li>
-              <li>{{item.date}}</li>
+              <li>{{ item.name2 }}</li>
+              <li>{{ item.date }}</li>
             </ul>
           </div>
           <!-- <div
@@ -113,6 +129,7 @@ import daikuane from "../../assets/home/daikuane.svg";
 import licaie from "../../assets/home/licaie.svg";
 import up from "../../assets/home/arrow-alt-up.svg";
 import down from "../../assets/home/arrow-alt-down.svg";
+import moment from "moment";
 export default {
   name: "Home",
   data() {
@@ -170,29 +187,7 @@ export default {
         },
         effect: "slide",
       },
-      latest_tasks: [
-        {
-          name1: "产品营销",
-          menoy: "30万/100万",
-          name2: "企业贷",
-          date: "2020-08-30日前",
-          id: 1,
-        },
-        {
-          name1: "资料采集",
-          menoy: "10户/30户",
-          name2: "农户家庭",
-          date: "2020-08-30日前",
-          id: 2,
-        },
-        {
-          name1: "资料采集",
-          menoy: "10户/30户",
-          name2: "农户家庭",
-          date: "2020-08-30日前",
-          id: 3,
-        },
-      ],
+      latest_tasks: [],
       recent_contact: [
         {
           name1: "陈昱晓",
@@ -253,15 +248,41 @@ export default {
     CustomNav,
     MyTabbar,
   },
+  created() {
+    this.queryNewTask();
+  },
   methods: {
     tab(ev) {
       this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
+    },
+    queryNewTask() {
+      let _username = localStorage.getItem("username");
+      this.$httpGet({
+        url: "/api/semTasks/appNewTask",
+        params: {
+          userName: _username,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.latest_tasks = res.data;
+      });
+    },
+  },
+  filters: {
+    transform(val) {
+      if (val) {
+        return moment(val).format("YYYY-MM-DD");
+      }
     },
   },
 };
 </script>
 <style scoped lang='scss'>
+.task_execution {
+  margin: 5px 5px;
+}
 .home {
   padding-top: 46px;
 }

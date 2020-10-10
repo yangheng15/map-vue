@@ -10,8 +10,8 @@
         v-model="username"
         name="txtUserName"
         left-icon="manager"
-        placeholder="请输入手机号"
-        :rules="[{ required: true, message: '请输入手机号' }]"
+        placeholder="请输入账号"
+        :rules="[{ required: true, message: '请输入账号' }]"
       />
       <van-field
         v-model="password"

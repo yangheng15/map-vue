@@ -24,8 +24,7 @@
           ></router-link>
         </li>
         <li>
-          <span style="font-weight: 600">客户地址：</span
-          >{{address}}
+          <span style="font-weight: 600">客户地址：</span>{{ address }}
           <router-link
             tag="a"
             class="img3"
@@ -39,7 +38,19 @@
         <li>
           <span style="font-weight: 600"
             >意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向：</span
-          >{{ intention == 0? '强': (intention == 1? '一般': (intention == 2? '无': (intention == 3? '已有产品': (intention == 4? '直接拒绝': '同意采集')))) }}
+          >{{
+            intention == 0
+              ? "强"
+              : intention == 1
+              ? "一般"
+              : intention == 2
+              ? "无"
+              : intention == 3
+              ? "已有产品"
+              : intention == 4
+              ? "直接拒绝"
+              : "同意采集"
+          }}
         </li>
       </ul>
       <div>
@@ -54,6 +65,7 @@
               query: {
                 title: '营销记录',
                 id: thisItem.id,
+                custName: custName,
               },
             }"
             class="marked_record"
@@ -118,6 +130,7 @@
               customerCode: this.customerCode,
               gridCode: this.gridCode,
               productCode: this.productCode,
+              productName: this.productName,
               custName: this.custName,
               id: this.id,
             },
@@ -285,9 +298,9 @@ export default {
       gridCode: "",
       productCode: "",
       id: "",
-      productName:"",
-      telphone:"",
-      address:""
+      productName: "",
+      telphone: "",
+      address: "",
     };
   },
   components: {
@@ -565,9 +578,6 @@ export default {
     top: 0.5rem;
     font-size: 0.8rem;
     right: 1rem;
-  }
-  .screen_content input {
-    height: 2rem;
   }
   .customer_list ul li {
     padding: 0.3rem 0.5rem;

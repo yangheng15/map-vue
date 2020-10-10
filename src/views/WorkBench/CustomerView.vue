@@ -1,18 +1,30 @@
 <template>
   <div class="CustomerView">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='客户视图'">
-      <div class="tabTitle" style="border-top:0px;padding-top:0rem">
+    <div v-if="typeCN == '客户视图'">
+      <div class="tabTitle" style="border-top: 0px; padding-top: 0rem">
         <ul
           class="tabList"
-          style="display:flex;height:3rem;line-height:3rem;background:#fff;border-bottom:0.001rem solid #e8e8e8;padding: 0rem 1rem;justify-content: space-between;"
+          style="
+            display: flex;
+            height: 3rem;
+            line-height: 3rem;
+            background: #fff;
+            border-bottom: 0.001rem solid #e8e8e8;
+            padding: 0rem 1rem;
+            justify-content: space-between;
+          "
         >
-          <li @click="tab(0)" :class="tabId==0?'cur':'ordinary'">基本信息</li>
-          <li @click="tab(1)" :class="tabId==1?'cur':'ordinary'">联系方式</li>
-          <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">学历</li>
-          <li @click="tab(3)" :class="tabId==3?'cur':'ordinary'">工作</li>
+          <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
+            基本信息
+          </li>
+          <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
+            联系方式
+          </li>
+          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">学历</li>
+          <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">工作</li>
         </ul>
-        <div v-show="tabId===0">
+        <div v-show="tabId === 0">
           <van-form @submit="onSubmit">
             <van-field
               v-model="customer_number"
@@ -159,11 +171,13 @@
               :rules="[{ required: true, message: '请填写职业' }]"
             />
             <div class="save">
-              <van-button round block type="primary" @click="prev()">保存</van-button>
+              <van-button round block type="primary" @click="prev()"
+                >保存</van-button
+              >
             </div>
           </van-form>
         </div>
-        <div v-show="tabId===1">
+        <div v-show="tabId === 1">
           <van-field
             v-model="phone_number"
             name="手机号码："
@@ -197,8 +211,8 @@
             clickable
             name="area"
             :value="regional_grid_txt"
-            label="区域网格："
-            placeholder="点击选择区域网格"
+            label="所属网格："
+            placeholder="点击选择所属网格"
             @click="regional_grid = true"
           />
           <van-popup v-model="regional_grid" position="bottom">
@@ -237,41 +251,64 @@
             :rules="[{ required: true, message: '请填写联系地址' }]"
           />
 
-          <div style="width:99%;margin:0.5rem auto;">
+          <div style="width: 99%; margin: 0.5rem auto">
             <baidu-map
               class="bm-view"
-              :center="{lng:114.65, lat: 33.37}"
+              :center="{ lng: 114.65, lat: 33.37 }"
               :zoom="12"
               ak="YOUR_APP_KEY"
             >
               <bm-marker
-                :position="{lng:114.73, lat: 33.33}"
-                :icon="{url: con1, size: {width: 50, height: 50}}"
+                :position="{ lng: 114.73, lat: 33.33 }"
+                :icon="{ url: con1, size: { width: 50, height: 50 } }"
               ></bm-marker>
             </baidu-map>
           </div>
           <div class="save">
-            <van-button round block type="primary" @click="prev()">保存</van-button>
+            <van-button round block type="primary" @click="prev()"
+              >保存</van-button
+            >
           </div>
         </div>
-        <div v-show="tabId===2">
-          <div class="stock stock_education" v-for="(thisItem,index) in education" :key="index">
+        <div v-show="tabId === 2">
+          <div
+            class="stock stock_education"
+            v-for="(thisItem, index) in education"
+            :key="index"
+          >
             <div>
-              <p>{{thisItem.university}}</p>
-              <p>{{thisItem.education}}</p>
-              <p>{{thisItem.date}}</p>
+              <p>{{ thisItem.university }}</p>
+              <p>{{ thisItem.education }}</p>
+              <p>{{ thisItem.date }}</p>
             </div>
-            <p>{{thisItem.major}}</p>
+            <p>{{ thisItem.major }}</p>
             <p class="delete">删除</p>
           </div>
           <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
           <span class="add_record" @click="showPopupEducation()">+</span>
           <div
             v-show="isPopupVisibleEducation"
-            style="position: fixed;z-index: 100;top:0px;left:0rem;width:100%;height:100vh;padding:0.5rem 0.5rem;background:rgba(193, 185, 185, .7);"
+            style="
+              position: fixed;
+              z-index: 100;
+              top: 0px;
+              left: 0rem;
+              width: 100%;
+              height: 100vh;
+              padding: 0.5rem 0.5rem;
+              background: rgba(193, 185, 185, 0.7);
+            "
           >
             <div
-              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 77%;background: rgb(255, 255, 255);border-radius: 0.5rem;"
+              style="
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 77%;
+                background: rgb(255, 255, 255);
+                border-radius: 0.5rem;
+              "
             >
               <p class="pop_title">学历添加</p>
               <van-field
@@ -297,7 +334,10 @@
                 placeholder="点击选择入学时间"
                 @click="showAdmission_time = true"
               />
-              <van-calendar v-model="showAdmission_time" @confirm="onAdmission_time" />
+              <van-calendar
+                v-model="showAdmission_time"
+                @confirm="onAdmission_time"
+              />
               <van-field
                 readonly
                 clickable
@@ -307,7 +347,10 @@
                 placeholder="点击选择毕业时间"
                 @click="showGraduation_time = true"
               />
-              <van-calendar v-model="showGraduation_time" @confirm="onGraduation_time" />
+              <van-calendar
+                v-model="showGraduation_time"
+                @confirm="onGraduation_time"
+              />
               <van-field
                 readonly
                 clickable
@@ -325,35 +368,59 @@
                   @cancel="education_level = false"
                 />
               </van-popup>
-              <div style="margin-top:3rem" class="save_pop">
+              <div style="margin-top: 3rem" class="save_pop">
                 <van-button
-                  style="margin-right:1rem"
+                  style="margin-right: 1rem"
                   round
                   type="primary"
                   @click="closePopupEducation()"
-                >保存</van-button>
-                <van-button round type="primary" @click="closePopupEducation()">取消</van-button>
+                  >保存</van-button
+                >
+                <van-button round type="primary" @click="closePopupEducation()"
+                  >取消</van-button
+                >
               </div>
             </div>
           </div>
         </div>
-        <div v-show="tabId===3">
-          <div class="stock stock_education" v-for="(thisItem,index) in work" :key="index">
+        <div v-show="tabId === 3">
+          <div
+            class="stock stock_education"
+            v-for="(thisItem, index) in work"
+            :key="index"
+          >
             <div>
-              <p>{{thisItem.university}}</p>
-              <p>{{thisItem.date}}</p>
+              <p>{{ thisItem.university }}</p>
+              <p>{{ thisItem.date }}</p>
             </div>
-            <p>{{thisItem.major}}</p>
+            <p>{{ thisItem.major }}</p>
             <p class="delete">删除</p>
           </div>
           <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
           <span class="add_record" @click="showPopupWork()">+</span>
           <div
             v-show="isPopupVisibleWork"
-            style="position: fixed;z-index: 100;top:0px;left:0rem;width:100%;height:100vh;padding:0.5rem 0.5rem;background:rgba(193, 185, 185, .7);"
+            style="
+              position: fixed;
+              z-index: 100;
+              top: 0px;
+              left: 0rem;
+              width: 100%;
+              height: 100vh;
+              padding: 0.5rem 0.5rem;
+              background: rgba(193, 185, 185, 0.7);
+            "
           >
             <div
-              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 77%;background: rgb(255, 255, 255);border-radius: 0.5rem;"
+              style="
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 77%;
+                background: rgb(255, 255, 255);
+                border-radius: 0.5rem;
+              "
             >
               <p class="pop_title">工作添加</p>
               <van-field
@@ -370,34 +437,47 @@
                 placeholder="单行输入"
                 :rules="[{ required: true, message: '请填写职位' }]"
               />
-              <div style="margin-top:3rem" class="save_pop">
+              <div style="margin-top: 3rem" class="save_pop">
                 <van-button
-                  style="margin-right:1rem"
+                  style="margin-right: 1rem"
                   round
                   type="primary"
                   @click="closePopupWork()"
-                >保存</van-button>
-                <van-button round type="primary" @click="closePopupWork()">取消</van-button>
+                  >保存</van-button
+                >
+                <van-button round type="primary" @click="closePopupWork()"
+                  >取消</van-button
+                >
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="typeCN=='农户'">
+    <div v-if="typeCN == '农户'">
       <div>
         <ul
           class="tabList"
-          style="display:flex;height:3rem;line-height:3rem;background:#fff;border-bottom:0.001rem solid #e8e8e8;justify-content: space-between;padding: 0rem 1rem;"
+          style="
+            display: flex;
+            height: 3rem;
+            line-height: 3rem;
+            background: #fff;
+            border-bottom: 0.001rem solid #e8e8e8;
+            justify-content: space-between;
+            padding: 0rem 1rem;
+          "
         >
-          <li @click="tab(0)" :class="tabId==0?'cur':'ordinary'">基本</li>
-          <li @click="tab(1)" :class="tabId==1?'cur':'ordinary'">联系</li>
-          <li @click="tab(2)" :class="tabId==2?'cur':'ordinary'">三有三无</li>
-          <li @click="tab(3)" :class="tabId==3?'cur':'ordinary'">成员</li>
-          <li @click="tab(4)" :class="tabId==4?'cur':'ordinary'">资产</li>
-          <li @click="tab(5)" :class="tabId==5?'cur':'ordinary'">收支</li>
+          <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本</li>
+          <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">联系</li>
+          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
+            三有三无
+          </li>
+          <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">成员</li>
+          <li @click="tab(4)" :class="tabId == 4 ? 'cur' : 'ordinary'">资产</li>
+          <li @click="tab(5)" :class="tabId == 5 ? 'cur' : 'ordinary'">收支</li>
         </ul>
-        <div v-show="tabId===0" class="household_base">
+        <div v-show="tabId === 0" class="household_base">
           <van-field
             v-model="family_number"
             name="家庭户号："
@@ -505,10 +585,12 @@
             show-word-limit
           />
           <div class="save">
-            <van-button round block type="primary" @click="prev()">保存</van-button>
+            <van-button round block type="primary" @click="prev()"
+              >保存</van-button
+            >
           </div>
         </div>
-        <div v-show="tabId===1">
+        <div v-show="tabId === 1">
           <van-field
             v-model="detailed_address"
             name="详细地址："
@@ -535,8 +617,8 @@
             clickable
             name="area"
             :value="regional_grid_txt"
-            label="区域网格："
-            placeholder="点击选择区域网格"
+            label="所属网格："
+            placeholder="点击选择所属网格"
             @click="regional_grid = true"
           />
           <van-popup v-model="regional_grid" position="bottom">
@@ -553,33 +635,55 @@
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写位置（经纬度）' }]"
           />
-          <div style="width:99%;margin:0.5rem auto;">
+          <div style="width: 99%; margin: 0.5rem auto">
             <baidu-map
               class="bm-view"
-              :center="{lng:114.65, lat: 33.37}"
+              :center="{ lng: 114.65, lat: 33.37 }"
               :zoom="12"
               ak="YOUR_APP_KEY"
             >
               <bm-marker
-                :position="{lng:114.73, lat: 33.380}"
-                :icon="{url: con1, size: {width: 50, height: 50}}"
+                :position="{ lng: 114.73, lat: 33.38 }"
+                :icon="{ url: con1, size: { width: 50, height: 50 } }"
               ></bm-marker>
             </baidu-map>
           </div>
           <div class="save">
-            <van-button round block type="primary" @click="prev()">保存</van-button>
+            <van-button round block type="primary" @click="prev()"
+              >保存</van-button
+            >
           </div>
           <div
             v-show="isPopupVisible"
-            style="position: fixed;z-index: 10;top:0px;left:0rem;width:100%;height:100vh;padding:0.5rem 0.5rem;background:#fff"
+            style="
+              position: fixed;
+              z-index: 10;
+              top: 0px;
+              left: 0rem;
+              width: 100%;
+              height: 100vh;
+              padding: 0.5rem 0.5rem;
+              background: #fff;
+            "
           >
             <input
-              style="border:0.05rem solid #bbb;width:100%;padding:0rem 0.5rem"
+              style="
+                border: 0.05rem solid #bbb;
+                width: 100%;
+                padding: 0rem 0.5rem;
+              "
               type="text"
               placeholder="网格名称"
             />
             <select
-              style="border:0.05rem solid #bbb;width:100%;padding:0.3rem 0.5rem;background:#fff;border-radius:0.3rem;margin-top:0.5rem"
+              style="
+                border: 0.05rem solid #bbb;
+                width: 100%;
+                padding: 0.3rem 0.5rem;
+                background: #fff;
+                border-radius: 0.3rem;
+                margin-top: 0.5rem;
+              "
               name
               id
             >
@@ -588,7 +692,14 @@
               <option value="行政区域">行政区域</option>
             </select>
             <select
-              style="border:0.05rem solid #bbb;width:100%;padding:0.3rem 0.5rem;background:#fff;border-radius:0.3rem;margin-top:0.5rem"
+              style="
+                border: 0.05rem solid #bbb;
+                width: 100%;
+                padding: 0.3rem 0.5rem;
+                background: #fff;
+                border-radius: 0.3rem;
+                margin-top: 0.5rem;
+              "
               name
               id
             >
@@ -598,36 +709,56 @@
             </select>
             <dl>
               <dt
-                style="display: flex;background:#E6E3E3;border:0.05rem solid #bbb;justify-content: space-around;line-height:2rem;margin-top:1rem"
+                style="
+                  display: flex;
+                  background: #e6e3e3;
+                  border: 0.05rem solid #bbb;
+                  justify-content: space-around;
+                  line-height: 2rem;
+                  margin-top: 1rem;
+                "
               >
-                <p style="margin:0rem">编号</p>
-                <p style="margin:0rem">名称</p>
+                <p style="margin: 0rem">编号</p>
+                <p style="margin: 0rem">名称</p>
               </dt>
               <dd
-                style="display: flex;flex-flow: row;position: relative;"
-                v-for="(thisItem,index) in customer_pool"
+                style="display: flex; flex-flow: row; position: relative"
+                v-for="(thisItem, index) in customer_pool"
                 :key="index"
               >
                 <div
-                  style="width: 1.2rem;height: 1.2rem;border: 0.05rem solid #000;margin: 1rem 0rem 0rem 1.2rem; cursor: pointer;border-radius: 100%;"
-                  :class="thisItem.checked?'checked':''"
+                  style="
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    border: 0.05rem solid #000;
+                    margin: 1rem 0rem 0rem 1.2rem;
+                    cursor: pointer;
+                    border-radius: 100%;
+                  "
+                  :class="thisItem.checked ? 'checked' : ''"
                   @click="selectItem(thisItem)"
                 ></div>
                 <li
-                  style="width:90%;list-style-type:none;display: flex;justify-content: space-around;align-items: flex-end;"
+                  style="
+                    width: 90%;
+                    list-style-type: none;
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: flex-end;
+                  "
                   class="newCustomerList"
                 >
-                  <p style="margin:0rem">{{thisItem.name}}</p>
-                  <p style="margin:0rem">{{thisItem.text}}</p>
+                  <p style="margin: 0rem">{{ thisItem.name }}</p>
+                  <p style="margin: 0rem">{{ thisItem.text }}</p>
                 </li>
               </dd>
             </dl>
-            <div style="margin-top:10rem" class="save">
+            <div style="margin-top: 10rem" class="save">
               <button @click="closePopup()">确定</button>
             </div>
           </div>
         </div>
-        <div v-show="tabId===2" class="household_have">
+        <div v-show="tabId === 2" class="household_have">
           <van-field name="radio" label="有无固定场所：">
             <template #input>
               <van-radio-group v-model="radio" direction="horizontal">
@@ -676,32 +807,54 @@
               </van-radio-group>
             </template>
           </van-field>
-          <div class="save" style="padding-top:2rem">
-            <van-button round block type="primary" @click="prev()">保存</van-button>
+          <div class="save" style="padding-top: 2rem">
+            <van-button round block type="primary" @click="prev()"
+              >保存</van-button
+            >
           </div>
         </div>
-        <div v-show="tabId===3">
-          <div class="stock stock_education" v-for="(thisItem,index) in family_member" :key="index">
-            <div style="margin-bottom: 0.5rem;">
-              <p style="color:#000;font-weight:550;width: 40%;">
-                {{thisItem.name}}
+        <div v-show="tabId === 3">
+          <div
+            class="stock stock_education"
+            v-for="(thisItem, index) in family_member"
+            :key="index"
+          >
+            <div style="margin-bottom: 0.5rem">
+              <p style="color: #000; font-weight: 550; width: 40%">
+                {{ thisItem.name }}
                 <span class="approval_Passed">户主</span>
               </p>
-              <p>{{thisItem.age}}</p>
-              <p>{{thisItem.income}}</p>
+              <p>{{ thisItem.age }}</p>
+              <p>{{ thisItem.income }}</p>
             </div>
             <div>
-              <p>{{thisItem.telephone}}</p>
+              <p>{{ thisItem.telephone }}</p>
               <p class="delete">删除</p>
             </div>
           </div>
           <span class="add_record" @click="showPopupFamily()">+</span>
           <div
             v-show="isPopupVisibleFamily"
-            style="position: fixed;z-index: 100;top:0px;left:0rem;width:100%;height:100vh;background:rgba(193, 185, 185, .7);"
+            style="
+              position: fixed;
+              z-index: 100;
+              top: 0px;
+              left: 0rem;
+              width: 100%;
+              height: 100vh;
+              background: rgba(193, 185, 185, 0.7);
+            "
           >
             <div
-              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 85%;background: rgb(255, 255, 255);border-radius: 0.5rem;"
+              style="
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 85%;
+                background: rgb(255, 255, 255);
+                border-radius: 0.5rem;
+              "
             >
               <p class="pop_title">农户成员添加</p>
               <van-field
@@ -756,36 +909,59 @@
                 placeholder="单行输入"
                 :rules="[{ required: true, message: '请填写年收入' }]"
               />
-              <div style="margin-top:3rem" class="save_pop">
+              <div style="margin-top: 3rem" class="save_pop">
                 <van-button
-                  style="margin-right:1rem"
+                  style="margin-right: 1rem"
                   round
                   type="primary"
                   @click="closePopupFamily()"
-                >保存</van-button>
-                <van-button round type="primary" @click="closePopupFamily()">取消</van-button>
+                  >保存</van-button
+                >
+                <van-button round type="primary" @click="closePopupFamily()"
+                  >取消</van-button
+                >
               </div>
             </div>
           </div>
         </div>
-        <div v-show="tabId===4">
-          <div class="stock stock_education" v-for="(thisItem,index) in assets" :key="index">
-            <div style="margin-bottom:0.5rem">
-              <p style="color:#000;font-weight:550">{{thisItem.name}}</p>
-              <p>{{thisItem.date}}</p>
+        <div v-show="tabId === 4">
+          <div
+            class="stock stock_education"
+            v-for="(thisItem, index) in assets"
+            :key="index"
+          >
+            <div style="margin-bottom: 0.5rem">
+              <p style="color: #000; font-weight: 550">{{ thisItem.name }}</p>
+              <p>{{ thisItem.date }}</p>
             </div>
-            <p>{{thisItem.menoy}}</p>
+            <p>{{ thisItem.menoy }}</p>
             <p class="delete">删除</p>
-            <span v-if="thisItem.id===1" class="approval_Passed">资产</span>
-            <span v-if="thisItem.id===2" class="approval_Passed1">负债</span>
+            <span v-if="thisItem.id === 1" class="approval_Passed">资产</span>
+            <span v-if="thisItem.id === 2" class="approval_Passed1">负债</span>
           </div>
           <span class="add_record" @click="showPopupAssets()">+</span>
           <div
             v-show="isPopupVisibleAssets"
-            style="position: fixed;z-index: 100;top:0px;left:0rem;width:100%;height:100vh;background:rgba(193, 185, 185, .7);"
+            style="
+              position: fixed;
+              z-index: 100;
+              top: 0px;
+              left: 0rem;
+              width: 100%;
+              height: 100vh;
+              background: rgba(193, 185, 185, 0.7);
+            "
           >
             <div
-              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 91%;background: rgb(255, 255, 255);border-radius: 0.5rem;"
+              style="
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 91%;
+                background: rgb(255, 255, 255);
+                border-radius: 0.5rem;
+              "
             >
               <p class="pop_title">资产添加</p>
               <van-field
@@ -863,19 +1039,22 @@
                 placeholder="请输入年收入"
                 show-word-limit
               />
-              <div style="margin-top:3rem" class="save_pop">
+              <div style="margin-top: 3rem" class="save_pop">
                 <van-button
-                  style="margin-right:1rem"
+                  style="margin-right: 1rem"
                   round
                   type="primary"
                   @click="closePopupAssets()"
-                >保存</van-button>
-                <van-button round type="primary" @click="closePopupAssets()">取消</van-button>
+                  >保存</van-button
+                >
+                <van-button round type="primary" @click="closePopupAssets()"
+                  >取消</van-button
+                >
               </div>
             </div>
           </div>
         </div>
-        <div v-show="tabId===5">
+        <div v-show="tabId === 5">
           <ul class="cw_stock yes_no income_expenditure">
             <p>基本信息</p>
             <li class="ie_left">合计（自动计算）（万元）：</li>
@@ -922,8 +1101,10 @@
               <input type="text" value="3" placeholder="单行输入" />
             </li>
           </ul>
-          <div class="save" style="padding-top:2rem">
-            <van-button block round type="primary" @click="prev()">保存</van-button>
+          <div class="save" style="padding-top: 2rem">
+            <van-button block round type="primary" @click="prev()"
+              >保存</van-button
+            >
           </div>
         </div>
       </div>
@@ -2098,9 +2279,6 @@ textarea {
     top: 0.5rem;
     font-size: 0.8rem;
     right: 1rem;
-  }
-  .screen_content input {
-    height: 2rem;
   }
   .customer_list ul li {
     padding: 0.3rem 0.5rem;

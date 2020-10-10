@@ -4,10 +4,10 @@
     <div v-if="typeCN == '营销记录'">
       <ul class="mission_details">
         <li>
-          客户：{{ editRecords.customerName }}
+          客户：{{ custName }}
           <img src="../../assets/WorkBench/location.svg" alt />
         </li>
-        <li>方式：{{ editRecords.semType }}</li>
+        <!-- <li>方式：{{ editRecords.semType }}</li> -->
         <li>营销产品：{{ editRecords.products }}</li>
         <li>执行时间：{{ editRecords.semTime | transform }}</li>
       </ul>
@@ -24,7 +24,13 @@
             readonly
             clickable
             name="picker"
-            :value="editRecords.isSucc == 0 ? '成功' : (editRecords.isSucc == 1 ? '未成功' : '失败')"
+            :value="
+              editRecords.isSucc == 0
+                ? '成功'
+                : editRecords.isSucc == 1
+                ? '未成功'
+                : '失败'
+            "
             label="结果"
             placeholder="点击选择结果"
             @click="showResult = true"
@@ -67,6 +73,31 @@
             />
           </van-popup>
           <van-field
+            readonly
+            clickable
+            name="picker"
+            :value="
+              editRecords.semType == 0
+                ? '上门'
+                : editRecords.semType == 1
+                ? '电话'
+                : editRecords.semType == 2
+                ? '网络'
+                : '无'
+            "
+            label="营销方式"
+            placeholder="点击选择营销方式"
+            @click="showMarketing_methods = true"
+          />
+          <van-popup v-model="showMarketing_methods" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="columnsMarketing_methods"
+              @confirm="onMarketing_methods"
+              @cancel="showMarketing_methods = false"
+            />
+          </van-popup>
+          <van-field
             v-model="editRecords.actualDemand"
             rows="2"
             autosize
@@ -97,7 +128,9 @@
             show-word-limit
           />
           <div class="save">
-            <van-button type="primary" block @click="modifyResult()">保存</van-button>
+            <van-button type="primary" block @click="modifyResult()"
+              >保存</van-button
+            >
           </div>
         </div>
         <div v-show="tabId === 1" style="background: #fff">
@@ -109,10 +142,10 @@
               flex-wrap: wrap;
             "
           >
-          <!-- <img style="width:100px;height:100px" :src="'data:image/jpg;base64,'+this.pictureData" alt=""> -->
-          <!-- <van-uploader v-model="fileList1" multiple /> -->
+            <!-- <img style="width:100px;height:100px" :src="'data:image/jpg;base64,'+this.pictureData" alt=""> -->
+            <!-- <van-uploader v-model="fileList1" multiple /> -->
             <van-uploader
-            result-type="dataUrl"
+              result-type="dataUrl"
               :after-read="afterRead"
               :max-count="1"
               v-model="fileList"
@@ -120,7 +153,9 @@
             />
           </div>
           <div class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="modifyPicture()">保存</van-button>
+            <van-button type="primary" block @click="modifyPicture()"
+              >保存</van-button
+            >
           </div>
         </div>
         <div v-show="tabId === 2" style="background: #fff; height: 70vh">
@@ -146,7 +181,9 @@
             :rules="[{ required: true, message: '请填写产品利率' }]"
           />
           <div class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="modifyCompetitor()">保存</van-button>
+            <van-button type="primary" block @click="modifyCompetitor()"
+              >保存</van-button
+            >
           </div>
         </div>
       </div>
@@ -176,17 +213,23 @@ export default {
         { index: 5, text: "同意采集" },
       ],
       showCustomer_intention: false,
+      columnsMarketing_methods: [
+        { index: 0, text: "上门" },
+        { index: 1, text: "电话" },
+        { index: 2, text: "网络" },
+      ],
+      showMarketing_methods: false,
       showResult: false,
       id: "",
-      imageInfo:"",
-      resultCode:"",
-      customerCode:"",
-      griddingCode:"",
-      products:"",
+      productName: "",
+      imageInfo: "",
+      resultCode: "",
+      customerCode: "",
+      griddingCode: "",
+      products: "",
       // pictureData:"",
-      fileList: [
-        { url: "" },
-      ],
+      fileList: [{ url: "" }],
+      custName: "",
     };
   },
   components: {
@@ -195,6 +238,8 @@ export default {
   created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
+    this.productName = this.$route.query.productName;
+    this.custName = this.$route.query.custName;
     this.editRecord();
   },
   updated() {},
@@ -204,8 +249,8 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
-      if(ev==1){
-        this.editPicture()
+      if (ev == 1) {
+        this.editPicture();
       }
     },
     editRecord(val) {
@@ -218,10 +263,10 @@ export default {
       }).then((res) => {
         console.log(res.data);
         this.editRecords = res.data;
-        this.imageInfo=res.data.imageInfo
-        this.customerCode=res.data.customerCode
-        this.griddingCode=res.data.griddingCode
-        this.products=res.data.products
+        this.imageInfo = res.data.imageInfo;
+        this.customerCode = res.data.customerCode;
+        this.griddingCode = res.data.griddingCode;
+        this.products = res.data.products;
       });
     },
     onResult(value) {
@@ -232,6 +277,10 @@ export default {
     onCustomer_intention(value) {
       this.editRecords.intention = value.index;
       this.showCustomer_intention = false;
+    },
+    onMarketing_methods(value) {
+      this.editRecords.semType = value.index;
+      this.showMarketing_methods = false;
     },
     modifyResult() {
       console.log(this.id);
@@ -245,6 +294,7 @@ export default {
           code: this.editRecords.code,
           id: this.id,
           isSucc: this.editRecords.isSucc,
+          semType: this.editRecords.semType,
           intention: this.editRecords.intention,
           actualDemand: this.editRecords.actualDemand,
           remark: this.editRecords.remark,
@@ -305,8 +355,8 @@ export default {
         },
       }).then((res) => {
         console.log(res.data);
-        this.fileList[0].url='data:image/jpg;base64,'+res.data;
-        this.fileList[0].isImage=true
+        this.fileList[0].url = "data:image/jpg;base64," + res.data;
+        this.fileList[0].isImage = true;
       });
     },
     afterRead(file) {
@@ -322,9 +372,8 @@ export default {
         this.pictureId = res.data.pid;
       });
     },
-    
   },
-    filters: {
+  filters: {
     transform(val) {
       if (val) {
         return moment(val).format("YYYY-MM-DD");

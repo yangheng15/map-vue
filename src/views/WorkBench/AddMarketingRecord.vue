@@ -7,8 +7,8 @@
           客户：{{ custName }}
           <img src="../../assets/WorkBench/location.svg" alt />
         </li>
-        <li>方式：上门</li>
-        <li>营销产品：{{ productCode }}</li>
+        <!-- <li>方式：上门</li> -->
+        <li>营销产品：{{ productName }}</li>
         <li>执行时间：2020-08-30 9:00</li>
       </ul>
       <div>
@@ -52,6 +52,23 @@
               :columns="columnsCustomer_intention"
               @confirm="onCustomer_intention"
               @cancel="showCustomer_intention = false"
+            />
+          </van-popup>
+          <van-field
+            readonly
+            clickable
+            name="picker"
+            :value="Marketing_methods_txt.text"
+            label="方式"
+            placeholder="点击选择方式"
+            @click="showMarketing_methods = true"
+          />
+          <van-popup v-model="showMarketing_methods" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="columnsMarketing_methods"
+              @confirm="onMarketing_methods"
+              @cancel="showMarketing_methods = false"
             />
           </van-popup>
           <van-field
@@ -162,6 +179,13 @@ export default {
         { index: 5, text: "同意采集" },
       ],
       showCustomer_intention: false,
+      Marketing_methods_txt: "",
+      columnsMarketing_methods: [
+        { index: 0, text: "上门" },
+        { index: 1, text: "电话" },
+        { index: 2, text: "网络" },
+      ],
+      showMarketing_methods: false,
       actual_demand: "",
       remarks: "",
       customer_feedback: "",
@@ -171,6 +195,7 @@ export default {
       customerCode: "",
       gridCode: "",
       productCode: "",
+      productName: "",
       custName: "",
       id: "",
       resultCode: "",
@@ -186,6 +211,7 @@ export default {
     this.customerCode = this.$route.query.customerCode;
     this.gridCode = this.$route.query.gridCode;
     this.productCode = this.$route.query.productCode;
+    this.productName = this.$route.query.productName;
     this.custName = this.$route.query.custName;
     this.id = this.$route.query.id;
     // this./api/semCustomersRecords/appGet/{id}
@@ -213,10 +239,11 @@ export default {
         data: {
           customerCode: this.customerCode,
           griddingCode: this.gridCode,
-          products: this.productCode,
+          products: this.productName,
           taskId: this.id,
           isSucc: this.result_txt.index,
           intention: this.Customer_intention_txt.index,
+          semType: this.Marketing_methods_txt.index,
           actualDemand: this.actual_demand,
           remark: this.remarks,
           feedback: this.customer_feedback,
@@ -256,6 +283,10 @@ export default {
       this.Customer_intention_txt = value;
       this.showCustomer_intention = false;
     },
+    onMarketing_methods(value) {
+      this.Marketing_methods_txt = value;
+      this.showMarketing_methods = false;
+    },
     afterRead(file) {
       let formData = new FormData();
       formData.append("file", file.file);
@@ -272,7 +303,7 @@ export default {
       this.$httpPost({
         url: "/api/customersRecords/appAddImage",
         data: {
-          imageInfo: this.pictureId.join(','),
+          imageInfo: this.pictureId.join(","),
           customerCode: this.customerCode,
           semCode: this.resultCode,
         },

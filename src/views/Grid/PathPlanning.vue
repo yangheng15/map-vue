@@ -56,16 +56,10 @@
                 <p>客户等级：{{ thisItem.level }}级</p>
               </div>
             </li>
-            <van-checkbox
-              :name="thisItem"
-              shape="square"
-            ></van-checkbox>
+            <van-checkbox :name="thisItem" shape="square"></van-checkbox>
           </ul>
         </van-checkbox-group>
-        <div
-          class="save"
-          @click="back"
-        >
+        <div class="save" @click="back">
           <button>确认</button>
         </div>
       </div>
@@ -129,7 +123,7 @@ export default {
         },
       }).then((res) => {
         console.log(res);
-        this.path_planning_list = res.data
+        this.path_planning_list = res.data;
       });
     },
     onSearch(val) {
@@ -145,10 +139,10 @@ export default {
         },
       }).then((res) => {
         console.log(res);
-        this.path_planning_list = res.data
+        this.path_planning_list = res.data;
       });
     },
-  }
+  },
 };
 </script>
 
@@ -313,10 +307,6 @@ export default {
   }
   .map_marker p img {
     width: 1.5rem;
-  }
-  .screen_content input {
-    height: 2.5rem;
-    margin: 0.5rem 0.5rem;
   }
   .selection_people ul {
     padding: 0rem;
