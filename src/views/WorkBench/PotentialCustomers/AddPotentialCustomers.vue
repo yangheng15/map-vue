@@ -588,7 +588,12 @@ export default {
         url: "/dic/type/dic_marital_status",
       }).then((res) => {
         console.log(res.data);
-        const transformDara = res.data.map((it, index) => (it.parentId === null ? '' : {index: it.id, text: it.codeText}))
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if(it.parentId !== null) {
+            transformDara.push({index: it.id, text: it.codeText})
+          }
+        })
         this.marital_status_list = transformDara;
       });
       // 最高学历
@@ -596,7 +601,12 @@ export default {
         url: "/dic/type/dic_education",
       }).then((res) => {
         console.log(res.data);
-        const transformDara = res.data.map((it, index) => (it.parentId === null ? '' : {index: it.id, text: it.codeText}))
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if(it.parentId !== null) {
+            transformDara.push({index: it.id, text: it.codeText})
+          }
+        })
         this.education_level_list = transformDara;
       });
     },

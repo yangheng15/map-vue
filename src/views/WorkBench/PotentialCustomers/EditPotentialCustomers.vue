@@ -51,13 +51,7 @@
         readonly
         clickable
         name="picker"
-        :value="
-          prospect_details.marriage == 0
-            ? '已婚'
-            : prospect_details.marriage == 1
-            ? '未婚'
-            : ''
-        "
+        :value=" prospect_details.marriage"
         label="婚姻状况："
         placeholder="点击选择婚姻状况"
         @click="marital_status = true"
@@ -121,23 +115,7 @@
         clickable
         name="picker"
         :value="
-          prospect_details.education == 0
-            ? '博士'
-            : prospect_details.education == 1
-            ? '硕士'
-            : prospect_details.education == 2
-            ? '本科'
-            : prospect_details.education == 3
-            ? '大专'
-            : prospect_details.education == 4
-            ? '中专'
-            : prospect_details.education == 5
-            ? '高中'
-            : prospect_details.education == 6
-            ? '初中'
-            : prospect_details.education == 7
-            ? '小学'
-            : ' '
+          prospect_details.education
         "
         label="学历："
         placeholder="点击选择学历"
@@ -632,21 +610,45 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_marital_status",
       }).then((res) => {
-        console.log(res.data);
-        const transformDara = res.data.map((it, index) =>
-          it.parentId === null ? "" : { index, text: it.codeText }
-        );
+        // console.log(res.data);
+        // const transformDara = res.data.map((it, index) =>
+        //   it.parentId === null ? "" : { index, text: it.codeText }
+        // );
+        // this.marital_status_list = transformDara;
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.id, text: it.codeText });
+          }
+        });
         this.marital_status_list = transformDara;
+        this.prospect_details.marriage = this.enumData(
+          this.prospect_details.marriage,
+          this.marital_status_list
+        );
+        console.log(this.prospect_details.marriage);
       });
       // 最高学历
       this.$httpGet({
         url: "/dic/type/dic_education",
       }).then((res) => {
-        console.log(res.data);
-        const transformDara = res.data.map((it, index) =>
-          it.parentId === null ? "" : { index, text: it.codeText }
-        );
+        // console.log(res.data);
+        // const transformDara = res.data.map((it, index) =>
+        //   it.parentId === null ? "" : { index, text: it.codeText }
+        // );
+        // this.education_level_list = transformDara;
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.id, text: it.codeText });
+          }
+        });
         this.education_level_list = transformDara;
+        this.prospect_details.education = this.enumData(
+          this.prospect_details.education,
+          this.education_level_list
+        );
+        console.log(this.prospect_details.education);
       });
     },
     onNation(value) {
@@ -656,7 +658,8 @@ export default {
       this.nation = false;
     },
     onMarital_status(value) {
-      this.prospect_details.marriage = value.index;
+      this.prospect_detailsEdit.marriage = value.index;
+      this.prospect_details.marriage = value.text;
       this.marital_status = false;
     },
     onCountry(value) {
@@ -668,7 +671,8 @@ export default {
       this.health = false;
     },
     onEducation_level(value) {
-      this.prospect_details.education = value.index;
+      this.prospect_detailsEdit.education = value.index;
+      this.prospect_details.education = value.text;
       this.education_level = false;
     },
     onRegional_grid(values) {
@@ -695,13 +699,13 @@ export default {
           identifyNo: this.prospect_details.identifyNo,
           wechat: this.prospect_details.wechat,
           nation: this.prospect_detailsEdit.nation,
-          marriage: this.prospect_details.marriage,
+          marriage: this.prospect_detailsEdit.marriage,
           gridding: this.prospect_details.gridding,
           workUnit: this.prospect_details.workUnit,
           connectAddress: this.prospect_details.connectAddress,
           annualIncome: this.prospect_details.annualIncome,
           qq: this.prospect_details.qq,
-          education: this.prospect_details.education,
+          education: this.prospect_detailsEdit.education,
           nationality: this.prospect_details.nationality,
           health: this.prospect_details.health,
           address: this.prospect_details.address,
