@@ -584,6 +584,8 @@ export default {
         url: "/dic/type/dic_nation",
       }).then((res) => {
         console.log(res.data);
+        const transformDara = res.data.map((it, index) => (it.parentId === null ? '' : {index, text: it.codeText}))
+        this.nation_list = transformDara;
       });
     },
     onNation(value) {
