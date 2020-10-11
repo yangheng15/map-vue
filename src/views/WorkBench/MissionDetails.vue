@@ -62,7 +62,7 @@
                   this.polymerizationLocation.split(',')[1],
               }" -->
           <bml-marker-clusterer :averageCenter="true">
-            <bm-marker
+            <!-- <bm-marker
               :position="{
                 lng:
                   this.polymerizationLocation &&
@@ -72,7 +72,8 @@
                   this.polymerizationLocation.split(',')[1],
               }"
               :dragging="true"
-            ></bm-marker>
+            ></bm-marker> -->
+            <bm-marker v-for="(marker, index) in polymerizationLocation" :key="index" :position="{lng: marker.lng, lat: marker.lat}"></bm-marker>
           </bml-marker-clusterer>
         </baidu-map>
       </div>
@@ -233,7 +234,12 @@ export default {
       taskQuery: {},
       id: "",
       productName: "",
-      polymerizationLocation: "",
+      polymerizationLocation: [],
+      mockData: [
+        {lng: '114.67002898631655', lat: '33.621688347700044'},
+        {lng: '114.68002898631655', lat: '33.621688347700044'},
+        {lng: '114.69002898631655', lat: '33.621688347700044'},
+      ]
     };
   },
   components: {
@@ -242,7 +248,7 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      console.log(from);
+      // console.log(from);
       if (from.path === "/MarketingDetails") {
         vm.tab(1);
       }
@@ -252,7 +258,7 @@ export default {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
     this.productName = this.$route.query.productName;
-    console.log(this.id);
+    // console.log(this.id);
     this.getTaskQuery();
     // $loading.show("拼命加载中..");
   },
@@ -287,12 +293,10 @@ export default {
         },
       }).then((res) => {
         this.taskQuery = res.data;
-        console.log(res.data.custList);
-        if (res.data.custList) {
-          res.data.custList.forEach((it) => {
-            this.polymerizationLocation = it.location;
-            console.log(this.polymerizationLocation);
-          });
+        // console.log(res.data.custList);
+        if (res.data.custList.length > 0) {
+          this.polymerizationLocation = res.data.custList.map(it => ({lng: it.location.split(',')[0], lat: it.location.split(',')[1]}))
+          // console.log(this.polymerizationLocation);
         }
       });
     },
@@ -304,7 +308,7 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.MarketingRecord = res.data;
         if (
           this.MarketingRecord.customerCode &&
@@ -319,14 +323,14 @@ export default {
               page: 1,
             },
           }).then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             this.MarketingRecord1 = res.data;
           });
         }
       });
     },
     onSearch(val) {
-      console.log(val);
+      // console.log(val);
       this.$httpGet({
         url: "/api/appMarket/custInfo",
         params: {
@@ -339,7 +343,7 @@ export default {
       });
     },
     marketChange(val) {
-      console.log(val);
+      // console.log(val);
       this.$httpGet({
         url: "/api/appMarket/custInfo",
         params: {
@@ -348,12 +352,12 @@ export default {
           isSem: val,
         },
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.MarketingRecord = res.data;
       });
     },
     intentionChange(val) {
-      console.log(val);
+      // console.log(val);
       this.$httpGet({
         url: "/api/appMarket/custInfo",
         params: {
@@ -367,7 +371,7 @@ export default {
       });
     },
     marketingChange(val) {
-      console.log(val);
+      // console.log(val);
       this.$httpGet({
         url: "/api/appMarket/custInfo",
         params: {
@@ -376,7 +380,7 @@ export default {
           isSucceed: val,
         },
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.MarketingRecord = res.data;
       });
     },
