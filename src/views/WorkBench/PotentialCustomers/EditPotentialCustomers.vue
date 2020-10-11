@@ -231,16 +231,10 @@ export default {
       phone_number: "",
       weChat: "",
       nation_txt: "",
-      nation_list: [
-        { index: 0, text: "汉族" },
-        { index: 1, text: "回族" },
-      ],
+      nation_list: [],
       nation: false,
       marital_status_txt: "",
-      marital_status_list: [
-        { index: 0, text: "已婚" },
-        { index: 1, text: "未婚" },
-      ],
+      marital_status_list: [],
       marital_status: false,
       work_unit: "",
       contact_address: "",
@@ -270,16 +264,7 @@ export default {
       Custome_level: false,
       recommended_products: "",
       education_level_txt: "",
-      education_level_list: [
-        { index: 0, text: "博士" },
-        { index: 1, text: "硕士" },
-        { index: 2, text: "本科" },
-        { index: 3, text: "大专" },
-        { index: 4, text: "中专" },
-        { index: 5, text: "高中" },
-        { index: 6, text: "初中" },
-        { index: 7, text: "小学" },
-      ],
+      education_level_list: [],
       education_level: false,
       choose_gender_txt: "",
       choose_gender_list: ["男", "女"],
@@ -601,9 +586,36 @@ export default {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
     this.editRecord();
+    this.dic_nation();
   },
   updated() {},
   methods: {
+    dic_nation() {
+      // 民族
+      this.$httpGet({
+        url: "/dic/type/dic_nation",
+      }).then((res) => {
+        console.log(res.data);
+        const transformDara = res.data.map((it, index) => (it.parentId === null ? '' : {index, text: it.codeText}))
+        this.nation_list = transformDara;
+      });
+      // 婚姻状况
+      this.$httpGet({
+        url: "/dic/type/dic_marital_status",
+      }).then((res) => {
+        console.log(res.data);
+        const transformDara = res.data.map((it, index) => (it.parentId === null ? '' : {index, text: it.codeText}))
+        this.marital_status_list = transformDara;
+      });
+      // 最高学历
+      this.$httpGet({
+        url: "/dic/type/dic_education",
+      }).then((res) => {
+        console.log(res.data);
+        const transformDara = res.data.map((it, index) => (it.parentId === null ? '' : {index, text: it.codeText}))
+        this.education_level_list = transformDara;
+      });
+    },
     onNation(value) {
       this.prospect_details.nation = value.index;
       this.nation = false;
