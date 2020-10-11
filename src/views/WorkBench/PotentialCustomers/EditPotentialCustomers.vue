@@ -34,7 +34,7 @@
         readonly
         clickable
         name="picker"
-        :value="prospect_details.nation == 0 ? '汉族' : ''"
+        :value="prospect_details.nation"
         label="民族："
         placeholder="点击选择民族"
         @click="nation = true"
@@ -51,7 +51,13 @@
         readonly
         clickable
         name="picker"
-        :value="prospect_details.marriage == 0 ? '已婚' : prospect_details.marriage == 1?'未婚':''"
+        :value="
+          prospect_details.marriage == 0
+            ? '已婚'
+            : prospect_details.marriage == 1
+            ? '未婚'
+            : ''
+        "
         label="婚姻状况："
         placeholder="点击选择婚姻状况"
         @click="marital_status = true"
@@ -74,7 +80,7 @@
         placeholder="点击选择所属网格"
         @click="regional_grid = true"
       />
-      
+
       <van-popup v-model="regional_grid" position="bottom">
         <van-area
           :area-list="areaList"
@@ -580,31 +586,56 @@ export default {
       card_number: "",
       id: "",
       prospect_details: "",
+      prospect_detailsEdit: {},
     };
   },
-  created() {
+  async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
-    this.editRecord();
+    await this.editRecord();
     this.dic_nation();
   },
   updated() {},
   methods: {
+    enumData(val, data) {
+      // debugger
+      if (val && data.length > 0) {
+        console.log(this.prospect_details);
+        console.log(data, val);
+        const find = data.find((it) => it.index === +val);
+        // debugger
+        return find ? find.text : "";
+      } else {
+        return "";
+      }
+    },
     dic_nation() {
       // 民族
       this.$httpGet({
         url: "/dic/type/dic_nation",
       }).then((res) => {
         console.log(res.data);
-        const transformDara = res.data.map((it, index) => (it.parentId === null ? '' : {index, text: it.codeText}))
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.id, text: it.codeText });
+          }
+        });
         this.nation_list = transformDara;
+        this.prospect_details.nation = this.enumData(
+          this.prospect_details.nation,
+          this.nation_list
+        );
+        console.log(this.prospect_details.nation);
       });
       // 婚姻状况
       this.$httpGet({
         url: "/dic/type/dic_marital_status",
       }).then((res) => {
         console.log(res.data);
-        const transformDara = res.data.map((it, index) => (it.parentId === null ? '' : {index, text: it.codeText}))
+        const transformDara = res.data.map((it, index) =>
+          it.parentId === null ? "" : { index, text: it.codeText }
+        );
         this.marital_status_list = transformDara;
       });
       // 最高学历
@@ -612,12 +643,16 @@ export default {
         url: "/dic/type/dic_education",
       }).then((res) => {
         console.log(res.data);
-        const transformDara = res.data.map((it, index) => (it.parentId === null ? '' : {index, text: it.codeText}))
+        const transformDara = res.data.map((it, index) =>
+          it.parentId === null ? "" : { index, text: it.codeText }
+        );
         this.education_level_list = transformDara;
       });
     },
     onNation(value) {
-      this.prospect_details.nation = value.index;
+      // debugger;
+      this.prospect_detailsEdit.nation = value.index;
+      this.prospect_details.nation = value.text;
       this.nation = false;
     },
     onMarital_status(value) {
@@ -640,28 +675,26 @@ export default {
       this.regional_grid_txt = values.map((item) => item.name).join("/");
       this.regional_grid = false;
     },
-    editRecord(val) {
+    async editRecord(val) {
       console.log(val);
-      this.$httpGet({
+      const res = await this.$httpGet({
         url: `/api/customersPotential/get/${this.id}`,
         data: {
           id: this.id,
         },
-      }).then((res) => {
-        console.log(res.data);
-        this.prospect_details = res.data;
       });
+      this.prospect_details = res.data;
     },
     modifyResult() {
       this.$httpPut({
         url: "/api/customersPotential/update",
         data: {
-          id:this.id,
+          id: this.id,
           name: this.prospect_details.name,
           telphone: this.prospect_details.telphone,
           identifyNo: this.prospect_details.identifyNo,
           wechat: this.prospect_details.wechat,
-          nation: this.prospect_details.nation,
+          nation: this.prospect_detailsEdit.nation,
           marriage: this.prospect_details.marriage,
           gridding: this.prospect_details.gridding,
           workUnit: this.prospect_details.workUnit,
