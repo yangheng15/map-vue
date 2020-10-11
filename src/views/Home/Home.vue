@@ -76,7 +76,7 @@
           >
             <ul>
               <li style="font-weight: 600">{{ item.name }}</li>
-              <li>{{ item.targetNum }}万</li>
+              <li>{{ item.targetNum | NumFormat }}</li>
             </ul>
             <ul>
               <li>{{ item.productName }}</li>
@@ -129,7 +129,6 @@ import daikuane from "../../assets/home/daikuane.svg";
 import licaie from "../../assets/home/licaie.svg";
 import up from "../../assets/home/arrow-alt-up.svg";
 import down from "../../assets/home/arrow-alt-down.svg";
-import moment from "moment";
 export default {
   name: "Home",
   data() {
@@ -268,13 +267,6 @@ export default {
         console.log(res.data);
         this.latest_tasks = res.data;
       });
-    },
-  },
-  filters: {
-    transform(val) {
-      if (val) {
-        return moment(val).format("YYYY-MM-DD");
-      }
     },
   },
 };

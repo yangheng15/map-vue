@@ -33,7 +33,7 @@
               目
               <span style="display: inline-block; width: 1.5rem"></span
               >标： </span
-            >{{ taskQuery.targetNum }}万元
+            >{{ taskQuery.targetNum | NumFormat }}
           </li>
           <li>
             <span style="font-weight: 600">
@@ -53,17 +53,27 @@
           :zoom="7"
           ak="YOUR_APP_KEY"
         >
-          <bm-marker
-            :position="{
-              lng:
-                this.polymerizationLocation &&
-                this.polymerizationLocation.split(',')[0],
-              lat:
-                this.polymerizationLocation &&
-                this.polymerizationLocation.split(',')[1],
-            }"
-            :dragging="true"
-          ></bm-marker>
+        <!-- :position="{
+                lng:
+                  this.polymerizationLocation &&
+                  this.polymerizationLocation.split(',')[0],
+                lat:
+                  this.polymerizationLocation &&
+                  this.polymerizationLocation.split(',')[1],
+              }" -->
+          <bml-marker-clusterer :averageCenter="true">
+            <bm-marker
+              :position="{
+                lng:
+                  this.polymerizationLocation &&
+                  this.polymerizationLocation.split(',')[0],
+                lat:
+                  this.polymerizationLocation &&
+                  this.polymerizationLocation.split(',')[1],
+              }"
+              :dragging="true"
+            ></bm-marker>
+          </bml-marker-clusterer>
         </baidu-map>
       </div>
       <div v-show="tabId === 1">
@@ -175,7 +185,7 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import moment from "moment";
+import { BmlMarkerClusterer } from "vue-baidu-map";
 export default {
   data() {
     return {
@@ -228,6 +238,7 @@ export default {
   },
   components: {
     ChildNav,
+    BmlMarkerClusterer,
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -368,13 +379,6 @@ export default {
         console.log(res.data);
         this.MarketingRecord = res.data;
       });
-    },
-  },
-  filters: {
-    transform(val) {
-      if (val) {
-        return moment(val).format("YYYY-MM-DD");
-      }
     },
   },
 };

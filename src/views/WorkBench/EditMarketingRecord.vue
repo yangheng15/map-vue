@@ -192,7 +192,6 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import moment from "moment";
 import { Toast } from "vant";
 export default {
   data() {
@@ -371,13 +370,6 @@ export default {
         console.log(res.data.pid);
         this.pictureId = res.data.pid;
       });
-    },
-  },
-  filters: {
-    transform(val) {
-      if (val) {
-        return moment(val).format("YYYY-MM-DD");
-      }
     },
   },
 };

@@ -212,9 +212,7 @@ export default {
       phone_number: "",
       weChat: "",
       nation_txt: "",
-      nation_list: [
-        { index: 0, text: "汉族" },
-      ],
+      nation_list: [{ index: 0, text: "汉族" }],
       nation: false,
       marital_status_txt: "",
       marital_status_list: [
@@ -577,9 +575,17 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.dic_nation();
   },
   updated() {},
   methods: {
+    dic_nation() {
+      this.$httpGet({
+        url: "/dic/type/dic_nation",
+      }).then((res) => {
+        console.log(res.data);
+      });
+    },
     onNation(value) {
       this.nation_txt = value;
       this.nation = false;

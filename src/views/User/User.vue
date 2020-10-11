@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="new_item_body">
-      <div
+      <!-- <div
         class="calendar"
         @click="$router.push('/LGBUserCenter/MyMedal?title=我的足迹')"
       >
@@ -49,7 +49,7 @@
           我的日历
         </p>
         <van-icon name="arrow" />
-      </div>
+      </div> -->
       <router-link
         tag="div"
         class="calendar"

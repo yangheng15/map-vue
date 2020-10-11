@@ -19,7 +19,8 @@
             }"
           >
             <p>{{ thisItem.name }}</p>
-            <p>上次联系</p>
+            <p v-if="thisItem.updatedTime">上次联系</p>
+            <p v-if="!thisItem.updatedTime">最近暂无联系</p>
             <p class="schedule_star">
               <van-rate
                 v-model="value"
@@ -61,7 +62,6 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-import moment from "moment";
 export default {
   name: "PotentialCustomers",
   components: {
@@ -105,13 +105,6 @@ export default {
       }).then((res) => {
         this.customer_list = res.data;
       });
-    },
-  },
-  filters: {
-    transform(val) {
-      if (val) {
-        return moment(val).format("YYYY-MM-DD");
-      }
     },
   },
   mounted() {},

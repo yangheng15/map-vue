@@ -187,12 +187,16 @@
       >
         <img src="../../assets/grid/path_planning.svg" alt />
       </router-link> -->
-      <router-link
+      <!-- <router-link
         tag="p"
         :to="{ name: 'GridSelection', query: { title: '网格选择' } }"
       >
-        <img src="../../assets/grid/grid_filtering.svg" alt />
-      </router-link>
+        <img src="../../assets/grid/eyeMine.svg" alt />
+      </router-link> -->
+      <p @click="eyeTrueFalse">
+        <img v-show="eyeMe" src="../../assets/grid/eyeMine.svg" alt />
+        <img v-show="!eyeMe" src="../../assets/grid/eyeNotMine.svg" alt />
+      </p>
     </div>
 
     <div v-show="isPopupVisibleSign" class="isPopupVisibleSign">
@@ -290,7 +294,6 @@ import MyOverlay from "./MyOverlay";
 import MyNav from "../../components/Public/MyNav";
 import myTabbar from "../../components/Public/MyTabbar";
 import { Toast } from "vant";
-import moment from "moment";
 export default {
   name: "Grid",
   components: {
@@ -331,6 +334,7 @@ export default {
       typeIdsData: [],
       typeIdsItem: {},
       typeIdsAlert: false,
+      eyeMe: true,
     };
   },
   created() {
@@ -351,6 +355,7 @@ export default {
     }
     this.specialSubject = this.$route.params.specialSubject;
     this.owner = this.$route.params.owner;
+    // this.eyeTrueFalse()
   },
   methods: {
     mapPlaning(BMap, map) {
@@ -369,16 +374,16 @@ export default {
      * 筛选资源数据
      */
     resource_selection(BMap, map) {
-      if (this.owner) {
-        var _username = localStorage.getItem("username");
-      } else {
-        _username = [];
-      }
+      // if (this.owner) {
+      var _username = localStorage.getItem("username");
+      // } else {
+      //   _username = [];
+      // }
       this.$httpGet({
         url: "/api/semGridding/selection",
         params: {
           owner: _username,
-          specialSubject: this.specialSubject,
+          // specialSubject: this.specialSubject,
         },
       }).then((res) => {
         console.log(res.data);
@@ -388,6 +393,14 @@ export default {
         });
         map && this.createPolygon(map);
       });
+    },
+    eyeTrueFalse() {
+      if (this.eyeMe) {
+        this.resource_selection();
+      } else {
+        this.mapPlaning();
+      }
+      this.eyeMe = !this.eyeMe
     },
     queryResources(BMap, map) {
       this.$httpGet({
@@ -623,13 +636,6 @@ export default {
       }).then((res) => {
         this.isPopupVisibleSign = false;
       });
-    },
-  },
-  filters: {
-    transform(val) {
-      if (val) {
-        return moment(val).format("YYYY-MM-DD");
-      }
     },
   },
 };

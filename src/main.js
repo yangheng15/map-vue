@@ -7,7 +7,11 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 // import moment from 'moment'; 
 import BaiduMap from 'vue-baidu-map'
-import { httpPost, httpGet, httpPut } from '@/axios/http';
+import {
+  httpPost,
+  httpGet,
+  httpPut
+} from '@/axios/http';
 // 全局注册
 
 Vue.use(BaiduMap, {
@@ -34,9 +38,23 @@ Vue.prototype.$httpPut = httpPut;
 // 引入echarts画饼状图
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts;
-
+import moment from "moment";
 Vue.config.productionTip = false
-
+Vue.filter('NumFormat', function (val = 0) {
+  val = val.toLocaleString(); // 3,000
+  console.log(val);
+  if (val.indexOf(".") == -1) {
+    val = val + ".00"; //3,000.00
+  } else if (val.charAt(val.indexOf(".") == val.length - 2)) {
+    val = val + "0";
+  }
+  return val;
+})
+Vue.filter('transform', function (val) {
+  if (val) {
+    return moment(val).format("YYYY-MM-DD");
+  }
+})
 new Vue({
   router,
   store,

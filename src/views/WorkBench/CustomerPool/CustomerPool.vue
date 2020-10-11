@@ -23,6 +23,9 @@
             v-model="thisItem.id"
             shape="square"
           ></van-checkbox> -->
+          <p class="selctBtn">
+            <img style="width: 20px;" src="../../../assets/WorkBench/empty_heart.svg" alt="">
+            </p>
           <li class="newCustomerList" style="width: 100%">
             <router-link
               tag="p"

@@ -143,7 +143,6 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import moment from "moment";
 export default {
   data() {
     return {
@@ -339,13 +338,6 @@ export default {
           console.log(res.data);
           this.MarketingRecord = res.data;
         });
-      }
-    },
-  },
-  filters: {
-    transform(val) {
-      if (val) {
-        return moment(val).format("YYYY-MM-DD");
       }
     },
   },

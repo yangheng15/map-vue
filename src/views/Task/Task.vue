@@ -15,13 +15,17 @@
           tag="div"
           :to="{
             name: 'MissionDetails',
-            query: { title: '任务详情', id: thisItem.id, productName:thisItem.productName},
+            query: {
+              title: '任务详情',
+              id: thisItem.id,
+              productName: thisItem.productName,
+            },
           }"
         >
           <div class="new_task">
             <p style="font-weight: 550">{{ thisItem.name }}</p>
             <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
-              {{ thisItem.targetNum }}万
+              {{ thisItem.targetNum | NumFormat }}
             </p>
             <p>创建日期：{{ thisItem.createdTime | transform }}</p>
           </div>
@@ -43,13 +47,17 @@
           tag="div"
           :to="{
             name: 'MissionDetails',
-            query: { title: '任务详情', id: thisItem.id, productName:thisItem.productName },
+            query: {
+              title: '任务详情',
+              id: thisItem.id,
+              productName: thisItem.productName,
+            },
           }"
         >
           <div class="new_task">
             <p style="font-weight: 550">{{ thisItem.name }}</p>
             <p style="text-align: center !important">
-              {{ thisItem.targetNum }}万
+              {{ thisItem.targetNum | NumFormat }}
             </p>
             <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
@@ -83,14 +91,18 @@
           tag="div"
           :to="{
             name: 'MissionDetails',
-            query: { title: '任务详情', id: thisItem.id, productName:thisItem.productName },
+            query: {
+              title: '任务详情',
+              id: thisItem.id,
+              productName: thisItem.productName,
+            },
           }"
           class="right_content"
         >
           <div class="new_task">
             <p style="font-weight: 550">{{ thisItem.name }}</p>
             <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
-              {{ thisItem.targetNum }}万
+              {{ thisItem.targetNum | NumFormat }}
             </p>
             <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
@@ -109,8 +121,6 @@
 <script>
 import MyNav from "../../components/Public/MyNav";
 import MyTabbar from "../../components/Public/MyTabbar";
-import moment from "moment";
-
 export default {
   name: "Task",
   components: {
@@ -181,13 +191,6 @@ export default {
         // console.log(res.data);
         this.new_task = res.data;
       });
-    },
-  },
-  filters: {
-    transform(val) {
-      if (val) {
-        return moment(val).format("YYYY-MM-DD");
-      }
     },
   },
 };
