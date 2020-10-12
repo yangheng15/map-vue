@@ -20,7 +20,7 @@
           <router-link
             tag="a"
             class="img2"
-            :to="{ name: 'ProductIntroduction', query: { title: '产品介绍' } }"
+            :to="{ name: 'ProductIntroduction', query: { title: '产品介绍',productCode: productCode } }"
           ></router-link>
         </li>
         <li>
@@ -99,7 +99,7 @@
                     ? 'approval_Passed'
                     : 'approval_Passed1'
                 "
-                >{{ thisItem.isSucc == "0" ? "成功" : "失败" }}
+                >{{ thisItem.isSucc == "0" ? "成功" :thisItem.isSucc == "1"?"未成功": "失败" }}
               </span>
             </p>
             <p class="schedule_star" style="width: 100%">
@@ -172,124 +172,6 @@ export default {
       value3: "",
       value4: "",
       value5: "",
-      channel: [
-        {
-          menoy_name: "签约情况",
-          menoy: "吴",
-        },
-        {
-          menoy_name: "最近一次柜面交易时间",
-          menoy: "2020-01-01",
-        },
-        {
-          menoy_name: "最近一次柜面交易机构",
-          menoy: "总行营业部",
-        },
-        {
-          menoy_name: "手机银行使用状态",
-          menoy: "近6个月无交易",
-        },
-        {
-          menoy_name: "年累计手机银行交易额",
-          menoy: "0",
-        },
-        {
-          menoy_name: "年累计手机银行交易笔数",
-          menoy: "0",
-        },
-        {
-          menoy_name: "网上银行使用状态",
-          menoy: "近6个月无交易",
-        },
-      ],
-      product: [
-        {
-          menoy_name: "历史购买",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "理财余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "基金余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "黄金余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "年累计保险金额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "贵金属",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "水费年累计金额",
-          menoy: "1,000.00",
-        },
-        {
-          menoy_name: "电费年累计金额",
-          menoy: "2,000.00%",
-        },
-        {
-          menoy_name: "ETC年累计金额",
-          menoy: "3,000.00",
-        },
-      ],
-      card: [
-        {
-          menoy_name: "签约情况",
-          menoy: "无",
-        },
-        {
-          menoy_name: "贷记卡激活主卡数",
-          menoy: "0",
-        },
-        {
-          menoy_name: "借记卡有效卡数",
-          menoy: "0",
-        },
-        {
-          menoy_name: "市民卡激活卡数",
-          menoy: "0",
-        },
-      ],
-      recommend: [
-        {
-          id: 1,
-          menoy_name: "存款",
-          menoy: "定期存款",
-        },
-        {
-          id: 2,
-          menoy_name: "贷款",
-          menoy: "企业经营贷",
-        },
-        {
-          id: 3,
-          menoy_name: "理财",
-          menoy: "周周赢",
-        },
-        {
-          id: 4,
-          menoy_name: "大额存单",
-          menoy: "大额存单",
-        },
-        {
-          id: 5,
-          menoy_name: "支付工具",
-          menoy: "支付宝",
-        },
-        {
-          id: 6,
-          menoy_name: "手机银行",
-          menoy: "手机银行",
-        },
-      ],
       custName: "",
       telephone: "",
       intention: "",
@@ -335,7 +217,6 @@ export default {
             page: 1,
           },
         }).then((res) => {
-          console.log(res.data);
           this.MarketingRecord = res.data;
         });
       }

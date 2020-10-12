@@ -1,4 +1,4 @@
-<template>
+productCode<template>
   <div class="MyMedal">
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN=='我的勋章'">

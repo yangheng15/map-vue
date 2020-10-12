@@ -19,6 +19,7 @@
               title: '任务详情',
               id: thisItem.id,
               productName: thisItem.productName,
+              productCode: thisItem.productCode,
             },
           }"
         >
@@ -51,6 +52,7 @@
               title: '任务详情',
               id: thisItem.id,
               productName: thisItem.productName,
+              productCode: thisItem.productCode,
             },
           }"
         >
@@ -95,6 +97,7 @@
               title: '任务详情',
               id: thisItem.id,
               productName: thisItem.productName,
+              productCode: thisItem.productCode,
             },
           }"
           class="right_content"

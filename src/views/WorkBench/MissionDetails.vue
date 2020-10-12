@@ -116,6 +116,7 @@
                   telphone: thisItem.telphone,
                   address: thisItem.address,
                   productName: productName,
+                  productCode: productCode,
                   id: taskQuery.id,
                 },
               }"
@@ -234,6 +235,7 @@ export default {
       taskQuery: {},
       id: "",
       productName: "",
+      productCode: "",
       polymerizationLocation: [],
       mockData: [
         {lng: '114.67002898631655', lat: '33.621688347700044'},
@@ -258,7 +260,9 @@ export default {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
     this.productName = this.$route.query.productName;
-    // console.log(this.id);
+    this.productCode = this.$route.query.productCode;
+    console.log(this.$route.query.productName);
+    console.log(this.$route.query.productCode);
     this.getTaskQuery();
     // $loading.show("拼命加载中..");
   },

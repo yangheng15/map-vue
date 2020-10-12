@@ -11,9 +11,9 @@
               <p style="margin: 0">{{ statistic.name }}</p>
             </li>
             <li>
-              <p class="total_money">{{ statistic.num }}万</p>
+              <p class="total_money">{{ statistic.num }}</p>
               <p :class="statistic.state ? 'up_color' : 'down_color'">
-                {{ statistic.money }}万
+                {{ statistic.money }}%
                 <img
                   style="width: 15px; vertical-align: text-top"
                   :src="statistic.up_down"
@@ -211,7 +211,7 @@ export default {
         {
           img: kehushu,
           name: "客户数",
-          num: "10",
+          num: "23人",
           money: "21",
           up_down: up,
           state: true,
@@ -219,15 +219,15 @@ export default {
         {
           img: cunkuane,
           name: "存款额",
-          num: "100",
-          money: "20",
-          up_down: up,
-          state: true,
+          num: "100万",
+          money: "10",
+          up_down: down,
+          state: false,
         },
         {
           img: daikuane,
           name: "贷款额",
-          num: "100",
+          num: "110万",
           money: "21",
           up_down: down,
           state: false,
@@ -235,7 +235,7 @@ export default {
         {
           img: licaie,
           name: "理财额",
-          num: "100",
+          num: "200万",
           money: "20",
           up_down: up,
           state: true,

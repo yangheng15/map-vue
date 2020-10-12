@@ -1,11 +1,11 @@
 <template>
   <div class="ProductIntroduction">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='产品介绍'" style="background:#f5f5f5;">
-      <p class="productName">产品名称：企业贷</p>
+    <div v-if="typeCN == '产品介绍'" style="background: #f5f5f5">
+      <p class="productName">产品名称：{{productInformation.name}}</p>
       <p class="productTitle">产品描述</p>
       <van-field
-        v-model="product_description"
+        v-model="productInformation.productDesc"
         rows="10"
         autosize
         label
@@ -16,7 +16,7 @@
       />
       <p class="productTitle">营销话术</p>
       <van-field
-        v-model="marketing_talk"
+        v-model="productInformation.talk"
         rows="10"
         autosize
         label
@@ -25,9 +25,9 @@
         placeholder="请输入营销话术"
         show-word-limit
       />
-      <p class="productTitle">现场影像</p>
+      <p class="productTitle">宣传资料</p>
       <div class="productImg">
-        <van-image width="79px" height="79px" fit="contain" :src="picture" />
+        <van-image width="79px" height="79px" fit="contain" :src="productInformation.url" />
         <van-image width="79px" height="79px" fit="contain" :src="picture" />
         <van-uploader :after-read="afterRead" />
       </div>
@@ -46,6 +46,8 @@ export default {
     return {
       title: "",
       typeCN: "",
+      productCode: "",
+      productInformation:"",
       product_description:
         "向企事业法人或国家规定可以作为借款人的其他组织发放的用于借款人日常生产经营周转的贷款。业务特点：满足企业日常生产经营过程中的流动资金需求。使用指南：使用对象：企事业法人或国家规定可以作为借款人的其他组织。授信额度：根据借款人经营规模、业务特征及应收账款、资金循环周期等要素测算其营运资金需求，综合考虑借款人现金流、负债、还款能力、担保等因素，合理确定授信金额",
       marketing_talk:
@@ -55,12 +57,24 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.productCode = this.$route.query.productCode;
+    this.getProductInformation();
   },
   updated() {},
   methods: {
     afterRead(file) {
-      // 此时可以自行将文件上传至服务器
       console.log(file);
+    },
+    getProductInformation() {
+      this.$httpGet({
+        url: "/api/productsInfo/getByCode",
+        params: {
+          code: this.productCode,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.productInformation = res.data;
+      });
     },
   },
   beforeDestroy() {},
