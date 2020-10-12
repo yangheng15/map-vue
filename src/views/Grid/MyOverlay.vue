@@ -2,8 +2,8 @@
   <bm-overlay v-if="position" ref="customOverlay" :class="{sample: true, active}" pane="labelPane" @draw="draw">
     <div class="introduce_content" @touchstart="registerEvent">
       <!-- <img v-if="show" class="introduce_img" :src="img" alt /> -->
-      <p v-if="name" class="introduce_name">{{name}}</p>
       <p :class="name ?'introduce_address':'introduce_address_lv'">{{address}}</p>
+      <p v-if="name" class="introduce_name">{{name}}</p>
     </div>
     <!-- <div v-text="text" @click="handleClick"></div> -->
   </bm-overlay>
@@ -39,7 +39,7 @@ export default {
 }
 .introduce_content {
   text-align: center;
-  width: 4rem;
+  width: 6rem;
   /* height: 5rem; */
   display: flex;
   flex-wrap: wrap;
@@ -55,7 +55,7 @@ export default {
   color: #fff;
   font-size: 0.8rem;
   font-weight: 600;
-  width: 4rem;
+  width: 95px;
   height: 1.5rem;
   line-height: 1.5rem;
   background: #df0f0f;
@@ -65,15 +65,16 @@ export default {
   /* width: 100%; */
 }
 .introduce_content .introduce_address {
+  box-sizing: border-box;
   color: #df0f0f;
   font-size: 0.8rem;
   font-weight: 600;
-  /* width: 4rem; */
+  width: 95px;
   height: 1.5rem;
   line-height: 1.5rem;
   text-align: center;
   background: transparent;
-  border: 0.01rem solid #df0f0f;
+  border:2px solid #df0f0f;
   /* width: 100%; */
   margin: 0rem;
 }
