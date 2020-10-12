@@ -52,7 +52,7 @@
         <router-link
           tag="div"
           class="function_men"
-          :to="{ name: 'WorkbenchBranch', query: { title: '我的客户' } }"
+          :to="{ name: 'MyClients', query: { title: '我的客户' } }"
         >
           <span class="c-link-card" style="background: #3d425e">
             <img src="../../assets/WorkBench/kehu.svg" alt />

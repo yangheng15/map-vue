@@ -41,16 +41,16 @@
               <span style="display: inline-block; width: 0.4rem"></span>成
               <span style="display: inline-block; width: 0.4rem"></span>度：
             </span>
-            <span style="color: #3cc8ab">160,000.00</span>
+            <span style="color: #3cc8ab">{{taskQuery.taskCompletion}}</span>
             <div class="progress">
-              <div class="progress-done" data-done="80">80%</div>
+              <div class="progress-done" :style="'width:' + taskQuery.taskCompletion + '%'" data-done="taskQuery.taskCompletion">{{taskQuery.taskCompletion}}%</div>
             </div>
           </li>
         </ul>
         <baidu-map
           class="bm-view"
           :center="{ lng: 114.654102, lat: 33.623741 }"
-          :zoom="7"
+          :zoom="14"
           ak="YOUR_APP_KEY"
         >
         <!-- :position="{

@@ -15,7 +15,7 @@ const GridSelection = () => import('@/views/Grid/GridSelection.vue');
 const PathPlanning = () => import('@/views/Grid/PathPlanning.vue');
 //工作台
 const WorkBench = () => import('@/views/WorkBench/WorkBench.vue');
-//我的客户
+//我的客户不要了
 const WorkbenchBranch = () => import('@/views/WorkBench/WorkbenchBranch.vue');
 //任务详情
 const ArticleViewBasic = () => import('@/views/WorkBench/ArticleViewBasic.vue');
@@ -58,6 +58,8 @@ const MissionAccomplished = () => import('@/views/WorkBench/MissionAccomplished.
 const TaskManagement = () => import('@/views/WorkBench/TaskManagement/TaskManagement.vue');
 // 潜在客户
 const PotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/PotentialCustomers.vue');
+// 潜在客户
+const MyClients = () => import('@/views/WorkBench/MyClients/MyClients.vue');
 // 添加潜在客户
 const AddPotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/AddPotentialCustomers.vue');
 // 修改潜在客户
@@ -234,6 +236,11 @@ const routes = [{
     path: '/EditPotentialCustomers',
     name: 'EditPotentialCustomers',
     component: EditPotentialCustomers,
+  },
+  {
+    path: '/MyClients',
+    name: 'MyClients',
+    component: MyClients,
   },
   {
     path: '/CustomerPool',

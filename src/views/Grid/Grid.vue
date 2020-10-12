@@ -360,7 +360,7 @@ export default {
   methods: {
     mapPlaning(BMap, map) {
       this.$httpGet({
-        url: "/api/mapPlaning/query",
+        url: "/api/mapPlaningByApp/query",
       }).then((res) => {
         console.log(res.data);
         this.map_data = res.data;

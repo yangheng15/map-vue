@@ -1123,7 +1123,7 @@ export default {
       radio: "2",
       customer_number: "112346546",
       customer_rating: "二级",
-      choose_gender_txt: "男",
+      choose_gender_txt: "女",
       choose_gender_list: ["男", "女"],
       choose_gender: false,
       religious_belief: "无",

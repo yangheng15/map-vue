@@ -62,30 +62,30 @@ export default {
   text-align: center;
   border: none;
   margin: 0rem;
-  width: 100%;
+  /* width: 100%; */
 }
 .introduce_content .introduce_address {
   color: #df0f0f;
   font-size: 0.8rem;
   font-weight: 600;
-  width: 4rem;
+  /* width: 4rem; */
   height: 1.5rem;
   line-height: 1.5rem;
   text-align: center;
   background: transparent;
   border: 0.01rem solid #df0f0f;
-  width: 100%;
+  /* width: 100%; */
   margin: 0rem;
 }
 .introduce_content .introduce_address_lv {
   color: #0FB38F;
   font-size: 0.8rem;
   font-weight: 600;
-  width: 4rem;
+  /* width: 4rem; */
   height: 1.5rem;
   line-height: 1.5rem;
   background: #fff;
-  width: 100%;
+  /* width: 100%; */
   text-align: center;
   border: 0.01rem solid #0FB38F;
 }
