@@ -23,7 +23,7 @@
             v-model="thisItem.id"
             shape="square"
           ></van-checkbox> -->
-          <p class="selctBtn" @click="joinCust">
+          <p class="selctBtn" @click="joinCust(thisItem.code)">
             <img
               style="width: 20px"
               src="../../../assets/WorkBench/empty_heart.svg"
@@ -260,12 +260,12 @@ export default {
         this.customer_pool = res.data;
       });
     },
-    joinCust() {
+    joinCust(code) {
       console.log(this.customerCode);
       this.$httpPost({
         url: "/api/customers/joinCust",
         params: {
-          customerCode: this.customerCode,
+          customerCode: code,
         },
       }).then((res) => {
       }).catch(() => {});
