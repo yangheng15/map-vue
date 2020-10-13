@@ -276,7 +276,10 @@
       <div v-show="tabId === 2" class="household_have">
         <van-field name="radio" label="有无固定场所：">
           <template #input>
-            <van-radio-group v-model="farmers_details.hasFixPlace" direction="horizontal">
+            <van-radio-group
+              v-model="farmers_details.hasFixPlace"
+              direction="horizontal"
+            >
               <van-radio name="1">有</van-radio>
               <van-radio name="0">无</van-radio>
             </van-radio-group>
@@ -284,7 +287,10 @@
         </van-field>
         <van-field name="radio" label="有无不良资信：">
           <template #input>
-            <van-radio-group v-model="farmers_details.hasBadAsset" direction="horizontal">
+            <van-radio-group
+              v-model="farmers_details.hasBadAsset"
+              direction="horizontal"
+            >
               <van-radio name="1">有</van-radio>
               <van-radio name="0">无</van-radio>
             </van-radio-group>
@@ -292,7 +298,10 @@
         </van-field>
         <van-field name="radio" label="有无稳定工作：">
           <template #input>
-            <van-radio-group v-model="farmers_details.hasIncome" direction="horizontal">
+            <van-radio-group
+              v-model="farmers_details.hasIncome"
+              direction="horizontal"
+            >
               <van-radio name="1">有</van-radio>
               <van-radio name="0">无</van-radio>
             </van-radio-group>
@@ -300,7 +309,10 @@
         </van-field>
         <van-field name="radio" label="有无过度融资：">
           <template #input>
-            <van-radio-group v-model="farmers_details.hasOverFinace" direction="horizontal">
+            <van-radio-group
+              v-model="farmers_details.hasOverFinace"
+              direction="horizontal"
+            >
               <van-radio name="1">有</van-radio>
               <van-radio name="0">无</van-radio>
             </van-radio-group>
@@ -308,7 +320,10 @@
         </van-field>
         <van-field name="radio" label="有无和睦家庭：">
           <template #input>
-            <van-radio-group v-model="farmers_details.hasHarmonyFamily" direction="horizontal">
+            <van-radio-group
+              v-model="farmers_details.hasHarmonyFamily"
+              direction="horizontal"
+            >
               <van-radio name="1">有</van-radio>
               <van-radio name="0">无</van-radio>
             </van-radio-group>
@@ -316,7 +331,10 @@
         </van-field>
         <van-field name="radio" label="有无不良嗜好：">
           <template #input>
-            <van-radio-group v-model="farmers_details.hasBadAddiction" direction="horizontal">
+            <van-radio-group
+              v-model="farmers_details.hasBadAddiction"
+              direction="horizontal"
+            >
               <van-radio name="1">有</van-radio>
               <van-radio name="0">无</van-radio>
             </van-radio-group>
@@ -1125,16 +1143,29 @@ export default {
       isPopupVisibleWork: false,
       id: "",
       farmers_details: "",
-      prospect_detailsEdit: "",
+      prospect_detailsEdit: {},
     };
   },
-  created() {
+  async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
-    this.editFarmers();
+    await this.editFarmers();
+    this.dic_nation();
   },
 
   methods: {
+    enumData(val, data) {
+      // debugger
+      if (val && data.length > 0) {
+        console.log(this.prospect_details);
+        console.log(data, val);
+        const find = data.find((it) => it.index === val);
+        // debugger
+        return find ? find.text : "";
+      } else {
+        return "";
+      }
+    },
     dic_nation() {
       // 家庭类型
       this.$httpGet({
@@ -1156,8 +1187,8 @@ export default {
       });
     },
     onFamily_type(value) {
-      this.prospect_detailsEdit.type = value.index;
-      this.farmers_details.type = value.text;
+      this.prospect_detailsEdit.type = value['index'];
+      this.farmers_details.type = value['text'];
       this.family_type = false;
     },
     onProperty_situation(value) {
@@ -1283,16 +1314,14 @@ export default {
     closePopupWork() {
       this.isPopupVisibleWork = false;
     },
-    editFarmers() {
-      this.$httpGet({
+    async editFarmers() {
+      const res = await this.$httpGet({
         url: `/api/customersFamily/get/${this.id}`,
         data: {
           id: this.id,
         },
-      }).then((res) => {
-        console.log(res.data);
-        this.farmers_details = res.data;
       });
+      this.farmers_details = res.data;
     },
     modifyResult() {
       this.$httpPut({
