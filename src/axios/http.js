@@ -119,3 +119,22 @@ export function httpPut({
     })
   })
 }
+//delete 
+export function httpDelete({
+  url,
+  data = {},
+  params = {},
+  headers = {}
+}) {
+  return new Promise((resolve, reject) => {
+    axios({
+      url,
+      method: 'delete',
+      data,
+      params,
+      headers
+    }).then(res => {
+      resolve(res.data)
+    })
+  })
+}

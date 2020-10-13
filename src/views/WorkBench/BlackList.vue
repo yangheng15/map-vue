@@ -2,16 +2,20 @@
   <div class="BlackList">
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '黑名单'">
-      <van-search v-model="search_txt" placeholder="客户名称" />
+      <van-search
+        v-model="search_txt"
+        placeholder="客户名称"
+        @search="onSearch"
+      />
       <div class="customer_list">
         <ul>
           <li v-for="(thisItem, index) in black_list" :key="index">
             <router-link
               tag="p"
               :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
-              >{{ thisItem.name }}</router-link
+              >{{ thisItem.customerName }}</router-link
             >
-            <p>{{ thisItem.date }}</p>
+            <p>{{ thisItem.createdTime | transform }}</p>
             <p v-if="thisItem.have == 2" class="schedule_star">
               <van-rate
                 v-model="value"
@@ -42,21 +46,38 @@ export default {
       typeCN: "",
       value: 1,
       search_txt: "",
-      black_list: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          date: "三个月前",
-          id: 1,
-          have: 1,
-        },
-        { name: "刘莎莎", date: "三个月前", id: 2, have: 2 },
-      ],
+      black_list: [],
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.getBlackList();
   },
-  methods: {},
+  methods: {
+    getBlackList() {
+      this.$httpGet({
+        url: "/api/semCustomersBlack/appQuery",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.black_list = res.data;
+      });
+    },
+    onSearch(val) {
+      this.$httpGet({
+        url: "/api/semCustomersBlack/appQuery",
+        params: {
+          limit: 10,
+          page: 1,
+          custName: val,
+        },
+      }).then((res) => {
+        this.black_list = res.data;
+      });
+    },
+  },
   mounted() {},
 };
 </script>

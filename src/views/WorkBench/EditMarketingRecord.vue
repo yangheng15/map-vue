@@ -98,6 +98,15 @@
             />
           </van-popup>
           <van-field
+            v-model="editRecords.marketAmount"
+            rows="2"
+            autosize
+            label="金额"
+            type="number"
+            placeholder="请填写金额"
+            show-word-limit
+          />
+          <van-field
             v-model="editRecords.actualDemand"
             rows="2"
             autosize
@@ -296,6 +305,7 @@ export default {
           semType: this.editRecords.semType,
           intention: this.editRecords.intention,
           actualDemand: this.editRecords.actualDemand,
+          marketAmount: this.editRecords.marketAmount,
           remark: this.editRecords.remark,
           feedback: this.editRecords.feedback,
         },

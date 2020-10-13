@@ -72,6 +72,15 @@
             />
           </van-popup>
           <van-field
+            v-model="market_amount"
+            rows="2"
+            autosize
+            label="营销金额"
+            type="number"
+            placeholder="请填写营销金额"
+            show-word-limit
+          />
+          <van-field
             v-model="actual_demand"
             rows="2"
             autosize
@@ -187,6 +196,7 @@ export default {
       ],
       showMarketing_methods: false,
       actual_demand: "",
+      market_amount: "",
       remarks: "",
       customer_feedback: "",
       competitor: "",
@@ -245,6 +255,7 @@ export default {
           intention: this.Customer_intention_txt.index,
           semType: this.Marketing_methods_txt.index,
           actualDemand: this.actual_demand,
+          marketAmount: this.market_amount,
           remark: this.remarks,
           feedback: this.customer_feedback,
         },

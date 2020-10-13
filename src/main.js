@@ -10,7 +10,8 @@ import BaiduMap from 'vue-baidu-map'
 import {
   httpPost,
   httpGet,
-  httpPut
+  httpPut,
+  httpDelete
 } from '@/axios/http';
 // 全局注册
 
@@ -28,6 +29,7 @@ Vue.use(VueAMap);
 Vue.prototype.$httpGet = httpGet;
 Vue.prototype.$httpPost = httpPost;
 Vue.prototype.$httpPut = httpPut;
+Vue.prototype.$httpDelete = httpDelete;
 // //引入地图
 // VueAMap.initAMapApiLoader({
 //   key: 'your amap key',

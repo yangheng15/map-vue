@@ -23,7 +23,7 @@
             <p v-if="!thisItem.updatedTime">最近暂无联系</p>
             <p class="schedule_star">
               <van-rate
-                v-model="value"
+                v-model="thisItem.starRating"
                 :size="14"
                 color="#ffd21e"
                 void-icon="star"

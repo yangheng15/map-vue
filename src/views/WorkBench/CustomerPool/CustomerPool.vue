@@ -23,9 +23,13 @@
             v-model="thisItem.id"
             shape="square"
           ></van-checkbox> -->
-          <p class="selctBtn">
-            <img style="width: 20px;" src="../../../assets/WorkBench/empty_heart.svg" alt="">
-            </p>
+          <p class="selctBtn" @click="joinCust">
+            <img
+              style="width: 20px"
+              src="../../../assets/WorkBench/empty_heart.svg"
+              alt=""
+            />
+          </p>
           <li class="newCustomerList" style="width: 100%">
             <router-link
               tag="p"
@@ -36,7 +40,7 @@
             <p style="width: 1%"></p>
             <p class="schedule_star">
               <van-rate
-                v-model="value"
+                v-model="thisItem.star"
                 :size="18"
                 color="#0078D7"
                 void-icon="star"
@@ -44,18 +48,18 @@
                 readonly
               />
             </p>
-            <p style="color: #df0f0f">{{ thisItem.text }}</p>
-            <p style="color: #1badf2">{{ thisItem.platinum_customers }}</p>
+            <p style="color: #df0f0f">AUM:{{ thisItem.aum }}</p>
+            <p style="color: #1badf2">{{ levelName }}客户</p>
             <p class="marter">
-              <span v-if="thisItem.business1" class="business1">{{
-                thisItem.business1
-              }}</span>
-              <span v-if="thisItem.business2" class="business2">{{
-                thisItem.business2
-              }}</span>
-              <span v-if="thisItem.business3" class="business3">{{
-                thisItem.business3
-              }}</span>
+              <span v-if="!thisItem.business1" class="business1"
+                >{{ thisItem.business1 }}存款</span
+              >
+              <span v-if="!thisItem.business2" class="business2"
+                >{{ thisItem.business2 }}贷款</span
+              >
+              <span v-if="!thisItem.business3" class="business3"
+                >{{ thisItem.business3 }}理财</span
+              >
             </p>
           </li>
         </ul>
@@ -186,20 +190,9 @@ export default {
       isPopupVisibleScreen: false,
       isPopupVisibleFamily: false,
       text: "本季度",
-      newCustomerList: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          date: "上次联系 三个月前",
-          business1: "存款",
-          business2: "贷款",
-          business3: "理财",
-          text: "AUM:300万",
-          id: 1,
-          platinum_customers: "铂金客户",
-          key_customers: "重点客户 ",
-          back: "退回",
-        },
-      ],
+      level: "",
+      levelName: "",
+      customerCode: "",
       customer_pool_pop: [
         {
           name: "20001",
@@ -212,43 +205,72 @@ export default {
           id: 1,
         },
       ],
-      customer_pool: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          business1: "存款",
-          business2: "贷款",
-          business3: "理财",
-          text: "AUM:300万",
-          id: 0,
-          platinum_customers: "铂金客户",
-        },
-        {
-          name: "刘莎莎",
-          business1: "存款",
-          business3: "理财",
-          text: "AUM:300万",
-          id: 1,
-          platinum_customers: "普惠金融",
-        },
-      ],
+      customer_pool: [],
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.getCustomerPool();
   },
   methods: {
     onGrid_theme(value) {
       this.grid_theme_txt = value;
       this.grid_theme = false;
     },
-    onSearch(val) {
-      Toast(val);
-    },
     showPopup() {
       this.isPopupVisible = true;
     },
     closePopup() {
       this.isPopupVisible = false;
+    },
+    getCustomerPool() {
+      this.$httpGet({
+        url: "/api/customerPool/app",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.customer_pool = res.data;
+        this.customer_pool.forEach((it) => {
+          this.level = it.level;
+          this.customerCode = it.code;
+        });
+        if (this.level) {
+          this.getdic();
+        }
+      });
+    },
+    getdic() {
+      this.$httpGet({
+        url: `/dic/dic_client_grade/${this.level}`,
+      }).then((res) => {
+        console.log(res.data);
+        this.levelName = res.data.codeText;
+      });
+    },
+    onSearch(val) {
+      this.$httpGet({
+        url: "/api/customerPool/app",
+        params: {
+          limit: 10,
+          page: 1,
+          name: val,
+        },
+      }).then((res) => {
+        this.customer_pool = res.data;
+      });
+    },
+    joinCust() {
+      console.log(this.customerCode);
+      this.$httpPost({
+        url: "/api/customers/joinCust",
+        params: {
+          customerCode: this.customerCode,
+        },
+      }).then((res) => {
+        console.log(res);
+      }).catch(() => {});
     },
   },
 };

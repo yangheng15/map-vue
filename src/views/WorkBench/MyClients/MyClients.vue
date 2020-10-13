@@ -12,7 +12,11 @@
           <div @click="$router.push('/PutRecord/?title=筛选')">筛选</div>
         </template>
       </van-search>
-      <div class="customer_list">
+      <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">网格客户</li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">关注客户</li>
+      </ul>
+      <div v-show="tabId === 0" class="customer_list">
         <ul v-for="(thisItem, index) in newCustomerList" :key="index">
           <li class="newCustomerList">
             <router-link
@@ -21,19 +25,19 @@
               >{{ thisItem.name }}</router-link
             >
             <p>
-              <span v-if="thisItem.business1" class="business1">{{
-                thisItem.business1
-              }}</span>
-              <span v-if="thisItem.business2" class="business2">{{
-                thisItem.business2
-              }}</span>
-              <span v-if="thisItem.business3" class="business3">{{
-                thisItem.business3
-              }}</span>
+              <span v-if="!thisItem.business1" class="business1"
+                >{{ thisItem.business1 }}存款</span
+              >
+              <span v-if="!thisItem.business2" class="business2"
+                >{{ thisItem.business2 }}贷款</span
+              >
+              <span v-if="!thisItem.business3" class="business3"
+                >{{ thisItem.business3 }}理财</span
+              >
             </p>
             <p class="schedule_star">
               <van-rate
-                v-model="value"
+                v-model="thisItem.star"
                 :size="14"
                 color="blue"
                 void-icon="star"
@@ -41,20 +45,53 @@
                 readonly
               />
             </p>
-            <p style="color: #df0f0f">{{ thisItem.text }}</p>
-            <p style="color: #1badf2">{{ thisItem.platinum_customers }}</p>
-            <p>{{ thisItem.date }}</p>
-            <p style="color: #df0f0f">{{ thisItem.key_customers }}</p>
-            <p style="color: #1432e3" @click="showBack()">
-              {{ thisItem.back }}
+            <p style="color: #df0f0f">AUM:{{ thisItem.aum }}</p>
+            <p style="color: #1badf2">{{ levelName }}客户</p>
+            <p>上次联系{{ thisItem.date }}</p>
+            <p v-if="thisItem.isPpoint" style="color: #df0f0f">
+              {{ thisItem.isPpoint ? "重点客户" : "普通客户" }}
             </p>
           </li>
         </ul>
-        <van-dialog
-          v-model="show_back"
-          title="你确定移除吗"
-          show-cancel-button
-        ></van-dialog>
+      </div>
+      <div v-show="tabId === 1" class="customer_list">
+        <ul v-for="(thisItem, index) in newCustomerList1" :key="index">
+          <li class="newCustomerList">
+            <router-link
+              tag="p"
+              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
+              >{{ thisItem.name }}</router-link
+            >
+            <p>
+              <span v-if="!thisItem.business1" class="business1"
+                >{{ thisItem.business1 }}存款</span
+              >
+              <span v-if="!thisItem.business2" class="business2"
+                >{{ thisItem.business2 }}贷款</span
+              >
+              <span v-if="!thisItem.business3" class="business3"
+                >{{ thisItem.business3 }}理财</span
+              >
+            </p>
+            <p class="schedule_star">
+              <van-rate
+                v-model="thisItem.star"
+                :size="14"
+                color="blue"
+                void-icon="star"
+                void-color="#eee"
+                readonly
+              />
+            </p>
+            <p style="color: #df0f0f">AUM:{{ thisItem.aum }}</p>
+            <p style="color: #1badf2">{{ levelName }}客户</p>
+            <p>上次联系{{ thisItem.date }}</p>
+            <p style="color: #df0f0f">
+              {{ thisItem.isPpoint ? "重点客户" : "普通客户" }}
+            </p>
+            <p style="color: #1432e3" @click="showBack()">移除</p>
+          </li>
+        </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       <div v-show="isPopupVisibleScreen" class="isPopupVisibleSign">
@@ -298,6 +335,7 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
+import { Dialog } from "vant";
 export default {
   name: "MyClients",
   components: {
@@ -312,27 +350,17 @@ export default {
       date: "",
       date1: "",
       show: false,
-      show_back: false,
       active: false,
       isPopupVisible: false,
       isPopupVisibleScreen: false,
       isPopupVisibleFamily: false,
       checkAllFlag: false,
       text: "本季度",
-      newCustomerList: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          date: "上次联系 三个月前",
-          business1: "存款",
-          business2: "贷款",
-          business3: "理财",
-          text: "AUM:300万",
-          id: 1,
-          platinum_customers: "铂金客户",
-          key_customers: "重点客户 ",
-          back: "移除",
-        },
-      ],
+      tabId: 0,
+      level: "",
+      levelName: "",
+      newCustomerList: [],
+      newCustomerList1: [],
     };
   },
   created() {
@@ -340,6 +368,29 @@ export default {
     this.getMyClients();
   },
   methods: {
+    tab(ev) {
+      this.tabId = ev;
+      if (ev == 1) {
+        this.$httpGet({
+          url: "/api/customer/appOwnerClaim",
+          params: {
+            limit: 10,
+            page: 1,
+          },
+        }).then((res) => {
+          console.log(res.data);
+          this.newCustomerList1 = res.data;
+        });
+      }
+    },
+    getdic() {
+      this.$httpGet({
+        url: `/dic/dic_client_grade/${this.level}`,
+      }).then((res) => {
+        console.log(res.data);
+        this.levelName = res.data.codeText;
+      });
+    },
     onSearch(val) {
       Toast(val);
     },
@@ -350,8 +401,20 @@ export default {
       this.isPopupVisibleScreen = false;
     },
     showBack() {
-      this.show_back = true;
-      console.log(111);
+      Dialog.confirm({
+        title: "你确定移除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customers/removeCust",
+            params: {
+              customerCodes: this.newCustomerList.name,
+            },
+          }).then((res) => {
+            console.log(res.data);
+          });
+        })
+        .catch(() => {});
     },
     getMyClients() {
       this.$httpGet({
@@ -361,7 +424,15 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res);
+        console.log(res.data);
+        this.newCustomerList = res.data;
+        this.newCustomerList.forEach((it) => {
+          this.level = it.level;
+        });
+        console.log(this.level);
+        if (this.level) {
+          this.getdic();
+        }
       });
     },
   },
@@ -382,6 +453,19 @@ export default {
 }
 .MyClients {
   padding-top: 46px;
+}
+.time_frame {
+  height: 2rem;
+  line-height: 1.5rem;
+  background-color: #fff;
+  margin: 0.3rem;
+  display: flex;
+  padding: 0rem 1rem;
+  justify-content: space-around;
+}
+.cur {
+  color: #df0f0f;
+  position: relative;
 }
 /* 下面是弹窗 */
 .isPopupVisibleSign {
