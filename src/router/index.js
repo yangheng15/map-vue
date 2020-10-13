@@ -66,6 +66,8 @@ const AddPotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers
 const EditPotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/EditPotentialCustomers.vue');
 // 客户池
 const CustomerPool = () => import('@/views/WorkBench/CustomerPool/CustomerPool.vue');
+// 客户池筛选
+const ScreenCustomerPool = () => import('@/views/WorkBench/CustomerPool/ScreenCustomerPool.vue');
 // 农户
 const PeasantHousehold = () => import('@/views/WorkBench/PeasantHousehold/PeasantHousehold.vue');
 const User = () => import('@/views/User/User.vue');
@@ -246,6 +248,11 @@ const routes = [{
     path: '/CustomerPool',
     name: 'CustomerPool',
     component: CustomerPool,
+  },
+  {
+    path: '/ScreenCustomerPool',
+    name: 'ScreenCustomerPool',
+    component: ScreenCustomerPool,
   },
   {
     path: '/PeasantHousehold',

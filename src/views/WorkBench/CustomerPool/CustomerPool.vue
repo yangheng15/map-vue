@@ -9,7 +9,7 @@
         @search="onSearch"
       >
         <template #action>
-          <div @click="$router.push('/PutRecord/?title=筛选')">筛选</div>
+          <div @click="$router.push('/ScreenCustomerPool/?title=筛选')">筛选</div>
         </template>
       </van-search>
       <div class="customer_list">
@@ -245,7 +245,6 @@ export default {
       this.$httpGet({
         url: `/dic/dic_client_grade/${this.level}`,
       }).then((res) => {
-        console.log(res.data);
         this.levelName = res.data.codeText;
       });
     },
@@ -269,7 +268,6 @@ export default {
           customerCode: this.customerCode,
         },
       }).then((res) => {
-        console.log(res);
       }).catch(() => {});
     },
   },
