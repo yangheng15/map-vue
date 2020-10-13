@@ -3,7 +3,30 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '最近联系'">
       <van-search v-model="search_txt" placeholder="客户名称" />
-      <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
+      <div class="customer_list">
+        <ul>
+          <li v-for="(thisItem, index) in data_customer_list1" :key="index">
+            <router-link
+              tag="p"
+              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
+              >{{ thisItem.name }}</router-link
+            >
+            <p>{{ thisItem.text }}</p>
+            <p class="schedule_star">
+              <van-rate
+                v-model="value"
+                :size="14"
+                color="#ffd21e"
+                void-icon="star"
+                void-color="#eee"
+                readonly
+              />
+            </p>
+            <p>{{ thisItem.date }}</p>
+          </li>
+        </ul>
+      </div>
+      <!-- <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
         <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">三天内</li>
         <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">一周内</li>
         <li @click="tab(2)" :class="tabId == 2 ? 'cur' : ''">两周内</li>
@@ -76,7 +99,7 @@
             <p>{{ thisItem.date }}</p>
           </li>
         </ul>
-      </div>
+      </div> -->
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
     </div>
   </div>

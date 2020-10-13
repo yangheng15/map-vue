@@ -69,7 +69,7 @@
           readonly
           clickable
           name="picker"
-          :value="education_level_txt"
+          :value="education_level_txt.text"
           label="最高学历："
           placeholder="点击选择最高学历"
           @click="education_level = true"
@@ -227,16 +227,7 @@ export default {
       Custome_level: false,
       recommended_products: "",
       education_level_txt: "",
-      education_level_list: [
-        "博士",
-        "硕士",
-        "本科",
-        "大专",
-        "中专",
-        "高中",
-        "初中",
-        "小学",
-      ],
+      education_level_list: [],
       education_level: false,
       choose_gender_txt: "",
       choose_gender_list: ["男", "女"],
@@ -532,9 +523,25 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.dic_nation();
   },
   updated() {},
   methods: {
+      dic_nation() {
+      // 最高学历
+      this.$httpGet({
+        url: "/dic/type/dic_education",
+      }).then((res) => {
+        console.log(res.data);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if(it.parentId !== null) {
+            transformDara.push({index: it.id, text: it.codeText})
+          }
+        })
+        this.education_level_list = transformDara;
+      });
+    },
     onKey_customers(value) {
       this.key_customers_txt = value;
       this.key_customers = false;
@@ -571,7 +578,37 @@ export default {
       console.log("submit", values);
     },
     prev() {
-      this.$router.go(-1);
+      this.$httpGet({
+        url: "/api/customerPool/app",
+        params: {
+          limit: 10,
+          page: 1,
+          name: this.customer_name,
+          code: this.customer_name,
+          branchCode: this.customer_name,
+          isPpoint: this.customer_name,
+          telphone: this.phone_number,
+          identifyNo: this.card_number,
+          wechat: this.weChat,
+          nation: this.nation_txt.index,
+          marriage: this.marital_status_txt.index,
+          gridding: this.regional_grid_txt,
+          workUnit: this.work_unit,
+          connectAddress: this.contact_address,
+          annualIncome: this.annual_income,
+          qq: this.qq_number,
+          education: this.education_level_txt.index,
+          nationality: this.country_txt.index,
+          health: this.health_txt.index,
+          address: this.residential_address,
+          location: this.user_positioning,
+          workAddress: this.work_address,
+          plateNumber: this.car_number,
+        },
+      })
+        .then((res) => {
+          this.$router.go(-1);
+          })
     },
   },
 };

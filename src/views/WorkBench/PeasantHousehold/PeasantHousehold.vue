@@ -2,19 +2,28 @@
   <div class="WorkbenchBranch">
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '农户'">
-      <van-search v-model="search_txt" placeholder="客户名称" />
+      <van-search
+        v-model="search_txt"
+        placeholder="客户名称"
+        @search="onSearch"
+      />
       <div class="customer_list">
-        <router-link
-          tag="ul"
-          :to="{ name: 'CustomerView', query: { title: '农户' } }"
-        >
-          <li v-for="(thisItem, index) in peasant_household" :key="index">
-            <p>{{ thisItem.num }}</p>
-            <p>{{ thisItem.name }}</p>
-            <p>{{ thisItem.text }}</p>
-            <p>{{ thisItem.date }}</p>
-          </li>
-        </router-link>
+        <ul>
+          <router-link
+            tag="li"
+            :to="{
+              name: 'FarmersInformation',
+              query: { title: '农户', id: thisItem.id },
+            }"
+            v-for="(thisItem, index) in peasant_household"
+            :key="index"
+          >
+            <p>{{ thisItem.familyCode }}</p>
+            <p>{{ familyCodeName }}</p>
+            <p>户主：{{ thisItem.houseName }}</p>
+            <p>成员数：{{ thisItem.num }}</p>
+          </router-link>
+        </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       <div
@@ -35,10 +44,24 @@
           <p class="pop_title">添加</p>
           <div class="pop_content">
             <van-field
+              v-model="householder_name"
+              name="户主姓名："
+              label="户主姓名："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写户主姓名' }]"
+            />
+            <!-- <van-field
+              v-model="householder_code"
+              name="家庭户号："
+              label="家庭户号："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写家庭户号' }]"
+            /> -->
+            <van-field
               readonly
               clickable
               name="picker"
-              :value="family_type_txt"
+              :value="family_type_txt.text"
               label="家庭类型："
               placeholder="点击选择家庭类型"
               @click="family_type = true"
@@ -51,42 +74,34 @@
                 @cancel="family_type = false"
               />
             </van-popup>
-            <van-field
-              readonly
-              clickable
-              name="area"
-              :value="regional_grid_txt"
-              label="所属网格："
-              placeholder="点击选择所属网格"
-              @click="regional_grid = true"
-            />
-            <van-popup v-model="regional_grid" position="bottom">
-              <van-area
-                :area-list="areaList"
-                @confirm="onRegional_grid"
-                @cancel="regional_grid = false"
-              />
-            </van-popup>
+            <!-- <van-field
+              v-model="householder_num.text"
+              name="成员数量："
+              label="成员数量："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写成员数量' }]"
+            /> -->
             <van-field
               v-model="residential_address"
-              name="居住地址："
-              label="居住地址："
+              name="详细地址："
+              label="详细地址："
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写居住地址' }]"
+              :rules="[{ required: true, message: '请填写详细地址' }]"
             />
+            <!-- 
             <van-field
               v-model="user_positioning"
               name="经纬度数："
               label="经纬度数："
               placeholder="单行输入"
               :rules="[{ required: true, message: '请填写经纬度数' }]"
-            />
+            /> -->
             <div style="margin-top: 2rem" class="save">
               <van-button
                 style="margin-right: 1rem"
                 round
                 type="primary"
-                @click="closePopupFamily()"
+                @click="addHouseholderName()"
                 >保存</van-button
               >
               <van-button round type="primary" @click="closePopupFamily()"
@@ -101,6 +116,7 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
+import { Toast } from "vant";
 export default {
   name: "WorkbenchBranch",
   components: {
@@ -110,8 +126,11 @@ export default {
     return {
       title: "",
       typeCN: "",
+      householder_name: "",
+      householder_code: "",
+      householder_num: "",
       family_type_txt: "",
-      family_type_list: ["务工，务农", "经营型"],
+      family_type_list: [],
       family_type: false,
       regional_grid_txt: "",
       areaList: {
@@ -187,42 +206,11 @@ export default {
       radio: "1",
       search_txt: "",
       showBdLabel: false,
-      MarketingRecord: [
-        {
-          id: 1,
-          name: "企业贷",
-          text: "支付工具",
-          date: " 2020-08-30日前",
-          text1: "资料采集",
-        },
-        {
-          id: 2,
-          name: "农户家庭",
-          text: "生活缴费",
-          date: "  2020-08-30日前",
-          text1: "产品营销",
-        },
-      ],
       date: "",
       date1: "",
       show: false,
       show_back: false,
       active: false,
-      circlePath: {
-        center: {
-          lng: 114.65,
-          lat: 33.37,
-        },
-        radius: 5000,
-      },
-      polylinePath: [
-        { lng: 114.75, lat: 33.41 },
-        { lng: 114.72, lat: 33.38 },
-        { lng: 114.69, lat: 33.32 },
-        { lng: 114.5, lat: 33.365 },
-        { lng: 114.65, lat: 33.47 },
-        { lng: 114.75, lat: 33.5 },
-      ],
       isPopupVisible: false,
       isPopupVisibleScreen: false,
       isPopupVisibleFamily: false,
@@ -239,135 +227,14 @@ export default {
       isAdd: false,
       isDelete: false,
       tabId: 1,
-      tabId1: 5,
-      show1: false,
-      show2: false,
-      show3: false,
-      show4: false,
-      show5: false,
-      value1: "",
-      value2: "",
-      value3: "",
-      value4: "",
-      value5: "",
-      customer_list: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          text: "上次联系",
-          date: "三个月前",
-          id: 1,
-        },
-        { name: "刘莎莎", text: "上次联系", date: "三个月前", id: 2 },
-      ],
-      data_customer_list1: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          text: "上次联系",
-          date: "一天前",
-          id: 1,
-        },
-        { name: "吴宇迪", text: "上次联系", date: "两天前", id: 2 },
-      ],
-      data_customer_list2: [
-        {
-          name: "刘莎莎",
-          text: "上次联系",
-          date: "五天前",
-          id: 1,
-        },
-      ],
-      data_customer_list3: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          text: "上次联系",
-          date: "一周前",
-          id: 1,
-        },
-        { name: "刘莎莎", text: "上次联系", date: "十三天前", id: 2 },
-      ],
-      black_list: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          date: "三个月前",
-          id: 1,
-          have: 1,
-        },
-        { name: "刘莎莎", date: "三个月前", id: 2, have: 2 },
-      ],
-      knowledge: [
-        {
-          name: "营销网格",
-          date: "发布时间:2020-08-24",
-          id: 1,
-        },
-        { name: "企业贷", date: "发布时间:2020-08-24", id: 2 },
-      ],
-      newCustomerList: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          date: "上次联系 三个月前",
-          business1: "存款",
-          business2: "贷款",
-          business3: "理财",
-          text: "AUM:300万",
-          id: 1,
-          platinum_customers: "铂金客户",
-          key_customers: "重点客户 ",
-          back: "退回",
-        },
-      ],
-      customer_pool_pop: [
-        {
-          name: "20001",
-          text: "世纪广场etc开通",
-          id: 0,
-        },
-        {
-          name: "10001",
-          text: "柳芳社区etc开通",
-          id: 1,
-        },
-      ],
-      customer_pool: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          business1: "存款",
-          business2: "贷款",
-          business3: "理财",
-          text: "AUM:300万",
-          id: 0,
-          platinum_customers: "铂金客户",
-        },
-        {
-          name: "刘莎莎",
-          business1: "存款",
-          business3: "理财",
-          text: "AUM:300万",
-          id: 1,
-          platinum_customers: "普惠金融",
-        },
-      ],
-      peasant_household: [
-        {
-          num: "202008290001001",
-          name: "务工、务工型",
-          text: "户主：张燕",
-          date: "成员数：6",
-        },
-      ],
-      customer_list2: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          text: "1",
-          date: "张三丰·总行营业部",
-        },
-        { name: "刘莎莎", text: "2", date: "张三丰·总行营业部" },
-        { name: "刘莎莎", text: "3", date: "张三丰·总行营业部" },
-      ],
+      peasant_household: [],
+      familyCode: "",
+      familyCodeName: "",
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.getFamily();
   },
   methods: {
     onFamily_type(value) {
@@ -377,9 +244,6 @@ export default {
     onRegional_grid(values) {
       this.regional_grid_txt = values.map((item) => item.name).join("/");
       this.regional_grid = false;
-    },
-    onSearch(val) {
-      Toast(val);
     },
     showPopup() {
       this.isPopupVisible = true;
@@ -392,6 +256,73 @@ export default {
     },
     closePopupFamily() {
       this.isPopupVisibleFamily = false;
+    },
+    getFamily() {
+      this.$httpGet({
+        url: "/api/customersFamily/app",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.peasant_household = res.data;
+        this.peasant_household.forEach((it) => {
+          this.familyCode = it.type;
+        });
+        this.getDic();
+      });
+    },
+    onSearch(val) {
+      this.$httpGet({
+        url: "/api/customersFamily/app",
+        params: {
+          limit: 10,
+          page: 1,
+          houseName: val,
+        },
+      }).then((res) => {
+        this.peasant_household = res.data;
+      });
+    },
+    getDic() {
+      this.$httpGet({
+        url: `/dic/dic_family_type/${this.familyCode}`,
+      }).then((res) => {
+        console.log(res.data);
+        this.familyCodeName = res.data.codeText;
+      });
+      this.$httpGet({
+        url: "/dic/type/dic_family_type",
+      }).then((res) => {
+        console.log(res.data);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.code !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.family_type_list = transformDara;
+      });
+    },
+    addHouseholderName() {
+      this.$httpPost({
+        url: "/api/customersFamily/add",
+        data: {
+          houseName: this.householder_name,
+          type: this.family_type_txt.index,
+          address: this.residential_address,
+        },
+      }).then((res) => {
+        console.log(res);
+        // this.resultCode = res.data.code;
+        this.isPopupVisibleFamily = false;
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
+        this.getFamily();
+      });
     },
   },
 };

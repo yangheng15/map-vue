@@ -89,7 +89,7 @@
             <p style="color: #df0f0f">
               {{ thisItem.isPpoint ? "重点客户" : "普通客户" }}
             </p>
-            <p style="color: #1432e3" @click="showBack()">移除</p>
+            <p style="color: #1432e3" @click="showBack(thisItem.code)">移除</p>
           </li>
         </ul>
       </div>
@@ -371,17 +371,20 @@ export default {
     tab(ev) {
       this.tabId = ev;
       if (ev == 1) {
-        this.$httpGet({
-          url: "/api/customer/appOwnerClaim",
-          params: {
-            limit: 10,
-            page: 1,
-          },
-        }).then((res) => {
-          console.log(res.data);
-          this.newCustomerList1 = res.data;
-        });
+        this.getFollow();
       }
+    },
+    getFollow() {
+      this.$httpGet({
+        url: "/api/customer/appOwnerClaim",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.newCustomerList1 = res.data;
+      });
     },
     getdic() {
       this.$httpGet({
@@ -400,7 +403,7 @@ export default {
     closePopupScreen() {
       this.isPopupVisibleScreen = false;
     },
-    showBack() {
+    showBack(code) {
       Dialog.confirm({
         title: "你确定移除吗",
       })
@@ -408,11 +411,13 @@ export default {
           this.$httpDelete({
             url: "/api/customers/removeCust",
             params: {
-              customerCodes: this.newCustomerList.name,
+              customerCodes: code,
             },
-          }).then((res) => {
-            console.log(res.data);
-          });
+          })
+            .then((res) => {
+              this.getMyClients();
+            })
+            .catch(() => {});
         })
         .catch(() => {});
     },

@@ -1653,7 +1653,7 @@ export default {
       this.property_situation_txt = value;
       this.property_situation = false;
     },
-    onrelationship_householder(value) {
+    onRelationship_householder(value) {
       this.relationship_householder_txt = value;
       this.relationship_householder = false;
     },
@@ -1807,9 +1807,6 @@ export default {
     closePopupWork() {
       this.isPopupVisibleWork = false;
     },
-  },
-  beforeDestroy() {
-    cancel();
   },
 };
 </script>

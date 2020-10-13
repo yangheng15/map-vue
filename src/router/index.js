@@ -70,6 +70,8 @@ const CustomerPool = () => import('@/views/WorkBench/CustomerPool/CustomerPool.v
 const ScreenCustomerPool = () => import('@/views/WorkBench/CustomerPool/ScreenCustomerPool.vue');
 // 农户
 const PeasantHousehold = () => import('@/views/WorkBench/PeasantHousehold/PeasantHousehold.vue');
+// 农户信息
+const FarmersInformation = () => import('@/views/WorkBench/PeasantHousehold/FarmersInformation.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -258,6 +260,11 @@ const routes = [{
     path: '/PeasantHousehold',
     name: 'PeasantHousehold',
     component: PeasantHousehold,
+  },
+  {
+    path: '/FarmersInformation',
+    name: 'FarmersInformation',
+    component: FarmersInformation,
   },
   {
     path: '/User',
