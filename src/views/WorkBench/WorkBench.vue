@@ -70,17 +70,16 @@
           </span>
           <p class="function_name">客户认领</p>
         </router-link> -->
-        <router-link
+        <!-- <router-link
           tag="div"
           class="function_men"
           :to="{ name: 'BlackList', query: { title: '黑名单' } }"
         >
           <span class="c-link-card" style="background: #d90bb2">
             <img src="../../assets/WorkBench/heimingdan.svg" alt />
-            <!-- <span v-if="countsMap.grief>0">{{countsMap.grief}}</span> -->
           </span>
           <p class="function_name">黑名单</p>
-        </router-link>
+        </router-link> -->
       </div>
     </div>
     <div style="margin-top: 10px">

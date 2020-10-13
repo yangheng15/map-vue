@@ -368,6 +368,13 @@ export default {
     this.getMyClients();
   },
   methods: {
+    selectData() {
+      if (this.tabId) {
+
+      } else {
+
+      }
+    },
     tab(ev) {
       this.tabId = ev;
       if (ev == 1) {
@@ -407,18 +414,18 @@ export default {
       Dialog.confirm({
         title: "你确定移除吗",
       })
-        .then(() => {
-          this.$httpDelete({
-            url: "/api/customers/removeCust",
-            params: {
-              customerCodes: code,
-            },
-          })
-            .then((res) => {
-              this.getMyClients();
-            })
-            .catch(() => {});
+      .then(() => {
+        this.$httpDelete({
+          url: "/api/customers/removeCust",
+          params: {
+            customerCodes: code,
+          },
         })
+        .then((res) => {
+          this.getFollow()
+        })
+        .catch(() => {});
+      })
         .catch(() => {});
     },
     getMyClients() {

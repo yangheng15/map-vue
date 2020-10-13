@@ -571,7 +571,7 @@
         <van-button round block type="primary" @click="prev()">保存</van-button>
       </div>
     </div>
-    <!-- <div v-if="typeCN=='筛选'">
+    <div v-if="typeCN=='筛选'">
       <van-form @submit="onSubmit">
         <van-field
           v-model="screen_name"
@@ -747,7 +747,7 @@
           <van-button round block type="primary" @click="prev()">查询</van-button>
         </div>
       </van-form>
-    </div> -->
+    </div>
     <div v-if="typeCN=='农户家庭添加'">
       <ul class="stock cw_stock peasant_households">
         <li>*家庭类型：</li>

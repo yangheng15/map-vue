@@ -153,13 +153,18 @@
         <div style="width: 99%; margin: 0.5rem auto">
           <baidu-map
             class="bm-view"
-            :center="{ lng: 114.65, lat: 33.37 }"
-            :zoom="12"
+            :center="{ lng: 114.6, lat: 33.6}"
+            :zoom="14"
             ak="YOUR_APP_KEY"
           >
             <bm-marker
-              :position="{ lng: 114.73, lat: 33.38 }"
-              :icon="{ url: con1, size: { width: 50, height: 50 } }"
+              :dragging="true"
+              :position="{ lng: 114.6, lat: 33.6 }"
+              @dragend="markerDragend"
+              :icon="{
+                url: require('../../../assets/grid/location_map.svg'),
+                size: { width: 30, height: 30 },
+              }"
             ></bm-marker>
           </baidu-map>
         </div>
@@ -1154,6 +1159,11 @@ export default {
   },
 
   methods: {
+    markerDragend({ point }) {
+      console.log(point);
+      const { lng, lat } = point;
+      this.farmers_details.location = `${lng},${lat}`;
+    },
     enumData(val, data) {
       // debugger
       if (val && data.length > 0) {
@@ -1322,22 +1332,34 @@ export default {
         },
       });
       this.farmers_details = res.data;
+      this.prospect_detailsEdit.type = res.data.type;
     },
     modifyResult() {
       this.$httpPut({
-        url: "/api/customersPotential/update",
+        url: "/api/customersFamily/update",
         data: {
           id: this.id,
-          houseName: this.farmers_details.houseName,
           familyCode: this.farmers_details.familyCode,
+          houseName: this.farmers_details.houseName,
+          type: this.prospect_detailsEdit.type,
+          num: this.farmers_details.num,
           houseProperty: this.farmers_details.houseProperty,
           cars: this.farmers_details.cars,
-          type: this.prospect_detailsEdit.type,
+          
           rufsBehalf: this.farmers_details.rufsBehalf,
           rufsAmount: this.farmers_details.rufsAmount,
           creditBehalf: this.farmers_details.creditBehalf,
-          num: this.farmers_details.num,
+          
           membersEvaluate: this.farmers_details.membersEvaluate,
+          address: this.farmers_details.address,
+          telphone: this.farmers_details.telphone,
+          location: this.farmers_details.location,
+          hasFixPlace: this.farmers_details.hasFixPlace,
+          hasBadAsset: this.farmers_details.hasBadAsset,
+          hasIncome: this.farmers_details.hasIncome,
+          hasOverFinace: this.farmers_details.hasOverFinace,
+          hasHarmonyFamily: this.farmers_details.hasHarmonyFamily,
+          hasBadAddiction: this.farmers_details.hasBadAddiction,
         },
       })
         .then((res) => {
@@ -1372,6 +1394,9 @@ export default {
   border-bottom: 0.001rem solid #e8e8e8;
   justify-content: space-between;
   padding: 0rem 1rem;
+}
+.van-radio__icon{
+  height: 1.25rem;
 }
 input {
   border-radius: 0.3rem;

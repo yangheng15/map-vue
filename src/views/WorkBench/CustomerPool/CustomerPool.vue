@@ -9,7 +9,9 @@
         @search="onSearch"
       >
         <template #action>
-          <div @click="$router.push('/ScreenCustomerPool/?title=筛选')">筛选</div>
+          <div @click="$router.push('/ScreenCustomerPool/?title=筛选')">
+            筛选
+          </div>
         </template>
       </van-search>
       <div class="customer_list">
@@ -23,11 +25,10 @@
             v-model="thisItem.id"
             shape="square"
           ></van-checkbox> -->
-          <p class="selctBtn" @click="joinCust(thisItem.code)">
+          <p class="selctBtn" @click="joinCust(thisItem)">
             <img
               style="width: 20px"
-              src="../../../assets/WorkBench/empty_heart.svg"
-              alt=""
+              :src="thisItem.flag ? imgArr[0] : imgArr[1]"
             />
           </p>
           <li class="newCustomerList" style="width: 100%">
@@ -165,6 +166,8 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
+let img1 = require('../../../assets/WorkBench/empty_heart.svg'),
+    img2 = require('../../../assets/WorkBench/full_heart.svg');
 export default {
   name: "CustomerPool",
   components: {
@@ -206,6 +209,8 @@ export default {
         },
       ],
       customer_pool: [],
+      empty_heart: true,
+      imgArr: [img1, img2]
     };
   },
   created() {
@@ -260,15 +265,21 @@ export default {
         this.customer_pool = res.data;
       });
     },
-    joinCust(code) {
+    joinCust(item) {
       console.log(this.customerCode);
+      item.flag = !item.flag
       this.$httpPost({
         url: "/api/customers/joinCust",
         params: {
-          customerCode: code,
+          customerCode: item.code,
         },
-      }).then((res) => {
-      }).catch(() => {});
+      })
+        .then((res) => {
+          console.log(code);
+          this.empty_heart = !this.empty_heart;
+          console.log(this.empty_heart);
+        })
+        .catch(() => {});
     },
   },
 };
