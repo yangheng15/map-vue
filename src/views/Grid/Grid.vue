@@ -5,6 +5,49 @@
       v-model="searchVal"
       placeholder="网格名称、客户名称、资源名称"
     />
+    <van-popup v-model="showPopup" position="top" :style="{ height: '30%' }">
+      <resource-selection @resourceEmit="resourceEmit" />
+    </van-popup>
+    <van-popup v-model="introduce">
+      <div class="Popup_introduce">
+        <p class="pop_title">
+          网格信息
+          <img
+            src="../../assets/grid/pop_close.svg"
+            @touchstart="overlayClose()"
+          />
+        </p>
+        <div class="pop_content">
+          <p>所属机构：{{ table.orgName }}</p>
+          <p>网格经理：{{ table.principalName }}</p>
+          <p>认领日期：{{ table.allocateTime | transform }}</p>
+          <p>客户数量：{{ table.customer_num }}</p>
+          <!-- <p>人口数量：{{ table.population_num }}</p> -->
+          <p>营销状态：{{ table.status }}</p>
+        </div>
+        <div style="margin-top: 1.5rem" class="save">
+          <van-button
+            style="
+              margin-right: 1rem;
+              border-radius: 0.3rem;
+              background: #df0f0f;
+            "
+            :disabled="Boolean(table.principalName)"
+            type="primary"
+            @touchstart="clickClaim(table)"
+            >认领</van-button
+          >
+          <van-button
+            style="border-radius: 0.3rem; background: #0fb38f"
+            :disabled="!Boolean(table.principalName)"
+            ref="goback"
+            type="primary"
+            @touchstart="clickBack(table)"
+            >归还</van-button
+          >
+        </div>
+      </div>
+    </van-popup>
     <baidu-map
       class="bm-view"
       @ready="mapReady"
@@ -38,7 +81,7 @@
       </template>
 
       <!-- 弹窗 -->
-      <bm-overlay
+      <!-- <bm-overlay
         v-if="introduce"
         pane="labelPane"
         :class="{ sampleAlert: true }"
@@ -57,7 +100,6 @@
             <p>网格经理：{{ table.principalName }}</p>
             <p>认领日期：{{ table.allocateTime | transform }}</p>
             <p>客户数量：{{ table.customer_num }}</p>
-            <!-- <p>人口数量：{{ table.population_num }}</p> -->
             <p>营销状态：{{ table.status }}</p>
           </div>
           <div style="margin-top: 1.5rem" class="save">
@@ -82,7 +124,7 @@
             >
           </div>
         </div>
-      </bm-overlay>
+      </bm-overlay> -->
 
       <!-- <bm-info-window
           :position="typeIdsItem.position"
@@ -193,12 +235,9 @@
 
     <!-- 右侧图标 -->
     <div class="resource map_marker">
-      <router-link
-        tag="p"
-        :to="{ name: 'ResourceSelection', query: { title: '资源选择' } }"
-      >
+      <p @click="showPopup = true">
         <img src="../../assets/grid/resource.svg" alt />
-      </router-link>
+      </p>
       <p @click="markerTure = true">
         <img src="../../assets/grid/sign.svg" alt />
       </p>
@@ -316,12 +355,14 @@ import MyOverlay from "./MyOverlay";
 import MyNav from "../../components/Public/MyNav";
 import myTabbar from "../../components/Public/MyTabbar";
 import { Toast } from "vant";
+import resourceSelection from "./ResourceSelection";
 export default {
   name: "Grid",
   components: {
     MyNav,
     MyOverlay,
     myTabbar,
+    resourceSelection,
   },
   data() {
     return {
@@ -360,10 +401,10 @@ export default {
       typeIdsAlert: false,
       eyeMe: true,
       redFlagPostionArr: [],
+      showPopup: false,
     };
   },
   created() {
-    this.typeIds = this.$route.params.typeIds;
     this.pathIds = this.$route.params.pathIds;
     if (this.pathIds) {
       this.pathIds.forEach((it) => {
@@ -375,14 +416,19 @@ export default {
       console.log(this.polylinePath);
     }
     // console.log(this.pathIds);
-    if (this.typeIds) {
-      this.queryResources();
-    }
+
     this.specialSubject = this.$route.params.specialSubject;
     this.owner = this.$route.params.owner;
     // this.eyeTrueFalse()
   },
   methods: {
+    resourceEmit(data) {
+      this.typeIds = data.typeIds;
+      if (this.typeIds) {
+        this.queryResources();
+      }
+      this.showPopup = false;
+    },
     mapPlaning(BMap, map) {
       this.$httpGet({
         url: "/api/mapPlaningByApp/query",
@@ -643,8 +689,11 @@ export default {
       // console.log("submit", values);
       //显示红旗
       this.markerTure = false;
-      const posArr = this.signData.sign_position.split(','); 
-      this.redFlagPostionArr.push({postion: { lng: posArr[0], lat: posArr[1]}, text: this.signData.sign_name});
+      const posArr = this.signData.sign_position.split(",");
+      this.redFlagPostionArr.push({
+        postion: { lng: posArr[0], lat: posArr[1] },
+        text: this.signData.sign_name,
+      });
       console.log(this.redFlagPostionArr);
 
       const code = this.filterData.find(
@@ -662,7 +711,7 @@ export default {
           mark: this.signData.marked_or_not_txt,
           description: this.signData.sign_remarks,
           type: code,
-          position: this.signData.sign_position
+          position: this.signData.sign_position,
         },
       }).then((res) => {
         this.isPopupVisibleSign = false;

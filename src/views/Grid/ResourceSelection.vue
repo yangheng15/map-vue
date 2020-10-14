@@ -1,7 +1,7 @@
 <template>
   <div class="ResourceSelection">
-    <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN == '资源选择'">
+    <!-- <child-nav :title="typeCN"></child-nav> -->
+    <div>
       <!-- <van-search v-model="value" placeholder="网格名称、客户名称、资源名称" /> -->
       <!-- <div class="resource_selection">
         <p>任务</p>
@@ -100,11 +100,12 @@ export default {
   },
   methods: {
     back() {
-      console.log(this.resultArr.join(","));
-      this.$router.push({
-        name: "Grid",
-        params: { typeIds: this.resultArr.join(",") },
-      });
+      this.$emit('resourceEmit', { typeIds: this.resultArr.join(",") })
+      // console.log(this.resultArr.join(","));
+      // this.$router.push({
+      //   name: "Grid",
+      //   params: { typeIds: this.resultArr.join(",") },
+      // });
     },
     async obtainDic() {
       this.$httpGet({
