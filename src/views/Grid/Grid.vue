@@ -5,7 +5,7 @@
       v-model="searchVal"
       placeholder="网格名称、客户名称、资源名称"
     />
-    <van-popup v-model="showPopup" position="top" :style="{ height: '30%' }">
+    <van-popup v-model="showPopup" position="top" >
       <resource-selection @resourceEmit="resourceEmit" />
     </van-popup>
     <van-popup v-model="introduce">
@@ -425,6 +425,7 @@ export default {
     resourceEmit(data) {
       this.typeIds = data.typeIds;
       if (this.typeIds) {
+        this.map.clearOverlays()
         this.queryResources();
       }
       this.showPopup = false;
@@ -473,7 +474,7 @@ export default {
       }
       this.eyeMe = !this.eyeMe;
     },
-    queryResources(BMap, map) {
+    queryResources() {
       this.$httpGet({
         url: "/api/resourceType/query",
         params: {
@@ -485,9 +486,9 @@ export default {
         this.typeIdsData.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
-        map && this.createPolygon(map);
+        this.createPolygon(this.map);
         //创建infowindow
-        map && this.createInfoWindow(map);
+        this.createInfoWindow(this.map);
       });
     },
     createInfoWindow(map) {
@@ -542,11 +543,10 @@ export default {
       this.introduce = false;
     },
     mapReady({ BMap, map }) {
+      this.map = map;
       //添加多边形覆盖物
       if (this.specialSubject || this.owner) {
         this.resource_selection(BMap, map);
-      } else if (this.typeIds) {
-        this.queryResources(BMap, map);
       } else {
         this.mapPlaning(BMap, map);
       }
