@@ -13,6 +13,7 @@
       ak="YOUR_APP_KEY"
     >
       <template v-for="(item, index) in map_data">
+        <!-- 网格经理网格名称 -->
         <my-overlay
           :key="index"
           :show="true"
