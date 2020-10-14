@@ -74,6 +74,8 @@ const PeasantHousehold = () => import('@/views/WorkBench/PeasantHousehold/Peasan
 const FarmersInformation = () => import('@/views/WorkBench/PeasantHousehold/FarmersInformation.vue');
 // 农户成员详情
 const FarmerMemberDetails = () => import('@/views/WorkBench/PeasantHousehold/FarmerMemberDetails.vue');
+// 农户资产负债详情
+const AssetsLiabilitiesDetail = () => import('@/views/WorkBench/PeasantHousehold/AssetsLiabilitiesDetail.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -272,6 +274,11 @@ const routes = [{
     path: '/FarmerMemberDetails',
     name: 'FarmerMemberDetails',
     component: FarmerMemberDetails,
+  },
+  {
+    path: '/AssetsLiabilitiesDetail',
+    name: 'AssetsLiabilitiesDetail',
+    component: AssetsLiabilitiesDetail,
   },
   {
     path: '/User',

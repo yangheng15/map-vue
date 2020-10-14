@@ -487,13 +487,30 @@
           :key="index"
         >
           <div style="margin-bottom: 0.5rem">
-            <p style="color: #000; font-weight: 550">{{ thisItem.name }}</p>
+            <router-link
+              tag="p"
+              :to="{
+                name: 'AssetsLiabilitiesDetail',
+                query: {
+                  title: '农户资产负债详情',
+                  id: thisItem.id,
+                  familyCode: thisItem.familyCode,
+                },
+              }"
+              style="color: #000; font-weight: 550"
+            >
+              {{ thisItem.name }}
+              <span v-if="thisItem.type === 1" class="approval_Passed"
+                >资产</span
+              >
+              <span v-if="thisItem.type === 2" class="approval_Passed1"
+                >负债</span
+              >
+            </router-link>
             <p>清查日期：{{ thisItem.checkTime | transform }}</p>
           </div>
           <p>评估价值（万元）：{{ thisItem.amount }}</p>
-          <p class="delete">删除</p>
-          <span v-if="thisItem.id === 1" class="approval_Passed">资产</span>
-          <span v-if="thisItem.id === 2" class="approval_Passed1">负债</span>
+          <p class="delete" @click="deleteFamilyAssets(thisItem.id)">删除</p>
         </div>
         <span class="add_record" @click="showPopupAssets()">+</span>
         <div
@@ -524,7 +541,7 @@
               readonly
               clickable
               name="picker"
-              :value="select_type_txt"
+              :value="select_type_txt.text"
               label="类型："
               placeholder="点击选择类型"
               @click="select_type = true"
@@ -532,12 +549,28 @@
             <van-popup v-model="select_type" position="bottom">
               <van-picker
                 show-toolbar
-                :columns="select_type_list.text"
+                :columns="select_type_list"
                 @confirm="onSelect_type"
                 @cancel="select_type = false"
               />
             </van-popup>
             <van-field
+              v-if="select_type_txt.index == 1"
+              v-model="asset_type_txt"
+              name="资产类型："
+              label="资产类型："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写资产类型' }]"
+            />
+            <van-field
+              v-if="select_type_txt.index !== 1"
+              v-model="asset_type_txt"
+              name="负债类型："
+              label="负债类型："
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写负债类型' }]"
+            />
+            <!-- <van-field
               readonly
               clickable
               name="picker"
@@ -570,8 +603,9 @@
                 @confirm="onDebt_type"
                 @cancel="debt_type = false"
               />
-            </van-popup>
+            </van-popup> -->
             <van-field
+              v-if="select_type_txt.index == 1"
               v-model="evaluation_value"
               name="评估价值："
               label="评估价值："
@@ -579,7 +613,8 @@
               :rules="[{ required: true, message: '请填写评估价值' }]"
             />
             <van-field
-              v-model="amount_liabilities"
+              v-if="select_type_txt.index !== 1"
+              v-model="evaluation_value"
               name="负债金额："
               label="负债金额："
               placeholder="单行输入"
@@ -595,6 +630,8 @@
               placeholder="请输入年收入"
               show-word-limit
             />
+            <!-- <van-cell title="清查日期" :value="date" @click="show = true" />
+            <van-calendar v-model="show" @confirm="onConfirm1" /> -->
             <div style="margin-top: 3rem" class="save_pop">
               <van-button
                 style="margin-right: 1rem"
@@ -613,52 +650,90 @@
       <div v-show="tabId === 5">
         <ul class="cw_stock yes_no income_expenditure">
           <p>基本信息</p>
-          <li class="ie_left">合计（自动计算）（万元）：</li>
-          <li>
-            <input type="text" disabled value="20" placeholder="单行输入" />
-          </li>
+          <van-field
+            readonly
+            v-model="addAllNum"
+            name="合计（自动计算）（万元）："
+            label="合计（自动计算）（万元）："
+            placeholder="单行输入"
+            :rules="[
+              { required: true, message: '请填写合计（自动计算）（万元）' },
+            ]"
+          />
           <p>收入信息</p>
-          <li class="ie_left">总收入（自动计算）（万元）：</li>
-          <li>
-            <input type="text" disabled value="100" placeholder="单行输入" />
-          </li>
-          <li class="ie_left">家庭年收入（万元）：</li>
-          <li>
-            <input type="text" value="40" placeholder="单行输入" />
-          </li>
-          <li class="ie_left">其他收入（万元）：</li>
-          <li>
-            <input type="text" value="60" placeholder="单行输入" />
-          </li>
+          <van-field
+            readonly
+            v-model="addIncomeNum"
+            name="总收入（自动计算）（万元）："
+            label="总收入（自动计算）（万元）："
+            placeholder="单行输入"
+            :rules="[
+              { required: true, message: '请填写总收入（自动计算）（万元）' },
+            ]"
+          />
+          <van-field
+            v-model="familyIncome.householdIncome"
+            name="家庭年收入（万元）："
+            label="家庭年收入（万元）："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写家庭年收入（万元）' }]"
+          />
+          <van-field
+            v-model="familyIncome.otherIncome"
+            name="其他收入（万元）："
+            label="其他收入（万元）："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写其他收入（万元）' }]"
+          />
           <p>支出信息</p>
-          <li class="ie_left">总支出（自动计算）（万元）：</li>
-          <li>
-            <input type="text" disabled value="80" placeholder="单行输入" />
-          </li>
-          <li class="ie_left">按揭（万元）：</li>
-          <li class="search_currency">
-            <input type="text" value="2" placeholder="单行输入" />
-          </li>
-
-          <li class="ie_left">经营性支出（万元）：</li>
-          <li class="search_currency">
-            <input type="text" value="50" placeholder="单行输入" />
-          </li>
-          <li class="ie_left">水电气（万元）：</li>
-          <li class="search_currency">
-            <input type="text" value="10" placeholder="单行输入" />
-          </li>
-          <li class="ie_left">教育医疗（万元）：</li>
-          <li class="search_currency">
-            <input type="text" value="15" placeholder="单行输入" />
-          </li>
-          <li class="ie_left">其他支出（万元）：</li>
-          <li class="search_currency">
-            <input type="text" value="3" placeholder="单行输入" />
-          </li>
+          <van-field
+            readonly
+            v-model="addExpenditureNum"
+            name="总支出（自动计算）（万元）："
+            label="总支出（自动计算）（万元）："
+            placeholder="单行输入"
+            :rules="[
+              { required: true, message: '请填写总支出（自动计算）（万元）：' },
+            ]"
+          />
+          <van-field
+            v-model="familyIncome.mortgage"
+            name="按揭（万元）："
+            label="按揭（万元）："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写按揭（万元）：' }]"
+          />
+          <van-field
+            v-model="familyIncome.businessExpend"
+            name="经营性支出（万元）："
+            label="经营性支出（万元）："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写经营性支出（万元）' }]"
+          />
+          <van-field
+            v-model="familyIncome.utilities"
+            name="水电气（万元）："
+            label="水电气（万元）："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写水电气（万元）' }]"
+          />
+          <van-field
+            v-model="familyIncome.lcme"
+            name="教育医疗（万元）："
+            label="教育医疗（万元）："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写教育医疗（万元）' }]"
+          />
+          <van-field
+            v-model="familyIncome.otherExpend"
+            name="其他支出（万元）："
+            label="其他支出（万元）："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写其他支出（万元）' }]"
+          />
         </ul>
         <div class="save" style="padding-top: 2rem">
-          <van-button block round type="primary" @click="prev()"
+          <van-button block round type="primary" @click="UpdateFamilyIncome()"
             >保存</van-button
           >
         </div>
@@ -670,6 +745,7 @@
 import ChildNav from "../../../components/Public/ChildNav";
 import con from "../../../assets/grid/location_map.svg";
 import { Toast, Dialog } from "vant";
+import moment from "moment";
 export default {
   components: {
     ChildNav,
@@ -817,12 +893,15 @@ export default {
       relationship_householder: false,
       select_type_txt: "",
       select_type_list: [
-      {
-        index:1,text:"资产"
-      },
-      {
-        index:2,text:"负债"
-      }],
+        {
+          index: 1,
+          text: "资产",
+        },
+        {
+          index: 2,
+          text: "负债",
+        },
+      ],
       select_type: false,
       asset_type_txt: "",
       asset_type_list: ["房产", "汽车"],
@@ -925,8 +1004,7 @@ export default {
         },
       ],
       family_member: [],
-      assets: [
-      ],
+      assets: [],
       customer_pool: [
         {
           name: "20001",
@@ -1153,12 +1231,17 @@ export default {
       id: "",
       farmers_details: "",
       prospect_detailsEdit: {},
+      date: "",
+      show: false,
+      familyIncome: "",
     };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (from.path === "/FarmerMemberDetails") {
         vm.tab(3);
+      } else if (from.path === "/AssetsLiabilitiesDetail") {
+        vm.tab(4);
       }
     });
   },
@@ -1170,6 +1253,13 @@ export default {
   },
 
   methods: {
+    formatDate(date) {
+      return `${date.getMonth() + 1}-${date.getDate()}`;
+    },
+    onConfirm1(date) {
+      this.show = false;
+      this.date = this.formatDate(date);
+    },
     markerDragend({ point }) {
       console.log(point);
       const { lng, lat } = point;
@@ -1291,10 +1381,12 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
-      if (ev == 3){
+      if (ev == 3) {
         this.getFamilyPeople();
-      }else if(ev == 4){
-        this.getFamilyAssets()
+      } else if (ev == 4) {
+        this.getFamilyAssets();
+      } else if (ev == 5) {
+        this.getFamilyIncome();
       }
     },
 
@@ -1342,22 +1434,22 @@ export default {
       });
     },
     AddPopupAssets() {
+      let lallalal = moment(this.data).unix();
+      console.log(lallalal);
       this.$httpPost({
         url: "/api/customersFamilyAssetsLiability/add",
         data: {
-          name: this.household_name,
-          age: this.household_age,
-          identifyNo: this.customer_id,
-          telphone: this.phone_number,
-          annualIncome: this.annual_income,
-          relationship: this.relationship_householder_txt,
-          servOpen: this.Customer_intention_txt,
+          name: this.asset_type_txt,
           familyCode: this.farmers_details.familyCode,
+          type: this.select_type_txt.index,
+          description: this.message_income,
+          amount: this.evaluation_value,
+          // checkTime:this.date,
         },
       }).then((res) => {
         console.log(res);
-        this.getFamilyPeople();
-        this.isPopupVisibleFamily = false;
+        this.getFamilyAssets();
+        this.isPopupVisibleAssets = false;
         Toast({
           message: "保存成功",
           position: "middle",
@@ -1380,6 +1472,24 @@ export default {
           })
             .then((res) => {
               this.getFamilyPeople();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    },
+    deleteFamilyAssets(id) {
+      Dialog.confirm({
+        title: "你确定删除这条记录吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customersFamilyAssetsLiability/delete",
+            params: {
+              ids: id,
+            },
+          })
+            .then((res) => {
+              this.getFamilyAssets();
             })
             .catch(() => {});
         })
@@ -1447,6 +1557,18 @@ export default {
         // this.getDic();
       });
     },
+    getFamilyIncome() {
+      this.$httpGet({
+        url: `/api/customersFamilyIncome/get/${this.farmers_details.familyCode}`,
+      }).then((res) => {
+        console.log(res.data);
+        this.familyIncome = res.data;
+        // this.peasant_household.forEach((it) => {
+        //   this.familyCode = it.type;
+        // });
+        // this.getDic();
+      });
+    },
     modifyResult() {
       this.$httpPut({
         url: "/api/customersFamily/update",
@@ -1480,16 +1602,74 @@ export default {
             message: "保存成功",
             position: "middle",
           });
-          this.$router.go(-1);
+          // this.$router.go(-1);
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    UpdateFamilyIncome(){
+      this.$httpPut({
+        url: "/api/customersFamilyIncome/update",
+        data: {
+          sum: this.addAllNum,
+          sumIncome: this.addIncomeNum,
+          householdIncome: this.familyIncome.householdIncome,
+          otherIncome: this.familyIncome.otherIncome,
+          sumExpend: this.addExpenditureNum,
+          mortgage: this.familyIncome.mortgage,
+          businessExpend: this.familyIncome.businessExpend,
+          utilities: this.familyIncome.utilities,
+          lcme: this.familyIncome.lcme,
+          otherExpend: this.familyIncome.otherExpend,
+          familyCode: this.farmers_details.familyCode,
+        },
+      })
+        .then((res) => {
+          Toast({
+            message: "修改成功",
+            position: "middle",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  },
+  computed: {
+    addExpenditureNum() {
+      return (
+        Number(this.familyIncome.mortgage) +
+        Number(this.familyIncome.businessExpend) +
+        Number(this.familyIncome.utilities) +
+        Number(this.familyIncome.lcme) +
+        Number(this.familyIncome.otherExpend)
+      );
+    },
+    addIncomeNum() {
+      return (
+        Number(this.familyIncome.householdIncome) +
+        Number(this.familyIncome.otherIncome)
+      );
+    },
+    addAllNum() {
+      return (
+        Number(this.familyIncome.householdIncome) +
+        Number(this.familyIncome.otherIncome) -
+        Number(this.familyIncome.mortgage) -
+        Number(this.familyIncome.businessExpend) -
+        Number(this.familyIncome.utilities) -
+        Number(this.familyIncome.lcme) -
+        Number(this.familyIncome.otherExpend)
+      );
+    },
   },
 };
 </script>
 <style scoped>
+.income_expenditure .van-cell >>> .van-field__label {
+  width: 75%;
+}
 .household_base .van-cell >>> .van-field__label {
   width: 9em;
 }
@@ -1749,9 +1929,7 @@ textarea {
   left: 17%;
 }
 .income_expenditure {
-  padding: 0rem 1rem;
   background: #fff;
-  width: calc(100% - 4rem);
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
@@ -1761,6 +1939,7 @@ textarea {
 }
 .income_expenditure p {
   width: 100%;
+  padding: 0rem 1rem;
   color: #000;
   font-size: 0.9rem;
   font-weight: 550;

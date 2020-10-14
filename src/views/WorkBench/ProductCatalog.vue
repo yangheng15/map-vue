@@ -1,19 +1,31 @@
 <template>
   <div class="ProductCatalog">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='产品目录'">
+    <div v-if="typeCN == '产品目录'">
       <van-dropdown-menu>
-        <van-dropdown-item v-model="product_catalog" :options="product_option" />
+        <van-dropdown-item
+          v-model="product_catalog.text"
+          :options="product_option"
+          @change="screenChange"
+        />
       </van-dropdown-menu>
       <div class="customer_list">
-        <router-link tag="ul" :to="{ name: 'ProductCatalogDetail', query: { title: '产品目录详情' }}">
-          <li v-for="(thisItem,index) in MarketingRecord" :key="index">
-            <p style="font-size:1rem;font-weight:600;">{{thisItem.name}}</p>
-            <p class="schedule_star">{{thisItem.text}}</p>
-            <p class="schedule_star">{{thisItem.text1}}</p>
-            <p class="schedule_star">{{thisItem.date}}</p>
-          </li>
-        </router-link>
+        <ul>
+          <router-link
+            tag="li"
+            :to="{
+              name: 'ProductCatalogDetail',
+              query: { title: '产品目录详情', id: thisItem.id },
+            }"
+            v-for="(thisItem, index) in MarketingRecord"
+            :key="index"
+          >
+            <p style="font-size: 1rem; font-weight: 600">{{ thisItem.name }}</p>
+            <p class="schedule_star">支付工具</p>
+            <p class="schedule_star">{{ thisItem.type }}</p>
+            <p class="schedule_star">{{ thisItem.updatedTime | transform }}</p>
+          </router-link>
+        </ul>
       </div>
     </div>
   </div>
@@ -30,7 +42,7 @@ export default {
     return {
       title: "",
       typeCN: "",
-      product_catalog: 0,
+      product_catalog: '2',
       product_option: [
         {
           text: "贷款",
@@ -57,28 +69,53 @@ export default {
           value: 5,
         },
       ],
-      MarketingRecord: [
-        {
-          id: 1,
-          name: "企业贷",
-          text: "支付工具",
-          date: " 2020-08-30日前",
-          text1: "资料采集",
-        },
-        {
-          id: 2,
-          name: "农户家庭",
-          text: "生活缴费",
-          date: "  2020-08-30日前",
-          text1: "产品营销",
-        },
-      ],
+      MarketingRecord: [],
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.getProduct();
+    this.dic_nation();
   },
-  methods: {},
+  methods: {
+    getProduct() {
+      this.$httpGet({
+        url: "/api/productsInfo/appQuery",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.MarketingRecord = res.data;
+      });
+    },
+    screenChange(val) {
+      this.$httpGet({
+        url: "/api/productsInfo/appQuery",
+        params: {
+          limit: 10,
+          page: 1,
+          type: val,
+        },
+      }).then((res) => {
+        this.MarketingRecord = res.data;
+      });
+    },
+    dic_nation() {
+      this.$httpGet({
+        url: "/dic/type/dic_product_type",
+      }).then((res) => {
+        console.log(res.data);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if(it.parentId !== null) {
+            transformDara.push({index: it.id, text: it.codeText})
+          }
+        })
+        this.product_option = transformDara;
+      });
+    },
+  },
   mounted() {},
 };
 </script>
