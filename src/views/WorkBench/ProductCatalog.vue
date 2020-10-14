@@ -4,7 +4,7 @@
     <div v-if="typeCN == '产品目录'">
       <van-dropdown-menu>
         <van-dropdown-item
-          v-model="product_catalog.text"
+          v-model="product_catalog"
           :options="product_option"
           @change="screenChange"
         />
@@ -42,33 +42,8 @@ export default {
     return {
       title: "",
       typeCN: "",
-      product_catalog: '2',
-      product_option: [
-        {
-          text: "贷款",
-          value: 0,
-        },
-        {
-          text: "理财",
-          value: 1,
-        },
-        {
-          text: "支付工具",
-          value: 2,
-        },
-        {
-          text: "基金",
-          value: 3,
-        },
-        {
-          text: "保险",
-          value: 4,
-        },
-        {
-          text: "生活缴费",
-          value: 5,
-        },
-      ],
+      product_catalog: 6,
+      product_option: [],
       MarketingRecord: [],
     };
   },
@@ -109,7 +84,7 @@ export default {
         let transformDara = [];
         res.data.forEach((it, index) => {
           if(it.parentId !== null) {
-            transformDara.push({index: it.id, text: it.codeText})
+            transformDara.push({value: it.id, text: it.codeText})
           }
         })
         this.product_option = transformDara;
