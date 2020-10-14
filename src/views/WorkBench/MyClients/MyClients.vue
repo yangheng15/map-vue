@@ -368,13 +368,7 @@ export default {
     this.getMyClients();
   },
   methods: {
-    selectData() {
-      if (this.tabId) {
-
-      } else {
-
-      }
-    },
+    selectData() {},
     tab(ev) {
       this.tabId = ev;
       if (ev == 1) {
@@ -402,7 +396,38 @@ export default {
       });
     },
     onSearch(val) {
-      Toast(val);
+      if (this.tabId == 0) {
+        this.$httpGet({
+          url: "/api/customer/appOwner",
+          params: {
+            limit: 10,
+            page: 1,
+            name: val,
+          },
+        }).then((res) => {
+          console.log(res.data);
+          this.newCustomerList = res.data;
+          this.newCustomerList.forEach((it) => {
+            this.level = it.level;
+          });
+          console.log(this.level);
+          if (this.level) {
+            this.getdic();
+          }
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/customer/appOwnerClaim",
+          params: {
+            limit: 10,
+            page: 1,
+            name: val,
+          },
+        }).then((res) => {
+          console.log(res.data);
+          this.newCustomerList1 = res.data;
+        });
+      }
     },
     showPopupScreen() {
       this.isPopupVisibleScreen = true;
@@ -414,18 +439,18 @@ export default {
       Dialog.confirm({
         title: "你确定移除吗",
       })
-      .then(() => {
-        this.$httpDelete({
-          url: "/api/customers/removeCust",
-          params: {
-            customerCodes: code,
-          },
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customers/removeCust",
+            params: {
+              customerCodes: code,
+            },
+          })
+            .then((res) => {
+              this.getFollow();
+            })
+            .catch(() => {});
         })
-        .then((res) => {
-          this.getFollow()
-        })
-        .catch(() => {});
-      })
         .catch(() => {});
     },
     getMyClients() {

@@ -153,7 +153,7 @@
         <div style="width: 99%; margin: 0.5rem auto">
           <baidu-map
             class="bm-view"
-            :center="{ lng: 114.6, lat: 33.6}"
+            :center="{ lng: 114.6, lat: 33.6 }"
             :zoom="14"
             ak="YOUR_APP_KEY"
           >
@@ -169,7 +169,7 @@
           </baidu-map>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="prev()"
+          <van-button round block type="primary" @click="modifyResult()"
             >保存</van-button
           >
         </div>
@@ -346,7 +346,7 @@
           </template>
         </van-field>
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="prev()"
+          <van-button round block type="primary" @click="modifyResult()()"
             >保存</van-button
           >
         </div>
@@ -358,16 +358,27 @@
           :key="index"
         >
           <div style="margin-bottom: 0.5rem">
-            <p style="color: #000; font-weight: 550; width: 40%">
+            <router-link
+              tag="p"
+              :to="{
+                name: 'FarmerMemberDetails',
+                query: {
+                  title: '农户成员详情',
+                  id: thisItem.id,
+                  familyCode: thisItem.familyCode,
+                },
+              }"
+              style="color: #000; font-weight: 550; width: 40%"
+            >
               {{ thisItem.name }}
-              <span class="approval_Passed">户主</span>
-            </p>
-            <p>{{ thisItem.age }}</p>
-            <p>{{ thisItem.income }}</p>
+              <span class="approval_Passed">{{ thisItem.relationship }}</span>
+            </router-link>
+            <p>年龄：{{ thisItem.age }}</p>
+            <p>年收入：{{ thisItem.annualIncome }}</p>
           </div>
           <div>
-            <p>{{ thisItem.telephone }}</p>
-            <p class="delete">删除</p>
+            <p>电话：{{ thisItem.telphone }}</p>
+            <p class="delete" @click="deleteFamilyPeople(thisItem.id)">删除</p>
           </div>
         </div>
         <span class="add_record" @click="showPopupFamily()">+</span>
@@ -410,6 +421,13 @@
               :rules="[{ required: true, message: '请填写年龄' }]"
             />
             <van-field
+              v-model="relationship_householder_txt"
+              name="与户主关系"
+              label="与户主关系"
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写与户主关系' }]"
+            />
+            <!-- <van-field
               readonly
               clickable
               name="picker"
@@ -425,7 +443,7 @@
                 @confirm="onRelationship_householder"
                 @cancel="relationship_householder = false"
               />
-            </van-popup>
+            </van-popup> -->
             <van-field
               v-model="customer_id"
               name="身份证号："
@@ -452,7 +470,7 @@
                 style="margin-right: 1rem"
                 round
                 type="primary"
-                @click="closePopupFamily()"
+                @click="addPopupFamily()"
                 >保存</van-button
               >
               <van-button round type="primary" @click="closePopupFamily()"
@@ -470,9 +488,9 @@
         >
           <div style="margin-bottom: 0.5rem">
             <p style="color: #000; font-weight: 550">{{ thisItem.name }}</p>
-            <p>{{ thisItem.date }}</p>
+            <p>清查日期：{{ thisItem.checkTime | transform }}</p>
           </div>
-          <p>{{ thisItem.menoy }}</p>
+          <p>评估价值（万元）：{{ thisItem.amount }}</p>
           <p class="delete">删除</p>
           <span v-if="thisItem.id === 1" class="approval_Passed">资产</span>
           <span v-if="thisItem.id === 2" class="approval_Passed1">负债</span>
@@ -514,7 +532,7 @@
             <van-popup v-model="select_type" position="bottom">
               <van-picker
                 show-toolbar
-                :columns="select_type_list"
+                :columns="select_type_list.text"
                 @confirm="onSelect_type"
                 @cancel="select_type = false"
               />
@@ -582,7 +600,7 @@
                 style="margin-right: 1rem"
                 round
                 type="primary"
-                @click="closePopupAssets()"
+                @click="AddPopupAssets()"
                 >保存</van-button
               >
               <van-button round type="primary" @click="closePopupAssets()"
@@ -651,6 +669,7 @@
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
 import con from "../../../assets/grid/location_map.svg";
+import { Toast, Dialog } from "vant";
 export default {
   components: {
     ChildNav,
@@ -687,11 +706,11 @@ export default {
       childrenStatus_list: ["有", "无"],
       childrenStatus: false,
       customer_hobby: "无",
-      customer_id: "110242199702125858",
+      customer_id: "",
       date_of_birth: "9/20",
       showDateBirth: false,
       occupation: "程序员",
-      phone_number: "15840991076",
+      phone_number: "",
       residential_address: "郑州周口市",
       work_address: "郑州周口市",
       qq_number: "2548456723",
@@ -797,7 +816,13 @@ export default {
       relationship_householder_list: ["户主", "夫妻", "父女", "父子"],
       relationship_householder: false,
       select_type_txt: "",
-      select_type_list: ["资产", "贷款"],
+      select_type_list: [
+      {
+        index:1,text:"资产"
+      },
+      {
+        index:2,text:"负债"
+      }],
       select_type: false,
       asset_type_txt: "",
       asset_type_list: ["房产", "汽车"],
@@ -899,29 +924,8 @@ export default {
           major: "职员",
         },
       ],
-      family_member: [
-        {
-          name: "张军",
-          age: "年龄：30",
-          relationship: "与户主关系：户主",
-          id: "身份证：110115198008086654",
-          telephone: "电话：18612287876",
-          income: "年收入：40万",
-        },
-      ],
+      family_member: [],
       assets: [
-        {
-          name: "房产",
-          date: "清查日期：2020-01-01",
-          menoy: "评估价值（万元）：100",
-          id: 1,
-        },
-        {
-          name: "贷款",
-          date: "清查日期：2020-01-01",
-          menoy: "负债金额（万元）：100",
-          id: 2,
-        },
       ],
       customer_pool: [
         {
@@ -1151,6 +1155,13 @@ export default {
       prospect_detailsEdit: {},
     };
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (from.path === "/FarmerMemberDetails") {
+        vm.tab(3);
+      }
+    });
+  },
   async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
@@ -1197,8 +1208,8 @@ export default {
       });
     },
     onFamily_type(value) {
-      this.prospect_detailsEdit.type = value['index'];
-      this.farmers_details.type = value['text'];
+      this.prospect_detailsEdit.type = value["index"];
+      this.farmers_details.type = value["text"];
       this.family_type = false;
     },
     onProperty_situation(value) {
@@ -1280,7 +1291,11 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
+      if (ev == 3){
+        this.getFamilyPeople();
+      }else if(ev == 4){
+        this.getFamilyAssets()
+      }
     },
 
     showPopup() {
@@ -1303,8 +1318,72 @@ export default {
     showPopupFamily() {
       this.isPopupVisibleFamily = true;
     },
+    addPopupFamily() {
+      this.$httpPost({
+        url: "/api/customersFamilyMembers/add",
+        data: {
+          name: this.household_name,
+          age: this.household_age,
+          identifyNo: this.customer_id,
+          telphone: this.phone_number,
+          annualIncome: this.annual_income,
+          relationship: this.relationship_householder_txt,
+          servOpen: this.Customer_intention_txt,
+          familyCode: this.farmers_details.familyCode,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.getFamilyPeople();
+        this.isPopupVisibleFamily = false;
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
+      });
+    },
+    AddPopupAssets() {
+      this.$httpPost({
+        url: "/api/customersFamilyAssetsLiability/add",
+        data: {
+          name: this.household_name,
+          age: this.household_age,
+          identifyNo: this.customer_id,
+          telphone: this.phone_number,
+          annualIncome: this.annual_income,
+          relationship: this.relationship_householder_txt,
+          servOpen: this.Customer_intention_txt,
+          familyCode: this.farmers_details.familyCode,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.getFamilyPeople();
+        this.isPopupVisibleFamily = false;
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
+      });
+    },
     closePopupFamily() {
       this.isPopupVisibleFamily = false;
+    },
+    deleteFamilyPeople(id) {
+      Dialog.confirm({
+        title: "你确定删除这条记录吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customersFamilyMembers/delete",
+            params: {
+              ids: id,
+            },
+          })
+            .then((res) => {
+              this.getFamilyPeople();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
     },
     showPopupAssets() {
       this.isPopupVisibleAssets = true;
@@ -1334,6 +1413,40 @@ export default {
       this.farmers_details = res.data;
       this.prospect_detailsEdit.type = res.data.type;
     },
+    getFamilyPeople() {
+      this.$httpGet({
+        url: "/api/customersFamilyMembers/query",
+        params: {
+          familyCode: this.farmers_details.familyCode,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.family_member = res.data;
+        // this.peasant_household.forEach((it) => {
+        //   this.familyCode = it.type;
+        // });
+        // this.getDic();
+      });
+    },
+    getFamilyAssets() {
+      this.$httpGet({
+        url: "/api/customersFamilyAssetsLiability/query",
+        params: {
+          familyCode: this.farmers_details.familyCode,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.assets = res.data;
+        // this.peasant_household.forEach((it) => {
+        //   this.familyCode = it.type;
+        // });
+        // this.getDic();
+      });
+    },
     modifyResult() {
       this.$httpPut({
         url: "/api/customersFamily/update",
@@ -1345,11 +1458,11 @@ export default {
           num: this.farmers_details.num,
           houseProperty: this.farmers_details.houseProperty,
           cars: this.farmers_details.cars,
-          
+
           rufsBehalf: this.farmers_details.rufsBehalf,
           rufsAmount: this.farmers_details.rufsAmount,
           creditBehalf: this.farmers_details.creditBehalf,
-          
+
           membersEvaluate: this.farmers_details.membersEvaluate,
           address: this.farmers_details.address,
           telphone: this.farmers_details.telphone,
@@ -1395,7 +1508,7 @@ export default {
   justify-content: space-between;
   padding: 0rem 1rem;
 }
-.van-radio__icon{
+.van-radio__icon {
   height: 1.25rem;
 }
 input {

@@ -1335,9 +1335,6 @@ export default {
       el.style.top = pixel.y - 20 + "px";
     },
   },
-  beforeDestroy() {
-    cancel();
-  },
 };
 </script>
 <style scoped>

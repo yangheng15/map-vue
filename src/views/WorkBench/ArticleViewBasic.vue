@@ -200,7 +200,7 @@
             style="width:150px;margin-left:0px;text-align:center;"
             @click="tab(0)"
             :class="tabId==0?'cur':'ordinary'"
-          >存货</li>
+          >存贷</li>
           <li
             style="width:150px;text-align:center;"
             @click="tab(1)"

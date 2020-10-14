@@ -72,6 +72,8 @@ const ScreenCustomerPool = () => import('@/views/WorkBench/CustomerPool/ScreenCu
 const PeasantHousehold = () => import('@/views/WorkBench/PeasantHousehold/PeasantHousehold.vue');
 // 农户信息
 const FarmersInformation = () => import('@/views/WorkBench/PeasantHousehold/FarmersInformation.vue');
+// 农户成员详情
+const FarmerMemberDetails = () => import('@/views/WorkBench/PeasantHousehold/FarmerMemberDetails.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -265,6 +267,11 @@ const routes = [{
     path: '/FarmersInformation',
     name: 'FarmersInformation',
     component: FarmersInformation,
+  },
+  {
+    path: '/FarmerMemberDetails',
+    name: 'FarmerMemberDetails',
+    component: FarmerMemberDetails,
   },
   {
     path: '/User',
