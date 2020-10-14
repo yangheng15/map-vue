@@ -12,8 +12,8 @@
       :zoom="14"
       ak="YOUR_APP_KEY"
     >
+      <!-- 网格经理网格名称 -->
       <template v-for="(item, index) in map_data">
-        <!-- 网格经理网格名称 -->
         <my-overlay
           :key="index"
           :show="true"
@@ -158,9 +158,29 @@
         @dragend="markerDragend"
         :icon="{
           url: require('../../assets/grid/location_map.svg'),
-          size: { width: 60, height: 60 },
+          size: { width: 30, height: 30 },
         }"
       ></bm-marker>
+
+      <!-- 🚩红旗 -->
+      <template>
+        <bm-marker
+          v-for="(item, index) in redFlagPostionArr"
+          :dragging="false"
+          :position="item.postion"
+          :key="index + 'flag'"
+          :icon="{
+            url: require('../../assets/grid/flag.svg'),
+            size: { width: 30, height: 30 },
+          }"
+        >
+          <bm-label
+            :content="item.text"
+            :labelStyle="{ color: 'red', fontSize: '14px' }"
+            :offset="{ width: -35, height: 30 }"
+          />
+        </bm-marker>
+      </template>
 
       <!-- 右下角定位的图标 -->
       <bm-geolocation
@@ -204,28 +224,29 @@
       <van-form class="isPopupVisibleSign_content" @submit="onSubmit">
         <p class="pop_title">地图标记</p>
         <van-field
-          v-model="sign_name"
+          v-model="signData.sign_name"
           name="名称："
           label="名称："
           placeholder="单行输入"
           :rules="[{ required: true, message: '请填写名称' }]"
         />
         <van-field
-          v-model="sign_phone"
+          v-model="signData.sign_phone"
           name="电话："
           label="电话："
           placeholder="单行输入"
           :rules="[{ required: true, message: '请填写电话' }]"
         />
         <van-field
-          v-model="sign_address"
+          v-model="signData.sign_address"
           name="地址："
           label="地址："
           placeholder="单行输入"
           :rules="[{ required: true, message: '请填写地址' }]"
         />
         <van-field
-          v-model="sign_position"
+          disabled
+          v-model="signData.sign_position"
           name="位置："
           label="位置："
           placeholder="单行输入"
@@ -252,7 +273,7 @@
           readonly
           clickable
           name="picker"
-          :value="marked_or_not_txt"
+          :value="signData.marked_or_not_txt"
           label="标记："
           placeholder="点击选择是否标记"
           @click="marked_or_not = true"
@@ -266,7 +287,7 @@
           />
         </van-popup>
         <van-field
-          v-model="sign_remarks"
+          v-model="signData.sign_remarks"
           rows="2"
           autosize
           label="备注"
@@ -315,17 +336,19 @@ export default {
       markerTure: false,
       polylinePath: [],
       searchVal: "",
-      sign_name: "",
-      sign_phone: "",
-      sign_address: "",
-      marked_or_not_txt: "",
+      signData: {
+        sign_name: "",
+        sign_phone: "",
+        sign_address: "",
+        marked_or_not_txt: "",
+        sign_remarks: "",
+        sign_position: "",
+      },
       marked_or_not_list: ["是", "否"],
       marked_or_not: false,
       resource_type_txt: "",
       resource_type_list: [],
       resource_type: false,
-      sign_remarks: "",
-      sign_position: "",
       markerPostion: { lng: 114.655, lat: 33.625 },
       filterData: [],
       map: null,
@@ -336,6 +359,7 @@ export default {
       typeIdsItem: {},
       typeIdsAlert: false,
       eyeMe: true,
+      redFlagPostionArr: [],
     };
   },
   created() {
@@ -401,7 +425,7 @@ export default {
       } else {
         this.mapPlaning();
       }
-      this.eyeMe = !this.eyeMe
+      this.eyeMe = !this.eyeMe;
     },
     queryResources(BMap, map) {
       this.$httpGet({
@@ -575,7 +599,7 @@ export default {
     },
     showPopupSign(point) {
       this.isPopupVisibleSign = true;
-      this.sign_position = `${point.lng},${point.lat}`;
+      this.signData.sign_position = `${point.lng},${point.lat}`;
       this.obtainDic();
     },
     draw({ el, BMap, map }) {
@@ -595,7 +619,7 @@ export default {
       this.polylinePath = e.target.getPath();
     },
     onMarked_or_not(value) {
-      this.marked_or_not_txt = value;
+      this.signData.marked_or_not_txt = value;
       this.marked_or_not = false;
     },
     onResource_type(value) {
@@ -617,6 +641,12 @@ export default {
     },
     async onSubmit(values) {
       // console.log("submit", values);
+      //显示红旗
+      this.markerTure = false;
+      const posArr = this.signData.sign_position.split(','); 
+      this.redFlagPostionArr.push({postion: { lng: posArr[0], lat: posArr[1]}, text: this.signData.sign_name});
+      console.log(this.redFlagPostionArr);
+
       const code = this.filterData.find(
         (it) => it.codeText === this.resource_type_txt
       )["code"];
@@ -626,16 +656,18 @@ export default {
           token: this.token,
         },
         data: {
-          name: this.sign_name,
-          telphone: this.sign_phone,
-          address: this.sign_address,
-          mark: this.marked_or_not_txt,
-          description: this.sign_remarks,
+          name: this.signData.sign_name,
+          telphone: this.signData.sign_phone,
+          address: this.signData.sign_address,
+          mark: this.signData.marked_or_not_txt,
+          description: this.signData.sign_remarks,
           type: code,
-          position: this.sign_position,
+          position: this.signData.sign_position
         },
       }).then((res) => {
         this.isPopupVisibleSign = false;
+        this.signData = {};
+        this.markerPostion = { lng: 114.655, lat: 33.625 };
       });
     },
   },
