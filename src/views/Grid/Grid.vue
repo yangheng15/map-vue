@@ -193,6 +193,7 @@
 
       <!-- 点击出现的标记 -->
       <bm-marker
+        :zIndex=999
         v-if="markerTure"
         @click="showPopupSign(markerPostion)"
         :dragging="true"
