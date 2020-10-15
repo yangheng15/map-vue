@@ -6,8 +6,8 @@ productCode<template>
         <ul v-for="(thisItem,index) in peasant_household" :key="index">
           <li>
             <img src="../../assets/User/medal.png" alt class="li_img" />
-            <p>{{thisItem.name}}</p>
-            <p>{{thisItem.date}}</p>
+            <p>{{thisItem.medalName}}</p>
+            <p>{{thisItem.createdTime | transform}}</p>
           </li>
         </ul>
       </div>
@@ -51,21 +51,7 @@ export default {
     return {
       typeCN: "",
       title: "",
-      peasant_household: [
-        {
-          img: con1,
-          name: "跑动达人",
-          date: "2020-09-09",
-        },
-        {
-          name: "月度冠军",
-          date: "2020-09-09",
-        },
-        {
-          name: "年度优秀",
-          date: "2020-09-09",
-        },
-      ],
+      peasant_household: [],
       Footprintlist: [
         {
           name: "赵敏",
@@ -102,16 +88,12 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
+    if(this.typeCN=='我的勋章'){
+this.getMedalOwner();
+    }
   },
   methods: {
     formatDate(date) {
-      // var d = new Date(date),
-      //   month = "" + (d.getMonth() + 1),
-      //   day = "" + d.getDate(),
-      //   year = d.getFullYear();
-      // if (month.length < 2) month = "0" + month;
-      // if (day.length < 2) day = "0" + day;
-      // return `${year}-${month}-${day}`;
       return `${date.getMonth() + 1}/${date.getDate()}`;
     },
     onConfirm(date) {
@@ -152,6 +134,17 @@ export default {
               });
           }
         });
+    },
+    getMedalOwner() {
+      this.$httpGet({
+        url: "/api/medalOwner/query",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.peasant_household=res.data
+      });
     },
 
     showItemView(item) {

@@ -163,11 +163,11 @@
         />
         <van-popup v-model="regional_grid" position="bottom">
           <van-picker
-          show-toolbar
-          :columns="areaList"
-          @cancel="regional_grid = false"
-          @confirm="onRegional_grid"
-        />
+            show-toolbar
+            :columns="areaList"
+            @cancel="regional_grid = false"
+            @confirm="onRegional_grid"
+          />
         </van-popup>
         <div class="save" style="margin: 16px">
           <van-button round block type="primary" @click="sceenPool()"
@@ -377,29 +377,55 @@ export default {
       console.log("submit", values);
     },
     sceenPool() {
-      this.$httpGet({
-        url: "/api/customerPool/app",
-        params: {
-          limit: 10,
-          page: 1,
-          name: this.screen_name,
-          code: this.screen_number,
-          branchCode: this.organization_txt.index,
-          isPpoint: this.key_customers_txt.index,
-          customer_base:this.customer_base,
-          level: this.custome_level_txt.index,
-          recommended_products:this.recommended_products,
-          education: this.education_level_txt.index,
-          gender: this.choose_gender_txt.index,
-          age:this.screen_age,
-          profession: this.occupation_category_txt.index,
-          products_held_txt:this.products_held_txt.index,
-          regional_grid_txt:this.regional_grid_txt.index,
-        },
-      }).then((res) => {
-        console.log(res);
-        // this.$router.go(-1);
-      });
+      if (tabid) {
+        this.$httpGet({
+          url: "/api/customer/appOwner",
+          params: {
+            limit: 10,
+            page: 1,
+            name: this.screen_name,
+            code: this.screen_number,
+            branchCode: this.organization_txt.index,
+            isPpoint: this.key_customers_txt.index,
+            customer_base: this.customer_base,
+            level: this.custome_level_txt.index,
+            recommended_products: this.recommended_products,
+            education: this.education_level_txt.index,
+            gender: this.choose_gender_txt.index,
+            age: this.screen_age,
+            profession: this.occupation_category_txt.index,
+            products_held_txt: this.products_held_txt.index,
+            regional_grid_txt: this.regional_grid_txt.index,
+          },
+        }).then((res) => {
+          console.log(res);
+          this.$router.go(-1);
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/customer/appOwnerClaim",
+          params: {
+            limit: 10,
+            page: 1,
+            name: this.screen_name,
+            code: this.screen_number,
+            branchCode: this.organization_txt.index,
+            isPpoint: this.key_customers_txt.index,
+            customer_base: this.customer_base,
+            level: this.custome_level_txt.index,
+            recommended_products: this.recommended_products,
+            education: this.education_level_txt.index,
+            gender: this.choose_gender_txt.index,
+            age: this.screen_age,
+            profession: this.occupation_category_txt.index,
+            products_held_txt: this.products_held_txt.index,
+            regional_grid_txt: this.regional_grid_txt.index,
+          },
+        }).then((res) => {
+          console.log(res);
+          this.$router.go(-1);
+        });
+      }
     },
   },
 };

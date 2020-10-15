@@ -18,17 +18,9 @@
           />
         </div>
         <div class="personal_introduction">
-          <div>
+          <div v-for="(item,index) in MedalOwner" :key="index">
             <img src="../../assets/User/medal.png" alt />
-            <p>跑动达人</p>
-          </div>
-          <div>
-            <img src="../../assets/User/medal.png" alt />
-            <p>月度冠军</p>
-          </div>
-          <div>
-            <img src="../../assets/User/medal.png" alt />
-            <p>年度冠军</p>
+            <p>{{item.medalName}}</p>
           </div>
           <router-link
             tag="div"
@@ -101,10 +93,12 @@ export default {
   data() {
     return {
       userNameTxt: [],
+      MedalOwner:[]
     };
   },
   created() {
     this.getRealName();
+    this.getMedalOwner();
   },
   methods: {
     endLogin() {
@@ -127,7 +121,19 @@ export default {
       }).then((res) => {
         // console.log(res.row);
         this.userNameTxt = res.row;
-        this.userNameTxt.level =parseInt(res.row.level);
+        this.userNameTxt.level = parseInt(res.row.level);
+      });
+    },
+    getMedalOwner() {
+      this.$httpGet({
+        url: "/api/medalOwner/query",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.MedalOwner=res.data
       });
     },
   },
@@ -172,7 +178,7 @@ export default {
   left: 2%;
 }
 .head_portrait .personal_introduction div {
-  width: 20%;
+  width: 26%;
   margin: 7px 0px 0px;
 }
 .head_portrait .personal_introduction div img {

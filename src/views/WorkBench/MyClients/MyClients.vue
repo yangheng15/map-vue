@@ -9,7 +9,7 @@
         @search="onSearch"
       >
         <template #action>
-          <div @click="$router.push('/PutRecord/?title=筛选')">筛选</div>
+          <div @click="$router.push('/ScreenMyCustomers/?title=筛选')">筛选</div>
         </template>
       </van-search>
       <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">

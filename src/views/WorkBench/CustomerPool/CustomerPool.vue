@@ -35,7 +35,10 @@
             <router-link
               tag="p"
               style="width: 98%; margin: 4px 0px"
-              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
+              :to="{
+                name: 'CustomerViewPresentation',
+                query: { title: '客户视图', id: thisItem.id },
+              }"
               >{{ thisItem.name }}</router-link
             >
             <p style="width: 1%"></p>

@@ -22,6 +22,8 @@ const ArticleViewBasic = () => import('@/views/WorkBench/ArticleViewBasic.vue');
 const PutRecord = () => import('@/views/WorkBench/PutRecord.vue');
 //客户视图、农户
 const CustomerView = () => import('@/views/WorkBench/CustomerView.vue');
+//客户视图s
+const CustomerViewPresentation = () => import('@/views/WorkBench/CustomerViewPresentation/CustomerViewPresentation.vue');
 //任务详情
 const MissionDetails = () => import('@/views/WorkBench/MissionDetails.vue');
 //营销客户详情
@@ -58,8 +60,10 @@ const MissionAccomplished = () => import('@/views/WorkBench/MissionAccomplished.
 const TaskManagement = () => import('@/views/WorkBench/TaskManagement/TaskManagement.vue');
 // 潜在客户
 const PotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/PotentialCustomers.vue');
-// 潜在客户
+// 我的客户
 const MyClients = () => import('@/views/WorkBench/MyClients/MyClients.vue');
+// 我的客户筛选
+const ScreenMyCustomers = () => import('@/views/WorkBench/MyClients/ScreenMyCustomers.vue');
 // 添加潜在客户
 const AddPotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/AddPotentialCustomers.vue');
 // 修改潜在客户
@@ -144,6 +148,11 @@ const routes = [{
     path: '/CustomerView',
     name: 'CustomerView',
     component: CustomerView,
+  },
+  {
+    path: '/CustomerViewPresentation',
+    name: 'CustomerViewPresentation',
+    component: CustomerViewPresentation,
   },
   {
     path: '/MissionDetails',
@@ -249,6 +258,11 @@ const routes = [{
     path: '/MyClients',
     name: 'MyClients',
     component: MyClients,
+  },
+  {
+    path: '/ScreenMyCustomers',
+    name: 'ScreenMyCustomers',
+    component: ScreenMyCustomers,
   },
   {
     path: '/CustomerPool',
