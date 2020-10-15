@@ -259,31 +259,8 @@ export default {
       organization_txt: "",
       organization_list: ["请选择"],
       organization: false,
-      regional_grid_txt: "",
-      areaList: [
-        {
-          text: "浙江",
-          children: [
-            {
-              text: "杭州",
-            },
-            {
-              text: "温州",
-            },
-          ],
-        },
-        {
-          text: "福建",
-          children: [
-            {
-              text: "福州",
-            },
-            {
-              text: "厦门",
-            },
-          ],
-        },
-      ],
+      regional_grid_txt: {},
+      areaList: [],
       regional_grid: false,
       value: "",
       customer_name: "",
@@ -346,17 +323,30 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        // console.log(res.data);
-        let transformDara = [];
-        res.data.forEach((it, index) => {
-          if (it.code !== null) {
-            // console.log(it.children);
-            transformDara.push({ index: it.code, text: it.name });
-          }
-        });
+        console.log(res.data);
+        // let transformDara = [];
+        // res.data.forEach((it, index) => {
+        //   if (it.code !== null) {
+        //     // console.log(it.children);
+        //     transformDara.push({ index: it.code, text: it.name });
+        //   }
+        // });
         // console.log(transformDara);
-        this.areaList = transformDara;
+        // this.areaList = transformDara;
+        this.areaList = res.data.length > 0 &&  this.transformData(res.data);
+        console.log(this.areaList);
       });
+    },
+    transformData(data, newArr = []) { //递归查询
+      for (let i = 0; i < data.length; i++) {
+        newArr.push({text: data[i]['name'], id: data[i]['id']})
+        if(data[i]['children'] && data[i]['children'].length > 0) {
+          this.transformData(data[i]['children'], newArr[i]['children'] = []);
+        }else {
+          newArr[i]['children'] = ''
+        }
+      }
+      return newArr;
     },
     onNation(value) {
       // debugger
@@ -379,12 +369,10 @@ export default {
       this.education_level_txt = value;
       this.education_level = false;
     },
-    onRegional_grid(values) {
-      // console.log(values);
-      this.regional_grid_txt = values;
-      // this.regional_grid_txt = values
-      //   .map((item) => item)
-      //   .join('/');
+    onRegional_grid(values, index) {
+      console.log(values, index);
+      this.regional_grid_txt.text = values.join('/');
+      this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
       this.regional_grid = false;
     },
     addResult() {
@@ -397,7 +385,7 @@ export default {
           wechat: this.weChat,
           nation: this.nation_txt.index,
           marriage: this.marital_status_txt.index,
-          gridding: this.regional_grid_txt,
+          gridding: this.regional_grid_txt.index,
           workUnit: this.work_unit,
           connectAddress: this.contact_address,
           annualIncome: this.annual_income,
