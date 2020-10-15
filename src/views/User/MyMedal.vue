@@ -146,7 +146,6 @@ export default {
               )
               .then((res) => {
                 $loading.hide();
-                console.log("请求res:", res);
                 if (res.resultMessage == "success") {
                   callback();
                 }

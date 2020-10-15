@@ -578,8 +578,8 @@ export default {
     enumData(val, data) {
       // debugger
       if (val && data.length > 0) {
-        console.log(this.prospect_details);
-        console.log(data, val);
+        // console.log(this.prospect_details);
+        // console.log(data, val);
         const find = data.find((it) => it.index === +val);
         // debugger
         return find ? find.text : "";
@@ -592,7 +592,7 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_nation",
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
@@ -604,7 +604,7 @@ export default {
           this.prospect_details.nation,
           this.nation_list
         );
-        console.log(this.prospect_details.nation);
+        // console.log(this.prospect_details.nation);
       });
       // 婚姻状况
       this.$httpGet({
@@ -626,7 +626,7 @@ export default {
           this.prospect_details.marriage,
           this.marital_status_list
         );
-        console.log(this.prospect_details.marriage);
+        // console.log(this.prospect_details.marriage);
       });
       // 最高学历
       this.$httpGet({
@@ -648,7 +648,7 @@ export default {
           this.prospect_details.education,
           this.education_level_list
         );
-        console.log(this.prospect_details.education);
+        // console.log(this.prospect_details.education);
       });
     },
     onNation(value) {
@@ -680,7 +680,7 @@ export default {
       this.regional_grid = false;
     },
     async editRecord(val) {
-      console.log(val);
+      // console.log(val);
       const res = await this.$httpGet({
         url: `/api/customersPotential/get/${this.id}`,
         data: {
@@ -722,7 +722,7 @@ export default {
           this.$router.go(-1);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     },
   },

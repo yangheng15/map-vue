@@ -122,12 +122,10 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res);
         this.path_planning_list = res.data;
       });
     },
     onSearch(val) {
-      console.log(val);
       let _username = localStorage.getItem("username");
       this.$httpGet({
         url: "/api/semGridding/custInfo",
@@ -138,7 +136,6 @@ export default {
           custName: val,
         },
       }).then((res) => {
-        console.log(res);
         this.path_planning_list = res.data;
       });
     },

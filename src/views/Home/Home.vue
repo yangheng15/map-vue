@@ -264,7 +264,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
         this.latest_tasks = res.data;
       });
     },

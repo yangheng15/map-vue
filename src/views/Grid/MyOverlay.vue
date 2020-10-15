@@ -3,7 +3,7 @@
     <div class="introduce_content" @touchstart="registerEvent">
       <!-- <img v-if="show" class="introduce_img" :src="img" alt /> -->
       <p :class="name ?'introduce_address':'introduce_address_lv'">{{address}}</p>
-      <p v-if="name" class="introduce_name">{{name}}</p>
+      <p :class="name?'introduce_name':'introduce_name_lv'">{{name?name:'无人认领'}}</p>
     </div>
     <!-- <div v-text="text" @click="handleClick"></div> -->
   </bm-overlay>
@@ -82,11 +82,24 @@ export default {
   color: #0FB38F;
   font-size: 0.8rem;
   font-weight: 600;
-  /* width: 4rem; */
+   width: 95px;
   height: 1.5rem;
   line-height: 1.5rem;
   background: #fff;
-  /* width: 100%; */
+  margin: 0;
+  text-align: center;
+  border: 0.01rem solid #0FB38F;
+}
+.introduce_content .introduce_name_lv {
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0rem 0.2rem;
+   width: 95px;
+  height: 1.5rem;
+  margin: 0;
+  line-height: 1.5rem;
+  background:#0FB38F;
   text-align: center;
   border: 0.01rem solid #0FB38F;
 }

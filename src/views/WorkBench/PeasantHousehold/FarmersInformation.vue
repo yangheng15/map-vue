@@ -1261,15 +1261,14 @@ export default {
       this.date = this.formatDate(date);
     },
     markerDragend({ point }) {
-      console.log(point);
       const { lng, lat } = point;
       this.farmers_details.location = `${lng},${lat}`;
     },
     enumData(val, data) {
       // debugger
       if (val && data.length > 0) {
-        console.log(this.prospect_details);
-        console.log(data, val);
+        // console.log(this.prospect_details);
+        // console.log(data, val);
         const find = data.find((it) => it.index === val);
         // debugger
         return find ? find.text : "";
@@ -1282,7 +1281,7 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_family_type",
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
@@ -1294,7 +1293,7 @@ export default {
           this.farmers_details.type,
           this.family_type_list
         );
-        console.log(this.farmers_details.type);
+        // console.log(this.farmers_details.type);
       });
     },
     onFamily_type(value) {
@@ -1325,9 +1324,6 @@ export default {
     onVehicle_condition(value) {
       this.vehicle_condition_txt = value;
       this.vehicle_condition = false;
-    },
-    onSubmit(values) {
-      console.log("submit", values);
     },
     onChoose_gender(value) {
       this.choose_gender_txt = value;
@@ -1374,7 +1370,7 @@ export default {
       this.showPicker = false;
     },
     handler({ BMap, map }) {
-      console.log(BMap, map);
+      // console.log(BMap, map);
       this.center.lng = 116.404;
       this.center.lat = 39.915;
       this.zoom = 15;
@@ -1397,7 +1393,7 @@ export default {
       this.isPopupVisible = false;
     },
     handleChange(value) {
-      console.log(`selected ${value}`);
+      // console.log(`selected ${value}`);
     },
     //选中一个item
     selectItem(thisItem) {
@@ -1424,7 +1420,6 @@ export default {
           familyCode: this.farmers_details.familyCode,
         },
       }).then((res) => {
-        console.log(res);
         this.getFamilyPeople();
         this.isPopupVisibleFamily = false;
         Toast({
@@ -1434,8 +1429,6 @@ export default {
       });
     },
     AddPopupAssets() {
-      let lallalal = moment(this.data).unix();
-      console.log(lallalal);
       this.$httpPost({
         url: "/api/customersFamilyAssetsLiability/add",
         data: {
@@ -1447,7 +1440,6 @@ export default {
           // checkTime:this.date,
         },
       }).then((res) => {
-        console.log(res);
         this.getFamilyAssets();
         this.isPopupVisibleAssets = false;
         Toast({
@@ -1532,7 +1524,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
         this.family_member = res.data;
         // this.peasant_household.forEach((it) => {
         //   this.familyCode = it.type;
@@ -1549,7 +1540,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
         this.assets = res.data;
         // this.peasant_household.forEach((it) => {
         //   this.familyCode = it.type;
@@ -1561,7 +1551,6 @@ export default {
       this.$httpGet({
         url: `/api/customersFamilyIncome/get/${this.farmers_details.familyCode}`,
       }).then((res) => {
-        console.log(res.data);
         this.familyIncome = res.data;
         // this.peasant_household.forEach((it) => {
         //   this.familyCode = it.type;
@@ -1605,7 +1594,7 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     },
     UpdateFamilyIncome(){
@@ -1632,7 +1621,7 @@ export default {
           });
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     }
   },

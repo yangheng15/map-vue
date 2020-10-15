@@ -261,10 +261,7 @@ export default {
     this.id = this.$route.query.id;
     this.productName = this.$route.query.productName;
     this.productCode = this.$route.query.productCode;
-    console.log(this.$route.query.productName);
-    console.log(this.$route.query.productCode);
     this.getTaskQuery();
-    // $loading.show("拼命加载中..");
   },
   updated() {},
   methods: {
@@ -370,7 +367,7 @@ export default {
           intention: val,
         },
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.MarketingRecord = res.data;
       });
     },

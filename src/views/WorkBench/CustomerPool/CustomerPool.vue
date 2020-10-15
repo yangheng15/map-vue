@@ -28,7 +28,7 @@
           <p class="selctBtn" @click="joinCust(thisItem)">
             <img
               style="width: 20px"
-              :src="thisItem.flag ? imgArr[0] : imgArr[1]"
+              :src="thisItem.flag ? imgArr[1] : imgArr[0]"
             />
           </p>
           <li class="newCustomerList" style="width: 100%">
@@ -166,8 +166,9 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-let img1 = require('../../../assets/WorkBench/empty_heart.svg'),
-    img2 = require('../../../assets/WorkBench/full_heart.svg');
+import { Toast, Dialog } from "vant";
+let img1 = require("../../../assets/WorkBench/empty_heart.svg"),
+  img2 = require("../../../assets/WorkBench/full_heart.svg");
 export default {
   name: "CustomerPool",
   components: {
@@ -210,7 +211,7 @@ export default {
       ],
       customer_pool: [],
       empty_heart: true,
-      imgArr: [img1, img2]
+      imgArr: [img1, img2],
     };
   },
   created() {
@@ -266,8 +267,16 @@ export default {
       });
     },
     joinCust(item) {
-      console.log(this.customerCode);
-      item.flag = !item.flag
+      // console.log(this.customerCode);
+      if (item.flag) {
+        Toast({
+          message: "已存在我的客户信息",
+          position: "middle",
+        });
+      } else {
+        item.flag = !item.flag;
+      }
+
       this.$httpPost({
         url: "/api/customers/joinCust",
         params: {
@@ -275,9 +284,9 @@ export default {
         },
       })
         .then((res) => {
-          console.log(code);
+          // console.log(code);
           this.empty_heart = !this.empty_heart;
-          console.log(this.empty_heart);
+          // console.log(this.empty_heart);
         })
         .catch(() => {});
     },

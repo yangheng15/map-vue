@@ -89,12 +89,12 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.customer_list = res.data;
       });
     },
     onSearch(val) {
-      console.log(val);
+      // console.log(val);
       this.$httpGet({
         url: "/api/customersPotential/app",
         params: {

@@ -21,7 +21,7 @@
           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div> -->
-      <div class="resource_selection new_selection_three">
+      <div class="new_selection_three">
         <!-- <p>资源</p> -->
         <ul
           v-for="(thisItem, index) in resource_selection3"
@@ -203,11 +203,14 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
+.new_selection_three{
+  padding: 0rem 1rem;
+}
 .new_selection_two ul {
   width: 50%;
 }
 .new_selection_three ul {
-  width: 33.3%;
+  width: 50%;
 }
 .resource_selection p {
   width: 100%;
@@ -248,9 +251,9 @@ export default {
   margin-left: 0.5rem;
 }
 .save {
-  margin-top: 3rem;
+  margin-top: 1rem;
   text-align: center;
-  padding-bottom: 3rem;
+  padding-bottom: 1.5rem;
 }
 .save button {
   border: 0.05rem solid #bbb;
@@ -311,7 +314,7 @@ export default {
   }
   .save button {
     height: 1.7rem;
-    line-height: 1.7rem;
+    line-height: 1.6rem;
     width: 5rem;
     font-size: 0.8rem;
   }

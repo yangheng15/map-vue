@@ -262,14 +262,12 @@ export default {
       }
     },
     editRecord(val) {
-      console.log(val);
       this.$httpGet({
         url: `/api/semCustomersRecords/appGet/${this.id}`,
         data: {
           id: this.id,
         },
       }).then((res) => {
-        console.log(res.data);
         this.editRecords = res.data;
         this.imageInfo = res.data.imageInfo;
         this.customerCode = res.data.customerCode;
@@ -278,7 +276,6 @@ export default {
       });
     },
     onResult(value) {
-      console.log(value);
       this.editRecords.isSucc = value.index;
       this.showResult = false;
     },
@@ -291,8 +288,8 @@ export default {
       this.showMarketing_methods = false;
     },
     modifyResult() {
-      console.log(this.id);
-      console.log(this.editRecords.code);
+      // console.log(this.id);
+      // console.log(this.editRecords.code);
       this.$httpPut({
         url: "/api/semCustomersRecords/updateRecord",
         data: {
@@ -310,7 +307,6 @@ export default {
           feedback: this.editRecords.feedback,
         },
       }).then((res) => {
-        console.log(res);
         Toast({
           message: "保存成功",
           position: "middle",
@@ -330,7 +326,6 @@ export default {
           interestRate: this.editRecords.interestRate,
         },
       }).then((res) => {
-        console.log(res);
         Toast({
           message: "保存成功",
           position: "middle",
@@ -348,7 +343,6 @@ export default {
           imageInfo: this.imageInfo,
         },
       }).then((res) => {
-        console.log(res);
         Toast({
           message: "保存成功",
           position: "middle",
@@ -356,14 +350,12 @@ export default {
       });
     },
     async editPicture() {
-      console.log(this.imageInfo);
       this.$httpGet({
         url: "/api/show/image/base64",
         params: {
           id: this.imageInfo,
         },
       }).then((res) => {
-        console.log(res.data);
         this.fileList[0].url = "data:image/jpg;base64," + res.data;
         this.fileList[0].isImage = true;
       });
@@ -371,13 +363,13 @@ export default {
     afterRead(file) {
       let formData = new FormData();
       formData.append("file", file.file);
-      console.log(file);
+      // console.log(file);
       this.$httpPost({
         url: "/api/upload/attachment",
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        console.log(res.data.pid);
+        // console.log(res.data.pid);
         this.pictureId = res.data.pid;
       });
     },

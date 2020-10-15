@@ -5,7 +5,7 @@
       v-model="searchVal"
       placeholder="网格名称、客户名称、资源名称"
     />
-    <van-popup v-model="showPopup" position="top" >
+    <van-popup v-model="showPopup" position="middle" round :closeable="true" :style="{ width: '80%',marginLeft:'10%',borderRadius: '5%' }">
       <resource-selection @resourceEmit="resourceEmit" />
     </van-popup>
     <van-popup v-model="introduce">
@@ -193,7 +193,7 @@
 
       <!-- 点击出现的标记 -->
       <bm-marker
-        :zIndex=999
+        :zIndex="999"
         v-if="markerTure"
         @click="showPopupSign(markerPostion)"
         :dragging="true"
@@ -239,7 +239,7 @@
       <p @click="showPopup = true">
         <img src="../../assets/grid/resource.svg" alt />
       </p>
-      <p @click="markerTure = true">
+      <p @click="showMarkerToast">
         <img src="../../assets/grid/sign.svg" alt />
       </p>
       <!-- <router-link
@@ -257,6 +257,14 @@
       <p @click="eyeTrueFalse">
         <img v-show="eyeMe" src="../../assets/grid/eyeMine.svg" alt />
         <img v-show="!eyeMe" src="../../assets/grid/eyeNotMine.svg" alt />
+      </p>
+      <p>
+        <img src="../../assets/grid/surroundingCustomers.svg" alt />
+        <img
+          v-show="false"
+          src="../../assets/grid/surroundingCustomers.svg"
+          alt
+        />
       </p>
     </div>
 
@@ -391,7 +399,7 @@ export default {
       resource_type_txt: "",
       resource_type_list: [],
       resource_type: false,
-      markerPostion: { lng: 114.655, lat: 33.625 },
+      markerPostion: { lng: 114.665, lat: 33.635 },
       filterData: [],
       map: null,
       typeIds: "",
@@ -414,7 +422,7 @@ export default {
           lat: it.location.split(",")[1],
         });
       });
-      console.log(this.polylinePath);
+      // console.log(this.polylinePath);
     }
     // console.log(this.pathIds);
 
@@ -426,7 +434,7 @@ export default {
     resourceEmit(data) {
       this.typeIds = data.typeIds;
       if (this.typeIds) {
-        this.map.clearOverlays()
+        this.map.clearOverlays();
         this.queryResources();
       }
       this.showPopup = false;
@@ -435,7 +443,6 @@ export default {
       this.$httpGet({
         url: "/api/mapPlaningByApp/query",
       }).then((res) => {
-        console.log(res.data);
         this.map_data = res.data;
         this.map_data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
@@ -459,7 +466,6 @@ export default {
           // specialSubject: this.specialSubject,
         },
       }).then((res) => {
-        console.log(res.data);
         this.map_data = res.data;
         this.map_data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
@@ -482,7 +488,6 @@ export default {
           typeIds: this.typeIds,
         },
       }).then((res) => {
-        console.log(res.data);
         this.typeIdsData = res.data;
         this.typeIdsData.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
@@ -493,7 +498,7 @@ export default {
       });
     },
     createInfoWindow(map) {
-      console.log(this.typeIdsData);
+      // console.log(this.typeIdsData);
       map.centerAndZoom(new BMap.Point(114.664477, 33.640232), 15);
       var data_info = this.typeIdsData;
       var opts = {
@@ -533,7 +538,6 @@ export default {
       this.introduce = true;
     },
     showTypeIds(data) {
-      console.log(data);
       this.typeIdsItem = { ...data };
       const positionArr =
         this.typeIdsItem.position && this.typeIdsItem.position.split(",");
@@ -586,7 +590,6 @@ export default {
       this.markerPostion = point;
     },
     clickBack(item) {
-      console.log(item);
       // debugger
       let _username = localStorage.getItem("username");
       if (item.principal == _username) {
@@ -618,7 +621,6 @@ export default {
       }
     },
     clickClaim(item) {
-      console.log(item);
       if (item.principalName) {
         Toast({
           message: "已分配的网格不允许认领",
@@ -643,6 +645,13 @@ export default {
         // };
         this.introduce = false; //关闭弹窗
       });
+    },
+    showMarkerToast() {
+      Toast({
+        message: "拖拽图标标记位置",
+        position: "middle",
+      });
+      this.markerTure = true;
     },
     showPopupSign(point) {
       this.isPopupVisibleSign = true;
@@ -695,7 +704,7 @@ export default {
         postion: { lng: posArr[0], lat: posArr[1] },
         text: this.signData.sign_name,
       });
-      console.log(this.redFlagPostionArr);
+      // console.log(this.redFlagPostionArr);
 
       const code = this.filterData.find(
         (it) => it.codeText === this.resource_type_txt

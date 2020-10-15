@@ -260,7 +260,6 @@ export default {
           feedback: this.customer_feedback,
         },
       }).then((res) => {
-        console.log(res);
         this.resultCode = res.data.code;
         Toast({
           message: "保存成功",
@@ -279,7 +278,6 @@ export default {
           interestRate: this.product_rate,
         },
       }).then((res) => {
-        console.log(res);
         Toast({
           message: "保存成功",
           position: "middle",
@@ -306,7 +304,7 @@ export default {
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        console.log(res.data.pid);
+        // console.log(res.data.pid);
         this.pictureId.push(res.data.pid);
       });
     },
@@ -319,7 +317,6 @@ export default {
           semCode: this.resultCode,
         },
       }).then((res) => {
-        console.log(res);
         Toast({
           message: "保存成功",
           position: "middle",

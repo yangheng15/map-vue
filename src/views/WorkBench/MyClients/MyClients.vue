@@ -383,7 +383,7 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.newCustomerList1 = res.data;
       });
     },
@@ -391,7 +391,7 @@ export default {
       this.$httpGet({
         url: `/dic/dic_client_grade/${this.level}`,
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.levelName = res.data.codeText;
       });
     },
@@ -405,12 +405,12 @@ export default {
             name: val,
           },
         }).then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.newCustomerList = res.data;
           this.newCustomerList.forEach((it) => {
             this.level = it.level;
           });
-          console.log(this.level);
+          // console.log(this.level);
           if (this.level) {
             this.getdic();
           }
@@ -424,7 +424,7 @@ export default {
             name: val,
           },
         }).then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.newCustomerList1 = res.data;
         });
       }
@@ -461,12 +461,12 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.newCustomerList = res.data;
         this.newCustomerList.forEach((it) => {
           this.level = it.level;
         });
-        console.log(this.level);
+        // console.log(this.level);
         if (this.level) {
           this.getdic();
         }

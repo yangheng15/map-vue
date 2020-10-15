@@ -65,7 +65,6 @@ export default {
       });
     },
     screenChange(val) {
-      console.log(val);
       this.$httpGet({
         url: "/api/productsInfo/appQuery",
         params: {
@@ -81,7 +80,6 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_product_type",
       }).then((res) => {
-        console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if(it.parentId !== null) {

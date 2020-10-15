@@ -532,7 +532,7 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_education",
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if(it.parentId !== null) {

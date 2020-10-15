@@ -69,16 +69,17 @@
         readonly
         clickable
         name="area"
-        :value="regional_grid_txt"
+        :value="regional_grid_txt.text"
         label="所属网格："
         placeholder="点击选择所属网格"
         @click="regional_grid = true"
       />
       <van-popup v-model="regional_grid" position="bottom">
-        <van-area
-          :area-list="areaList"
-          @confirm="onRegional_grid"
+        <van-picker
+          show-toolbar
+          :columns="areaList"
           @cancel="regional_grid = false"
+          @confirm="onRegional_grid"
         />
       </van-popup>
       <van-field
@@ -231,7 +232,6 @@ export default {
       health_list: [{ index: 0, text: "良好" }],
       health: false,
       car_number: "",
-
       region_choice: false,
       active: false,
       screen_name: "",
@@ -245,8 +245,7 @@ export default {
       Custome_level: false,
       recommended_products: "",
       education_level_txt: "",
-      education_level_list: [
-        ],
+      education_level_list: [],
       education_level: false,
       choose_gender_txt: "",
       choose_gender_list: ["男", "女"],
@@ -261,303 +260,32 @@ export default {
       organization_list: ["请选择"],
       organization: false,
       regional_grid_txt: "",
-      areaList: {
-        province_list: {
-          110000: "川汇区",
-          120000: "项城市",
-          130000: "扶沟县",
-          140000: "西华县",
-          150000: "商水县",
-          160000: "沈丘县",
-        },
-        city_list: {
-          110100: "陈州回族街道",
-          110200: "七一路街道",
-          110300: "荷花路街道",
-          110400: "人和街道",
-          110500: "小桥街道",
-          110600: "李埠口乡",
-
-          120100: "花园街道",
-          120200: "水寨街道",
-          120300: "东方街道",
-          120400: "莲花街道",
-          120500: "千佛阁街道",
-          120600: "光武街",
-
-          130100: "桐丘街道",
-          130200: "扶亭街道",
-          130300: "崔桥镇",
-          130400: "江村镇",
-          130500: "白潭镇",
-          130600: "韭园镇",
-        },
-        county_list: {
-          110101: "城关村",
-          110102: "化河村",
-          110205: "王店村",
-          110206: "许湾村",
-          110301: "城关村",
-          110302: "城郊村",
-          110401: "王皮溜镇",
-          110402: "太清宫镇",
-          110505: "迟营村",
-          110506: "田口村",
-          110601: "胡集村",
-          110702: "古郊村",
-
-          120101: "南顿村",
-          120102: "高寺村",
-          120203: "官会村",
-          120204: "丁集村",
-          120305: "郑郭村",
-          120306: "范集村",
-
-          130101: "包屯村",
-          130102: "曹里村",
-          130203: "大李村",
-          130204: "练寺村",
-          130305: "汴岗村",
-          130306: "范集村",
-        },
-      },
-      regional_grid: false,
-      screen_age: "",
-      circlePath: {
-        center: {
-          lng: 114.65,
-          lat: 33.37,
-        },
-        radius: 5000,
-      },
-      token: "",
-      tabId: 0,
-      title: "详情",
-      textTitle: "--",
-      content: "",
-      deliverTime: "",
-      deliverDepartment: "",
-      deliverPerson: "",
-      articleId: "",
-      isPlaying: false,
-      dataURL: "",
-      pictureId: undefined,
-      isLGB: true,
-      tpxw: {},
-      isEdit: false,
-      show1: false,
-      show2: false,
-      show3: false,
-      value1: "",
-      value2: "",
-      value3: "",
-      value: "",
-      showPicker: false,
-      columns: [
+      areaList: [
         {
-          text: "川汇区",
+          text: "浙江",
           children: [
             {
-              text: "陈州回族街道",
-              children: [{ text: "城关村" }, { text: "化河村" }],
+              text: "杭州",
             },
             {
-              text: "七一路街道",
-              children: [{ text: "王店村" }, { text: "许湾村" }],
-            },
-            {
-              text: "荷花路街道",
-              children: [{ text: "城关村" }, { text: "城郊村" }],
-            },
-            {
-              text: "人和街道",
-              children: [{ text: "王皮溜镇" }, { text: "太清宫镇" }],
-            },
-            {
-              text: "小桥街道",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "李埠口乡",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
+              text: "温州",
             },
           ],
         },
         {
-          text: "淮阳区",
+          text: "福建",
           children: [
             {
-              text: "柳湖街道",
-              children: [{ text: "豆门村" }, { text: "冯塘村" }],
+              text: "福州",
             },
             {
-              text: "城关回族镇",
-              children: [{ text: "刘振村" }, { text: "许湾村" }],
-            },
-            {
-              text: "新站镇",
-              children: [{ text: "城关村" }, { text: "黄集村" }],
-            },
-            {
-              text: "鲁台镇",
-              children: [{ text: "齐老镇" }, { text: "曹河镇" }],
-            },
-            {
-              text: "四通镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "临蔡镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "项城市",
-          children: [
-            {
-              text: "花园街道",
-              children: [{ text: "南顿村" }, { text: "高寺村" }],
-            },
-            {
-              text: "水寨街道",
-              children: [{ text: "官会村" }, { text: "丁集村" }],
-            },
-            {
-              text: "东方街道",
-              children: [{ text: "郑郭村" }, { text: "范集村" }],
-            },
-            {
-              text: "莲花街道",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "千佛阁街道",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "光武街",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "扶沟县",
-          children: [
-            {
-              text: "桐丘街道",
-              children: [{ text: "包屯村" }, { text: "曹里村" }],
-            },
-            {
-              text: "扶亭街道",
-              children: [{ text: "大李村" }, { text: "练寺村" }],
-            },
-            {
-              text: "崔桥镇",
-              children: [{ text: "汴岗村" }, { text: "范集村" }],
-            },
-            {
-              text: "江村镇",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "白潭镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "韭园镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "西华县",
-          children: [
-            {
-              text: "昆山",
-              children: [{ text: "红花村" }, { text: "聂堆村" }],
-            },
-            {
-              text: "娲城",
-              children: [{ text: "东夏村" }, { text: "迟营村" }],
-            },
-            {
-              text: "箕子台个街道",
-              children: [{ text: "叶埠村" }, { text: "皮营" }],
-            },
-            {
-              text: "西夏亭",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "逍遥",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "奉母",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "商水县",
-          children: [
-            {
-              text: "柳湖街道",
-              children: [{ text: "豆门村" }, { text: "冯塘村" }],
-            },
-            {
-              text: "城关回族镇",
-              children: [{ text: "刘振村" }, { text: "许湾村" }],
-            },
-            {
-              text: "新站镇",
-              children: [{ text: "城关村" }, { text: "黄集村" }],
-            },
-            {
-              text: "鲁台镇",
-              children: [{ text: "齐老镇" }, { text: "曹河镇" }],
-            },
-            {
-              text: "四通镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "临蔡镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "沈丘县",
-          children: [
-            {
-              text: "桐丘街道",
-              children: [{ text: "包屯村" }, { text: "曹里村" }],
-            },
-            {
-              text: "扶亭街道",
-              children: [{ text: "大李村" }, { text: "练寺村" }],
-            },
-            {
-              text: "崔桥镇",
-              children: [{ text: "汴岗村" }, { text: "范集村" }],
-            },
-            {
-              text: "江村镇",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "白潭镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "韭园镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
+              text: "厦门",
             },
           ],
         },
       ],
+      regional_grid: false,
+      value: "",
       customer_name: "",
       card_number: "",
     };
@@ -573,13 +301,13 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_nation",
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
-          if(it.parentId !== null) {
-            transformDara.push({index: it.id, text: it.codeText})
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.id, text: it.codeText });
           }
-        })
+        });
         // debugger
         this.nation_list = transformDara;
       });
@@ -587,27 +315,47 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_marital_status",
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
-          if(it.parentId !== null) {
-            transformDara.push({index: it.id, text: it.codeText})
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.id, text: it.codeText });
           }
-        })
+        });
         this.marital_status_list = transformDara;
       });
       // 最高学历
       this.$httpGet({
         url: "/dic/type/dic_education",
       }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
-          if(it.parentId !== null) {
-            transformDara.push({index: it.id, text: it.codeText})
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.id, text: it.codeText });
           }
-        })
+        });
+        // console.log(transformDara);
         this.education_level_list = transformDara;
+      });
+      // 所属网格
+      this.$httpGet({
+        url: "/api/semGridding/query",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        // console.log(res.data);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.code !== null) {
+            // console.log(it.children);
+            transformDara.push({ index: it.code, text: it.name });
+          }
+        });
+        // console.log(transformDara);
+        this.areaList = transformDara;
       });
     },
     onNation(value) {
@@ -632,7 +380,11 @@ export default {
       this.education_level = false;
     },
     onRegional_grid(values) {
-      this.regional_grid_txt = values.map((item) => item.name).join("/");
+      // console.log(values);
+      this.regional_grid_txt = values;
+      // this.regional_grid_txt = values
+      //   .map((item) => item)
+      //   .join('/');
       this.regional_grid = false;
     },
     addResult() {
@@ -667,7 +419,7 @@ export default {
           this.$router.go(-1);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     },
   },

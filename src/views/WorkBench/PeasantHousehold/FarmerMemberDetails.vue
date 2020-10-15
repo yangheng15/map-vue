@@ -86,8 +86,8 @@ export default {
     enumData(val, data) {
       // debugger
       if (val && data.length > 0) {
-        console.log(this.prospect_details);
-        console.log(data, val);
+        // console.log(this.prospect_details);
+        // console.log(data, val);
         const find = data.find((it) => it.index === +val);
         // debugger
         return find ? find.text : "";
@@ -100,7 +100,6 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_nation",
       }).then((res) => {
-        console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
@@ -112,7 +111,7 @@ export default {
           this.prospect_details.nation,
           this.nation_list
         );
-        console.log(this.prospect_details.nation);
+        // console.log(this.prospect_details.nation);
       });
     },
     onNation(value) {
@@ -122,14 +121,14 @@ export default {
       this.nation = false;
     },
     async editRecord(val) {
-      console.log(val);
+      // console.log(val);
       const res = await this.$httpGet({
         url: `/api/customersFamilyMembers/get/${this.id}`,
       });
       this.prospect_details = res.data;
     },
     modifyResult() {
-        console.log(this.familyCode);
+        // console.log(this.familyCode);
       this.$httpPut({
         url: "/api/customersFamilyMembers/update",
         data: {
@@ -151,7 +150,7 @@ export default {
           this.$router.go(-1);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     },
   },

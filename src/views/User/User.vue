@@ -125,7 +125,7 @@ export default {
       this.$httpGet({
         url: `/api/v1/user/byname/${_username}`,
       }).then((res) => {
-        console.log(res.row);
+        // console.log(res.row);
         this.userNameTxt = res.row;
         this.userNameTxt.level =parseInt(res.row.level);
       });
