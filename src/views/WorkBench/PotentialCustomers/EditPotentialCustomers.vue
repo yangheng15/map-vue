@@ -76,10 +76,11 @@
       />
 
       <van-popup v-model="regional_grid" position="bottom">
-        <van-area
-          :area-list="areaList"
-          @confirm="onRegional_grid"
+        <van-picker
+          show-toolbar
+          :columns="areaList"
           @cancel="regional_grid = false"
+          @confirm="onRegional_grid"
         />
       </van-popup>
       <van-field
@@ -263,66 +264,7 @@ export default {
       organization_list: ["请选择"],
       organization: false,
       regional_grid_txt: "",
-      areaList: {
-        province_list: {
-          110000: "川汇区",
-          120000: "项城市",
-          130000: "扶沟县",
-          140000: "西华县",
-          150000: "商水县",
-          160000: "沈丘县",
-        },
-        city_list: {
-          110100: "陈州回族街道",
-          110200: "七一路街道",
-          110300: "荷花路街道",
-          110400: "人和街道",
-          110500: "小桥街道",
-          110600: "李埠口乡",
-
-          120100: "花园街道",
-          120200: "水寨街道",
-          120300: "东方街道",
-          120400: "莲花街道",
-          120500: "千佛阁街道",
-          120600: "光武街",
-
-          130100: "桐丘街道",
-          130200: "扶亭街道",
-          130300: "崔桥镇",
-          130400: "江村镇",
-          130500: "白潭镇",
-          130600: "韭园镇",
-        },
-        county_list: {
-          110101: "城关村",
-          110102: "化河村",
-          110205: "王店村",
-          110206: "许湾村",
-          110301: "城关村",
-          110302: "城郊村",
-          110401: "王皮溜镇",
-          110402: "太清宫镇",
-          110505: "迟营村",
-          110506: "田口村",
-          110601: "胡集村",
-          110702: "古郊村",
-
-          120101: "南顿村",
-          120102: "高寺村",
-          120203: "官会村",
-          120204: "丁集村",
-          120305: "郑郭村",
-          120306: "范集村",
-
-          130101: "包屯村",
-          130102: "曹里村",
-          130203: "大李村",
-          130204: "练寺村",
-          130305: "汴岗村",
-          130306: "范集村",
-        },
-      },
+      areaList: {},
       regional_grid: false,
       screen_age: "",
       circlePath: {
@@ -563,7 +505,7 @@ export default {
       customer_name: "",
       card_number: "",
       id: "",
-      prospect_details: "",
+      prospect_details: {},
       prospect_detailsEdit: {},
     };
   },
@@ -650,6 +592,44 @@ export default {
         );
         // console.log(this.prospect_details.education);
       });
+       // 所属网格
+      this.$httpGet({
+        url: "/api/semGridding/query",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        // let transformDara = [];
+        // res.data.forEach((it, index) => {
+        //   if (it.code !== null) {
+        //     // console.log(it.children);
+        //     transformDara.push({ index: it.code, text: it.name });
+        //   }
+        // });
+        // console.log(transformDara);
+        // this.areaList = transformDara;
+        this.areaList = res.data.length > 0 &&  this.transformData(res.data);
+        console.log(this.areaList);
+        //回显数据
+        const arrIndex = this.prospect_details.gridding.split(',');
+        console.log(arrIndex);
+        this.prospect_details.gridding = `${this.areaList[arrIndex[0] - 1].text}/${this.areaList[arrIndex[1] - 1].text}`
+        console.log(this.prospect_details.gridding);
+
+      });
+    },
+    transformData(data, newArr = []) { //递归查询
+      for (let i = 0; i < data.length; i++) {
+        newArr.push({text: data[i]['name'], id: data[i]['id']})
+        if(data[i]['children'] && data[i]['children'].length > 0) {
+          this.transformData(data[i]['children'], newArr[i]['children'] = []);
+        }else {
+          newArr[i]['children'] = ''
+        }
+      }
+      return newArr;
     },
     onNation(value) {
       // debugger;
@@ -676,7 +656,8 @@ export default {
       this.education_level = false;
     },
     onRegional_grid(values) {
-      this.regional_grid_txt = values.map((item) => item.name).join("/");
+      this.regional_grid_txt.text = values.join('/');
+      this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
       this.regional_grid = false;
     },
     async editRecord(val) {
