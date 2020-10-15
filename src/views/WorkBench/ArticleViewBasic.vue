@@ -621,9 +621,6 @@ export default {
       this.showPicker = false;
     },
   },
-  beforeDestroy() {
-    cancel();
-  },
 };
 </script>
 <style scoped>

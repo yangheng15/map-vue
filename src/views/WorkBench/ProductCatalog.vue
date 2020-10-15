@@ -42,7 +42,7 @@ export default {
     return {
       title: "",
       typeCN: "",
-      product_catalog: 6,
+      product_catalog: "活期存款",
       product_option: [],
       MarketingRecord: [],
     };
@@ -65,6 +65,7 @@ export default {
       });
     },
     screenChange(val) {
+      console.log(val);
       this.$httpGet({
         url: "/api/productsInfo/appQuery",
         params: {
@@ -84,7 +85,7 @@ export default {
         let transformDara = [];
         res.data.forEach((it, index) => {
           if(it.parentId !== null) {
-            transformDara.push({value: it.id, text: it.codeText})
+            transformDara.push({value: it.code, text: it.codeText})
           }
         })
         this.product_option = transformDara;
