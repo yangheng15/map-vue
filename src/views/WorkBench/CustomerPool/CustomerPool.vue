@@ -169,6 +169,7 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
+// import bus from "../../../assets/eventBus.js"
 import { Toast, Dialog } from "vant";
 let img1 = require("../../../assets/WorkBench/empty_heart.svg"),
   img2 = require("../../../assets/WorkBench/full_heart.svg");
@@ -294,6 +295,11 @@ export default {
         .catch(() => {});
     },
   },
+  // mounted(){
+  //   bus.$on("userDefinedEvent",function(msg){
+  //     this.customer_pool=msg
+  //   })
+  // }
 };
 </script>
 <style scoped>
