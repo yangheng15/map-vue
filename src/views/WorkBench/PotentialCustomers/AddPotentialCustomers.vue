@@ -372,7 +372,8 @@ export default {
     onRegional_grid(values, index) {
       console.log(values, index);
       this.regional_grid_txt.text = values.join('/');
-      this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
+      this.regional_grid_txt.index = index.join(',');
+      // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
       this.regional_grid = false;
     },
     addResult() {

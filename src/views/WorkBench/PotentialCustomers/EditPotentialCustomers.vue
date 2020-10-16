@@ -615,7 +615,7 @@ export default {
         //回显数据
         const arrIndex = this.prospect_details.gridding.split(',');
         console.log(arrIndex);
-        this.prospect_details.gridding = `${this.areaList[arrIndex[0] - 1].text}/${this.areaList[arrIndex[1] - 1].text}`
+        this.prospect_details.gridding = `${this.areaList[arrIndex[0]].text}/${this.areaList[arrIndex[0]]['children'][arrIndex[1]].text}`
         console.log(this.prospect_details.gridding);
 
       });

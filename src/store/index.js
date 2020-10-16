@@ -4,11 +4,16 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    count: 0
+    ScreenCustomerPoolData: []
   },
   mutations: {
-    increment (state) {
-      state.count++
+    ['UPDATE'](state, data) {
+      state.ScreenCustomerPoolData = data; 
+    }
+  },
+  actions: {
+    updata({ commit }) {
+      commit
     }
   }
 })
