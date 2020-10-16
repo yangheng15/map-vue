@@ -180,7 +180,6 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-// import bus from "../../../assets/eventBus.js"
 export default {
   name: "ScreenCustomerPool",
   components: {
@@ -399,7 +398,6 @@ export default {
         },
       }).then((res) => {
         console.log(res.data);
-        // bus.$emit("userDefinedEvent","res.data")
         this.$router.go(-1);
       });
     },
