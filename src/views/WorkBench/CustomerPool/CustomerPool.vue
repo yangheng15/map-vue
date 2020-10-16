@@ -72,7 +72,7 @@
       <!-- <div class="save" style="margin-top:50px">
         <van-button type="primary" size="small" color="rgb(61, 66, 94)" @click="showPopup()">批量分配</van-button>
       </div> -->
-      <div v-show="isPopupVisible" class="isPopupVisibleSign">
+      <!-- <div v-show="isPopupVisible" class="isPopupVisibleSign">
         <div class="isPopupVisibleSign_content">
           <p class="pop_title">批量分配</p>
           <div class="pop_content">
@@ -163,7 +163,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

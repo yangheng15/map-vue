@@ -12,7 +12,7 @@
           <router-link
             tag="a"
             class="img1"
-            :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
+            :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图', id: this.custId } }"
           ></router-link>
         </li>
         <li>
@@ -179,6 +179,7 @@ export default {
       gridCode: "",
       productCode: "",
       id: "",
+      custId: "",
       productName: "",
       telphone: "",
       address: "",
@@ -199,6 +200,8 @@ export default {
     this.address = this.$route.query.address;
     this.telphone = this.$route.query.telphone;
     this.id = this.$route.query.id;
+    this.custId = this.$route.query.custId;
+    console.log( this.custId);
     this.getMarkedRecord();
   },
   updated() {},

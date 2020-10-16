@@ -117,6 +117,7 @@
                   address: thisItem.address,
                   productName: productName,
                   productCode: productCode,
+                  custId:thisItem.id,
                   id: taskQuery.id,
                 },
               }"
@@ -309,7 +310,7 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         this.MarketingRecord = res.data;
         if (
           this.MarketingRecord.customerCode &&

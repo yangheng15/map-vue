@@ -5,15 +5,21 @@
       <div class="customer_view">
         <div class="sanjiaoxing">
           <p class="customer_view_name">
-            {{CustomerViewDetails.name}}
-            <img :src="CustomerViewDetails.gender==1 ? imgArr[1] : imgArr[0]" alt />
-            <router-link tag="span" :to="{ name: 'CustomerView', query: { title: '客户视图' }}">
+            {{ CustomerViewDetails.name }}
+            <img
+              :src="CustomerViewDetails.gender == 1 ? imgArr[1] : imgArr[0]"
+              alt
+            />
+            <router-link
+              tag="span"
+              :to="{ name: 'CustomerView', query: { title: '客户视图' } }"
+            >
               <img src="../../../assets/WorkBench/folder.svg" alt />
             </router-link>
           </p>
         </div>
         <p class="customer_view_num">30</p>
-        <p class="customer_view_customer">{{level}}客户</p>
+        <p class="customer_view_customer">{{ level }}客户</p>
       </div>
       <ul class="mission_details" style="padding: 1rem 1rem 0rem 1rem">
         <li>
@@ -35,7 +41,7 @@
         </li>
         <li>
           <span class="left_title">身份证号：</span>
-          <span class="right_txt">{{CustomerViewDetails.identifyNo}}</span>
+          <span class="right_txt">{{ CustomerViewDetails.identifyNo }}</span>
         </li>
         <li>
           <span class="left_title">
@@ -44,13 +50,14 @@
           </span>
           <span class="right_txt">24</span>
         </li>
-        <li>
+        <li style="position: relative;">
           <span class="left_title">
             手
             <span style="display: inline-block; width: 8px"></span>机
             <span style="display: inline-block; width: 8px"></span>号：
           </span>
-          <span class="right_txt">{{CustomerViewDetails.telphone}}</span>
+          <span class="right_txt">{{ CustomerViewDetails.telphone }}</span>
+          <a class="img4" :href="'tel:' + CustomerViewDetails.telphone"></a>
         </li>
         <li>
           <span class="left_title">所属机构：</span>
@@ -413,7 +420,7 @@ export default {
       id: "",
       CustomerViewDetails: "",
       imgArr: [img1, img2],
-      level:""
+      level: "",
     };
   },
   components: {
@@ -479,9 +486,8 @@ export default {
       this.value = value;
       this.showPicker = false;
     },
-    getDic(){
-// 客户等级
-      
+    getDic() {
+      // 客户等级
     },
     getCustomerView() {
       this.$httpGet({
@@ -490,11 +496,11 @@ export default {
         console.log(res.data);
         this.CustomerViewDetails = res.data;
         this.$httpGet({
-        url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
-      }).then((res) => {
-        console.log(res.data.codeText);
-        this.level=res.data.codeText
-      });
+          url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
+        }).then((res) => {
+          console.log(res.data.codeText);
+          this.level = res.data.codeText;
+        });
       });
     },
   },
@@ -691,6 +697,15 @@ export default {
   top: 0rem;
   left: 0rem;
   z-index: 100000000000;
+}
+.img4 {
+  position: absolute;
+  right: 30%;
+  top: 0.1rem;
+  background: url("../../../assets/home/md-phone.svg") no-repeat;
+  background-size: cover;
+  width: 1rem;
+  height: 1rem;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   * {

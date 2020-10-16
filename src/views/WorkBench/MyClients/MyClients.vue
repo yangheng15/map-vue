@@ -9,7 +9,9 @@
         @search="onSearch"
       >
         <template #action>
-          <div @click="$router.push('/ScreenMyCustomers/?title=筛选')">筛选</div>
+          <div @click="$router.push('/ScreenMyCustomers/?title=筛选')">
+            筛选
+          </div>
         </template>
       </van-search>
       <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
@@ -21,7 +23,7 @@
           <li class="newCustomerList">
             <router-link
               tag="p"
-              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
+              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图' } }"
               >{{ thisItem.name }}</router-link
             >
             <p>
@@ -46,7 +48,9 @@
               />
             </p>
             <p style="color: #df0f0f">AUM:{{ thisItem.aum }}</p>
-            <p style="color: #1badf2">{{ levelName }}客户</p>
+            <p style="color: #1badf2">
+              {{ thisItem.level | dic_client_grade }}客户
+            </p>
             <p>上次联系{{ thisItem.date }}</p>
             <p v-if="thisItem.isPpoint" style="color: #df0f0f">
               {{ thisItem.isPpoint ? "重点客户" : "普通客户" }}
@@ -59,7 +63,7 @@
           <li class="newCustomerList">
             <router-link
               tag="p"
-              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
+              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图' } }"
               >{{ thisItem.name }}</router-link
             >
             <p>
@@ -84,7 +88,9 @@
               />
             </p>
             <p style="color: #df0f0f">AUM:{{ thisItem.aum }}</p>
-            <p style="color: #1badf2">{{ levelName }}客户</p>
+            <p style="color: #1badf2">
+              {{ thisItem.level | dic_client_grade }}客户
+            </p>
             <p>上次联系{{ thisItem.date }}</p>
             <p style="color: #df0f0f">
               {{ thisItem.isPpoint ? "重点客户" : "普通客户" }}
@@ -94,7 +100,7 @@
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
-      <div v-show="isPopupVisibleScreen" class="isPopupVisibleSign">
+      <!-- <div v-show="isPopupVisibleScreen" class="isPopupVisibleSign">
         <div class="isPopupVisibleSign_content">
           <p class="pop_title">客户查询</p>
           <div class="pop_content">
@@ -329,7 +335,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -363,9 +369,22 @@ export default {
       newCustomerList1: [],
     };
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      console.log(to);
+      console.log(from);
+      console.log(vm);
+      console.log(next);
+      if (from.name !== "ScreenMyCustomers") {
+        vm.getMyClients();
+      } else {
+        vm.newCustomerList = vm.$store.state.screenMyCustomerData;
+      }
+    });
+  },
   created() {
     this.typeCN = this.$route.query.title;
-    this.getMyClients();
+    // this.getMyClients();
   },
   methods: {
     selectData() {},
@@ -463,14 +482,30 @@ export default {
       }).then((res) => {
         // console.log(res.data);
         this.newCustomerList = res.data;
-        this.newCustomerList.forEach((it) => {
-          this.level = it.level;
-        });
-        // console.log(this.level);
-        if (this.level) {
-          this.getdic();
-        }
+        // this.newCustomerList.forEach((it) => {
+        //   this.level = it.level;
+        // });
+        // // console.log(this.level);
+        // if (this.level) {
+        //   this.getdic();
+        // }
       });
+    },
+  },
+  computed: {
+    customer_poolshi() {
+      return this.$store.state.customer_poolshi;
+    },
+  },
+  filters: {
+    dic_client_grade(val) {
+      console.log(val);
+      console.log(localStorage.getItem("dic"));
+      const find = JSON.parse(localStorage.getItem("dic")).find(
+        (it) => it.key === val
+      );
+      console.log(find);
+      return find ? parseInt(find.value) : "";
     },
   },
 };

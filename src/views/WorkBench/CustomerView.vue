@@ -184,7 +184,11 @@
             label="手机号码："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写手机号码' }]"
-          />
+          >
+            <template #button>
+              <a class="img4" :href="'tel:' + phone_number"></a>
+            </template>
+          </van-field>
           <van-field
             v-model="residential_address"
             name="居住地址："
@@ -236,13 +240,13 @@
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写微信' }]"
           />
-          <van-field
+          <!-- <van-field
             v-model="user_positioning"
             name="定位："
             label="定位："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写定位（经纬度）' }]"
-          />
+          /> -->
           <van-field
             v-model="contact_address"
             name="联系地址："
@@ -251,7 +255,7 @@
             :rules="[{ required: true, message: '请填写联系地址' }]"
           />
 
-          <div style="width: 99%; margin: 0.5rem auto">
+          <!-- <div style="width: 99%; margin: 0.5rem auto">
             <baidu-map
               class="bm-view"
               :center="{ lng: 114.65, lat: 33.37 }"
@@ -263,8 +267,8 @@
                 :icon="{ url: con1, size: { width: 50, height: 50 } }"
               ></bm-marker>
             </baidu-map>
-          </div>
-          <div class="save">
+          </div> -->
+          <div class="save" style="margin-top:20px">
             <van-button round block type="primary" @click="prev()"
               >保存</van-button
             >
@@ -1398,7 +1402,7 @@ textarea {
   background: #fff;
   color: #000;
   width: 6rem;
-  height: 2rem;
+  /* height: 2rem; */
   border-radius: 0.4rem;
 }
 .save1 {
@@ -1582,6 +1586,15 @@ textarea {
   width: 6rem;
   height: 2rem;
   border-radius: 0.3rem;
+}
+.img4 {
+  position: absolute;
+  right: 5%;
+  top: 0.1rem;
+  background: url("../../assets/home/md-phone.svg") no-repeat;
+  background-size: cover;
+  width: 1rem;
+  height: 1rem;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,

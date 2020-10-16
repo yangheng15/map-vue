@@ -5,12 +5,17 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     screenCustomerPoolData: [],
+    screenMyCustomerData: [],
     // dic_client_grade: [],
   },
   mutations: {
     ['UPDATESCREEN'](state, data) {
       console.log(data);
       state.screenCustomerPoolData = data;
+    },
+    ['UPDATEMYSCREEN'](state, data) {
+      console.log(data);
+      state.screenMyCustomerData = data;
     },
     // ['UPDATEDIC'](state, data) {
     //   state.dic_client_grade = data;
@@ -25,6 +30,19 @@ const store = new Vuex.Store({
         }).then((res) => {
           console.log(res.data);
           commit('UPDATESCREEN', res.data)
+          resolve();
+        });
+      })
+      
+    },
+    UPDATEMYSCREEN({ commit }, params) {
+      return new Promise((resolve, reject) => {
+        Vue.prototype.$httpGet({
+          url: "/api/customer/appOwner",
+          params
+        }).then((res) => {
+          console.log(res.data);
+          commit('UPDATEMYSCREEN', res.data)
           resolve();
         });
       })

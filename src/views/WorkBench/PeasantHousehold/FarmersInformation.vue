@@ -126,7 +126,11 @@
           label="手机号："
           placeholder="单行输入"
           :rules="[{ required: true, message: '请填写手机号' }]"
-        />
+        >
+            <template #button>
+              <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
+            </template>
+          </van-field>
         <van-field
           readonly
           clickable
@@ -378,7 +382,9 @@
             <p>年收入：{{ thisItem.annualIncome }}</p>
           </div>
           <div>
-            <p>电话：{{ thisItem.telphone }}</p>
+            <p style="position: relative;">电话：{{ thisItem.telphone }}
+               <a class="img1" :href="'tel:' + thisItem.telphone"></a>
+            </p>
             <p class="delete" @click="deleteFamilyPeople(thisItem.id)">删除</p>
           </div>
         </div>
@@ -1751,6 +1757,24 @@ textarea {
   width: 6rem;
   height: 2rem;
   border-radius: 0.3rem;
+}
+.img4 {
+  position: absolute;
+  right: 5%;
+  top: 0.1rem;
+  background: url("../../../assets/home/md-phone.svg") no-repeat;
+  background-size: cover;
+  width: 1rem;
+  height: 1rem;
+}
+.img1 {
+  position: absolute;
+  right: -1.5rem;
+  bottom: 0rem;
+  background: url("../../../assets/home/md-phone.svg") no-repeat;
+  background-size: cover;
+  width: 1rem;
+  height: 1rem;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,

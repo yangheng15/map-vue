@@ -200,11 +200,11 @@
         :position="markerPostion"
         @dragend="markerDragend"
         :icon="{
-          url: require('../../assets/grid/location_map.svg'),
+          url: require('../../assets/grid/sign.svg'),
           size: { width: 30, height: 30 },
         }"
       ></bm-marker>
-
+<!-- ../../assets/grid/location_map.svg -->
       <!-- 🚩红旗 -->
       <template>
         <bm-marker
@@ -283,14 +283,12 @@
           name="电话："
           label="电话："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写电话' }]"
         />
         <van-field
           v-model="signData.sign_address"
           name="地址："
           label="地址："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写地址' }]"
         />
         <van-field
           disabled
@@ -317,7 +315,7 @@
             @cancel="resource_type = false"
           />
         </van-popup>
-        <van-field
+        <!-- <van-field
           readonly
           clickable
           name="picker"
@@ -333,7 +331,7 @@
             @confirm="onMarked_or_not"
             @cancel="marked_or_not = false"
           />
-        </van-popup>
+        </van-popup> -->
         <van-field
           v-model="signData.sign_remarks"
           rows="2"
@@ -475,6 +473,10 @@ export default {
     },
     eyeTrueFalse() {
       if (this.eyeMe) {
+        Toast({
+          message: "当前展示我认领的网格",
+          position: "middle",
+        });
         this.resource_selection();
       } else {
         this.mapPlaning();
@@ -513,11 +515,12 @@ export default {
         ); // 创建标注
         map.addOverlay(marker); // 将标注添加到地图中
         const content = `
-          <p style="padding-top: 1rem">姓名：${data_info[i]["name"]}</p>
-          <p>类型：产品营销</p>
-          <p>产品：特色存款</p>
-          <p>目标：10万</p>
-          <p>剩余日期：30天</p>
+          <p style="padding-top: 1rem">名称：${data_info[i]["name"]}</p>
+          <p>电话：${data_info[i]["telphone"]}</p>
+          <p>地址：${data_info[i]["address"]}</p>
+          <p>坐标：${data_info[i]["position"]}</p>
+          <p>备注：${data_info[i]["description"]}</p>
+          <p class="deleteBut">删除</p>
         `;
         addClickHandler(content, marker);
       }
@@ -718,7 +721,7 @@ export default {
           name: this.signData.sign_name,
           telphone: this.signData.sign_phone,
           address: this.signData.sign_address,
-          mark: this.signData.marked_or_not_txt,
+          // mark: this.signData.marked_or_not_txt,
           description: this.signData.sign_remarks,
           type: code,
           position: this.signData.sign_position,

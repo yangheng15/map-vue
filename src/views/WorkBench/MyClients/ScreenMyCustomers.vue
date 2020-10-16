@@ -335,10 +335,11 @@ export default {
         },
       }).then((res) => {
         let transformDara = [];
-       res.data.forEach((it, index) => {
-          it.children&&it.children.forEach((ele, index1) => {
-            transformDara.push({ index: ele.code, text: ele.name });
-          });
+        res.data.forEach((it, index) => {
+          it.children &&
+            it.children.forEach((ele, index1) => {
+              transformDara.push({ index: ele.code, text: ele.name });
+            });
         });
         this.areaList = transformDara;
       });
@@ -378,57 +379,56 @@ export default {
     onSubmit(values) {
       console.log("submit", values);
     },
+    // sceenPool() {
+    // this.$httpGet({
+    //   url: "/api/customer/appOwner",
+    //   params: {
+    //     limit: 10,
+    //     page: 1,
+    //     name: this.screen_name,
+    //     code: this.screen_number,
+    //     branchCode: this.organization_txt.index,
+    //     isPpoint: this.key_customers_txt.index,
+    //     customer_base: this.customer_base,
+    //     level: this.custome_level_txt.index,
+    //     recommended_products: this.recommended_products,
+    //     education: this.education_level_txt.index,
+    //     gridding: this.regional_grid_txt.index,
+    //     gender: this.choose_gender_txt.index,
+    //     age: this.screen_age,
+    //     profession: this.occupation_category_txt.index,
+    //     products_held_txt: this.products_held_txt.index,
+    //     regional_grid_txt: this.regional_grid_txt.index,
+    //   },
+    // }).then((res) => {
+    //   console.log(res);
+    //   this.$router.go(-1);
+    // });
+
+    // },
     sceenPool() {
-      if (1) {
-        this.$httpGet({
-          url: "/api/customer/appOwner",
-          params: {
-            limit: 10,
-            page: 1,
-            name: this.screen_name,
-            code: this.screen_number,
-            branchCode: this.organization_txt.index,
-            isPpoint: this.key_customers_txt.index,
-            customer_base: this.customer_base,
-            level: this.custome_level_txt.index,
-            recommended_products: this.recommended_products,
-            education: this.education_level_txt.index,
-            gridding: this.regional_grid_txt.index,
-            gender: this.choose_gender_txt.index,
-            age: this.screen_age,
-            profession: this.occupation_category_txt.index,
-            products_held_txt: this.products_held_txt.index,
-            regional_grid_txt: this.regional_grid_txt.index,
-          },
-        }).then((res) => {
-          console.log(res);
-          this.$router.go(-1);
+      this.$store
+        .dispatch("UPDATEMYSCREEN", {
+          limit: 10,
+          page: 1,
+          name: this.screen_name,
+          code: this.screen_number,
+          branchCode: this.organization_txt.index,
+          isPpoint: this.key_customers_txt.index,
+          customer_base: this.customer_base,
+          level: this.custome_level_txt.index,
+          recommended_products: this.recommended_products,
+          education: this.education_level_txt.index,
+          gridding: this.regional_grid_txt.index,
+          gender: this.choose_gender_txt.index,
+          age: this.screen_age,
+          profession: this.occupation_category_txt.index,
+          products_held_txt: this.products_held_txt.index,
+          regional_grid_txt: this.regional_grid_txt.index,
+        })
+        .then(() => {
+          this.$router.back();
         });
-      } else {
-        this.$httpGet({
-          url: "/api/customer/appOwnerClaim",
-          params: {
-            limit: 10,
-            page: 1,
-            name: this.screen_name,
-            code: this.screen_number,
-            branchCode: this.organization_txt.index,
-            isPpoint: this.key_customers_txt.index,
-            customer_base: this.customer_base,
-            level: this.custome_level_txt.index,
-            recommended_products: this.recommended_products,
-            education: this.education_level_txt.index,
-            gender: this.choose_gender_txt.index,
-            age: this.screen_age,
-            profession: this.occupation_category_txt.index,
-            products_held_txt: this.products_held_txt.index,
-            regional_grid_txt: this.regional_grid_txt.index,
-          },
-        }).then((res) => {
-          console.log(res);
-          this.$router.go(-1);
-        });
-      }
     },
   },
 };

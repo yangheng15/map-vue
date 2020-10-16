@@ -15,7 +15,11 @@
         label="手机号："
         placeholder="单行输入"
         :rules="[{ required: true, message: '请填写手机号' }]"
-      />
+      >
+        <template #button>
+          <a class="img4" :href="'tel:' + prospect_details.telphone"></a>
+        </template>
+      </van-field>
       <van-field
         v-model="prospect_details.identifyNo"
         name="证件号码："
@@ -745,7 +749,15 @@ export default {
   text-align: center;
   color: #fff;
 }
-
+.img4 {
+  position: absolute;
+  right: 5%;
+  top: 0.1rem;
+  background: url("../../../assets/home/md-phone.svg") no-repeat;
+  background-size: cover;
+  width: 1rem;
+  height: 1rem;
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,
   select,

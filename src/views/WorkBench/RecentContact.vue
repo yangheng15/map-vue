@@ -2,19 +2,19 @@
   <div class="RecentContact">
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '最近联系'">
-      <van-search v-model="search_txt" placeholder="客户名称" />
+      <van-search v-model="search_txt" placeholder="客户名称" @search="onSearch" />
       <div class="customer_list">
         <ul>
           <li v-for="(thisItem, index) in data_customer_list1" :key="index">
             <router-link
               tag="p"
-              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
-              >{{ thisItem.name }}</router-link
+              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图' } }"
+              >{{ thisItem.custName }}</router-link
             >
-            <p>{{ thisItem.text }}</p>
+            <p>电话：</p>
             <p class="schedule_star">
               <van-rate
-                v-model="value"
+                v-model="thisItem.star"
                 :size="14"
                 color="#ffd21e"
                 void-icon="star"
@@ -22,7 +22,7 @@
                 readonly
               />
             </p>
-            <p>{{ thisItem.date }}</p>
+            <p>上次联系{{ thisItem.contactDays }}天前</p>
           </li>
         </ul>
       </div>
@@ -121,41 +121,40 @@ export default {
       show: false,
       text: "本季度",
       tabId: 1,
-      data_customer_list1: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          text: "上次联系",
-          date: "一天前",
-          id: 1,
-        },
-        { name: "吴宇迪", text: "上次联系", date: "两天前", id: 2 },
-      ],
-      data_customer_list2: [
-        {
-          name: "刘莎莎",
-          text: "上次联系",
-          date: "五天前",
-          id: 1,
-        },
-      ],
-      data_customer_list3: [
-        {
-          name: "北京卓越联腾科技有限公司",
-          text: "上次联系",
-          date: "一周前",
-          id: 1,
-        },
-        { name: "刘莎莎", text: "上次联系", date: "十三天前", id: 2 },
-      ],
+      data_customer_list1: [],
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.queryContact()
   },
   methods: {
     tab(ev) {
       this.tabId = ev;
     },
+    queryContact() {
+      this.$httpGet({
+        url: "/api/contactByApp/query",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.data_customer_list1 = res.data;
+      });
+    },
+    onSearch(val){
+       this.$httpGet({
+        url: "/api/contactByApp/query",
+        params: {
+          limit: 10,
+          page: 1,
+          customerName:val
+        },
+      }).then((res) => {
+        this.data_customer_list1 = res.data;
+      });
+    }
   },
 };
 </script>

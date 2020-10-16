@@ -73,7 +73,7 @@ export default {
   height: 1.5rem;
   line-height: 1.5rem;
   text-align: center;
-  background: transparent;
+  background: #fff;
   border:2px solid #df0f0f;
   /* width: 100%; */
   margin: 0rem;
@@ -88,7 +88,7 @@ export default {
   background: #fff;
   margin: 0;
   text-align: center;
-  border: 0.01rem solid #0FB38F;
+  border: 2px solid #0FB38F;
 }
 .introduce_content .introduce_name_lv {
   color: #fff;

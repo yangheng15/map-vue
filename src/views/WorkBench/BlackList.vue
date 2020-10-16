@@ -12,7 +12,7 @@
           <li v-for="(thisItem, index) in black_list" :key="index">
             <router-link
               tag="p"
-              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
+              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图' } }"
               >{{ thisItem.customerName }}</router-link
             >
             <p>{{ thisItem.createdTime | transform }}</p>

@@ -12,10 +12,18 @@
             </li>
             <li>
               <p class="total_money">{{ statistic.num }}</p>
-              <p :class="statistic.state ? 'up_color' : 'down_color'">
+              <p :class="statistic.state ? 'down_color' : 'up_color'">
                 {{ statistic.money }}%
                 <img
-                  style="width: 15px; vertical-align: text-top"
+                  style="
+                    transform: rotate(180deg);
+                    -ms-transform: rotate(180deg);
+                    -moz-transform: rotate(180deg);
+                    -webkit-transform: rotate(180deg);
+                    -o-transform: rotate(180deg);
+                    width: 15px;
+                    vertical-align: text-top;
+                  "
                   :src="statistic.up_down"
                   alt
                 />
@@ -91,7 +99,15 @@
             class="latest_tasks"
           >
             <ul>
-              <li>{{ item.name1 }}</li>
+              <router-link
+                tag="li"
+                :to="{
+                  name: 'CustomerViewPresentation',
+                  query: { title: '客户视图', id: item.id },
+                }"
+                >{{ item.name1 }}</router-link
+              >
+              <a style="color:#000" :href="'tel:' + item.telephone">
               <li>
                 {{ item.telephone }}
                 <img
@@ -100,6 +116,7 @@
                   alt
                 />
               </li>
+              </a>
             </ul>
             <ul>
               <li>{{ item.name2 }}</li>
@@ -193,18 +210,21 @@ export default {
           telephone: "18612280988",
           name2: "企业贷",
           date: "1天前",
+          id:1
         },
         {
           name1: "李亚楠",
           telephone: "18612280988",
           name2: "理财",
           date: "2天前",
+          id:2
         },
         {
           name1: "吴宇迪",
           telephone: "18612280988",
           name2: "资料采集",
           date: "2天前",
+          id:3
         },
       ],
       my_statistics: [
@@ -213,7 +233,7 @@ export default {
           name: "客户数",
           num: "23人",
           money: "21",
-          up_down: up,
+          up_down: down,
           state: true,
         },
         {
@@ -221,7 +241,7 @@ export default {
           name: "存款额",
           num: "100万",
           money: "10",
-          up_down: down,
+          up_down: up,
           state: false,
         },
         {
@@ -229,7 +249,7 @@ export default {
           name: "贷款额",
           num: "110万",
           money: "21",
-          up_down: down,
+          up_down: up,
           state: false,
         },
         {
@@ -237,7 +257,7 @@ export default {
           name: "理财额",
           num: "200万",
           money: "20",
-          up_down: up,
+          up_down: down,
           state: true,
         },
       ],
@@ -253,6 +273,9 @@ export default {
   methods: {
     tab(ev) {
       this.tabId = ev;
+      if(ev==1){
+        this.queryContact()
+      }
     },
     queryNewTask() {
       let _username = localStorage.getItem("username");
@@ -265,6 +288,17 @@ export default {
         },
       }).then((res) => {
         this.latest_tasks = res.data;
+      });
+    },
+    queryNewTask() {
+      this.$httpGet({
+        url: "/api/contactByApp/query",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        // this.latest_tasks = res.data;
       });
     },
   },

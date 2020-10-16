@@ -469,6 +469,16 @@
   top: 6.1rem;
   left: 6.4rem;
 }
+.deleteBut{
+  position: absolute;
+  right: 1rem;
+  bottom: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  background-color: darkgrey;
+  border-radius: 0.4rem;
+  margin: 0;
+  color: #fff;
+}
 
 /*  */
 @media screen and (min-width: 320px) and (max-width: 374px) {
