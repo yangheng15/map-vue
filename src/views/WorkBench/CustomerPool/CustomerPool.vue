@@ -53,7 +53,7 @@
               />
             </p>
             <p style="color: #df0f0f">AUM:{{ thisItem.aum }}</p>
-            <p style="color: #1badf2">{{ levelName }}客户</p>
+            <p style="color: #1badf2">{{ thisItem.level |  dic_client_grade}}客户</p>
             <p class="marter">
               <span v-if="!thisItem.business1" class="business1"
                 >{{ thisItem.business1 }}存款</span
@@ -217,10 +217,26 @@ export default {
       imgArr: [img1, img2],
     };
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      console.log(from);
+      if (from.name !== "ScreenCustomerPool") {
+        vm.getCustomerPool();
+      }else {
+        vm.customer_pool = vm.$store.state.screenCustomerPoolData
+      }
+    });
+  },
   created() {
     this.typeCN = this.$route.query.title;
-    this.getCustomerPool();
+    
   },
+  // computed: {
+  //   customer_pool() {
+  //     console.log(this.$store.state.screenCustomerPoolData);
+  //     return this.$store.state.screenCustomerPoolData
+  //   }
+  // },
   methods: {
     onGrid_theme(value) {
       this.grid_theme_txt = value;
@@ -241,13 +257,6 @@ export default {
         },
       }).then((res) => {
         this.customer_pool = res.data;
-        this.customer_pool.forEach((it) => {
-          this.level = it.level;
-          this.customerCode = it.code;
-        });
-        if (this.level) {
-          this.getdic();
-        }
       });
     },
     getdic() {
@@ -297,6 +306,11 @@ export default {
   computed: {
     customer_poolshi(){
       return this.$store.state.customer_poolshi
+    }
+  },
+  filters: {
+    dic_client_grade(val) {
+     return JSON.parse(localStorage.getItem('dic')).find(it => it.key === val).value;
     }
   }
 };

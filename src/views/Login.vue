@@ -46,6 +46,16 @@ export default {
     onFailed(errorInfo) {
       // console.log("failed", errorInfo);
     },
+    getDic() {
+      this.$httpGet({
+        url: "/dics/tree",
+      }).then((res) => {
+        console.log(res.data);
+        const data = res.data.find((it) => it.type === "dic_client_grade").childs;
+        console.log(data);
+        localStorage.setItem('dic', JSON.stringify(data))
+      });
+    },
     async onSubmit(values) {
       // console.log("submit", values);
       // console.log(values.txtUserName);
@@ -63,16 +73,19 @@ export default {
           client_secret: "test",
           scope: "all",
         }),
-      }).then((res) => {
-        if (res.access_token) {
-          // console.log(res);
-          localStorage.setItem("_token", res.access_token);
-          localStorage.setItem("username", res.username);
-          this.$router.push("/home");
-        }
-      }).catch(err=> {
-        // console.log(err);
       })
+        .then((res) => {
+          if (res.access_token) {
+            // console.log(res);
+            localStorage.setItem("_token", res.access_token);
+            localStorage.setItem("username", res.username);
+            this.getDic();
+            this.$router.push("/home");
+          }
+        })
+        .catch((err) => {
+          // console.log(err);
+        });
     },
   },
 };

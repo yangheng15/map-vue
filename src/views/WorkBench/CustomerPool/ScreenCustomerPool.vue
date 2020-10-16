@@ -377,9 +377,7 @@ export default {
       console.log("submit", values);
     },
     sceenPool() {
-      this.$httpGet({
-        url: "/api/customerPool/app",
-        params: {
+      this.$store.dispatch('UPDATESCREEN', {
           limit: 10,
           page: 1,
           name: this.screen_name,
@@ -395,11 +393,9 @@ export default {
           profession: this.occupation_category_txt.index,
           products_held_txt:this.products_held_txt.index,
           regional_grid_txt:this.regional_grid_txt.index,
-        },
-      }).then((res) => {
-        console.log(res.data);
-        this.$router.go(-1);
-      });
+        }).then(() => {
+          this.$router.back();
+        })
     },
   },
 };
