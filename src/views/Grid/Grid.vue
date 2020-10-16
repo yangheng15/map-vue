@@ -218,7 +218,7 @@
           }"
         >
           <bm-label
-            :content="item.text"
+            :content="item.name"
             :labelStyle="{ color: 'red', fontSize: '14px' }"
             :offset="{ width: -35, height: 30 }"
           />
@@ -273,27 +273,27 @@
         <p class="pop_title">地图标记</p>
         <van-field
           v-model="signData.sign_name"
-          name="名称："
+          name="name"
           label="名称："
           placeholder="单行输入"
           :rules="[{ required: true, message: '请填写名称' }]"
         />
         <van-field
           v-model="signData.sign_phone"
-          name="电话："
+          name="telphone"
           label="电话："
           placeholder="单行输入"
         />
         <van-field
           v-model="signData.sign_address"
-          name="地址："
+          name="address"
           label="地址："
           placeholder="单行输入"
         />
         <van-field
           disabled
           v-model="signData.sign_position"
-          name="位置："
+          name="position"
           label="位置："
           placeholder="单行输入"
           :rules="[{ required: true, message: '请填写位置' }]"
@@ -335,6 +335,7 @@
         <van-field
           v-model="signData.sign_remarks"
           rows="2"
+          name= "description"
           autosize
           label="备注"
           type="textarea"
@@ -452,23 +453,33 @@ export default {
      * 筛选资源数据
      */
     resource_selection(BMap, map) {
-      // if (this.owner) {
       var _username = localStorage.getItem("username");
-      // } else {
-      //   _username = [];
-      // }
       this.$httpGet({
         url: "/api/semGridding/selection",
         params: {
           owner: _username,
-          // specialSubject: this.specialSubject,
         },
       }).then((res) => {
-        this.map_data = res.data;
-        this.map_data.forEach((it) => {
+        console.log(this.polygonDl);
+        const arr = [
+          {
+            position: '114.67031644407975,33.6463360959123',
+          },
+          {
+            position: '114.6535001649329,33.62836207529424'
+          },
+          {
+            postion: '114.65069745174183,33.63046616699806'
+          }
+        ]
+        this.polygonDl.forEach(it => {
+         this.map.removeOverlay(it);
+        })
+        res.data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
-        map && this.createPolygon(map);
+        this.map_data = res.data;
+        this.createPolygon(this.map);
       });
     },
     eyeTrueFalse() {
@@ -499,10 +510,10 @@ export default {
         this.createInfoWindow(this.map);
       });
     },
-    createInfoWindow(map) {
-      // console.log(this.typeIdsData);
+    createInfoWindow(map, data) {
+      console.log(this.typeIdsData);
       map.centerAndZoom(new BMap.Point(114.664477, 33.640232), 15);
-      var data_info = this.typeIdsData;
+      var data_info = data || this.typeIdsData;
       var opts = {
         width: 250, // 信息窗口宽度
         height: 80, // 信息窗口高度
@@ -699,14 +710,15 @@ export default {
       });
     },
     async onSubmit(values) {
-      // console.log("submit", values);
+      console.log("submit", values);
       //显示红旗
       this.markerTure = false;
       const posArr = this.signData.sign_position.split(",");
       this.redFlagPostionArr.push({
+        ...values,
         postion: { lng: posArr[0], lat: posArr[1] },
-        text: this.signData.sign_name,
       });
+      this.createInfoWindow(this.map, [values])
       // console.log(this.redFlagPostionArr);
 
       const code = this.filterData.find(
