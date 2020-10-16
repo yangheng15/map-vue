@@ -223,7 +223,7 @@ export default {
       annual_income: "",
       qq_number: "",
       country_txt: "",
-      country_list: [{ index: 0, text: "中国" }],
+      country_list: [{ index: 1, text: "中国" }],
       country: false,
       residential_address: "",
       user_positioning: "",
@@ -259,7 +259,7 @@ export default {
       organization_txt: "",
       organization_list: ["请选择"],
       organization: false,
-      regional_grid_txt: {},
+      regional_grid_txt: "",
       areaList: [],
       regional_grid: false,
       value: "",
@@ -323,31 +323,30 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
-        // let transformDara = [];
-        // res.data.forEach((it, index) => {
-        //   if (it.code !== null) {
-        //     // console.log(it.children);
-        //     transformDara.push({ index: it.code, text: it.name });
-        //   }
-        // });
-        // console.log(transformDara);
-        // this.areaList = transformDara;
-        this.areaList = res.data.length > 0 &&  this.transformData(res.data);
-        console.log(this.areaList);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          it.children&&it.children.forEach((ele, index1) => {
+            transformDara.push({ index: ele.code, text: ele.name });
+          });
+        });
+        this.areaList = transformDara;
+        // this.areaList = res.data.length > 0 &&  this.transformData(res.data);
+        // console.log(this.areaList);
       });
     },
-    transformData(data, newArr = []) { //递归查询
-      for (let i = 0; i < data.length; i++) {
-        newArr.push({text: data[i]['name'], id: data[i]['id']})
-        if(data[i]['children'] && data[i]['children'].length > 0) {
-          this.transformData(data[i]['children'], newArr[i]['children'] = []);
-        }else {
-          newArr[i]['children'] = ''
-        }
-      }
-      return newArr;
-    },
+    // transformData(data, newArr = []) {
+    //   //递归查询一二级网格
+    //   for (let i = 0; i < data.length; i++) {
+    //     newArr.push({ text: data[i]["name"], id: data[i]["id"] });
+    //     if (data[i]["children"] && data[i]["children"].length > 0) {
+    //       this.transformData(data[i]["children"], (newArr[i]["children"] = []));
+    //       console.log(newArr[i]["children"]);
+    //     } else {
+    //       newArr[i]["children"] = "";
+    //     }
+    //   }
+    //   return newArr;
+    // },
     onNation(value) {
       // debugger
       this.nation_txt = value;
@@ -369,11 +368,13 @@ export default {
       this.education_level_txt = value;
       this.education_level = false;
     },
-    onRegional_grid(values, index) {
-      console.log(values, index);
-      this.regional_grid_txt.text = values.join('/');
-      this.regional_grid_txt.index = index.join(',');
+    onRegional_grid(values) {
+      console.log(values);
+      this.regional_grid_txt = values;
+      // this.regional_grid_txt.text = values.join('/');
+      // this.regional_grid_txt.index = index.join(',');
       // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
+      // this.regional_grid_txt.index = `${this.areaList[[index[1]]].id}`;
       this.regional_grid = false;
     },
     addResult() {

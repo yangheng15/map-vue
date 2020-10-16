@@ -336,7 +336,9 @@ export default {
       }).then((res) => {
         let transformDara = [];
         res.data.forEach((it, index) => {
-          transformDara.push({ index: it.code, text: it.name });
+          it.children&&it.children.forEach((ele, index1) => {
+            transformDara.push({ index: ele.code, text: ele.name });
+          });
         });
         this.areaList = transformDara;
       });
@@ -388,6 +390,7 @@ export default {
           level: this.custome_level_txt.index,
           recommended_products:this.recommended_products,
           education: this.education_level_txt.index,
+          gridding: this.regional_grid_txt.index,
           gender: this.choose_gender_txt.index,
           age:this.screen_age,
           profession: this.occupation_category_txt.index,

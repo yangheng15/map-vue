@@ -3,7 +3,7 @@
     <div class="introduce_content" @touchstart="registerEvent">
       <!-- <img v-if="show" class="introduce_img" :src="img" alt /> -->
       <p :class="name ?'introduce_address':'introduce_address_lv'">{{address}}</p>
-      <p :class="name?'introduce_name':'introduce_name_lv'">{{name?name:'无人认领'}}</p>
+      <p v-if="name" class="introduce_name">{{name}}</p>
     </div>
     <!-- <div v-text="text" @click="handleClick"></div> -->
   </bm-overlay>

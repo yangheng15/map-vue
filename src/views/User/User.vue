@@ -17,10 +17,10 @@
             readonly
           />
         </div>
-        <div class="personal_introduction">
-          <div v-for="(item,index) in MedalOwner" :key="index">
+        <div v-show="MedalOwner!==[]" class="personal_introduction">
+          <div v-for="(item, index) in MedalOwner" :key="index">
             <img src="../../assets/User/medal.png" alt />
-            <p>{{item.medalName}}</p>
+            <p>{{ item.medalName ? item.medalName : "荣誉勋章(0)" }}</p>
           </div>
           <router-link
             tag="div"
@@ -29,6 +29,12 @@
             >查看更多</router-link
           >
         </div>
+        <van-empty
+          v-show="MedalOwner == []"
+          class="personal_introduction"
+          image="https://img.yzcdn.cn/vant/custom-empty-image.png"
+          description="荣誉勋章(0)"
+        />
       </div>
     </div>
     <div class="new_item_body">
@@ -93,7 +99,7 @@ export default {
   data() {
     return {
       userNameTxt: [],
-      MedalOwner:[]
+      MedalOwner: [],
     };
   },
   created() {
@@ -132,14 +138,20 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
-        this.MedalOwner=res.data
+        this.MedalOwner = res.data;
       });
     },
   },
 };
 </script>
 <style scoped>
+.personal_introduction >>> .van-empty__image {
+  width: 90px;
+  height: 40px;
+}
+.personal_introduction >>> .van-empty__description {
+  margin: 0;
+}
 .c-row {
   border-bottom: #e8e8e8 solid 1px;
   padding-left: 0px;

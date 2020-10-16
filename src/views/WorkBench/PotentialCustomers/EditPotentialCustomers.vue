@@ -51,7 +51,7 @@
         readonly
         clickable
         name="picker"
-        :value=" prospect_details.marriage"
+        :value="prospect_details.marriage"
         label="婚姻状况："
         placeholder="点击选择婚姻状况"
         @click="marital_status = true"
@@ -115,9 +115,7 @@
         readonly
         clickable
         name="picker"
-        :value="
-          prospect_details.education
-        "
+        :value="prospect_details.education"
         label="学历："
         placeholder="点击选择学历"
         @click="education_level = true"
@@ -264,7 +262,7 @@ export default {
       organization_list: ["请选择"],
       organization: false,
       regional_grid_txt: "",
-      areaList: {},
+      areaList: [],
       regional_grid: false,
       screen_age: "",
       circlePath: {
@@ -518,12 +516,21 @@ export default {
   updated() {},
   methods: {
     enumData(val, data) {
-      // debugger
       if (val && data.length > 0) {
         // console.log(this.prospect_details);
-        // console.log(data, val);
+        console.log(data, val);
+        console.log(+val);
         const find = data.find((it) => it.index === +val);
-        // debugger
+        return find ? find.text : "";
+      } else {
+        return "";
+      }
+    },
+    enumData1(val, data) {
+      let find = "";
+      if (val && data.length > 0) {
+        find = data.find((it) => it.index === val);
+        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -592,7 +599,7 @@ export default {
         );
         // console.log(this.prospect_details.education);
       });
-       // 所属网格
+      // 所属网格
       this.$httpGet({
         url: "/api/semGridding/query",
         params: {
@@ -600,37 +607,39 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
-        // let transformDara = [];
-        // res.data.forEach((it, index) => {
-        //   if (it.code !== null) {
-        //     // console.log(it.children);
-        //     transformDara.push({ index: it.code, text: it.name });
-        //   }
-        // });
-        // console.log(transformDara);
-        // this.areaList = transformDara;
-        this.areaList = res.data.length > 0 &&  this.transformData(res.data);
-        console.log(this.areaList);
-        //回显数据
-        const arrIndex = this.prospect_details.gridding.split(',');
-        console.log(arrIndex);
-        this.prospect_details.gridding = `${this.areaList[arrIndex[0]].text}/${this.areaList[arrIndex[0]]['children'][arrIndex[1]].text}`
-        console.log(this.prospect_details.gridding);
-
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          it.children &&
+            it.children.forEach((ele, index1) => {
+              transformDara.push({ index: ele.code, text: ele.name });
+            });
+        });
+        console.log(transformDara);
+        this.areaList = transformDara;
+        this.prospect_details.gridding = this.enumData1(
+          this.prospect_details.gridding,
+          this.areaList
+        );
+        // this.areaList = res.data.length > 0 &&  this.transformData(res.data);
+        // console.log(this.areaList);
+        // //回显数据
+        // const arrIndex = this.prospect_details.gridding.split(',');
+        // console.log(arrIndex);
+        // this.prospect_details.gridding = `${this.areaList[arrIndex[0]].text}/${this.areaList[arrIndex[0]]['children'][arrIndex[1]].text}`
+        // console.log(this.prospect_details.gridding);
       });
     },
-    transformData(data, newArr = []) { //递归查询
-      for (let i = 0; i < data.length; i++) {
-        newArr.push({text: data[i]['name'], id: data[i]['id']})
-        if(data[i]['children'] && data[i]['children'].length > 0) {
-          this.transformData(data[i]['children'], newArr[i]['children'] = []);
-        }else {
-          newArr[i]['children'] = ''
-        }
-      }
-      return newArr;
-    },
+    // transformData(data, newArr = []) { //递归查询
+    //   for (let i = 0; i < data.length; i++) {
+    //     newArr.push({text: data[i]['name'], id: data[i]['id']})
+    //     if(data[i]['children'] && data[i]['children'].length > 0) {
+    //       this.transformData(data[i]['children'], newArr[i]['children'] = []);
+    //     }else {
+    //       newArr[i]['children'] = ''
+    //     }
+    //   }
+    //   return newArr;
+    // },
     onNation(value) {
       // debugger;
       this.prospect_detailsEdit.nation = value.index;
@@ -655,9 +664,11 @@ export default {
       this.prospect_details.education = value.text;
       this.education_level = false;
     },
-    onRegional_grid(values) {
-      this.regional_grid_txt.text = values.join('/');
-      this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
+    onRegional_grid(value) {
+      this.prospect_detailsEdit.gridding = value.index;
+      this.prospect_details.gridding = value.text;
+      // this.regional_grid_txt.text = values.join('/');
+      // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
       this.regional_grid = false;
     },
     async editRecord(val) {
@@ -681,7 +692,7 @@ export default {
           wechat: this.prospect_details.wechat,
           nation: this.prospect_detailsEdit.nation,
           marriage: this.prospect_detailsEdit.marriage,
-          gridding: this.prospect_details.gridding,
+          gridding: this.prospect_detailsEdit.gridding,
           workUnit: this.prospect_details.workUnit,
           connectAddress: this.prospect_details.connectAddress,
           annualIncome: this.prospect_details.annualIncome,
