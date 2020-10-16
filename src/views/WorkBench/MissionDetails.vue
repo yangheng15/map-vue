@@ -41,9 +41,9 @@
               <span style="display: inline-block; width: 0.4rem"></span>成
               <span style="display: inline-block; width: 0.4rem"></span>度：
             </span>
-            <span style="color: #3cc8ab">{{taskQuery.taskCompletion}}</span>
+            <span style="color: #3cc8ab">{{taskQuery.taskAmount}}</span>
             <div class="progress">
-              <div class="progress-done" :style="'width:' + taskQuery.taskCompletion + '%'" data-done="taskQuery.taskCompletion">{{taskQuery.taskCompletion}}%</div>
+              <div class="progress-done" :style="'width:' + taskQuery.taskCompletion>=100?100:taskQuery.taskCompletion + '%'" data-done="taskQuery.taskCompletion">{{taskQuery.taskCompletion>=100?100:taskQuery.taskCompletion}}%</div>
             </div>
           </li>
         </ul>
@@ -297,7 +297,7 @@ export default {
         this.taskQuery = res.data;
         // console.log(res.data.custList);
         if (res.data.custList.length > 0) {
-          this.polymerizationLocation = res.data.custList.map(it => ({lng: it.location.split(',')[0], lat: it.location.split(',')[1]}))
+          this.polymerizationLocation = res.data.custList.map(it => ({lng: it.location?.split(',')[0], lat: it.location?.split(',')[1]}))
           // console.log(this.polymerizationLocation);
         }
       });
@@ -461,7 +461,7 @@ export default {
   background: #3cc8ab;
   border-radius: 0.5rem;
   height: 1rem;
-  width: 80%;
+  /* width: 80%; */
   transition: width 1s ease 0.3s;
   text-align: right;
   color: #fff;

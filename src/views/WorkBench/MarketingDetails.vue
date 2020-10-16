@@ -66,13 +66,14 @@
                 title: '营销记录',
                 id: thisItem.id,
                 custName: custName,
+                productName: productName,
               },
             }"
             class="marked_record"
           >
-            <p style="width: 30%">{{ thisItem.semTime | transform }}</p>
-            <p style="width: 70%; display: flex" class="approval">
-              <span class="approval_Passed">已营销</span>
+            <p style="width: 55%">{{ thisItem.semTime | transform }}</p>
+            <p style="width: 45%; display: flex" class="approval">
+              <!-- <span class="approval_Passed">已营销</span> -->
               <span
                 :class="
                   thisItem.intention == '0'

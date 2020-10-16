@@ -8,7 +8,7 @@
           <img src="../../assets/WorkBench/location.svg" alt />
         </li>
         <!-- <li>方式：{{ editRecords.semType }}</li> -->
-        <li>营销产品：{{ editRecords.products }}</li>
+        <li>营销产品：{{ productName }}</li>
         <li>执行时间：{{ editRecords.semTime | transform }}</li>
       </ul>
       <div>
@@ -350,15 +350,17 @@ export default {
       });
     },
     async editPicture() {
-      this.$httpGet({
-        url: "/api/show/image/base64",
-        params: {
-          id: this.imageInfo,
-        },
-      }).then((res) => {
-        this.fileList[0].url = "data:image/jpg;base64," + res.data;
-        this.fileList[0].isImage = true;
-      });
+      if (this.imageInfo) {
+        this.$httpGet({
+          url: "/api/show/image/base64",
+          params: {
+            id: this.imageInfo,
+          },
+        }).then((res) => {
+          this.fileList[0].url = "data:image/jpg;base64," + res.data;
+          this.fileList[0].isImage = true;
+        });
+      }
     },
     afterRead(file) {
       let formData = new FormData();
