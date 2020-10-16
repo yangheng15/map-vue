@@ -12,6 +12,14 @@
 <script>
 export default {
   props: ["position", "active", "name", "address", "img", "show", "touchEvent"],
+  watch: {
+    position: {
+      handler () {
+        this.$refs.customOverlay.reload()  // 当位置发生变化时，重新渲染，内部会调用draw
+      },
+      deep: true
+    }
+  },
   methods: {
     registerEvent() {
       this.$emit('touchEvent');
