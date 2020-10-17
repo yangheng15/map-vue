@@ -9,7 +9,7 @@
         @search="onSearch"
       >
         <template #action>
-          <div @click="$router.push('/ScreenMyCustomers/?title=筛选')">
+          <div @click="$router.push(`/ScreenMyCustomers/?title=筛选&tabId=${tabId}`)">
             筛选
           </div>
         </template>
@@ -18,7 +18,7 @@
         <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">网格客户</li>
         <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">关注客户</li>
       </ul>
-      <div v-show="tabId === 0" class="customer_list">
+      <div v-show="tabId == 0" class="customer_list">
         <ul v-for="(thisItem, index) in newCustomerList" :key="index">
           <li class="newCustomerList">
             <router-link
@@ -58,7 +58,7 @@
           </li>
         </ul>
       </div>
-      <div v-show="tabId === 1" class="customer_list">
+      <div v-show="tabId == 1" class="customer_list">
         <ul v-for="(thisItem, index) in newCustomerList1" :key="index">
           <li class="newCustomerList">
             <router-link
@@ -371,19 +371,22 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      console.log(to);
       console.log(from);
-      console.log(vm);
-      console.log(next);
       if (from.name !== "ScreenMyCustomers") {
         vm.getMyClients();
       } else {
-        vm.newCustomerList = vm.$store.state.screenMyCustomerData;
+        console.log(vm.$store.state.screenMyCustomerData);
+        if(vm.$route.query.tabId == 0) {
+          vm.newCustomerList = vm.$store.state.screenMyCustomerData;
+        }else {
+          vm.newCustomerList1 = vm.$store.state.screenMyCustomerData;
+        }
       }
     });
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.tabId = this.$route.query.tabId || 0;
     // this.getMyClients();
   },
   methods: {
@@ -415,6 +418,7 @@ export default {
       });
     },
     onSearch(val) {
+      debugger
       if (this.tabId == 0) {
         this.$httpGet({
           url: "/api/customer/appOwner",
@@ -426,13 +430,6 @@ export default {
         }).then((res) => {
           // console.log(res.data);
           this.newCustomerList = res.data;
-          this.newCustomerList.forEach((it) => {
-            this.level = it.level;
-          });
-          // console.log(this.level);
-          if (this.level) {
-            this.getdic();
-          }
         });
       } else {
         this.$httpGet({
@@ -499,13 +496,7 @@ export default {
   },
   filters: {
     dic_client_grade(val) {
-      console.log(val);
-      console.log(localStorage.getItem("dic"));
-      const find = JSON.parse(localStorage.getItem("dic")).find(
-        (it) => it.key === val
-      );
-      console.log(find);
-      return find ? parseInt(find.value) : "";
+          return JSON.parse(localStorage.getItem('dic')).find(it => it.key === val).value;
     },
   },
 };
