@@ -27,14 +27,14 @@
         <div v-show="tabId === 0">
           <van-form @submit="onSubmit">
             <van-field
-              v-model="customer_number"
+              v-model="CustomerViewDetails.code"
               name="客户编号："
               label="客户编号："
               placeholder="单行输入"
               :rules="[{ required: true, message: '请填写客户编号' }]"
             />
             <van-field
-              v-model="customer_rating"
+              v-model="level"
               name="客户等级："
               label="客户等级："
               placeholder="单行输入"
@@ -44,7 +44,7 @@
               readonly
               clickable
               name="picker"
-              :value="choose_gender_txt"
+              :value="CustomerViewDetails.gender==0?'男':'女'"
               label="性别："
               placeholder="点击选择性别"
               @click="choose_gender = true"
@@ -82,7 +82,7 @@
               />
             </van-popup>
             <van-field
-              v-model="screen_name"
+              v-model="CustomerViewDetails.name"
               name="客户名称："
               label="客户名称："
               placeholder="单行输入"
@@ -113,7 +113,7 @@
               :rules="[{ required: true, message: '请填写兴趣爱好' }]"
             />
             <van-field
-              v-model="customer_id"
+              v-model="CustomerViewDetails.identifyNo"
               name="身份证号："
               label="身份证号："
               placeholder="单行输入"
@@ -179,7 +179,7 @@
         </div>
         <div v-show="tabId === 1">
           <van-field
-            v-model="phone_number"
+            v-model="CustomerViewDetails.telphone"
             name="手机号码："
             label="手机号码："
             placeholder="单行输入"
@@ -190,7 +190,7 @@
             </template>
           </van-field>
           <van-field
-            v-model="residential_address"
+            v-model="CustomerViewDetails.address"
             name="居住地址："
             label="居住地址："
             placeholder="单行输入"
@@ -210,7 +210,7 @@
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写QQ' }]"
           />
-          <van-field
+          <!-- <van-field
             readonly
             clickable
             name="area"
@@ -225,7 +225,7 @@
               @confirm="onRegional_grid"
               @cancel="regional_grid = false"
             />
-          </van-popup>
+          </van-popup> -->
           <van-field
             v-model="work_unit"
             name="工作单位："
@@ -268,7 +268,7 @@
               ></bm-marker>
             </baidu-map>
           </div> -->
-          <div class="save" style="margin-top:20px">
+          <div class="save" style="margin-top: 20px">
             <van-button round block type="primary" @click="prev()"
               >保存</van-button
             >
@@ -978,22 +978,32 @@ export default {
       isPopupVisibleAssets: false,
       isPopupVisibleEducation: false,
       isPopupVisibleWork: false,
+      id: "",
+      CustomerViewDetails:"",
+      level:"",
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
-    if (localStorage.getItem("indexTabId")) {
-      this.tabId = Number(localStorage.getItem("indexTabId"));
-      localStorage.removeItem("indexTabId");
-    }
-    this.token = localStorage.getItem("token");
-    this.articleId = this.$route.params.id;
-    this.title = this.$route.query.title;
-    this.isLGB = localStorage.getItem("isLgbWorker") == "0";
-    this.height = 400 * (document.documentElement.clientWidth / 750) + "";
+    this.id = this.$route.query.id;
+    this.getCustomerView();
   },
 
   methods: {
+    getCustomerView() {
+      this.$httpGet({
+        url: `/api/customersBasicInfo/get/${this.id}`,
+      }).then((res) => {
+        console.log(res.data);
+        this.CustomerViewDetails = res.data;
+        this.$httpGet({
+          url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
+        }).then((res) => {
+          console.log(res.data.codeText);
+          this.level = res.data.codeText;
+        });
+      });
+    },
     onFamily_type(value) {
       this.family_type_txt = value;
       this.family_type = false;

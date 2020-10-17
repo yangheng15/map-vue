@@ -17,7 +17,6 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import con from "../../assets/grid/location_map.svg";
 export default {
   components: {
     ChildNav,
