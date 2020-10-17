@@ -12,7 +12,7 @@
             />
             <router-link
               tag="span"
-              :to="{ name: 'CustomerView', query: { title: '客户视图' } }"
+              :to="{ name: 'CustomerView', query: { title: '客户视图',id:this.id } }"
             >
               <img src="../../../assets/WorkBench/folder.svg" alt />
             </router-link>
@@ -37,7 +37,7 @@
         </li>
         <li>
           <span class="left_title">客户编号：</span>
-          <span class="right_txt">0212298745</span>
+          <span class="right_txt">{{CustomerViewDetails.code}}</span>
         </li>
         <li>
           <span class="left_title">身份证号：</span>
@@ -61,10 +61,11 @@
         </li>
         <li>
           <span class="left_title">所属机构：</span>
-          <span class="right_txt">110242199702125858</span>
+          <span class="right_txt">{{ CustomerViewDetails.branchCode }}</span>
         </li>
         <li>
           <span class="left_title">客户群体：</span>
+          <span class="right_txt">{{ CustomerViewDetails.customerBaseName }}</span>
           <!-- 持续时间 -->
           <!-- <input class="multiple_choice" type="text" placeholder="小微企业主" :value="inpuVal" />
           <img style="vertical-align: middle;" src="../../assets/WorkBench/pencel.svg" alt @click="multiple_choice_ok()" />
@@ -74,7 +75,7 @@
               <button @click="multiple_choice_no()">保存</button>
             </div>
           </div>-->
-          <van-field
+          <!-- <van-field
             readonly
             clickable
             name="area"
@@ -89,7 +90,7 @@
               @confirm="onRegional_grid"
               @cancel="regional_grid = false"
             />
-          </van-popup>
+          </van-popup> -->
         </li>
       </ul>
       <div class="tabTitle" style="border-top: 0px; padding-top: 0rem">
@@ -212,34 +213,6 @@ export default {
       value: "",
       start_txt: 1,
       showPicker: false,
-      columns: [
-        {
-          text: "小微企业主",
-          children: [
-            {
-              text: "微企业主",
-              children: [{ text: "个人" }, { text: "融资" }],
-            },
-            {
-              text: "小企业主",
-              children: [{ text: "融资" }, { text: "个人" }],
-            },
-          ],
-        },
-        {
-          text: "中大企业主",
-          children: [
-            {
-              text: "中企业主",
-              children: [{ text: "个人" }, { text: "融资" }],
-            },
-            {
-              text: "大企业主",
-              children: [{ text: "融资" }, { text: "个人" }],
-            },
-          ],
-        },
-      ],
       tabId: 0,
       token: "",
       title: "详情",
@@ -421,6 +394,7 @@ export default {
       CustomerViewDetails: "",
       imgArr: [img1, img2],
       level: "",
+      organization_list:[]
     };
   },
   components: {
@@ -431,6 +405,7 @@ export default {
     this.id = this.$route.query.id;
     console.log(this.id);
     this.getCustomerView();
+    this.getDic()
   },
   methods: {
     onRegional_grid(value) {
@@ -487,7 +462,16 @@ export default {
       this.showPicker = false;
     },
     getDic() {
-      // 客户等级
+      // 所属机构
+      this.$httpGet({
+        url: "/api/v1/org/all",
+      }).then((res) => {
+        let transformDara = [];
+        res.row.forEach((it, index) => {
+          transformDara.push({ index: it.pid, text: it.orgName });
+        });
+        this.organization_list = transformDara;
+      });
     },
     getCustomerView() {
       this.$httpGet({

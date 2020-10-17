@@ -150,6 +150,7 @@
         </van-popup>
         <van-field
           v-model="farmers_details.location"
+          disabled 
           name="位置："
           label="位置："
           placeholder="单行输入"
@@ -167,7 +168,7 @@
               :position="{ lng: 114.6, lat: 33.6 }"
               @dragend="markerDragend"
               :icon="{
-                url: require('../../../assets/grid/location_map.svg'),
+                url: require('../../../assets/grid/sign.svg'),
                 size: { width: 30, height: 30 },
               }"
             ></bm-marker>
@@ -750,7 +751,6 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-import con from "../../../assets/grid/location_map.svg";
 import { Toast, Dialog } from "vant";
 import moment from "moment";
 export default {
@@ -860,15 +860,7 @@ export default {
       evaluation_value: "",
       amount_liabilities: "",
       message_income: "",
-      con1: con,
       active: false,
-      circlePath: {
-        center: {
-          lng: 114.65,
-          lat: 33.37,
-        },
-        radius: 5000,
-      },
       tabId: 0,
       token: "",
       title: "详情",
@@ -891,40 +883,6 @@ export default {
       value3: "",
       value4: "",
       value5: "",
-      stock: [
-        {
-          menoy_name: "存款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "活期存款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "定期存款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "大额存单余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "贷款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "历史贷款类型",
-          menoy: "抵押贷",
-        },
-        {
-          menoy_name: "最近放贷时间",
-          menoy: "2020-01-01",
-        },
-        {
-          menoy_name: "存贷比",
-          menoy: "50%",
-        },
-      ],
       education: [
         {
           university: "上海交通大学",

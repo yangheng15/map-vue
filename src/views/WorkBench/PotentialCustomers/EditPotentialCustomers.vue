@@ -136,7 +136,7 @@
         readonly
         clickable
         name="picker"
-        :value="prospect_details.nationality == '0' ? '中国' : ''"
+        :value="prospect_details.nationality == '1' ? '中国' : ''"
         label="国籍："
         placeholder="点击选择国籍"
         @click="country = true"
@@ -156,13 +156,6 @@
         label="居住地址："
         placeholder="单行输入"
         :rules="[{ required: true, message: '请填写居住地址' }]"
-      />
-      <van-field
-        v-model="prospect_details.location"
-        name="经纬度："
-        label="经纬度："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写定位（经纬度）' }]"
       />
       <van-field
         v-model="prospect_details.workAddress"
@@ -195,6 +188,32 @@
         placeholder="单行输入"
         :rules="[{ required: true, message: '请填写车牌号' }]"
       />
+      <van-field
+        v-model="prospect_details.location"
+        disabled 
+        name="经纬度："
+        label="经纬度："
+        placeholder="单行输入"
+        :rules="[{ required: true, message: '请填写定位（经纬度）' }]"
+      />
+      <div style="width: 99%; margin: 0.5rem auto">
+        <baidu-map
+          class="bm-view"
+          :center="{ lng: 114.6, lat: 33.6 }"
+          :zoom="14"
+          ak="YOUR_APP_KEY"
+        >
+          <bm-marker
+            :dragging="true"
+            :position="{ lng: 114.6, lat: 33.6 }"
+            @dragend="markerDragend"
+            :icon="{
+              url: require('../../../assets/grid/sign.svg'),
+              size: { width: 30, height: 30 },
+            }"
+          ></bm-marker>
+        </baidu-map>
+      </div>
       <div class="save">
         <van-button round block type="primary" @click="modifyResult()"
           >保存</van-button
@@ -269,13 +288,6 @@ export default {
       areaList: [],
       regional_grid: false,
       screen_age: "",
-      circlePath: {
-        center: {
-          lng: 114.65,
-          lat: 33.37,
-        },
-        radius: 5000,
-      },
       token: "",
       tabId: 0,
       title: "详情",
@@ -287,223 +299,8 @@ export default {
       articleId: "",
       isPlaying: false,
       dataURL: "",
-      pictureId: undefined,
-      isLGB: true,
-      tpxw: {},
-      isEdit: false,
-      show1: false,
-      show2: false,
-      show3: false,
-      value1: "",
-      value2: "",
-      value3: "",
       value: "",
       showPicker: false,
-      columns: [
-        {
-          text: "川汇区",
-          children: [
-            {
-              text: "陈州回族街道",
-              children: [{ text: "城关村" }, { text: "化河村" }],
-            },
-            {
-              text: "七一路街道",
-              children: [{ text: "王店村" }, { text: "许湾村" }],
-            },
-            {
-              text: "荷花路街道",
-              children: [{ text: "城关村" }, { text: "城郊村" }],
-            },
-            {
-              text: "人和街道",
-              children: [{ text: "王皮溜镇" }, { text: "太清宫镇" }],
-            },
-            {
-              text: "小桥街道",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "李埠口乡",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "淮阳区",
-          children: [
-            {
-              text: "柳湖街道",
-              children: [{ text: "豆门村" }, { text: "冯塘村" }],
-            },
-            {
-              text: "城关回族镇",
-              children: [{ text: "刘振村" }, { text: "许湾村" }],
-            },
-            {
-              text: "新站镇",
-              children: [{ text: "城关村" }, { text: "黄集村" }],
-            },
-            {
-              text: "鲁台镇",
-              children: [{ text: "齐老镇" }, { text: "曹河镇" }],
-            },
-            {
-              text: "四通镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "临蔡镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "项城市",
-          children: [
-            {
-              text: "花园街道",
-              children: [{ text: "南顿村" }, { text: "高寺村" }],
-            },
-            {
-              text: "水寨街道",
-              children: [{ text: "官会村" }, { text: "丁集村" }],
-            },
-            {
-              text: "东方街道",
-              children: [{ text: "郑郭村" }, { text: "范集村" }],
-            },
-            {
-              text: "莲花街道",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "千佛阁街道",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "光武街",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "扶沟县",
-          children: [
-            {
-              text: "桐丘街道",
-              children: [{ text: "包屯村" }, { text: "曹里村" }],
-            },
-            {
-              text: "扶亭街道",
-              children: [{ text: "大李村" }, { text: "练寺村" }],
-            },
-            {
-              text: "崔桥镇",
-              children: [{ text: "汴岗村" }, { text: "范集村" }],
-            },
-            {
-              text: "江村镇",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "白潭镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "韭园镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "西华县",
-          children: [
-            {
-              text: "昆山",
-              children: [{ text: "红花村" }, { text: "聂堆村" }],
-            },
-            {
-              text: "娲城",
-              children: [{ text: "东夏村" }, { text: "迟营村" }],
-            },
-            {
-              text: "箕子台个街道",
-              children: [{ text: "叶埠村" }, { text: "皮营" }],
-            },
-            {
-              text: "西夏亭",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "逍遥",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "奉母",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "商水县",
-          children: [
-            {
-              text: "柳湖街道",
-              children: [{ text: "豆门村" }, { text: "冯塘村" }],
-            },
-            {
-              text: "城关回族镇",
-              children: [{ text: "刘振村" }, { text: "许湾村" }],
-            },
-            {
-              text: "新站镇",
-              children: [{ text: "城关村" }, { text: "黄集村" }],
-            },
-            {
-              text: "鲁台镇",
-              children: [{ text: "齐老镇" }, { text: "曹河镇" }],
-            },
-            {
-              text: "四通镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "临蔡镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "沈丘县",
-          children: [
-            {
-              text: "桐丘街道",
-              children: [{ text: "包屯村" }, { text: "曹里村" }],
-            },
-            {
-              text: "扶亭街道",
-              children: [{ text: "大李村" }, { text: "练寺村" }],
-            },
-            {
-              text: "崔桥镇",
-              children: [{ text: "汴岗村" }, { text: "范集村" }],
-            },
-            {
-              text: "江村镇",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "白潭镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "韭园镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-      ],
       customer_name: "",
       card_number: "",
       id: "",
@@ -519,6 +316,10 @@ export default {
   },
   updated() {},
   methods: {
+    markerDragend({ point }) {
+      const { lng, lat } = point;
+      this.prospect_details.location = `${lng},${lat}`;
+    },
     enumData(val, data) {
       if (val && data.length > 0) {
         // console.log(this.prospect_details);
@@ -732,7 +533,7 @@ export default {
   width: calc(100% - 1rem);
   margin: auto;
   border: 0.05rem solid #bbb;
-  height: 59vh;
+  height: 40vh;
 }
 .save {
   display: flex;

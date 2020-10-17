@@ -153,13 +153,6 @@
         :rules="[{ required: true, message: '请填写居住地址' }]"
       />
       <van-field
-        v-model="user_positioning"
-        name="经纬度："
-        label="经纬度："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写定位（经纬度）' }]"
-      />
-      <van-field
         v-model="work_address"
         name="工作地址："
         label="工作地址："
@@ -190,6 +183,31 @@
         placeholder="单行输入"
         :rules="[{ required: true, message: '请填写车牌号' }]"
       />
+      <van-field
+        disabled
+        v-model="user_positioning"
+        name="经纬度："
+        label="经纬度："
+        placeholder="拖拽地图上图标获取经纬度"
+      />
+      <div style="width: 99%; margin: 0.5rem auto">
+        <baidu-map
+          class="bm-view"
+          :center="{ lng: 114.6, lat: 33.6 }"
+          :zoom="14"
+          ak="YOUR_APP_KEY"
+        >
+          <bm-marker
+            :dragging="true"
+            :position="{ lng: 114.6, lat: 33.6 }"
+            @dragend="markerDragend"
+            :icon="{
+              url: require('../../../assets/grid/sign.svg'),
+              size: { width: 30, height: 30 },
+            }"
+          ></bm-marker>
+        </baidu-map>
+      </div>
       <div class="save">
         <van-button round block type="primary" @click="addResult()"
           >保存</van-button
@@ -273,6 +291,10 @@ export default {
   },
   updated() {},
   methods: {
+    markerDragend({ point }) {
+      const { lng, lat } = point;
+      this.user_positioning = `${lng},${lat}`;
+    },
     dic_nation() {
       // 民族
       this.$httpGet({
@@ -325,9 +347,10 @@ export default {
       }).then((res) => {
         let transformDara = [];
         res.data.forEach((it, index) => {
-          it.children&&it.children.forEach((ele, index1) => {
-            transformDara.push({ index: ele.code, text: ele.name });
-          });
+          it.children &&
+            it.children.forEach((ele, index1) => {
+              transformDara.push({ index: ele.code, text: ele.name });
+            });
         });
         this.areaList = transformDara;
         // this.areaList = res.data.length > 0 &&  this.transformData(res.data);
@@ -423,7 +446,7 @@ export default {
   width: calc(100% - 1rem);
   margin: auto;
   border: 0.05rem solid #bbb;
-  height: 59vh;
+  height: 40vh;
 }
 .save {
   display: flex;
