@@ -7,7 +7,7 @@
           <p class="customer_view_name">
             {{ CustomerViewDetails.name }}
             <img
-              :src="CustomerViewDetails.gender == 1 ? imgArr[1] : imgArr[0]"
+              :src="CustomerViewDetails.gender == 2 ? imgArr[1] : imgArr[0]"
               alt
             />
             <router-link

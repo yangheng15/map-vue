@@ -39,7 +39,7 @@
             </p>
             <p class="schedule_star">
               <van-rate
-                v-model="thisItem.star"
+                v-model="star"
                 :size="14"
                 color="blue"
                 void-icon="star"
@@ -79,7 +79,7 @@
             </p>
             <p class="schedule_star">
               <van-rate
-                v-model="thisItem.star"
+                v-model="star1"
                 :size="14"
                 color="blue"
                 void-icon="star"
@@ -367,6 +367,8 @@ export default {
       levelName: "",
       newCustomerList: [],
       newCustomerList1: [],
+      star:"",
+      star1:"",
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -407,6 +409,9 @@ export default {
       }).then((res) => {
         // console.log(res.data);
         this.newCustomerList1 = res.data;
+        this.newCustomerList1.forEach((it) => {
+          this.star1 = it.star;
+        });
       });
     },
     getdic() {
@@ -430,6 +435,9 @@ export default {
         }).then((res) => {
           // console.log(res.data);
           this.newCustomerList = res.data;
+          this.newCustomerList.forEach((it) => {
+          this.star = it.star;
+        });
         });
       } else {
         this.$httpGet({
@@ -442,6 +450,9 @@ export default {
         }).then((res) => {
           // console.log(res.data);
           this.newCustomerList1 = res.data;
+          this.newCustomerList1.forEach((it) => {
+          this.star1 = it.star;
+        });
         });
       }
     },
@@ -479,9 +490,9 @@ export default {
       }).then((res) => {
         // console.log(res.data);
         this.newCustomerList = res.data;
-        // this.newCustomerList.forEach((it) => {
-        //   this.level = it.level;
-        // });
+        this.newCustomerList.forEach((it) => {
+          this.star = it.star;
+        });
         // // console.log(this.level);
         // if (this.level) {
         //   this.getdic();
