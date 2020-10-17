@@ -427,7 +427,7 @@ export default {
           regional_grid_txt: this.regional_grid_txt.index,
         })
         .then(() => {
-          this.$router.push({name: 'MyClients', query: {title: '我的客户', tabId: this.$route.query.tabId}})
+          this.$router.go(-1)
         });
     },
   },

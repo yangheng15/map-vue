@@ -9,7 +9,7 @@
         @search="onSearch"
       >
         <template #action>
-          <div @click="$router.push(`/ScreenMyCustomers/?title=筛选&tabId=${tabId}`)">
+          <div @click="jumb()">
             筛选
           </div>
         </template>
@@ -376,7 +376,7 @@ export default {
         vm.getMyClients();
       } else {
         console.log(vm.$store.state.screenMyCustomerData);
-        if(vm.$route.query.tabId == 0) {
+        if(vm.$store.state.tabId == 0) {
           vm.newCustomerList = vm.$store.state.screenMyCustomerData;
         }else {
           vm.newCustomerList1 = vm.$store.state.screenMyCustomerData;
@@ -386,10 +386,14 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
-    this.tabId = this.$route.query.tabId || 0;
+    this.tabId = this.$store.state.tabId|| 0;
     // this.getMyClients();
   },
   methods: {
+    jumb() {
+      this.$store.commit('SETTABID', this.tabId);
+      this.$router.push(`/ScreenMyCustomers/?title=筛选`)
+    },
     selectData() {},
     tab(ev) {
       this.tabId = ev;

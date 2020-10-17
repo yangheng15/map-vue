@@ -6,6 +6,7 @@ const store = new Vuex.Store({
   state: {
     screenCustomerPoolData: [],
     screenMyCustomerData: [],
+    tabId: 0
     // dic_client_grade: [],
   },
   mutations: {
@@ -17,6 +18,10 @@ const store = new Vuex.Store({
       console.log(data);
       state.screenMyCustomerData = data;
     },
+    ['SETTABID'](state, data) {
+      console.log(data);
+      state.tabId = data;
+    }
     // ['UPDATEDIC'](state, data) {
     //   state.dic_client_grade = data;
     // }
