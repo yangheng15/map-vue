@@ -1,30 +1,60 @@
 <template>
   <div class="RankingList">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='排行榜'">
-      <div style="background:#fff">
-        <ul class="ranking_list">
-          <li @click="tab1(0)" :class="tabId==0?'cur':''">本月</li>
-          <li @click="tab1(1)" :class="tabId==1?'cur':''">本季度</li>
-          <li @click="tab1(2)" :class="tabId==2?'cur':''">本年度</li>
-          <li @click="tab1(3)" :class="tabId==3?'cur':''">上半年</li>
-          <li @click="tab1(4)" :class="tabId==4?'cur':''">下半年</li>
+    <div v-if="typeCN == '排行榜'">
+      <div style="background: #fff">
+        <ul class="ranking_list" style="border-bottom: 1px solid #e8e8e8 !important">
+          <li @click="tab1(1)" :class="tabId == 1 ? 'cur' : ''">本月</li>
+          <li @click="tab1(2)" :class="tabId == 2 ? 'cur' : ''">本季度</li>
+          <li @click="tab1(3)" :class="tabId == 3 ? 'cur' : ''">本年度</li>
+          <li @click="tab1(4)" :class="tabId == 4 ? 'cur' : ''">上半年</li>
+          <li @click="tab1(5)" :class="tabId == 5 ? 'cur' : ''">下半年</li>
         </ul>
-        <ul class="ranking_list" style="background:#f5f5f5;">
-          <li @click="tab2(5)" :class="tabId1==5?'cur':''">存款</li>
+        <ul class="ranking_list1" style="border-bottom: 1px solid #e8e8e8 !important">
+          <li
+            v-for="(item, index) in product_option"
+            :key="index"
+            @click="tab2(item.value)"
+            :class="tabId1 == item.value ? 'cur' : ''"
+          >
+            {{ item.text }}
+          </li>
+          <!-- <li @click="tab2(5)" :class="tabId1==5?'cur':''">存款</li>
           <li @click="tab2(6)" :class="tabId1==6?'cur':''">贷款</li>
           <li @click="tab2(7)" :class="tabId1==7?'cur':''">理财</li>
           <li @click="tab2(8)" :class="tabId1==8?'cur':''">手机银行</li>
           <li @click="tab2(9)" :class="tabId1==9?'cur':''">网银</li>
-          <li @click="tab2(10)" :class="tabId1==10?'cur':''">ETC</li>
+          <li @click="tab2(10)" :class="tabId1==10?'cur':''">ETC</li> -->
         </ul>
         <ul
           class="ranking_list"
-          style="justify-content: start;background:#f5f5f5;margin:0px;padding:0px 15px"
+          style="
+            justify-content: start;
+            border-bottom: 1px solid #e8e8e8 !important
+            margin: 0px;
+          "
         >
-          <li @click="tab2(11)" :class="tabId1==11?'cur':''" style="margin-right:20px">跑动里程</li>
-          <li @click="tab2(12)" :class="tabId1==12?'cur':''" style="margin-right:20px">拜访客户数量</li>
-          <li @click="tab2(13)" :class="tabId1==13?'cur':''" style="margin-right:20px">执行任务数</li>
+          <li
+            @click="tab2(11)"
+            :class="tabId1 == 11 ? 'cur' : ''"
+            style="margin-right: 20px"
+          >
+            跑动里程
+          </li>
+          <li
+            @click="tab2(12)"
+            :class="tabId1 == 12 ? 'cur' : ''"
+            style="margin-right: 20px"
+          >
+            拜访客户数量
+          </li>
+          <li
+            @click="tab2(13)"
+            :class="tabId1 == 13 ? 'cur' : ''"
+            style="margin-right: 20px"
+          >
+            执行任务数
+          </li>
         </ul>
         <dl class="ranking_list_body">
           <dt>
@@ -34,24 +64,26 @@
               <li>成果</li>
             </ul>
           </dt>
-          <dd style="margin-left: 0px;">
+          <dd style="margin-left: 0px">
             <ul
-              v-for="(item,index) in achievements_list"
+              v-for="(item, index) in achievements_list"
               :key="index"
-              style="margin-top:15px"
-              v-show="tabId==item.id||tabId1==item.id||tabId2==item.id"
+              style="margin-top: 15px"
+              v-show="
+                tabId == item.id || tabId1 == item.id 
+              "
             >
               <li>
                 <img :src="item.img" alt />
               </li>
-              <li>{{item.name}}</li>
-              <li>{{item.achievements}}</li>
+              <li>{{ item.name }}</li>
+              <li>{{ item.achievements }}</li>
             </ul>
           </dd>
         </dl>
         <div>
-          <p style="text-align: center;">前5名业绩占比分析</p>
-          <div id="main" style="width: 100%;height: 200px;"></div>
+          <p style="text-align: center">前5名业绩占比分析</p>
+          <div id="main" style="width: 100%; height: 200px"></div>
         </div>
       </div>
     </div>
@@ -75,7 +107,7 @@ export default {
       title: "",
       typeCN: "",
       tabId: 1,
-      tabId1: 5,
+      tabId1: "活期存款",
       achievements_list: [
         {
           img: con1,
@@ -223,15 +255,27 @@ export default {
           id: 0,
         },
       ],
+      product_option:""
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
+    this.getDic();
+    this.getTask();
   },
   methods: {
-    tab(ev) {
-      this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
+    getDic() {
+      this.$httpGet({
+        url: "/dic/type/dic_product_type",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ value: it.code, text: it.codeText });
+          }
+        });
+        this.product_option = transformDara;
+      });
     },
     tab1(ev) {
       this.tabId = ev;
@@ -246,32 +290,56 @@ export default {
       } else {
         this.text = "下半年";
       }
+      this.getTaskText(ev);
+    },
+    getTaskText(ele) {
+      this.$httpGet({
+        url: "/api/taskFinish/thisMonth",
+        params: {
+          productType: "活期存款",
+          dateType: ele,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.text1 = res.data.FloatFinishRate;
+        this.moneyAll = res.data.marketAmount;
+        this.targetAmount = res.data.targetNum;
+      });
     },
     tab2(ev) {
+      console.log(ev);
       this.tabId1 = ev;
-      if (ev === 5) {
-        this.text1 = "存款";
-      } else if (ev === 6) {
-        this.text1 = "贷款";
-      } else if (ev === 7) {
-        this.text1 = "理财";
-      } else if (ev === 8) {
-        this.text1 = "手机银行";
-      } else if (ev === 9) {
-        this.text1 = "网银";
-      } else if (ev === 10) {
-        this.text1 = "ETC";
-      } else if (ev === 11) {
-        this.text1 = "跑动里程";
-      } else if (ev === 12) {
-        this.text1 = "拜访客户数量";
-      } else {
-        this.text1 = "执行任务数";
+      if (ev === this.tabId1) {
+        this.$httpGet({
+          url: "/api/taskFinish/thisMonth",
+          params: {
+            productType: this.tabId1,
+            dateType: this.tabId,
+          },
+        }).then((res) => {
+          console.log(res);
+          this.text1 = res.data.FloatFinishRate;
+          this.moneyAll = res.data.marketAmount;
+          this.targetAmount = res.data.targetNum;
+        });
       }
     },
+    getTask() {
+      this.$httpGet({
+        url: "/api/taskFinish/thisMonth",
+        params: {
+          productType: "活期存款",
+          dateType: 1,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.text1 = res.data.FloatFinishRate;
+        this.moneyAll = res.data.marketAmount;
+        this.targetAmount = res.data.targetNum;
+      });
+    },
   },
-  mounted() {
-  },
+  mounted() {},
 };
 </script>
 <style scoped>
@@ -301,8 +369,26 @@ export default {
   line-height: 40px;
   justify-content: space-between;
   width: calc(100% - 30px);
-  padding: 0px 15px;
+  margin: 0px 15px;
   border-bottom: 1px solid #e8e8e8 !important;
+}
+.ranking_list1 {
+  display: flex;
+  /* height: 30px; */
+  width: 100%;
+  line-height: 30px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: calc(100% - 30px);
+  /* background: #ededed; */
+  margin: 0px 15px;
+  border-bottom: 1px solid #e8e8e8 !important;
+}
+.ranking_list li {
+  margin: 0px 5px;
+}
+.ranking_list1 li {
+  margin: 0px 5px;
 }
 .ranking_list_body {
   padding: 15px;

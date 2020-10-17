@@ -54,6 +54,9 @@ export default {
         const data = res.data.find((it) => it.type === "dic_client_grade").childs;
         console.log(data);
         localStorage.setItem('dic', JSON.stringify(data))
+        const product = res.data.find((it) => it.type === "dic_product_type").childs;
+        console.log(product);
+        localStorage.setItem('dicProduct', JSON.stringify(product))
       });
     },
     async onSubmit(values) {
