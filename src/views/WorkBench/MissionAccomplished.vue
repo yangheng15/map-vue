@@ -231,6 +231,11 @@ export default {
         this.text1 = res.data.FloatFinishRate;
         this.moneyAll = res.data.marketAmount;
         this.targetAmount = res.data.targetNum;
+       option['series'][0]['data'][0] = {
+          value: this.text1,
+          name: "完成率"
+        }
+        this.myChart.setOption(option);
       });
     },
     drawLine() {
@@ -291,8 +296,8 @@ export default {
     // this.$nextTick(function () {
     //   this.drawPie("main");
     // });
-    let myChart = echarts.init(document.getElementById("gaugeContainer"));
-    myChart.setOption(option);
+    this.myChart = echarts.init(document.getElementById("gaugeContainer"));
+    this.myChart.setOption(option);
   },
 };
 </script>
