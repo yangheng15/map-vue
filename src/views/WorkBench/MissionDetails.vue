@@ -42,9 +42,12 @@
               <span style="display: inline-block; width: 0.4rem"></span>度：
             </span>
             <span style="color: #3cc8ab">{{taskQuery.taskAmount}}</span>
-            <div class="progress">
-              <div class="progress-done" :style="'width:' + parseFloat(taskQuery.taskCompletion*100)>=100?100:parseFloat(taskQuery.taskCompletion*100) + '%'" data-done="taskQuery.taskCompletion*100">{{parseFloat(taskQuery.taskCompletion*100)>=100?100:parseFloat(taskQuery.taskCompletion*100)}}%</div>
+            <div style="display:inline-block;width: 50%;margin-left:10px">
+              <van-progress :percentage="taskQuery.taskCompletion >= 100 ? 100 : taskQuery.taskCompletion" stroke-width="8" />
             </div>
+            <!-- <div class="progress">
+              <div class="progress-done" :style="'width:' + parseFloat(taskQuery.taskCompletion*100)>=100?100:parseFloat(taskQuery.taskCompletion*100) + '%'" data-done="taskQuery.taskCompletion*100">{{parseFloat(taskQuery.taskCompletion*100)>=100?100:parseFloat(taskQuery.taskCompletion*100)}}%</div>
+            </div> -->
           </li>
         </ul>
         <baidu-map
@@ -174,7 +177,6 @@
                 {{ thisItem.remark }}
               </p>
               <p
-                v-if="thisItem.lastTime"
                 class="schedule_star"
                 style="width: 20%"
               >
@@ -234,7 +236,9 @@ export default {
         { text: "营销成功", value: 0 },
         { text: "营销失败", value: 2 },
       ],
-      taskQuery: {},
+      taskQuery: {
+        taskCompletion: 0
+      },
       id: "",
       productName: "",
       productCode: "",
