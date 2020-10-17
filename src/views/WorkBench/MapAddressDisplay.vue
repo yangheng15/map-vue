@@ -2,8 +2,8 @@
   <div class="MapAddressDisplay">
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN=='地址'">
-      <baidu-map class="map" :center="{lng: 114.654102, lat: 33.623741}" :zoom="14" ak="YOUR_APP_KEY">
-       <bm-marker :position="{lng: 114.654102, lat: 33.623741}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
+      <baidu-map class="map" :center="{lng:locationLng, lat: locationLat}" :zoom="14" ak="YOUR_APP_KEY">
+       <bm-marker :position="{lng:locationLng, lat: locationLat}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
       <bm-label content="您当前的位置" :labelStyle="{color: 'red', fontSize : '14px'}" :offset="{width: -35, height: 30}"/>
     </bm-marker>
       </baidu-map>
@@ -21,11 +21,16 @@ export default {
     return {
       title: "",
       typeCN: "",
+      locationLng:"",
+      locationLat:"",
     }
   },
   created() {
     this.typeCN = this.$route.query.title;
     this.location = this.$route.query.location;
+    console.log(this.location.split(",")[0]);
+    this.locationLng=this.location.split(",")[0]
+    this.locationLat=this.location.split(",")[1]
   },
   updated() {},
   methods: {},
