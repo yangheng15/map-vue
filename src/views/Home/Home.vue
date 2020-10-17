@@ -105,11 +105,11 @@
                   name: 'CustomerViewPresentation',
                   query: { title: '客户视图', id: item.id },
                 }"
-                >{{ item.name1 }}</router-link
+                >{{ item.custName }}</router-link
               >
-              <a style="color:#000" :href="'tel:' + item.telephone">
+              <a style="color:#000" :href="'tel:' + item.telphone">
               <li>
-                {{ item.telephone }}
+                {{ item.telphone }}
                 <img
                   style="width: 16px"
                   src="../../assets/home/md-phone.svg"
@@ -119,8 +119,8 @@
               </a>
             </ul>
             <ul>
-              <li>{{ item.name2 }}</li>
-              <li>{{ item.date }}</li>
+              <li>{{ item.productType }}</li>
+              <li>{{ item.contactDays }}天前</li>
             </ul>
           </div>
           <!-- <div
@@ -204,29 +204,7 @@ export default {
         effect: "slide",
       },
       latest_tasks: [],
-      recent_contact: [
-        {
-          name1: "陈昱晓",
-          telephone: "18612280988",
-          name2: "企业贷",
-          date: "1天前",
-          id:1
-        },
-        {
-          name1: "李亚楠",
-          telephone: "18612280988",
-          name2: "理财",
-          date: "2天前",
-          id:2
-        },
-        {
-          name1: "吴宇迪",
-          telephone: "18612280988",
-          name2: "资料采集",
-          date: "2天前",
-          id:3
-        },
-      ],
+      recent_contact: [],
       my_statistics: [
         {
           img: kehushu,
@@ -290,7 +268,7 @@ export default {
         this.latest_tasks = res.data;
       });
     },
-    queryNewTask() {
+    queryContact() {
       this.$httpGet({
         url: "/api/contactByApp/query",
         params: {
@@ -298,7 +276,7 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        // this.latest_tasks = res.data;
+        this.recent_contact = res.data;
       });
     },
   },

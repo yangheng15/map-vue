@@ -59,12 +59,15 @@
           <div class="new_task">
             <p style="font-weight: 550">{{ thisItem.name }}</p>
             <p style="text-align: center !important">
-              {{ thisItem.targetNum | NumFormat }}
+              目标：{{ thisItem.targetNum | NumFormat }}
             </p>
             <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
           <div class="new_task">
             <p>{{ thisItem.productName }}</p>
+            <p style="text-align: center !important">
+              完成：{{ thisItem.taskAmount }}
+            </p>
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
           <van-tag
@@ -104,14 +107,20 @@
         >
           <div class="new_task">
             <p style="font-weight: 550">{{ thisItem.name }}</p>
-            <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
-              {{ thisItem.targetNum | NumFormat }}
+            <!-- <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
+              目标：{{ thisItem.targetNum | NumFormat }}
+            </p> -->
+            <p style="text-align: center !important">
+              目标：{{ thisItem.targetNum }}
             </p>
             <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
           <div class="new_task">
             <p>{{ thisItem.productName }}</p>
-            <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">已过期</p>
+            <!-- <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">已过期</p> -->
+            <p style="text-align: center !important">
+              完成：{{ thisItem.taskAmount }}
+            </p>
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
         </router-link>
@@ -287,8 +296,8 @@ export default {
 }
 .success_failure .status_success {
   position: absolute;
-  top: 38%;
-  left: 36%;
+  top: 37%;
+  left: 46%;
   transform: rotate(-15deg);
   -ms-transform: rotate(-15deg); /* IE 9 */
   -moz-transform: rotate(-15deg); /* Firefox */
@@ -296,8 +305,8 @@ export default {
   -o-transform: rotate(-15deg); /* Opera */
 }
 .success_failure .status_success.van-tag--large {
-  padding: 6px 12px;
-  font-size: 16px;
+  padding: 4px 10px;
+  font-size: 14px;
   border-radius: 0;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {

@@ -28,7 +28,7 @@
           <router-link
             tag="a"
             class="img3"
-            :to="{ name: 'PutRecord', query: { title: '地址' } }"
+            :to="{ name: 'MapAddressDisplay', query: { title: '地址',location:location } }"
           ></router-link>
         </li>
         <li>
@@ -184,6 +184,7 @@ export default {
       productName: "",
       telphone: "",
       address: "",
+      location:"",
     };
   },
   components: {
@@ -200,9 +201,9 @@ export default {
     this.productName = this.$route.query.productName;
     this.address = this.$route.query.address;
     this.telphone = this.$route.query.telphone;
+    this.location = this.$route.query.location;
     this.id = this.$route.query.id;
     this.custId = this.$route.query.custId;
-    console.log( this.custId);
     this.getMarkedRecord();
   },
   updated() {},

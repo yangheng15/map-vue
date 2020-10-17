@@ -20,6 +20,8 @@ const WorkbenchBranch = () => import('@/views/WorkBench/WorkbenchBranch.vue');
 //任务详情
 const ArticleViewBasic = () => import('@/views/WorkBench/ArticleViewBasic.vue');
 const PutRecord = () => import('@/views/WorkBench/PutRecord.vue');
+// 地图地址展示
+const MapAddressDisplay = () => import('@/views/WorkBench/MapAddressDisplay.vue');
 //客户视图、农户
 const CustomerView = () => import('@/views/WorkBench/CustomerView.vue');
 //客户视图s
@@ -143,6 +145,11 @@ const routes = [{
     path: '/PutRecord',
     name: 'PutRecord',
     component: PutRecord,
+  },
+  {
+    path: '/MapAddressDisplay',
+    name: 'MapAddressDisplay',
+    component: MapAddressDisplay,
   },
   {
     path: '/CustomerView',

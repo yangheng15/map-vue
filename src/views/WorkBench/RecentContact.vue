@@ -11,10 +11,10 @@
               :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图' } }"
               >{{ thisItem.custName }}</router-link
             >
-            <p>电话：</p>
+            <p>电话：{{thisItem.telphone}}</p>
             <p class="schedule_star">
               <van-rate
-                v-model="thisItem.star"
+                v-model="star"
                 :size="14"
                 color="#ffd21e"
                 void-icon="star"
@@ -115,12 +115,11 @@ export default {
     return {
       title: "",
       typeCN: "",
-      value: 1,
       search_txt: "",
       date: "",
       show: false,
-      text: "本季度",
       tabId: 1,
+      star:"",
       data_customer_list1: [],
     };
   },
@@ -141,6 +140,9 @@ export default {
         },
       }).then((res) => {
         this.data_customer_list1 = res.data;
+        this.data_customer_list1.forEach((el)=>{
+          this.star = parseInt(el.star)
+        })
       });
     },
     onSearch(val){

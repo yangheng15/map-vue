@@ -43,7 +43,7 @@
             </span>
             <span style="color: #3cc8ab">{{taskQuery.taskAmount}}</span>
             <div class="progress">
-              <div class="progress-done" :style="'width:' + taskQuery.taskCompletion>=100?100:taskQuery.taskCompletion + '%'" data-done="taskQuery.taskCompletion">{{taskQuery.taskCompletion>=100?100:taskQuery.taskCompletion}}%</div>
+              <div class="progress-done" :style="'width:' + parseFloat(taskQuery.taskCompletion*100)>=100?100:parseFloat(taskQuery.taskCompletion*100) + '%'" data-done="taskQuery.taskCompletion*100">{{parseFloat(taskQuery.taskCompletion*100)>=100?100:parseFloat(taskQuery.taskCompletion*100)}}%</div>
             </div>
           </li>
         </ul>
@@ -119,6 +119,7 @@
                   productCode: productCode,
                   custId:thisItem.id,
                   id: taskQuery.id,
+                  location:thisItem.location
                 },
               }"
               v-for="(thisItem, index) in MarketingRecord"

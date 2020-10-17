@@ -362,7 +362,7 @@
 import MyOverlay from "./MyOverlay";
 import MyNav from "../../components/Public/MyNav";
 import myTabbar from "../../components/Public/MyTabbar";
-import { Toast } from "vant";
+import { Toast , Dialog } from "vant";
 import resourceSelection from "./ResourceSelection";
 export default {
   name: "Grid",
@@ -428,6 +428,7 @@ export default {
     this.specialSubject = this.$route.params.specialSubject;
     this.owner = this.$route.params.owner;
     // this.eyeTrueFalse()
+    window.deleteBut = this.deleteBut;
   },
   methods: {
     resourceEmit(data) {
@@ -531,7 +532,7 @@ export default {
           <p>地址：${data_info[i]["address"]}</p>
           <p>坐标：${data_info[i]["position"]}</p>
           <p>备注：${data_info[i]["description"]}</p>
-          <p class="deleteBut">删除</p>
+          <p class="deleteBut" onclick="deleteBut('${data_info[i]["id"]}')">删除</p>
         `;
         addClickHandler(content, marker);
       }
@@ -546,6 +547,28 @@ export default {
         var infoWindow = new BMap.InfoWindow(content); // 创建信息窗口对象
         map.openInfoWindow(infoWindow, point); //开启信息窗口
       }
+    },
+    deleteBut(id){
+      Dialog.confirm({
+        title: "你确定删除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/semResource/delete",
+            params: {
+              ids: id,
+            },
+          })
+            .then((res) => {
+              this.createInfoWindow(map, data);
+              Toast({
+                message: "删除成功",
+                position: "middle",
+              });
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
     },
     selfOverlayClick(data) {
       this.table = data;
