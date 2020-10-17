@@ -95,7 +95,7 @@
 <script>
 import ChildNav from "../../components/Public/ChildNav";
 import echarts from "echarts";
-import { option } from "./gauge-option";
+import { option, option2 } from "./gauge-option";
 export default {
   name: "MissionAccomplished",
   components: {
@@ -261,6 +261,15 @@ export default {
             },
           }).then((res) => {
             console.log(res);
+            let mounthArr = [];
+            let moduthData = [];
+            for(let prop in res['data']) {
+              mounthArr.push(prop);
+              moduthData.push(res['data'][prop][0]['custNum'])
+            }
+            option2['xAxis'].data = mounthArr;
+            option2['series'][0].data = moduthData;
+            this.myChart2.setOption(option2);
           });
         } else {
           // APP产品类型目标数,完成度,完成情况 1:本月 2:本季度 3:本年度 4:上半年 5:下半年
@@ -308,50 +317,9 @@ export default {
     },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById("myChart"));
+      this.myChart2 = this.$echarts.init(document.getElementById("myChart"));
       // 绘制图表
-      myChart.setOption({
-        title: {
-          text: "",
-          subtext: "",
-        },
-        tooltip: {
-          trigger: "axis",
-        },
-        xAxis: {
-          type: "category",
-          boundaryGap: false,
-          data: ["4月", "5月", "6月", "7月", "8月"],
-        },
-        yAxis: {
-          type: "value",
-          axisLabel: {
-            formatter: "{value}",
-          },
-        },
-        series: [
-          {
-            name: "最高",
-            type: "line",
-            data: [1, 1, 4, 3, 2, 3, 0],
-            itemStyle: {
-              normal: {
-                // 拐点上显示数值
-                label: {
-                  show: true,
-                },
-                borderColor: "#22ecec", // 拐点边框颜色
-                lineStyle: {
-                  color: "#22ecec",
-                },
-              },
-            },
-            // markLine: {
-            //   data: [{ type: "average", name: "平均值" }],
-            // },
-          },
-        ],
-      });
+      this.myChart2.setOption(option2);
     },
     draw({ el, BMap, map }) {
       const pixel = map.pointToOverlayPixel(new BMap.Point(114.65, 33.37));

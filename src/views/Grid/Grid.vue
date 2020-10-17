@@ -535,7 +535,7 @@ export default {
           <p>地址：${data_info[i]["address"]}</p>
           <p>坐标：${data_info[i]["position"]}</p>
           <p>备注：${data_info[i]["description"]}</p>
-          <p class="deleteBut" onclick="deleteBut('${data_info[i]["id"]}')">删除</p>
+          <p class="deleteBut" onclick="deleteBut('${i}')">删除</p>
         `;
         addClickHandler(content, marker);
       }
@@ -551,7 +551,8 @@ export default {
         map.openInfoWindow(infoWindow, point); //开启信息窗口
       }
     },
-    deleteBut(id){
+    deleteBut(index){
+      console.log(index);
       Dialog.confirm({
         title: "你确定删除吗",
       })
@@ -559,17 +560,18 @@ export default {
           this.$httpDelete({
             url: "/api/semResource/delete",
             params: {
-              ids: id,
+              ids: this.typeIdsData[index]['id'],
             },
           })
             .then((res) => {
-              this.map.clearOverlays();
-              // Toast({
-              //   message: "删除成功",
-              //   position: "middle",
-              // });
-              this.createInfoWindow(this.map);
-              this.queryResources();
+              this.typeIdsData.splice(index, 1);
+              // this.map.clearOverlays();
+              Toast({
+                message: "删除成功",
+                position: "middle",
+              });
+              // this.createInfoWindow(this.map);
+              // this.queryResources();
             })
             .catch(() => {});
         })

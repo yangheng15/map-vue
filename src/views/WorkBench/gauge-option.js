@@ -80,3 +80,47 @@ export const option = {
     }]
   }]
 }
+
+
+export const option2 ={
+  title: {
+    text: "",
+    subtext: "",
+  },
+  tooltip: {
+    trigger: "axis",
+  },
+  xAxis: {
+    type: "category",
+    boundaryGap: false,
+    data: ["4月", "5月", "6月", "7月", "8月"],
+  },
+  yAxis: {
+    type: "value",
+    axisLabel: {
+      formatter: "{value}",
+    },
+  },
+  series: [
+    {
+      name: "最高",
+      type: "line",
+      data: [1, 1, 4, 3, 2, 3, 0],
+      itemStyle: {
+        normal: {
+          // 拐点上显示数值
+          label: {
+            show: true,
+          },
+          borderColor: "#22ecec", // 拐点边框颜色
+          lineStyle: {
+            color: "#22ecec",
+          },
+        },
+      },
+      // markLine: {
+      //   data: [{ type: "average", name: "平均值" }],
+      // },
+    },
+  ],
+}
