@@ -560,11 +560,13 @@ export default {
             },
           })
             .then((res) => {
-              this.createInfoWindow(map, data);
-              Toast({
-                message: "删除成功",
-                position: "middle",
-              });
+              this.map.clearOverlays();
+              // Toast({
+              //   message: "删除成功",
+              //   position: "middle",
+              // });
+              this.createInfoWindow(this.map);
+              this.queryResources();
             })
             .catch(() => {});
         })
