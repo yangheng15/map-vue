@@ -22,12 +22,6 @@
           >
             {{ item.text }}
           </li>
-          <!-- <li @click="tab2(5)" :class="tabId1 == 5 ? 'cur' : ''">存款</li>
-          <li @click="tab2(6)" :class="tabId1 == 6 ? 'cur' : ''">贷款</li>
-          <li @click="tab2(7)" :class="tabId1 == 7 ? 'cur' : ''">理财</li>
-          <li @click="tab2(8)" :class="tabId1 == 8 ? 'cur' : ''">手机银行</li>
-          <li @click="tab2(9)" :class="tabId1 == 9 ? 'cur' : ''">网银</li>
-          <li @click="tab2(10)" :class="tabId1 == 10 ? 'cur' : ''">ETC</li> -->
         </ul>
         <ul
           class="ranking_list"
@@ -36,23 +30,23 @@
             border-bottom: 1px solid #e8e8e8 !important;
           "
         >
-          <li
+          <!-- <li
             @click="tab2(11)"
             :class="tabId1 == 11 ? 'cur' : ''"
             style="margin-right: 20px"
           >
             跑动里程
-          </li>
+          </li> -->
           <li
-            @click="tab2(12)"
-            :class="tabId1 == 12 ? 'cur' : ''"
+            @click="tab2(custNum)"
+            :class="tabId1 == custNum ? 'cur' : ''"
             style="margin-right: 20px"
           >
-            拜访客户数量
+            拜访客户数
           </li>
           <li
-            @click="tab2(13)"
-            :class="tabId1 == 13 ? 'cur' : ''"
+            @click="tab2(taskNum)"
+            :class="tabId1 == taskNum ? 'cur' : ''"
             style="margin-right: 20px"
           >
             执行任务数
@@ -60,7 +54,7 @@
         </ul>
         <div class="situation">
           <div style="padding-top: 30px">
-            完成情况：{{ text1 }}
+            完成情况：{{ text1 | NumFormat }}
             <p
               style="
                 color: #df0f0f;
@@ -69,7 +63,7 @@
                 padding-bottom: 15px;
               "
             >
-              {{ moneyAll ? moneyAll : 0 }}
+              {{ moneyAll ? moneyAll : 0 | NumFormat }}
             </p>
           </div>
           <ul>
@@ -118,6 +112,9 @@ export default {
       product_option: [],
       moneyAll: "",
       targetAmount: "",
+      percentage: "",
+      custNum: "custNum",
+      taskNum: "taskNum",
     };
   },
   created() {
@@ -185,13 +182,13 @@ export default {
       } else {
         this.text = "下半年";
       }
-      this.getTaskText(ev)
+      this.getTaskText(ev);
     },
     getTaskText(ele) {
       this.$httpGet({
         url: "/api/taskFinish/thisMonth",
         params: {
-          productType: "活期存款",
+          productType: this.tabId1,
           dateType: ele,
         },
       }).then((res) => {
@@ -199,24 +196,86 @@ export default {
         this.text1 = res.data.FloatFinishRate;
         this.moneyAll = res.data.marketAmount;
         this.targetAmount = res.data.targetNum;
+        this.percentage = parseFloat(res.data.finishRate);
+        option["series"][0]["data"][0] = {
+          value: this.percentage,
+          name: "完成率",
+        };
+        this.myChart.setOption(option);
+      });
+    },
+    finishCountNum() {
+      // 客户数量，执行任务
+      this.$httpGet({
+        url: "/api/taskFinish/countNum",
+        params: {
+          productType: this.tabId1,
+          dateType: this.tabId,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.text1 = res.data.FloatFinishRate;
+        this.moneyAll = res.data.marketAmount;
+        this.targetAmount = res.data.targetNum;
+        this.percentage = parseFloat(res.data.finishRate);
+        option["series"][0]["data"][0] = {
+          value: this.percentage,
+          name: "完成率",
+        };
+        this.myChart.setOption(option);
+      });
+    },
+    thisMounth() {
+      // APP产品类型目标数,完成度,完成情况 1:本月 2:本季度 3:本年度 4:上半年 5:下半年
+      this.$httpGet({
+        url: "/api/taskFinish/thisMonth",
+        params: {
+          productType: this.tabId1,
+          dateType: this.tabId,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.text1 = res.data.FloatFinishRate;
+        this.moneyAll = res.data.marketAmount;
+        this.targetAmount = res.data.targetNum;
+        this.percentage = parseFloat(res.data.finishRate);
+        option["series"][0]["data"][0] = {
+          value: this.percentage,
+          name: "完成率",
+        };
+        this.myChart.setOption(option);
       });
     },
     tab2(ev) {
       console.log(ev);
       this.tabId1 = ev;
       if (ev === this.tabId1) {
-        this.$httpGet({
-          url: "/api/taskFinish/thisMonth",
-          params: {
-            productType: this.tabId1,
-            dateType: this.tabId,
-          },
-        }).then((res) => {
-          console.log(res);
-          this.text1 = res.data.FloatFinishRate;
-          this.moneyAll = res.data.marketAmount;
-          this.targetAmount = res.data.targetNum;
-        });
+        if (ev == this.taskNum || ev == this.custNum) {
+          // 客户数量，执行任务
+          this.finishCountNum();
+          // 获取最下面echarts折线图数据（客户数量，执行任务）
+          this.$httpGet({
+            url: "/api/taskFinish/otherMonthTrends",
+            params: {
+              productType: this.tabId1,
+            },
+          }).then((res) => {
+            console.log(res);
+          });
+        } else {
+          // APP产品类型目标数,完成度,完成情况 1:本月 2:本季度 3:本年度 4:上半年 5:下半年
+          this.thisMounth();
+          // 获取最下面echarts折线图数据
+          // APP产品类型近半年业绩趋势
+          this.$httpGet({
+            url: "/api/taskFinish/monthTrends",
+            params: {
+              productType: this.tabId1,
+            },
+          }).then((res) => {
+            console.log(res);
+          });
+        }
       }
     },
     getTask() {
@@ -231,11 +290,20 @@ export default {
         this.text1 = res.data.FloatFinishRate;
         this.moneyAll = res.data.marketAmount;
         this.targetAmount = res.data.targetNum;
-       option['series'][0]['data'][0] = {
-          value: this.text1,
-          name: "完成率"
-        }
+        this.percentage = parseFloat(res.data.finishRate);
+        option["series"][0]["data"][0] = {
+          value: this.percentage,
+          name: "完成率",
+        };
         this.myChart.setOption(option);
+      });
+      this.$httpGet({
+        url: "/api/taskFinish/monthTrends",
+        params: {
+          productType: "三方存管",
+        },
+      }).then((res) => {
+        console.log(res.data);
       });
     },
     drawLine() {

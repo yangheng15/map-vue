@@ -3,14 +3,20 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '排行榜'">
       <div style="background: #fff">
-        <ul class="ranking_list" style="border-bottom: 1px solid #e8e8e8 !important">
+        <ul
+          class="ranking_list"
+          style="border-bottom: 1px solid #e8e8e8 !important"
+        >
           <li @click="tab1(1)" :class="tabId == 1 ? 'cur' : ''">本月</li>
           <li @click="tab1(2)" :class="tabId == 2 ? 'cur' : ''">本季度</li>
           <li @click="tab1(3)" :class="tabId == 3 ? 'cur' : ''">本年度</li>
           <li @click="tab1(4)" :class="tabId == 4 ? 'cur' : ''">上半年</li>
           <li @click="tab1(5)" :class="tabId == 5 ? 'cur' : ''">下半年</li>
         </ul>
-        <ul class="ranking_list1" style="border-bottom: 1px solid #e8e8e8 !important">
+        <ul
+          class="ranking_list1"
+          style="border-bottom: 1px solid #e8e8e8 !important"
+        >
           <li
             v-for="(item, index) in product_option"
             :key="index"
@@ -35,22 +41,15 @@
           "
         >
           <li
-            @click="tab2(11)"
-            :class="tabId1 == 11 ? 'cur' : ''"
+            @click="tab2(custNum)"
+            :class="tabId1 == custNum ? 'cur' : ''"
             style="margin-right: 20px"
           >
-            跑动里程
+            拜访客户数
           </li>
           <li
-            @click="tab2(12)"
-            :class="tabId1 == 12 ? 'cur' : ''"
-            style="margin-right: 20px"
-          >
-            拜访客户数量
-          </li>
-          <li
-            @click="tab2(13)"
-            :class="tabId1 == 13 ? 'cur' : ''"
+            @click="tab2(taskNum)"
+            :class="tabId1 == taskNum ? 'cur' : ''"
             style="margin-right: 20px"
           >
             执行任务数
@@ -69,20 +68,29 @@
               v-for="(item, index) in achievements_list"
               :key="index"
               style="margin-top: 15px"
-              v-show="
-                tabId == item.id || tabId1 == item.id 
-              "
             >
               <li>
-                <img :src="item.img" alt />
+                <p
+                  :class="
+                    index + 1 == 1
+                      ? 'imgTxt1'
+                      : index + 1 == 2
+                      ? 'imgTxt2'
+                      : index + 1 == 3
+                      ? 'imgTxt3'
+                      : 'imgTxt'
+                  "
+                >
+                  {{ index + 1 }}
+                </p>
               </li>
-              <li>{{ item.name }}</li>
-              <li>{{ item.achievements }}</li>
+              <li>{{ item.realName }}</li>
+              <li>{{ item.marketAmount | NumFormat }}</li>
             </ul>
           </dd>
         </dl>
         <div>
-          <p style="text-align: center">前5名业绩占比分析</p>
+          <!-- <p style="text-align: center">前5名业绩占比分析</p> -->
           <div id="main" style="width: 100%; height: 200px"></div>
         </div>
       </div>
@@ -91,11 +99,6 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import con1 from "../../assets/WorkBench/one.png";
-import con2 from "../../assets/WorkBench/two.png";
-import con3 from "../../assets/WorkBench/three.png";
-import con4 from "../../assets/WorkBench/four.png";
-import con5 from "../../assets/WorkBench/five.png";
 import { option } from "./gauge-option";
 export default {
   name: "RankingList",
@@ -107,155 +110,12 @@ export default {
       title: "",
       typeCN: "",
       tabId: 1,
-      tabId1: "活期存款",
-      achievements_list: [
-        {
-          img: con1,
-          name: "张三",
-          achievements: "￥19,715.20",
-          id: 1,
-        },
-        {
-          img: con2,
-          name: "李四",
-          achievements: "￥19,715.20",
-          id: 4,
-        },
-        {
-          img: con3,
-          name: "王五",
-          achievements: "￥19,715.20",
-          id: 5,
-        },
-        {
-          img: con4,
-          name: "赵六",
-          achievements: "￥19,715.20",
-          id: 2,
-        },
-        {
-          img: con5,
-          name: "李东",
-          achievements: "￥19,715.20",
-          id: 8,
-        },
-        {
-          img: con1,
-          name: "赵丽",
-          achievements: "￥19,715.20",
-          id: 1,
-        },
-        {
-          img: con2,
-          name: "钱付",
-          achievements: "￥19,715.20",
-          id: 4,
-        },
-        {
-          img: con3,
-          name: "孙武",
-          achievements: "￥19,715.20",
-          id: 7,
-        },
-        {
-          img: con4,
-          name: "李林",
-          achievements: "￥19,715.20",
-          id: 10,
-        },
-        {
-          img: con5,
-          name: "周高",
-          achievements: "￥19,715.20",
-          id: 13,
-        },
-        {
-          img: con2,
-          name: "吴一",
-          achievements: "￥19,715.20",
-          id: 4,
-        },
-        {
-          img: con3,
-          name: "郑霞",
-          achievements: "￥19,715.20",
-          id: 7,
-        },
-        {
-          img: con4,
-          name: "王侯",
-          achievements: "￥19,715.20",
-          id: 10,
-        },
-        {
-          img: con5,
-          name: "高崎",
-          achievements: "￥19,715.20",
-          id: 5,
-        },
-        {
-          img: con3,
-          name: "郑霞",
-          achievements: "￥19,715.20",
-          id: 3,
-        },
-        {
-          img: con4,
-          name: "王侯",
-          achievements: "￥19,715.20",
-          id: 3,
-        },
-        {
-          img: con5,
-          name: "高崎",
-          achievements: "￥19,715.20",
-          id: 3,
-        },
-
-        {
-          img: con4,
-          name: "李林",
-          achievements: "￥19,715.20",
-          id: 10,
-        },
-        {
-          img: con5,
-          name: "周高",
-          achievements: "￥19,715.20",
-          id: 13,
-        },
-        {
-          img: con2,
-          name: "吴一",
-          achievements: "￥19,715.20",
-          id: 3,
-        },
-        {
-          img: con3,
-          name: "郑霞",
-          achievements: "￥19,715.20",
-          id: 0,
-        },
-        {
-          img: con4,
-          name: "王侯",
-          achievements: "￥19,715.20",
-          id: 0,
-        },
-        {
-          img: con5,
-          name: "高崎",
-          achievements: "￥19,715.20",
-          id: 0,
-        },
-        {
-          img: con3,
-          name: "郑霞",
-          achievements: "￥19,715.20",
-          id: 0,
-        },
-      ],
-      product_option:""
+      tabId1: "三方存管",
+      achievements_list: [],
+      product_option: "",
+      marketAmount: "",
+      custNum: "custNum",
+      taskNum: "taskNum",
     };
   },
   created() {
@@ -294,48 +154,64 @@ export default {
     },
     getTaskText(ele) {
       this.$httpGet({
-        url: "/api/taskFinish/thisMonth",
+        url: "/api/rankingList/dateType",
         params: {
-          productType: "活期存款",
+          productType: this.tabId1,
           dateType: ele,
         },
       }).then((res) => {
-        console.log(res);
-        this.text1 = res.data.FloatFinishRate;
-        this.moneyAll = res.data.marketAmount;
-        this.targetAmount = res.data.targetNum;
+        this.achievements_list = res.data;
+        this.achievements_list.forEach((el) => {
+          this.marketAmount = parseFloat(el.marketAmount);
+        });
+        this.achievements_list.marketAmount = this.marketAmount;
       });
     },
     tab2(ev) {
       console.log(ev);
       this.tabId1 = ev;
       if (ev === this.tabId1) {
-        this.$httpGet({
-          url: "/api/taskFinish/thisMonth",
-          params: {
-            productType: this.tabId1,
-            dateType: this.tabId,
-          },
-        }).then((res) => {
-          console.log(res);
-          this.text1 = res.data.FloatFinishRate;
-          this.moneyAll = res.data.marketAmount;
-          this.targetAmount = res.data.targetNum;
-        });
+        if (ev == this.taskNum || ev == this.custNum) {
+          this.$httpGet({
+            url: "/api/rankingList/otherType",
+            params: {
+              productType: this.tabId1,
+              dateType: this.tabId,
+            },
+          }).then((res) => {
+            this.achievements_list = res.data;
+            this.achievements_list.forEach((el) => {
+              this.marketAmount = parseFloat(el.marketAmount);
+            });
+          });
+        } else {
+          this.$httpGet({
+            url: "/api/rankingList/dateType",
+            params: {
+              productType: this.tabId1,
+              dateType: this.tabId,
+            },
+          }).then((res) => {
+            this.achievements_list = res.data;
+            this.achievements_list.forEach((el) => {
+              this.marketAmount = parseFloat(el.marketAmount);
+            });
+          });
+        }
       }
     },
     getTask() {
       this.$httpGet({
-        url: "/api/taskFinish/thisMonth",
+        url: "/api/rankingList/dateType",
         params: {
-          productType: "活期存款",
+          productType: "三方存管",
           dateType: 1,
         },
       }).then((res) => {
-        console.log(res);
-        this.text1 = res.data.FloatFinishRate;
-        this.moneyAll = res.data.marketAmount;
-        this.targetAmount = res.data.targetNum;
+        this.achievements_list = res.data;
+        this.achievements_list.forEach((el) => {
+          this.marketAmount = parseFloat(el.marketAmount);
+        });
       });
     },
   },
@@ -345,6 +221,37 @@ export default {
 <style scoped>
 * {
   font-size: 14px;
+}
+.imgTxt {
+  height: 26px;
+  line-height: 22px;
+  width: 30px;
+  text-align: center;
+  margin: 0;
+}
+.imgTxt1 {
+  background: url("../../assets/WorkBench/one.svg") no-repeat;
+  height: 26px;
+  line-height: 22px;
+  width: 30px;
+  text-align: center;
+  margin: 0;
+}
+.imgTxt2 {
+  background: url("../../assets/WorkBench/two.svg") no-repeat;
+  height: 26px;
+  line-height: 22px;
+  width: 30px;
+  text-align: center;
+  margin: 0;
+}
+.imgTxt3 {
+  background: url("../../assets/WorkBench/three.svg") no-repeat;
+  height: 26px;
+  line-height: 22px;
+  width: 30px;
+  text-align: center;
+  margin: 0;
 }
 .van-checkbox__icon {
   height: 20px;

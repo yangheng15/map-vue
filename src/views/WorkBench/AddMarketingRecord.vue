@@ -75,7 +75,7 @@
             v-model="market_amount"
             rows="2"
             autosize
-            label="营销金额"
+            label="金额（万元）"
             type="number"
             placeholder="请填写营销金额"
             show-word-limit

@@ -517,7 +517,7 @@
             </router-link>
             <p>清查日期：{{ thisItem.checkTime | transform }}</p>
           </div>
-          <p>评估价值（万元）：{{ thisItem.amount }}</p>
+          <p>评估价值（万元）：{{ thisItem.amount | NumFormat }}</p>
           <p class="delete" @click="deleteFamilyAssets(thisItem.id)">删除</p>
         </div>
         <span class="add_record" @click="showPopupAssets()">+</span>

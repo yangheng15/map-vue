@@ -23,11 +23,6 @@
 <script>
 import ChildNav from "../../components/Public/ChildNav";
 import echarts from "echarts";
-import con1 from "../../assets/WorkBench/one.png";
-import con2 from "../../assets/WorkBench/two.png";
-import con3 from "../../assets/WorkBench/three.png";
-import con4 from "../../assets/WorkBench/four.png";
-import con5 from "../../assets/WorkBench/five.png";
 import { option } from "./gauge-option";
 export default {
   name: "knowledgeBase",

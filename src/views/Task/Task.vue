@@ -66,7 +66,7 @@
           <div class="new_task">
             <p>{{ thisItem.productName }}</p>
             <p style="text-align: center !important">
-              完成：{{ thisItem.taskAmount }}
+              完成：{{ thisItem.taskAmount | NumFormat }}
             </p>
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
@@ -111,7 +111,7 @@
               目标：{{ thisItem.targetNum | NumFormat }}
             </p> -->
             <p style="text-align: center !important">
-              目标：{{ thisItem.targetNum }}
+              目标：{{ thisItem.targetNum | NumFormat }}
             </p>
             <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
@@ -119,7 +119,7 @@
             <p>{{ thisItem.productName }}</p>
             <!-- <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">已过期</p> -->
             <p style="text-align: center !important">
-              完成：{{ thisItem.taskAmount }}
+              完成：{{ thisItem.taskAmount | NumFormat }}
             </p>
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>

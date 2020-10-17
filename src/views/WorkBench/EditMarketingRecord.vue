@@ -101,7 +101,7 @@
             v-model="editRecords.marketAmount"
             rows="2"
             autosize
-            label="金额"
+            label="金额（万元）"
             type="number"
             placeholder="请填写金额"
             show-word-limit
