@@ -23,7 +23,7 @@
           <li class="newCustomerList">
             <router-link
               tag="p"
-              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图' } }"
+              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图',id: thisItem.id } }"
               >{{ thisItem.name }}</router-link
             >
             <p>
@@ -63,7 +63,7 @@
           <li class="newCustomerList">
             <router-link
               tag="p"
-              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图' } }"
+              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图',id: thisItem.id } }"
               >{{ thisItem.name }}</router-link
             >
             <p>

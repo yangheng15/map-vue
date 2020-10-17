@@ -103,19 +103,19 @@
                 tag="li"
                 :to="{
                   name: 'CustomerViewPresentation',
-                  query: { title: '客户视图', id: item.id },
+                  query: { title: '客户视图', id: item.custId },
                 }"
                 >{{ item.custName }}</router-link
               >
-              <a style="color:#000" :href="'tel:' + item.telphone">
-              <li>
-                {{ item.telphone }}
-                <img
-                  style="width: 16px"
-                  src="../../assets/home/md-phone.svg"
-                  alt
-                />
-              </li>
+              <a style="color: #000" :href="'tel:' + item.telphone">
+                <li>
+                  {{ item.telphone }}
+                  <img
+                    style="width: 16px"
+                    src="../../assets/home/md-phone.svg"
+                    alt
+                  />
+                </li>
               </a>
             </ul>
             <ul>
@@ -251,8 +251,8 @@ export default {
   methods: {
     tab(ev) {
       this.tabId = ev;
-      if(ev==1){
-        this.queryContact()
+      if (ev == 1) {
+        this.queryContact();
       }
     },
     queryNewTask() {

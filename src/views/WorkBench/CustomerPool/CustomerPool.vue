@@ -44,7 +44,7 @@
             <p style="width: 1%"></p>
             <p class="schedule_star">
               <van-rate
-                v-model="thisItem.star"
+                v-model="star"
                 :size="18"
                 color="#0078D7"
                 void-icon="star"
@@ -215,6 +215,7 @@ export default {
       customer_pool: [],
       empty_heart: true,
       imgArr: [img1, img2],
+      star:"",
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -257,6 +258,9 @@ export default {
         },
       }).then((res) => {
         this.customer_pool = res.data;
+        this.customer_pool.forEach((el)=>{
+          this.star = parseInt(el.star)
+        })
       });
     },
     getdic() {
@@ -276,6 +280,9 @@ export default {
         },
       }).then((res) => {
         this.customer_pool = res.data;
+        this.customer_pool.forEach((el)=>{
+          this.star = parseInt(el.star)
+        })
       });
     },
     joinCust(item) {

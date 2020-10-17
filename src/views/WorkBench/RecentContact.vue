@@ -8,7 +8,7 @@
           <li v-for="(thisItem, index) in data_customer_list1" :key="index">
             <router-link
               tag="p"
-              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图' } }"
+              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图',id:thisItem.custId } }"
               >{{ thisItem.custName }}</router-link
             >
             <p>电话：{{thisItem.telphone}}</p>
@@ -155,6 +155,9 @@ export default {
         },
       }).then((res) => {
         this.data_customer_list1 = res.data;
+        this.data_customer_list1.forEach((el)=>{
+          this.star = parseInt(el.star)
+        })
       });
     }
   },
