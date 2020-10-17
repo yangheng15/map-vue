@@ -427,7 +427,6 @@ export default {
       });
     },
     onSearch(val) {
-      debugger
       if (this.tabId == 0) {
         this.$httpGet({
           url: "/api/customer/appOwner",

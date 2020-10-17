@@ -41,7 +41,7 @@
               <span style="display: inline-block; width: 0.4rem"></span>成
               <span style="display: inline-block; width: 0.4rem"></span>度：
             </span>
-            <span style="color: #3cc8ab">{{taskQuery.taskAmount}}</span>
+            <span style="color: #3cc8ab">{{taskQuery.taskAmount | NumFormat}}</span>
             <div style="display:inline-block;width: 50%;margin-left:10px">
               <van-progress :percentage="taskQuery.taskCompletion >= 100 ? 100 : taskQuery.taskCompletion" stroke-width="8" />
             </div>
