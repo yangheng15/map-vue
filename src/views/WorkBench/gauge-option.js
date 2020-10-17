@@ -74,7 +74,7 @@ export const option = {
     // detail: {
     //   formatter: "{value}%"
     // },
-    data: [{
+  data: [{
       value: 80,
       name: "完成率"
     }]

@@ -439,7 +439,7 @@ export default {
       }
       this.showPopup = false;
     },
-    mapPlaning(BMap, map) {
+    mapPlaning() {
       this.$httpGet({
         url: "/api/mapPlaningByApp/query",
       }).then((res) => {
@@ -447,7 +447,10 @@ export default {
         this.map_data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
-        map && this.createPolygon(map);
+        this.polygonDl.forEach(it => {
+         this.map.removeOverlay(it);
+        })
+        this.createPolygon(this.map);
       });
     },
     /**
