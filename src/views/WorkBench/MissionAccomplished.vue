@@ -283,6 +283,15 @@ export default {
             },
           }).then((res) => {
             console.log(res);
+            let mounthArr = [];
+            let moduthData = [];
+            for(let prop in res['data']) {
+              mounthArr.push(prop);
+              moduthData.push(res['data'][prop][0]['custNum'])
+            }
+            option2['xAxis'].data = mounthArr;
+            option2['series'][0].data = moduthData;
+            this.myChart2.setOption(option2);
           });
         }
       }
@@ -313,6 +322,15 @@ export default {
         },
       }).then((res) => {
         console.log(res.data);
+        let mounthArr = [];
+            let moduthData = [];
+            for(let prop in res['data']) {
+              mounthArr.push(prop);
+              moduthData.push(res['data'][prop][0]['custNum'])
+            }
+            option2['xAxis'].data = mounthArr;
+            option2['series'][0].data = moduthData;
+            this.myChart2.setOption(option2);
       });
     },
     drawLine() {
