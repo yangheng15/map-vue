@@ -521,6 +521,7 @@ export default {
         height: 80, // 信息窗口高度
         title: "信息窗口", // 信息窗口标题
         enableMessage: true, //设置允许信息窗发送短息
+        offset: {width: -25, height: 30}
       };
       for (var i = 0; i < data_info.length; i++) {
         var marker = new BMap.Marker(
