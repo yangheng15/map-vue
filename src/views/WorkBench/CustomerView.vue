@@ -500,7 +500,7 @@ export default {
       childrenStatus: false,
       customer_hobby: "无",
       customer_id: "110242199702125858",
-      date_of_birth: "9/20",
+      date_of_birth: "2020-10-18",
       showDateBirth: false,
       occupation: "程序员",
       phone_number: "15840991076",

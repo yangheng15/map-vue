@@ -288,7 +288,6 @@
           v-model="signData.sign_address"
           name="address"
           label="地址："
-          placeholder="单行输入"
         />
         <van-field
           disabled
@@ -296,7 +295,6 @@
           name="position"
           label="位置："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写位置' }]"
         />
         <van-field
           readonly

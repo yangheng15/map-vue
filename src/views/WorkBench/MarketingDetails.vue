@@ -249,7 +249,7 @@ export default {
       this.tabId = ev;
     },
     getMarkedRecord() {
-      if (this.customerCode && this.gridCode) {
+      // if (this.customerCode && this.gridCode) {
         this.$httpGet({
           url: "/api/appMarket/marketRecord",
           params: {
@@ -262,7 +262,7 @@ export default {
         }).then((res) => {
           this.MarketingRecord = res.data;
         });
-      }
+      // }
     },
     deleteRemark(val) {
       Dialog.confirm({
