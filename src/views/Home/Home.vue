@@ -43,23 +43,23 @@
       <ul class="data_display">
         <li>
           <p>执行中</p>
-          <p class="data_num">10</p>
+          <p class="data_num">{{ taskNum.executNum }}</p>
         </li>
         <li>
           <p>即将过期</p>
-          <p class="data_num">10</p>
+          <p class="data_num">{{ taskNum.aboutExpireNum }}</p>
         </li>
         <li>
           <p>已经过期</p>
-          <p class="data_num">10</p>
+          <p class="data_num">{{ taskNum.expiredNum }}</p>
         </li>
         <li>
           <p>成功完成</p>
-          <p class="data_num">6</p>
+          <p class="data_num">{{ taskNum.succNum }}</p>
         </li>
         <li>
           <p>失败</p>
-          <p class="data_num">20</p>
+          <p class="data_num">{{ taskNum.failNum }}</p>
         </li>
       </ul>
       <div class="tabTitle">
@@ -240,6 +240,7 @@ export default {
           state: true,
         },
       ],
+      taskNum: "",
     };
   },
   components: {
@@ -248,8 +249,21 @@ export default {
   },
   created() {
     this.queryNewTask();
+    this.getNum();
   },
   methods: {
+    getNum() {
+      this.$httpGet({
+        url: "/api/homePage/taskNum",
+      }).then((res) => {
+        this.taskNum = res.data;
+      });
+      this.$httpGet({
+        url: "/api/homePage/countNum",
+      }).then((res) => {
+        console.log(res.data);
+      });
+    },
     tab(ev) {
       this.tabId = ev;
       if (ev == 1) {
