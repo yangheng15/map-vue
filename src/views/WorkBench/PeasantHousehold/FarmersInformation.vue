@@ -1255,6 +1255,7 @@ export default {
       this.isPopupVisibleWork = false;
     },
     async editFarmers() {
+      // debugger
       const res = await this.$httpGet({
         url: `/api/customersFamily/get/${this.id}`,
         data: {
@@ -1262,13 +1263,16 @@ export default {
         },
       });
       this.farmers_details = res.data;
+      localStorage.setItem('familyCode', this.farmers_details.familyCode)
       this.prospect_detailsEdit.type = res.data.type;
     },
     getFamilyPeople() {
+      //第一次this中存在familyCode进入详情页后返回需要查询本地
+      const familyCode = localStorage.getItem('familyCode');
       this.$httpGet({
         url: "/api/customersFamilyMembers/query",
         params: {
-          familyCode: this.farmers_details.familyCode,
+          familyCode: this.farmers_details.familyCode || familyCode,
           limit: 10,
           page: 1,
         },
@@ -1281,10 +1285,11 @@ export default {
       });
     },
     getFamilyAssets() {
+      const familyCode = localStorage.getItem('familyCode');
       this.$httpGet({
         url: "/api/customersFamilyAssetsLiability/query",
         params: {
-          familyCode: this.farmers_details.familyCode,
+          familyCode: this.farmers_details.familyCode || familyCode,
           limit: 10,
           page: 1,
         },
