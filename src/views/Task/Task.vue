@@ -28,14 +28,14 @@
             <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
               {{ thisItem.targetNum | NumFormat }}
             </p>
-            <p>创建日期：{{ thisItem.createdTime | transform }}</p>
+            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
           <div class="new_task">
             <p>{{ thisItem.productName }}</p>
             <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
               剩余{{ thisItem.remainingDays }}天
             </p>
-            <p>截止日期：{{ thisItem.updatedTime | transform }}</p>
+            <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
         </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>

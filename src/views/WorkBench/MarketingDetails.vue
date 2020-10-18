@@ -12,7 +12,10 @@
           <router-link
             tag="a"
             class="img1"
-            :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图', id: this.custId } }"
+            :to="{
+              name: 'CustomerViewPresentation',
+              query: { title: '客户视图', id: this.custId },
+            }"
           ></router-link>
         </li>
         <li>
@@ -20,7 +23,10 @@
           <router-link
             tag="a"
             class="img2"
-            :to="{ name: 'ProductIntroduction', query: { title: '产品介绍',productCode: productCode } }"
+            :to="{
+              name: 'ProductIntroduction',
+              query: { title: '产品介绍', productCode: productCode },
+            }"
           ></router-link>
         </li>
         <li>
@@ -28,7 +34,10 @@
           <router-link
             tag="a"
             class="img3"
-            :to="{ name: 'MapAddressDisplay', query: { title: '地址',location:location } }"
+            :to="{
+              name: 'MapAddressDisplay',
+              query: { title: '地址', location: location, custName: custName },
+            }"
           ></router-link>
         </li>
         <li>
@@ -46,7 +55,7 @@
               : intention == 2
               ? "无"
               : intention == 3
-              ? "已有产品"
+              ? "已有他行产品"
               : intention == 4
               ? "直接拒绝"
               : "同意采集"
@@ -56,57 +65,93 @@
       <div>
         <p class="detail_title">营销记录</p>
         <ul style="background: #fff">
-          <router-link
+          <li
             v-for="(thisItem, index) in MarketingRecord"
             :key="index"
-            tag="li"
-            :to="{
-              name: 'EditMarketingRecord',
-              query: {
-                title: '营销记录',
-                id: thisItem.id,
-                custName: custName,
-                productName: productName,
-              },
-            }"
             class="marked_record"
           >
-            <p style="width: 55%">{{ thisItem.semTime | transform }}</p>
-            <p style="width: 45%; display: flex" class="approval">
-              <!-- <span class="approval_Passed">已营销</span> -->
-              <span
-                :class="
-                  thisItem.intention == '0'
-                    ? 'approval_Passed'
-                    : 'approval_Passed1'
-                "
-                >{{
-                  thisItem.intention == "0"
-                    ? "强"
-                    : thisItem.intention == "1"
-                    ? "一般"
-                    : thisItem.intention == "2"
-                    ? "无"
-                    : thisItem.intention == "3"
-                    ? "已有产品"
-                    : thisItem.intention == "4"
-                    ? "直接拒绝"
-                    : "同意采集"
-                }}</span
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: custName,
+                    productName: productName,
+                  },
+                }"
+                style="width: 55%"
+                >{{ thisItem.semTime | transform }}</router-link
               >
-              <span
-                :class="
-                  thisItem.isSucc == '0'
-                    ? 'approval_Passed'
-                    : 'approval_Passed1'
-                "
-                >{{ thisItem.isSucc == "0" ? "成功" :thisItem.isSucc == "1"?"未成功": "失败" }}
-              </span>
-            </p>
-            <p class="schedule_star" style="width: 100%">
-              {{ thisItem.remark }}
-            </p>
-          </router-link>
+
+              <p>
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
+                  >删除</van-button
+                >
+              </p>
+            </div>
+
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: custName,
+                    productName: productName,
+                  },
+                }"
+                class="dadian"
+                >{{ thisItem.remark }}</router-link
+              >
+              <p style="width: 45%; display: flex" class="approval">
+                <!-- <span class="approval_Passed">已营销</span> -->
+                <span
+                  :class="
+                    thisItem.intention == '0'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{
+                    thisItem.intention == "0"
+                      ? "强"
+                      : thisItem.intention == "1"
+                      ? "一般"
+                      : thisItem.intention == "2"
+                      ? "无"
+                      : thisItem.intention == "3"
+                      ? "已有产品"
+                      : thisItem.intention == "4"
+                      ? "直接拒绝"
+                      : "同意采集"
+                  }}</span
+                >
+                <span
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{
+                    thisItem.isSucc == "0"
+                      ? "失败"
+                      : thisItem.isSucc == "1"
+                      ? "成功"
+                      : thisItem.isSucc == "2"
+                      ? "未成功"
+                      : ""
+                  }}
+                </span>
+              </p>
+            </div>
+          </li>
         </ul>
         <div class="end_line">已加载完毕</div>
       </div>
@@ -144,6 +189,7 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
+import { Dialog } from "vant";
 export default {
   data() {
     return {
@@ -181,10 +227,11 @@ export default {
       productCode: "",
       id: "",
       custId: "",
+      taskId: "",
       productName: "",
       telphone: "",
       address: "",
-      location:"",
+      location: "",
     };
   },
   components: {
@@ -204,6 +251,7 @@ export default {
     this.location = this.$route.query.location;
     this.id = this.$route.query.id;
     this.custId = this.$route.query.custId;
+    this.taskId = this.$route.query.taskId;
     this.getMarkedRecord();
   },
   updated() {},
@@ -219,6 +267,7 @@ export default {
             customerCode: this.customerCode,
             limit: 10,
             gridCode: this.gridCode,
+            taskId: this.taskId,
             page: 1,
           },
         }).then((res) => {
@@ -226,10 +275,44 @@ export default {
         });
       }
     },
+    deleteRemark(val) {
+      Dialog.confirm({
+        title: "你确定删除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/semCustRecords/delete",
+            params: {
+              ids: val,
+            },
+          })
+            .then((res) => {
+              this.getMarkedRecord();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    },
   },
+    filters: {
+    dic_client_will(val) {
+     return JSON.parse(localStorage.getItem('dicClientWill')).find(it => it.key === val).value;
+    }
+  }
 };
 </script>
 <style scoped>
+.positionFixd {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.dadian {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .MarketingDetails {
   padding-top: 46px;
 }
@@ -352,15 +435,6 @@ export default {
   border-radius: 100%;
   background-color: #3d425e;
   color: #fff;
-}
-
-.mission_details .schedule_star {
-  display: inline-block;
-  margin: 0rem 0rem 0rem 1.6rem;
-}
-.mission_details .schedule_star img {
-  width: 1.2rem;
-  margin: 0rem;
 }
 .cur {
   color: #df0f0f;

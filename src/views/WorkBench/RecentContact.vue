@@ -11,7 +11,7 @@
               :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图',id:thisItem.custId } }"
               >{{ thisItem.custName }}</router-link
             >
-            <p>电话：{{thisItem.telphone}}</p>
+            <p><a style="color:#000" :href="'tel:' + thisItem.telphone">电话：{{thisItem.telphone}}</a></p>
             <p class="schedule_star">
               <van-rate
                 v-model="star"
@@ -208,6 +208,15 @@ export default {
 .cur {
   color: #df0f0f;
   position: relative;
+}
+.img4 {
+  position: absolute;
+  right: 30%;
+  top: 0.1rem;
+  background: url("../../assets/home/md-phone.svg") no-repeat;
+  background-size: cover;
+  width: 1rem;
+  height: 1rem;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   * {

@@ -114,7 +114,7 @@
           :rules="[{ required: true, message: '请填写详细地址' }]"
         />
         <van-field
-          v-model="contacts"
+          v-model="farmers_details.houseName"
           name="联系人："
           label="联系人："
           placeholder="单行输入"
@@ -127,10 +127,10 @@
           placeholder="单行输入"
           :rules="[{ required: true, message: '请填写手机号' }]"
         >
-            <template #button>
-              <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
-            </template>
-          </van-field>
+          <template #button>
+            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
+          </template>
+        </van-field>
         <van-field
           readonly
           clickable
@@ -150,7 +150,7 @@
         </van-popup>
         <van-field
           v-model="farmers_details.location"
-          disabled 
+          disabled
           name="位置："
           label="位置："
           placeholder="单行输入"
@@ -383,8 +383,9 @@
             <p>年收入：{{ thisItem.annualIncome }}</p>
           </div>
           <div>
-            <p style="position: relative;">电话：{{ thisItem.telphone }}
-               <a class="img1" :href="'tel:' + thisItem.telphone"></a>
+            <p style="position: relative">
+              电话：{{ thisItem.telphone }}
+              <a class="img1" :href="'tel:' + thisItem.telphone"></a>
             </p>
             <p class="delete" @click="deleteFamilyPeople(thisItem.id)">删除</p>
           </div>
@@ -635,7 +636,7 @@
               label="描述"
               type="textarea"
               maxlength="50"
-              placeholder="请输入年收入"
+              placeholder="请输入描述"
               show-word-limit
             />
             <!-- <van-cell title="清查日期" :value="date" @click="show = true" />
@@ -680,14 +681,14 @@
             ]"
           />
           <van-field
-            v-model="familyIncome.householdIncome"
+            v-model="householdIncome"
             name="家庭年收入（万元）："
             label="家庭年收入（万元）："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写家庭年收入（万元）' }]"
           />
           <van-field
-            v-model="familyIncome.otherIncome"
+            v-model="otherIncome"
             name="其他收入（万元）："
             label="其他收入（万元）："
             placeholder="单行输入"
@@ -705,35 +706,35 @@
             ]"
           />
           <van-field
-            v-model="familyIncome.mortgage"
+            v-model="mortgage"
             name="按揭（万元）："
             label="按揭（万元）："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写按揭（万元）：' }]"
           />
           <van-field
-            v-model="familyIncome.businessExpend"
+            v-model="businessExpend"
             name="经营性支出（万元）："
             label="经营性支出（万元）："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写经营性支出（万元）' }]"
           />
           <van-field
-            v-model="familyIncome.utilities"
+            v-model="utilities"
             name="水电气（万元）："
             label="水电气（万元）："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写水电气（万元）' }]"
           />
           <van-field
-            v-model="familyIncome.lcme"
+            v-model="lcme"
             name="教育医疗（万元）："
             label="教育医疗（万元）："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写教育医疗（万元）' }]"
           />
           <van-field
-            v-model="familyIncome.otherExpend"
+            v-model="otherExpend"
             name="其他支出（万元）："
             label="其他支出（万元）："
             placeholder="单行输入"
@@ -832,7 +833,7 @@ export default {
         "活期存款、定期存款、网上银行、手机银行、支付宝支付、信用卡",
       mainEvaluation: "大家都非常好",
       detailed_address: "吉林省白城市大安市安广镇大田村",
-      contacts: "张军",
+      contacts: "",
       household_name: "",
       household_age: "",
       annual_income: "",
@@ -935,6 +936,13 @@ export default {
       date: "",
       show: false,
       familyIncome: "",
+      householdIncome: "",
+      otherIncome: "",
+      mortgage: "",
+      businessExpend: "",
+      utilities: "",
+      lcme: "",
+      otherExpend: "",
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -979,7 +987,6 @@ export default {
     },
     enumData1(val, data) {
       let find = "";
-      console.log(val, data);
       if (val && data.length > 0) {
         find = data.find((it) => it.index === val);
         console.log(find);
@@ -1018,11 +1025,9 @@ export default {
         res.data.forEach((it, index) => {
           it.children &&
             it.children.forEach((ele, index1) => {
-              console.log(ele);
               transformDara.push({ index: ele.code, text: ele.name });
             });
         });
-        console.log(transformDara);
         this.areaList = transformDara;
         this.farmers_details.gridding = this.enumData1(
           this.farmers_details.gridding,
@@ -1257,7 +1262,6 @@ export default {
         },
       });
       this.farmers_details = res.data;
-      console.log(this.farmers_details);
       this.prospect_detailsEdit.type = res.data.type;
     },
     getFamilyPeople() {
@@ -1296,7 +1300,17 @@ export default {
       this.$httpGet({
         url: `/api/customersFamilyIncome/get/${this.farmers_details.familyCode}`,
       }).then((res) => {
-        this.familyIncome = res.data;
+        if (res.data != null) {
+          this.familyIncome = res.data;
+          this.householdIncome = this.familyIncome.householdIncome;
+          this.otherIncome = this.familyIncome.otherIncome;
+          this.mortgage = this.familyIncome.mortgage;
+          this.businessExpend = this.familyIncome.businessExpend;
+          this.utilities = this.familyIncome.utilities;
+          this.lcme = this.familyIncome.lcme;
+          this.otherExpend = this.familyIncome.otherExpend;
+        }
+
         // this.peasant_household.forEach((it) => {
         //   this.familyCode = it.type;
         // });
@@ -1348,14 +1362,14 @@ export default {
         data: {
           sum: this.addAllNum,
           sumIncome: this.addIncomeNum,
-          householdIncome: this.familyIncome.householdIncome,
-          otherIncome: this.familyIncome.otherIncome,
+          householdIncome: this.householdIncome,
+          otherIncome: this.otherIncome,
           sumExpend: this.addExpenditureNum,
-          mortgage: this.familyIncome.mortgage,
-          businessExpend: this.familyIncome.businessExpend,
-          utilities: this.familyIncome.utilities,
-          lcme: this.familyIncome.lcme,
-          otherExpend: this.familyIncome.otherExpend,
+          mortgage: this.mortgage,
+          businessExpend: this.businessExpend,
+          utilities: this.utilities,
+          lcme: this.lcme,
+          otherExpend: this.otherExpend,
           familyCode: this.farmers_details.familyCode,
         },
       })
@@ -1372,30 +1386,36 @@ export default {
   },
   computed: {
     addExpenditureNum() {
-      return (
-        Number(this.familyIncome.mortgage) +
-        Number(this.familyIncome.businessExpend) +
-        Number(this.familyIncome.utilities) +
-        Number(this.familyIncome.lcme) +
-        Number(this.familyIncome.otherExpend)
-      );
+      if (this.mortgage||this.businessExpend||this.utilities||this.lcme||this.otherExpend) {
+        return (
+          Number(this.mortgage) +
+          Number(this.businessExpend) +
+          Number(this.utilities) +
+          Number(this.lcme) +
+          Number(this.otherExpend)
+        );
+      }
     },
     addIncomeNum() {
-      return (
-        Number(this.familyIncome.householdIncome) +
-        Number(this.familyIncome.otherIncome)
-      );
+      if (this.householdIncome||this.otherIncome) {
+        return (
+          Number(this.householdIncome) +
+          Number(this.otherIncome)
+        );
+      }
     },
     addAllNum() {
-      return (
-        Number(this.familyIncome.householdIncome) +
-        Number(this.familyIncome.otherIncome) -
-        Number(this.familyIncome.mortgage) -
-        Number(this.familyIncome.businessExpend) -
-        Number(this.familyIncome.utilities) -
-        Number(this.familyIncome.lcme) -
-        Number(this.familyIncome.otherExpend)
-      );
+      if (this.householdIncome||this.otherIncome||this.mortgage||this.businessExpend||this.utilities||this.lcme||this.otherExpend) {
+        return (
+          Number(this.householdIncome) +
+          Number(this.otherIncome) -
+          Number(this.mortgage) -
+          Number(this.businessExpend) -
+          Number(this.utilities) -
+          Number(this.lcme) -
+          Number(this.otherExpend)
+        );
+      }
     },
   },
 };

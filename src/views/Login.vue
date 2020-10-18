@@ -57,6 +57,9 @@ export default {
         const product = res.data.find((it) => it.type === "dic_product_type").childs;
         console.log(product);
         localStorage.setItem('dicProduct', JSON.stringify(product))
+        const clientWill = res.data.find((it) => it.type === "dic_client_will").childs;
+        console.log(clientWill);
+        localStorage.setItem('dicClientWill', JSON.stringify(clientWill))
       });
     },
     async onSubmit(values) {

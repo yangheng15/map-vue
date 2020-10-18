@@ -44,16 +44,16 @@
       <van-field
         v-if="prospect_details.type == 1"
         v-model="prospect_details.amount"
-        name="评估价值："
-        label="评估价值："
+        name="评估价值（万元）："
+        label="评估价值（万元）："
         placeholder="单行输入"
         :rules="[{ required: true, message: '请填写评估价值' }]"
       />
       <van-field
         v-if="prospect_details.type !== 1"
         v-model="prospect_details.amount"
-        name="负债金额："
-        label="负债金额："
+        name="负债金额（万元）："
+        label="负债金额（万元）："
         placeholder="单行输入"
         :rules="[{ required: true, message: '请填写负债金额' }]"
       />
@@ -64,7 +64,7 @@
         label="描述"
         type="textarea"
         maxlength="50"
-        placeholder="请输入年收入"
+        placeholder="请输入描述"
         show-word-limit
       />
       <!-- <van-cell title="清查日期" :value="date" @click="show = true" />
@@ -216,7 +216,9 @@ export default {
   text-align: center;
   color: #fff;
 }
-
+.van-cell >>> .van-field__label{
+  width: 43%;
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,
   select,

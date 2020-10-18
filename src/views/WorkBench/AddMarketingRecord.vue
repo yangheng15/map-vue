@@ -173,20 +173,13 @@ export default {
       tabId: 0,
       result_txt: "",
       columnsResult: [
-        { index: 0, text: "成功" },
-        { index: 1, text: "未成功" },
-        { index: 2, text: "失败" },
+        { index: 0, text: "失败" },
+        { index: 1, text: "成功" },
+        { index: 2, text: "未成功" },
       ],
       showResult: false,
       Customer_intention_txt: "",
-      columnsCustomer_intention: [
-        { index: 0, text: "强" },
-        { index: 1, text: "一般" },
-        { index: 2, text: "无" },
-        { index: 3, text: "已有他行产" },
-        { index: 4, text: "直接拒绝" },
-        { index: 5, text: "同意采集" },
-      ],
+      columnsCustomer_intention: [],
       showCustomer_intention: false,
       Marketing_methods_txt: "",
       columnsMarketing_methods: [
@@ -224,10 +217,26 @@ export default {
     this.productName = this.$route.query.productName;
     this.custName = this.$route.query.custName;
     this.id = this.$route.query.id;
-    // this./api/semCustomersRecords/appGet/{id}
+    this.dic_nation();
   },
   updated() {},
   methods: {
+    dic_nation() {
+      // 客户意向
+      this.$httpGet({
+        url: "/dic/type/dic_client_will",
+      }).then((res) => {
+        // console.log(res.data);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.id, text: it.codeText });
+          }
+        });
+        console.log(transformDara);
+        this.columnsCustomer_intention = transformDara;
+      });
+    },
     prev() {
       this.$router.go(-1);
     },

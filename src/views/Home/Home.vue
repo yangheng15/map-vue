@@ -79,6 +79,7 @@
                 title: '任务详情',
                 id: item.id,
                 productName: item.productName,
+                productCode: item.productCode,
               },
             }"
           >

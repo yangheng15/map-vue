@@ -26,10 +26,12 @@
             name="picker"
             :value="
               editRecords.isSucc == 0
-                ? '成功'
+                ? '失败'
                 : editRecords.isSucc == 1
+                ? '成功'
+                : editRecords.isSucc == 2
                 ? '未成功'
-                : '失败'
+                : ''
             "
             label="结果"
             placeholder="点击选择结果"
@@ -47,19 +49,7 @@
             readonly
             clickable
             name="picker"
-            :value="
-              editRecords.intention == 0
-                ? '强'
-                : editRecords.intention == 1
-                ? '一般'
-                : editRecords.intention == 2
-                ? '无'
-                : editRecords.intention == 3
-                ? '已有产品'
-                : editRecords.intention == 4
-                ? '直接拒绝'
-                : '同意采集'
-            "
+            :value="editRecords.intention"
             label="客户意向"
             placeholder="点击选择客户意向"
             @click="showCustomer_intention = true"
@@ -208,18 +198,11 @@ export default {
       tabId: 0,
       editRecords: [],
       columnsResult: [
-        { index: 0, text: "成功" },
-        { index: 1, text: "未成功" },
-        { index: 2, text: "失败" },
+        { index: 0, text: "失败" },
+        { index: 1, text: "成功" },
+        { index: 2, text: "未成功" },
       ],
-      columnsCustomer_intention: [
-        { index: 0, text: "强" },
-        { index: 1, text: "一般" },
-        { index: 2, text: "无" },
-        { index: 3, text: "已有他行产" },
-        { index: 4, text: "直接拒绝" },
-        { index: 5, text: "同意采集" },
-      ],
+      columnsCustomer_intention: [],
       showCustomer_intention: false,
       columnsMarketing_methods: [
         { index: 0, text: "上门" },
@@ -238,6 +221,7 @@ export default {
       // pictureData:"",
       fileList: [{ url: "" }],
       custName: "",
+      prospect_detailsEdit:{}
     };
   },
   components: {
@@ -249,9 +233,40 @@ export default {
     this.productName = this.$route.query.productName;
     this.custName = this.$route.query.custName;
     this.editRecord();
+    this.dic_nation();
   },
   updated() {},
   methods: {
+    enumData(val, data) {
+      if (val && data.length > 0) {
+        // console.log(this.prospect_details);
+        console.log(data, val);
+        console.log(+val);
+        const find = data.find((it) => it.index === +val);
+        console.log(find);
+        return find ? find.text : "";
+      } else {
+        return "";
+      }
+    },
+    dic_nation(){
+// 客户意向
+      this.$httpGet({
+        url: "/dic/type/dic_client_will",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.id, text: it.codeText });
+          }
+        });
+        this.columnsCustomer_intention = transformDara;
+        this.editRecords.intention = this.enumData(
+          this.editRecords.intention,
+          this.columnsCustomer_intention
+        );
+      });
+    },
     prev() {
       this.$router.go(-1);
     },
@@ -280,7 +295,8 @@ export default {
       this.showResult = false;
     },
     onCustomer_intention(value) {
-      this.editRecords.intention = value.index;
+      this.prospect_detailsEdit.intention = value.index;
+      this.editRecords.intention= value.text;
       this.showCustomer_intention = false;
     },
     onMarketing_methods(value) {
@@ -300,7 +316,7 @@ export default {
           id: this.id,
           isSucc: this.editRecords.isSucc,
           semType: this.editRecords.semType,
-          intention: this.editRecords.intention,
+          intention: this.prospect_detailsEdit.intention,
           actualDemand: this.editRecords.actualDemand,
           marketAmount: this.editRecords.marketAmount,
           remark: this.editRecords.remark,

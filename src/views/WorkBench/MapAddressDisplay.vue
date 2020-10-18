@@ -4,7 +4,7 @@
     <div v-if="typeCN=='地址'">
       <baidu-map class="map" :center="{lng:locationLng, lat: locationLat}" :zoom="14" ak="YOUR_APP_KEY">
        <bm-marker :position="{lng:locationLng, lat: locationLat}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
-      <bm-label content="您当前的位置" :labelStyle="{color: 'red', fontSize : '14px'}" :offset="{width: -35, height: 30}"/>
+      <bm-label :content="custName" :labelStyle="{color: 'red', fontSize : '15px',padding:'1px 10px'}" :offset="{width: -25, height: 30}"/>
     </bm-marker>
       </baidu-map>
     </div>
@@ -23,11 +23,13 @@ export default {
       typeCN: "",
       locationLng:"",
       locationLat:"",
+      custName:""
     }
   },
   created() {
     this.typeCN = this.$route.query.title;
     this.location = this.$route.query.location;
+    this.custName = this.$route.query.custName;
     console.log(this.location.split(",")[0]);
     this.locationLng=this.location.split(",")[0]
     this.locationLat=this.location.split(",")[1]

@@ -30,20 +30,26 @@
           </li>
           <li>
             <span style="font-weight: 600">
-              目
-              <span style="display: inline-block; width: 1.5rem"></span
-              >标： </span
-            >{{ taskQuery.targetNum | NumFormat }}
+              目<span style="display: inline-block; width: 1.5rem"></span>标：
+            </span>
+            {{ taskQuery.targetNum | NumFormat }}
           </li>
           <li>
             <span style="font-weight: 600">
-              完
-              <span style="display: inline-block; width: 0.4rem"></span>成
-              <span style="display: inline-block; width: 0.4rem"></span>度：
+              完<span style="display: inline-block; width: 1.5rem"></span>成：
             </span>
-            <span style="color: #3cc8ab">{{taskQuery.taskAmount | NumFormat}}</span>
-            <div style="display:inline-block;width: 50%;margin-left:10px">
-              <van-progress :percentage="taskQuery.taskCompletion >= 100 ? 100 : taskQuery.taskCompletion" stroke-width="8" />
+            <span style="color: #3cc8ab">{{
+              taskQuery.taskAmount | NumFormat
+            }}</span>
+            <div style="display: inline-block; width: 50%; margin-left: 10px">
+              <van-progress
+                :percentage="
+                  taskQuery.taskCompletion >= 100
+                    ? 100
+                    : taskQuery.taskCompletion
+                "
+                stroke-width="8"
+              />
             </div>
             <!-- <div class="progress">
               <div class="progress-done" :style="'width:' + parseFloat(taskQuery.taskCompletion*100)>=100?100:parseFloat(taskQuery.taskCompletion*100) + '%'" data-done="taskQuery.taskCompletion*100">{{parseFloat(taskQuery.taskCompletion*100)>=100?100:parseFloat(taskQuery.taskCompletion*100)}}%</div>
@@ -56,7 +62,7 @@
           :zoom="14"
           ak="YOUR_APP_KEY"
         >
-        <!-- :position="{
+          <!-- :position="{
                 lng:
                   this.polymerizationLocation &&
                   this.polymerizationLocation.split(',')[0],
@@ -76,7 +82,11 @@
               }"
               :dragging="true"
             ></bm-marker> -->
-            <bm-marker v-for="(marker, index) in polymerizationLocation" :key="index" :position="{lng: marker.lng, lat: marker.lat}"></bm-marker>
+            <bm-marker
+              v-for="(marker, index) in polymerizationLocation"
+              :key="index"
+              :position="{ lng: marker.lng, lat: marker.lat }"
+            ></bm-marker>
           </bml-marker-clusterer>
         </baidu-map>
       </div>
@@ -103,87 +113,163 @@
           placeholder="客户编号，客户名称"
           @search="onSearch"
         />
-        <div class="customer_list">
-          <ul>
-            <router-link
-              tag="li"
-              :to="{
-                name: 'MarketingDetails',
-                query: {
-                  title: '营销客户详情',
-                  custName: thisItem.custName,
-                  telephone: thisItem.telephone,
-                  intention: thisItem.intention,
-                  customerCode: thisItem.customerCode,
-                  gridCode: thisItem.gridCode,
-                  telphone: thisItem.telphone,
-                  address: thisItem.address,
-                  productName: productName,
-                  productCode: productCode,
-                  custId:thisItem.id,
-                  id: taskQuery.id,
-                  location:thisItem.location
-                },
-              }"
-              v-for="(thisItem, index) in MarketingRecord"
-              :key="index"
-            >
-              <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
-                {{ thisItem.custName }}
-              </p>
-              <p style="width: 70%; display: flex" class="approval">
-                <span
-                  :class="
-                    thisItem.isSem == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
-                  >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
-                >
-                <span
-                  :class="
-                    thisItem.intention == '0'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
-                  >{{
-                    thisItem.intention == "0"
-                      ? "强"
-                      : thisItem.intention == "1"
-                      ? "一般"
-                      : thisItem.intention == "2"
-                      ? "无"
-                      : thisItem.intention == "3"
-                      ? "已有产品"
-                      : thisItem.intention == "4"
-                      ? "直接拒绝"
-                      : "同意采集"
-                  }}</span
-                >
-                <span
-                  :class="
-                    thisItem.isSucceed == '0'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
-                  >{{ thisItem.isSucceed == "0" ? "成功" : "失败" }}
-                </span>
-              </p>
-              <p
-                v-if="thisItem.remark"
-                class="schedule_star"
-                style="width: 80%"
+        <ul class="tabList">
+          <li @click="tab1(0)" :class="tabId1 == 0 ? 'cur' : ''">网格客户</li>
+          <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">关注客户</li>
+        </ul>
+        <div v-show="tabId1 === 0">
+          <div class="customer_list">
+            <ul>
+              <router-link
+                tag="li"
+                :to="{
+                  name: 'MarketingDetails',
+                  query: {
+                    title: '营销客户详情',
+                    custName: thisItem.custName,
+                    telephone: thisItem.telephone,
+                    intention: thisItem.intention,
+                    customerCode: thisItem.customerCode,
+                    gridCode: thisItem.gridCode,
+                    telphone: thisItem.telphone,
+                    address: thisItem.address,
+                    productName: productName,
+                    productCode: productCode,
+                    custId: thisItem.id,
+                    taskId: id,
+                    id: taskQuery.id,
+                    location: thisItem.location,
+                  },
+                }"
+                v-for="(thisItem, index) in MarketingRecord"
+                :key="index"
               >
-                {{ thisItem.remark }}
-              </p>
-              <p
-                class="schedule_star"
-                style="width: 20%"
+                <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
+                  {{ thisItem.custName }}
+                </p>
+                <p style="width: 70%; display: flex" class="approval">
+                  <span
+                    :class="
+                      thisItem.isSem == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
+                  >
+                  <span
+                    :class="
+                      thisItem.intention == '0'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{ thisItem.intention | dic_client_will }}</span
+                  >
+                  <span
+                    :class="
+                      thisItem.isSucceed == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{
+                      thisItem.isSucceed == "0"
+                        ? "失败"
+                        : thisItem.isSucceed == "1"
+                        ? "成功"
+                        : thisItem.isSucceed == "2"
+                        ? "未成功"
+                        : ""
+                    }}
+                  </span>
+                </p>
+                <p
+                  v-if="thisItem.remark"
+                  class="schedule_star"
+                  style="width: 80%"
+                >
+                  {{ thisItem.remark }}
+                </p>
+                <p class="schedule_star" style="width: 20%">
+                  {{ thisItem.lastTime }}
+                </p>
+              </router-link>
+            </ul>
+          </div>
+        </div>
+        <div v-show="tabId1 === 1">
+          <div class="customer_list">
+            <ul>
+              <router-link
+                tag="li"
+                :to="{
+                  name: 'MarketingDetails',
+                  query: {
+                    title: '营销客户详情',
+                    custName: thisItem.custName,
+                    telephone: thisItem.telephone,
+                    intention: thisItem.intention,
+                    customerCode: thisItem.customerCode,
+                    gridCode: thisItem.gridCode,
+                    telphone: thisItem.telphone,
+                    address: thisItem.address,
+                    productName: productName,
+                    productCode: productCode,
+                    custId: thisItem.id,
+                    taskId: id,
+                    id: taskQuery.id,
+                    location: thisItem.location,
+                  },
+                }"
+                v-for="(thisItem, index) in MarketingRecordClaim"
+                :key="index"
               >
-                {{ thisItem.lastTime }}
-              </p>
-            </router-link>
-          </ul>
+                <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
+                  {{ thisItem.custName }}
+                </p>
+                <p style="width: 70%; display: flex" class="approval">
+                  <span
+                    :class="
+                      thisItem.isSem == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
+                  >
+                  <span
+                    :class="
+                      thisItem.intention == '0'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{ thisItem.intention | dic_client_will }}</span
+                  >
+                  <span
+                    :class="
+                      thisItem.isSucceed == '0'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{
+                      thisItem.isSucceed == "0"
+                        ? "成功"
+                        : thisItem.isSucceed == "1"
+                        ? "未成功"
+                        : "失败"
+                    }}
+                  </span>
+                </p>
+                <p
+                  v-if="thisItem.remark"
+                  class="schedule_star"
+                  style="width: 80%"
+                >
+                  {{ thisItem.remark }}
+                </p>
+                <p class="schedule_star" style="width: 20%">
+                  {{ thisItem.lastTime }}
+                </p>
+              </router-link>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -196,15 +282,9 @@ export default {
   data() {
     return {
       active: false,
-      circlePath: {
-        center: {
-          lng: 114.65,
-          lat: 33.37,
-        },
-        radius: 5000,
-      },
       serchCustomer: "",
       tabId: 0,
+      tabId1: 0,
       content: "",
       polylinePath: [
         { lng: 114.75, lat: 33.41 },
@@ -216,9 +296,10 @@ export default {
       ],
       MarketingRecord: [],
       MarketingRecord1: [],
+      MarketingRecordClaim: [],
       marketed: 0,
       intention: "",
-      marketing: 0,
+      marketing: "",
       marketed_option: [
         { text: "已营销", value: 1 },
         { text: "未营销", value: 0 },
@@ -233,21 +314,24 @@ export default {
         { text: "同意采集", value: 5 },
       ],
       marketing_option: [
+        { text: "营销结果", value: "" },
         { text: "营销成功", value: 0 },
+        { text: "尚未成功", value: 1 },
         { text: "营销失败", value: 2 },
       ],
       taskQuery: {
-        taskCompletion: 0
+        taskCompletion: 0,
       },
       id: "",
       productName: "",
       productCode: "",
       polymerizationLocation: [],
       mockData: [
-        {lng: '114.67002898631655', lat: '33.621688347700044'},
-        {lng: '114.68002898631655', lat: '33.621688347700044'},
-        {lng: '114.69002898631655', lat: '33.621688347700044'},
-      ]
+        { lng: "114.67002898631655", lat: "33.621688347700044" },
+        { lng: "114.68002898631655", lat: "33.621688347700044" },
+        { lng: "114.69002898631655", lat: "33.621688347700044" },
+      ],
+      id: "",
     };
   },
   components: {
@@ -279,7 +363,6 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
       if (ev == 1) {
         this.getMarketingCustomers();
       }
@@ -302,7 +385,10 @@ export default {
         this.taskQuery = res.data;
         // console.log(res.data.custList);
         if (res.data.custList.length > 0) {
-          this.polymerizationLocation = res.data.custList.map(it => ({lng: it.location?.split(',')[0], lat: it.location?.split(',')[1]}))
+          this.polymerizationLocation = res.data.custList.map((it) => ({
+            lng: it.location?.split(",")[0],
+            lat: it.location?.split(",")[1],
+          }));
           // console.log(this.polymerizationLocation);
         }
       });
@@ -330,66 +416,155 @@ export default {
               page: 1,
             },
           }).then((res) => {
-            // console.log(res.data);
+            this.MarketingRecord1 = res.data;
+          });
+        }
+      });
+    },
+    getMarketingCustomers1() {
+      this.$httpGet({
+        url: "/api/appMarketClaim/custInfo",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.MarketingRecordClaim = res.data;
+        if (
+          this.MarketingRecordClaim.customerCode &&
+          this.MarketingRecordClaim.gridCode
+        ) {
+          this.$httpGet({
+            url: "/api/appMarket/marketRecord",
+            params: {
+              customerCode: this.MarketingRecordClaim.customerCode,
+              limit: 10,
+              gridCode: this.MarketingRecordClaim.gridCode,
+              page: 1,
+            },
+          }).then((res) => {
             this.MarketingRecord1 = res.data;
           });
         }
       });
     },
     onSearch(val) {
-      // console.log(val);
-      this.$httpGet({
-        url: "/api/appMarket/custInfo",
-        params: {
-          limit: 10,
-          page: 1,
-          custInfo: val,
-        },
-      }).then((res) => {
-        this.MarketingRecord = res.data;
-      });
+      if (this.tabId1 == 0) {
+        this.$httpGet({
+          url: "/api/appMarket/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            custInfo: val,
+          },
+        }).then((res) => {
+          this.MarketingRecord = res.data;
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/appMarketClaim/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            custInfo: val,
+          },
+        }).then((res) => {
+          this.MarketingRecordClaim = res.data;
+        });
+      }
     },
     marketChange(val) {
-      // console.log(val);
-      this.$httpGet({
-        url: "/api/appMarket/custInfo",
-        params: {
-          limit: 10,
-          page: 1,
-          isSem: val,
-        },
-      }).then((res) => {
-        // console.log(res.data);
-        this.MarketingRecord = res.data;
-      });
+      if (this.tabId1 == 0) {
+        this.$httpGet({
+          url: "/api/appMarket/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            isSem: val,
+          },
+        }).then((res) => {
+          this.MarketingRecord = res.data;
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/appMarketClaim/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            isSem: val,
+          },
+        }).then((res) => {
+          this.MarketingRecordClaim = res.data;
+        });
+      }
     },
     intentionChange(val) {
-      // console.log(val);
-      this.$httpGet({
-        url: "/api/appMarket/custInfo",
-        params: {
-          limit: 10,
-          page: 1,
-          intention: val,
-        },
-      }).then((res) => {
-        // console.log(res.data);
-        this.MarketingRecord = res.data;
-      });
+      if (this.tabId1 == 0) {
+        this.$httpGet({
+          url: "/api/appMarket/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            intention: val,
+          },
+        }).then((res) => {
+          this.MarketingRecord = res.data;
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/appMarketClaim/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            intention: val,
+          },
+        }).then((res) => {
+          this.MarketingRecordClaim = res.data;
+        });
+      }
     },
     marketingChange(val) {
-      // console.log(val);
-      this.$httpGet({
-        url: "/api/appMarket/custInfo",
-        params: {
-          limit: 10,
-          page: 1,
-          isSucceed: val,
-        },
-      }).then((res) => {
-        // console.log(res.data);
-        this.MarketingRecord = res.data;
-      });
+      if (this.tabId1 == 0) {
+        this.$httpGet({
+          url: "/api/appMarket/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            isSucceed: val,
+          },
+        }).then((res) => {
+          this.MarketingRecord = res.data;
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/appMarketClaim/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            isSucceed: val,
+          },
+        }).then((res) => {
+          this.MarketingRecordClaim = res.data;
+        });
+      }
+    },
+    tab1(ev) {
+      this.tabId1 = ev;
+      if (ev == 1) {
+        this.getMarketingCustomers1();
+      }
+      if (ev == 0) {
+        this.getMarketingCustomers();
+      }
+    },
+  },
+  filters: {
+    dic_client_will(val) {
+      console.log(val);
+      return JSON.parse(localStorage.getItem("dicClientWill")).find(
+        (it) => it.key == val
+      ).value;
     },
   },
 };
