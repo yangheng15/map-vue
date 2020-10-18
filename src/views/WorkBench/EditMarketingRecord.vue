@@ -219,9 +219,10 @@ export default {
       griddingCode: "",
       products: "",
       // pictureData:"",
-      fileList: [{ url: "" }],
+      fileList: [],
       custName: "",
       prospect_detailsEdit: {},
+      pictureId: []
     };
   },
   components: {
@@ -282,7 +283,7 @@ export default {
         },
       });
       this.editRecords = res.data;
-      this.imageInfo = res.data.imageInfo;
+      this.pictureId = res.data.imageInfo ? res.data.imageInfo.split(',') : [];
       this.customerCode = res.data.customerCode;
       this.griddingCode = res.data.griddingCode;
       this.products = res.data.products;
@@ -354,7 +355,7 @@ export default {
           semCode: this.editRecords.code,
           // semCode: this.resultCode,
           id: this.editRecords.id,
-          imageInfo: this.imageInfo,
+          imageInfo: this.pictureId.join(","),
         },
       }).then((res) => {
         Toast({
@@ -363,6 +364,9 @@ export default {
         });
       });
     },
+    /**
+     * 获取图片接口
+     */
     async editPicture() {
       if (this.imageInfo) {
         this.$httpGet({
@@ -386,7 +390,7 @@ export default {
         data: formData,
       }).then((res) => {
         // console.log(res.data.pid);
-        this.pictureId = res.data.pid;
+        this.pictureId.push(res.data.pid)
       });
     },
   },
