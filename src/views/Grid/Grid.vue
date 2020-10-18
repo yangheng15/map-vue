@@ -529,7 +529,7 @@ export default {
         ); // 创建标注
         map.addOverlay(marker); // 将标注添加到地图中
         const content = `
-          <p style="padding-top: 1rem">名称：${data_info[i]["name"]}</p>
+          <p style="margin-top: 0rem">名称：${data_info[i]["name"]}</p>
           <p>电话：${data_info[i]["telphone"]}</p>
           <p>地址：${data_info[i]["address"]}</p>
           <p>坐标：${data_info[i]["position"]}</p>
@@ -563,14 +563,14 @@ export default {
             },
           })
             .then((res) => {
-              this.typeIdsData.splice(index, 1);
-              // this.map.clearOverlays();
+              // this.typeIdsData.splice(index, 1);
+              this.map.clearOverlays();
               Toast({
                 message: "删除成功",
                 position: "middle",
               });
-              // this.createInfoWindow(this.map);
-              // this.queryResources();
+              this.createInfoWindow(this.map);
+              this.queryResources();
             })
             .catch(() => {});
         })
