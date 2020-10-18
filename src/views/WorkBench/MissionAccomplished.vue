@@ -260,15 +260,16 @@ export default {
               productType: this.tabId1,
             },
           }).then((res) => {
-            console.log(res);
-            let mounthArr = [];
-            let moduthData = [];
-            for(let prop in res['data']) {
-              mounthArr.push(prop);
-              moduthData.push(res['data'][prop][0]['custNum'])
-            }
+            let mounthArr = Object.keys(res['data']).sort((a, b) =>{
+              if( a < b) {
+                return -1
+              }
+            })
+            let mounthData = [];
+            mounthArr.forEach(it => mounthData.push(res.data[it]))
+            console.log(mounthData);
             option2['xAxis'].data = mounthArr;
-            option2['series'][0].data = moduthData;
+            option2['series'][0].data = mounthData;
             this.myChart2.setOption(option2);
           });
         } else {
@@ -282,15 +283,15 @@ export default {
               productType: this.tabId1,
             },
           }).then((res) => {
-            console.log(res);
-            let mounthArr = [];
-            let moduthData = [];
-            for(let prop in res['data']) {
-              mounthArr.push(prop);
-              moduthData.push(res['data'][prop][0]['custNum'])
-            }
+           let mounthArr = Object.keys(res['data']).sort((a, b) =>{
+              if( a < b) {
+                return -1
+              }
+            })
+            let mounthData = [];
+            mounthArr.forEach(it => mounthData.push(res.data[it]))
             option2['xAxis'].data = mounthArr;
-            option2['series'][0].data = moduthData;
+            option2['series'][0].data = mounthData;
             this.myChart2.setOption(option2);
           });
         }
@@ -321,15 +322,15 @@ export default {
           productType: "三方存管",
         },
       }).then((res) => {
-        console.log(res.data);
-        let mounthArr = [];
-            let moduthData = [];
-            for(let prop in res['data']) {
-              mounthArr.push(prop);
-              moduthData.push(res['data'][prop][0]['custNum'])
-            }
+       let mounthArr = Object.keys(res['data']).sort((a, b) =>{
+              if( a < b) {
+                return -1
+              }
+            })
+            let mounthData = [];
+            mounthArr.forEach(it => mounthData.push(res.data[it]))
             option2['xAxis'].data = mounthArr;
-            option2['series'][0].data = moduthData;
+            option2['series'][0].data = mounthData;
             this.myChart2.setOption(option2);
       });
     },
