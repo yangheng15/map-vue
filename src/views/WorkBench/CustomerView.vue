@@ -1056,7 +1056,7 @@ export default {
       this.childrenStatus = false;
     },
     onDateBirth(date) {
-      this.date_of_birth = `${date.getMonth() + 1}/${date.getDate()}`;
+      this.date_of_birth = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
       this.showDateBirth = false;
     },
     onAdmission_time(date) {
