@@ -98,7 +98,7 @@
             @change="marketChange"
           />
           <van-dropdown-item
-            v-model="intention"
+            v-model="product_intention"
             :options="intention_option"
             @change="intentionChange"
           />
@@ -158,7 +158,7 @@
                   >
                   <span
                     :class="
-                      thisItem.intention == '0'
+                      thisItem.intention == '1'
                         ? 'approval_Passed'
                         : 'approval_Passed1'
                     "
@@ -236,7 +236,7 @@
                   >
                   <span
                     :class="
-                      thisItem.intention == '0'
+                      thisItem.intention == '1'
                         ? 'approval_Passed'
                         : 'approval_Passed1'
                     "
@@ -244,16 +244,18 @@
                   >
                   <span
                     :class="
-                      thisItem.isSucceed == '0'
+                      thisItem.isSucceed == '1'
                         ? 'approval_Passed'
                         : 'approval_Passed1'
                     "
                     >{{
                       thisItem.isSucceed == "0"
-                        ? "成功"
+                        ? "失败"
                         : thisItem.isSucceed == "1"
+                        ? "成功"
+                        : thisItem.isSucceed == "2"
                         ? "未成功"
-                        : "失败"
+                        : ""
                     }}
                   </span>
                 </p>
@@ -298,21 +300,14 @@ export default {
       MarketingRecord1: [],
       MarketingRecordClaim: [],
       marketed: 0,
-      intention: "",
+
       marketing: "",
       marketed_option: [
         { text: "已营销", value: 1 },
         { text: "未营销", value: 0 },
       ],
-      intention_option: [
-        { text: "客户意向", value: "" },
-        { text: "强", value: 0 },
-        { text: "一般", value: 1 },
-        { text: "无", value: 2 },
-        { text: "已有他行产品", value: 3 },
-        { text: "直接拒绝", value: 4 },
-        { text: "同意采集", value: 5 },
-      ],
+      product_intention: "1",
+      intention_option: [],
       marketing_option: [
         { text: "营销结果", value: "" },
         { text: "营销成功", value: 0 },
@@ -352,6 +347,7 @@ export default {
     this.productName = this.$route.query.productName;
     this.productCode = this.$route.query.productCode;
     this.getTaskQuery();
+    this.getDic();
   },
   updated() {},
   methods: {
@@ -401,7 +397,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
         this.MarketingRecord = res.data;
         if (
           this.MarketingRecord.customerCode &&
@@ -419,6 +414,20 @@ export default {
             this.MarketingRecord1 = res.data;
           });
         }
+      });
+    },
+    getDic() {
+      this.$httpGet({
+        url: "/dic/type/dic_client_will",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ value: it.code, text: it.codeText });
+          }
+        });
+        console.log(transformDara);
+        this.intention_option = transformDara;
       });
     },
     getMarketingCustomers1() {
@@ -561,10 +570,10 @@ export default {
   },
   filters: {
     dic_client_will(val) {
-      console.log(val);
-      return JSON.parse(localStorage.getItem("dicClientWill")).find(
-        (it) => it.key == val
-      ).value;
+      const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
+        (it) => +it.key == val
+      );
+      return findWill ? findWill.value : "";
     },
   },
 };

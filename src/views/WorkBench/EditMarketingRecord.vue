@@ -221,46 +221,44 @@ export default {
       // pictureData:"",
       fileList: [{ url: "" }],
       custName: "",
-      prospect_detailsEdit:{}
+      prospect_detailsEdit: {},
     };
   },
   components: {
     ChildNav,
   },
-  created() {
+  async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
     this.productName = this.$route.query.productName;
     this.custName = this.$route.query.custName;
-    this.editRecord();
+    await this.editRecord();
     this.dic_nation();
   },
   updated() {},
   methods: {
     enumData(val, data) {
       if (val && data.length > 0) {
-        // console.log(this.prospect_details);
-        console.log(data, val);
-        console.log(+val);
-        const find = data.find((it) => it.index === +val);
+        const find = data.find((it) => it.index == val);
         console.log(find);
         return find ? find.text : "";
       } else {
         return "";
       }
     },
-    dic_nation(){
-// 客户意向
+    dic_nation() {
+      // 客户意向
       this.$httpGet({
         url: "/dic/type/dic_client_will",
       }).then((res) => {
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
-            transformDara.push({ index: it.id, text: it.codeText });
+            transformDara.push({ index: it.code, text: it.codeText });
           }
         });
         this.columnsCustomer_intention = transformDara;
+        console.log(this.editRecords.intention);
         this.editRecords.intention = this.enumData(
           this.editRecords.intention,
           this.columnsCustomer_intention
@@ -276,19 +274,19 @@ export default {
         this.editPicture();
       }
     },
-    editRecord(val) {
-      this.$httpGet({
+    async editRecord(val) {
+      const res = await this.$httpGet({
         url: `/api/semCustomersRecords/appGet/${this.id}`,
         data: {
           id: this.id,
         },
-      }).then((res) => {
-        this.editRecords = res.data;
-        this.imageInfo = res.data.imageInfo;
-        this.customerCode = res.data.customerCode;
-        this.griddingCode = res.data.griddingCode;
-        this.products = res.data.products;
       });
+      this.editRecords = res.data;
+      this.imageInfo = res.data.imageInfo;
+      this.customerCode = res.data.customerCode;
+      this.griddingCode = res.data.griddingCode;
+      this.products = res.data.products;
+      console.log(this.editRecords.intention);
     },
     onResult(value) {
       this.editRecords.isSucc = value.index;
@@ -296,7 +294,7 @@ export default {
     },
     onCustomer_intention(value) {
       this.prospect_detailsEdit.intention = value.index;
-      this.editRecords.intention= value.text;
+      this.editRecords.intention = value.text;
       this.showCustomer_intention = false;
     },
     onMarketing_methods(value) {

@@ -230,7 +230,7 @@ export default {
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
-            transformDara.push({ index: it.id, text: it.codeText });
+            transformDara.push({ index: it.code, text: it.codeText });
           }
         });
         console.log(transformDara);

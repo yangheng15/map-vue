@@ -111,27 +111,16 @@
                 class="dadian"
                 >{{ thisItem.remark }}</router-link
               >
-              <p style="width: 45%; display: flex" class="approval">
+              <p style="width: 50%; display: flex" class="approval">
                 <!-- <span class="approval_Passed">已营销</span> -->
                 <span
                   :class="
-                    thisItem.intention == '0'
+                    thisItem.intention == '1'
                       ? 'approval_Passed'
                       : 'approval_Passed1'
                   "
                   >{{
-                    thisItem.intention == "0"
-                      ? "强"
-                      : thisItem.intention == "1"
-                      ? "一般"
-                      : thisItem.intention == "2"
-                      ? "无"
-                      : thisItem.intention == "3"
-                      ? "已有产品"
-                      : thisItem.intention == "4"
-                      ? "直接拒绝"
-                      : "同意采集"
-                  }}</span
+                    thisItem.intention | dic_client_will }}</span
                 >
                 <span
                   :class="
@@ -294,11 +283,17 @@ export default {
         .catch(() => {});
     },
   },
-    filters: {
+  filters: {
     dic_client_will(val) {
-     return JSON.parse(localStorage.getItem('dicClientWill')).find(it => it.key === val).value;
-    }
-  }
+      console.log(val);
+      console.log(JSON.parse(localStorage.getItem("dicClientWill")));
+      const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
+        (it) => +it.key == val
+      );
+      console.log(findWill);
+      return findWill ? findWill.value : "";
+    },
+  },
 };
 </script>
 <style scoped>
@@ -345,25 +340,23 @@ export default {
   display: inline-block;
   line-height: 2rem;
   text-align: center;
-  width: 4.5rem;
+  width: 6.5rem;
   height: 2rem;
-  font-size: 1rem;
+  font-size: 0.7rem;
   border: 1px solid #3cc8ab;
   color: #3cc8ab;
-  font-size: 0.8rem;
   margin-left: 0.5rem;
 }
 .approval .approval_Passed1 {
   display: inline-block;
   line-height: 2rem;
   text-align: center;
-  width: 4.5rem;
+  width: 6.5rem;
   height: 2rem;
-  font-size: 1rem;
+  font-size: 0.7rem;
   border: 1px solid #c1b9b9;
   color: #c1b9b9;
   margin-left: 0.5rem;
-  font-size: 0.8rem;
 }
 .cell_dashed {
   border-bottom: 0.001rem dashed #e8e8e8;
