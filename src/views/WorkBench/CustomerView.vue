@@ -58,7 +58,7 @@
               />
             </van-popup>
             <van-field
-              v-model="religious_belief"
+              v-model="CustomerViewDetails.faith"
               name="宗教信仰："
               label="宗教信仰："
               placeholder="单行输入"
@@ -106,7 +106,7 @@
               />
             </van-popup>
             <van-field
-              v-model="customer_hobby"
+              v-model="CustomerViewDetails.interest"
               name="兴趣爱好："
               label="兴趣爱好："
               placeholder="单行输入"
@@ -150,7 +150,7 @@
               readonly
               clickable
               name="picker"
-              :value="childrenStatus_txt"
+              :value="CustomerViewDetails.children"
               label="子女状况："
               placeholder="点击选择子女状况"
               @click="childrenStatus = true"
@@ -293,7 +293,11 @@
             </baidu-map>
           </div> -->
           <div class="save" style="margin-top: 20px">
-            <van-button round block type="primary" @click="prev()"
+            <van-button
+              round
+              block
+              type="primary"
+              @click="addBasicInformation()"
               >保存</van-button
             >
           </div>
@@ -301,7 +305,7 @@
         <div v-show="tabId === 2">
           <div
             class="stock stock_education"
-            v-for="(thisItem, index) in education"
+            v-for="(thisItem, index) in educationList"
             :key="index"
           >
             <div>
@@ -610,23 +614,6 @@ export default {
       isLGB: true,
       tpxw: {},
       isEdit: false,
-      marketing_record: [
-        {
-          id: 1,
-          name: "上门拜访，与负责领导洽谈一些事项",
-          date: "刚刚",
-        },
-        {
-          id: 2,
-          name: "客户出差，电话沟通，等待电话沟通",
-          date: "2020-08-12 9:00",
-        },
-        {
-          id: 3,
-          name: "上门拜访，初步达成意向想去上门拜访",
-          date: "2020-08-10 16:00",
-        },
-      ],
       show1: false,
       show2: false,
       show3: false,
@@ -637,41 +624,7 @@ export default {
       value3: "",
       value4: "",
       value5: "",
-      stock: [
-        {
-          menoy_name: "存款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "活期存款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "定期存款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "大额存单余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "贷款余额",
-          menoy: "500,000.00",
-        },
-        {
-          menoy_name: "历史贷款类型",
-          menoy: "抵押贷",
-        },
-        {
-          menoy_name: "最近放贷时间",
-          menoy: "2020-01-01",
-        },
-        {
-          menoy_name: "存贷比",
-          menoy: "50%",
-        },
-      ],
-      education: [
+      educationList: [
         {
           university: "上海交通大学",
           date: "2005~2008",
@@ -697,30 +650,6 @@ export default {
           major: "职员",
         },
       ],
-      family_member: [
-        {
-          name: "张军",
-          age: "年龄：30",
-          relationship: "与户主关系：户主",
-          id: "身份证：110115198008086654",
-          telephone: "电话：18612287876",
-          income: "年收入：40万",
-        },
-      ],
-      assets: [
-        {
-          name: "房产",
-          date: "清查日期：2020-01-01",
-          menoy: "评估价值（万元）：100",
-          id: 1,
-        },
-        {
-          name: "贷款",
-          date: "清查日期：2020-01-01",
-          menoy: "负债金额（万元）：100",
-          id: 2,
-        },
-      ],
       customer_pool: [
         {
           name: "20001",
@@ -735,211 +664,6 @@ export default {
       ],
       isPopupVisible: false,
       showPicker: false,
-      columns: [
-        {
-          text: "川汇区",
-          children: [
-            {
-              text: "陈州回族街道",
-              children: [{ text: "城关村" }, { text: "化河村" }],
-            },
-            {
-              text: "七一路街道",
-              children: [{ text: "王店村" }, { text: "许湾村" }],
-            },
-            {
-              text: "荷花路街道",
-              children: [{ text: "城关村" }, { text: "城郊村" }],
-            },
-            {
-              text: "人和街道",
-              children: [{ text: "王皮溜镇" }, { text: "太清宫镇" }],
-            },
-            {
-              text: "小桥街道",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "李埠口乡",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "淮阳区",
-          children: [
-            {
-              text: "柳湖街道",
-              children: [{ text: "豆门村" }, { text: "冯塘村" }],
-            },
-            {
-              text: "城关回族镇",
-              children: [{ text: "刘振村" }, { text: "许湾村" }],
-            },
-            {
-              text: "新站镇",
-              children: [{ text: "城关村" }, { text: "黄集村" }],
-            },
-            {
-              text: "鲁台镇",
-              children: [{ text: "齐老镇" }, { text: "曹河镇" }],
-            },
-            {
-              text: "四通镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "临蔡镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "项城市",
-          children: [
-            {
-              text: "花园街道",
-              children: [{ text: "南顿村" }, { text: "高寺村" }],
-            },
-            {
-              text: "水寨街道",
-              children: [{ text: "官会村" }, { text: "丁集村" }],
-            },
-            {
-              text: "东方街道",
-              children: [{ text: "郑郭村" }, { text: "范集村" }],
-            },
-            {
-              text: "莲花街道",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "千佛阁街道",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "光武街",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "扶沟县",
-          children: [
-            {
-              text: "桐丘街道",
-              children: [{ text: "包屯村" }, { text: "曹里村" }],
-            },
-            {
-              text: "扶亭街道",
-              children: [{ text: "大李村" }, { text: "练寺村" }],
-            },
-            {
-              text: "崔桥镇",
-              children: [{ text: "汴岗村" }, { text: "范集村" }],
-            },
-            {
-              text: "江村镇",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "白潭镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "韭园镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "西华县",
-          children: [
-            {
-              text: "昆山",
-              children: [{ text: "红花村" }, { text: "聂堆村" }],
-            },
-            {
-              text: "娲城",
-              children: [{ text: "东夏村" }, { text: "迟营村" }],
-            },
-            {
-              text: "箕子台个街道",
-              children: [{ text: "叶埠村" }, { text: "皮营" }],
-            },
-            {
-              text: "西夏亭",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "逍遥",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "奉母",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "商水县",
-          children: [
-            {
-              text: "柳湖街道",
-              children: [{ text: "豆门村" }, { text: "冯塘村" }],
-            },
-            {
-              text: "城关回族镇",
-              children: [{ text: "刘振村" }, { text: "许湾村" }],
-            },
-            {
-              text: "新站镇",
-              children: [{ text: "城关村" }, { text: "黄集村" }],
-            },
-            {
-              text: "鲁台镇",
-              children: [{ text: "齐老镇" }, { text: "曹河镇" }],
-            },
-            {
-              text: "四通镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "临蔡镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-        {
-          text: "沈丘县",
-          children: [
-            {
-              text: "桐丘街道",
-              children: [{ text: "包屯村" }, { text: "曹里村" }],
-            },
-            {
-              text: "扶亭街道",
-              children: [{ text: "大李村" }, { text: "练寺村" }],
-            },
-            {
-              text: "崔桥镇",
-              children: [{ text: "汴岗村" }, { text: "范集村" }],
-            },
-            {
-              text: "江村镇",
-              children: [{ text: "三店镇" }, { text: "永丰镇" }],
-            },
-            {
-              text: "白潭镇",
-              children: [{ text: "迟营村" }, { text: "田口村" }],
-            },
-            {
-              text: "韭园镇",
-              children: [{ text: "胡集村" }, { text: "古郊村" }],
-            },
-          ],
-        },
-      ],
       isPopupVisibleFamily: false,
       isPopupVisibleAssets: false,
       isPopupVisibleEducation: false,
@@ -957,6 +681,24 @@ export default {
   },
 
   methods: {
+    tab(ev) {
+      this.tabId = ev;
+      if (this.tabId === 2) {
+        this.getCustomersAcademic();
+      }
+    },
+    getCustomersAcademic() {
+      this.$httpGet({
+        url: "/api/customersAcademic/query",
+        params: {
+          customersCode:this.CustomerViewDetails.code,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+      });
+    },
     addBasicInformation() {
       this.$httpPut({
         url: "/api/customersBasicInfo/update",
@@ -964,26 +706,26 @@ export default {
           id: this.CustomerViewDetails.id,
           code: this.CustomerViewDetails.code,
           name: this.CustomerViewDetails.name,
-          // telphone: this.CustomerViewDetails.telphone,
           identifyNo: this.CustomerViewDetails.identifyNo,
-          level:this.level,
+          level: this.CustomerViewDetails.level,
           nationality: this.CustomerViewDetails.nationality,
-          nation: this.CustomerViewDetailsEdit.nation,
-          gender:this.CustomerViewDetails.gender,
-          wechat: this.CustomerViewDetails.wechat,
-          
-          marriage: this.CustomerViewDetailsEdit.marriage,
-          gridding: this.CustomerViewDetailsEdit.gridding,
-          workUnit: this.CustomerViewDetails.workUnit,
-          connectAddress: this.CustomerViewDetails.connectAddress,
-          annualIncome: this.CustomerViewDetails.annualIncome,
+          nation: this.CustomerViewDetails.nation,
+          gender: this.CustomerViewDetails.gender,
+          birthdayGl: this.CustomerViewDetails.birthdayGl,
+          faith: this.CustomerViewDetails.faith,
+          marriage: this.CustomerViewDetails.marriage,
+          children: this.CustomerViewDetails.children,
+          education: this.CustomerViewDetails.education,
+          interest: this.CustomerViewDetails.interest,
+          profession: this.CustomerViewDetails.profession,
+          telphone: this.CustomerViewDetails.telphone,
           qq: this.CustomerViewDetails.qq,
-          education: this.CustomerViewDetailsEdit.education,
-          health: this.CustomerViewDetails.health,
+          wechat: this.CustomerViewDetails.wechat,
           address: this.CustomerViewDetails.address,
+          gridding: this.CustomerViewDetails.gridding,
           location: this.CustomerViewDetails.location,
-          workAddress: this.CustomerViewDetails.workAddress,
-          plateNumber: this.CustomerViewDetails.plateNumber,
+          workUnit: this.CustomerViewDetails.workUnit,
+          contactAddr: this.CustomerViewDetails.contactAddr,
         },
       })
         .then((res) => {
@@ -991,7 +733,7 @@ export default {
             message: "修改成功",
             position: "middle",
           });
-          this.$router.go(-1);
+          // this.$router.go(-1);
         })
         .catch((err) => {
           // console.log(err);
@@ -1132,10 +874,6 @@ export default {
       this.center.lng = 116.404;
       this.center.lat = 39.915;
       this.zoom = 15;
-    },
-    tab(ev) {
-      this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
     },
     openValue1() {
       this.show1 = !this.show1;

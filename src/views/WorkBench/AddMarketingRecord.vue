@@ -258,7 +258,7 @@ export default {
         data: {
           customerCode: this.customerCode,
           griddingCode: this.gridCode,
-          products: this.productName,
+          products: this.productCode,
           taskId: this.id,
           isSucc: this.result_txt.index,
           intention: this.Customer_intention_txt.index,

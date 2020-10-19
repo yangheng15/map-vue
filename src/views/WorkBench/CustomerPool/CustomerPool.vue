@@ -317,7 +317,8 @@ export default {
   },
   filters: {
     dic_client_grade(val) {
-     return JSON.parse(localStorage.getItem('dic')).find(it => it.key === val).value;
+      console.log(val);
+     return JSON.parse(localStorage.getItem('dic')).find(it => it.key == val).value;
     }
   }
 };

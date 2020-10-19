@@ -54,7 +54,7 @@
         </ul>
         <div class="situation">
           <div style="padding-top: 30px">
-            完成情况：{{ text1 | NumFormat }}
+            完成情况：{{ text1 | NumFormat }}万元
             <p
               style="
                 color: #df0f0f;
@@ -63,11 +63,11 @@
                 padding-bottom: 15px;
               "
             >
-              {{ moneyAll ? moneyAll : 0 | NumFormat }}元
+              {{ moneyAll ? moneyAll : 0 | NumFormat }}万元
             </p>
           </div>
           <ul>
-            <li>{{ text }}目标：{{ targetAmount ? targetAmount : 0 }}</li>
+            <li>{{ text }}目标：{{ targetAmount ? targetAmount : 0 }}万元</li>
             <!-- <li>人均：234.00</li> -->
           </ul>
           <div
