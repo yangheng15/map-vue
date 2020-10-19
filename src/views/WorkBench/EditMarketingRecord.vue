@@ -146,7 +146,6 @@
             <van-uploader
               result-type="dataUrl"
               :after-read="afterRead"
-              :max-count="1"
               v-model="fileList"
               multiple
             />
@@ -246,7 +245,7 @@ export default {
       var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Linux") > -1; //android终端或者uc浏览器
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
       if (isAndroid) {
-        window.android.openCamera((el)=>{
+        window.android.openCamera((el) => {
           console.log(el);
         });
       } else if (isiOS) {
@@ -288,7 +287,9 @@ export default {
     tab(ev) {
       this.tabId = ev;
       if (ev == 1) {
-        this.editPicture();
+        if (this.editRecords.imageId) {
+          this.editPicture();
+        }
       }
     },
     async editRecord(val) {
@@ -344,57 +345,91 @@ export default {
       });
     },
     async modifyCompetitor() {
-      this.$httpPut({
-        url: "/api/semCustomersRecords/updateCompetitor",
-        data: {
-          customerCode: this.editRecords.customerCode,
-          semCode: this.editRecords.code,
-          // semCode: this.resultCode,
-          id: this.editRecords.id,
-          rivalName: this.editRecords.rivalName,
-          rivalProduct: this.editRecords.rivalProduct,
-          interestRate: this.editRecords.interestRate,
-        },
-      }).then((res) => {
-        Toast({
-          message: "保存成功",
-          position: "middle",
+      if (this.editRecords.competitorId) {
+        this.$httpPut({
+          url: "/api/semCustomersRecords/updateCompetitor",
+          data: {
+            customerCode: this.editRecords.customerCode,
+            semCode: this.editRecords.code,
+            // semCode: this.resultCode,
+            id: this.editRecords.competitorId,
+            rivalName: this.editRecords.rivalName,
+            rivalProduct: this.editRecords.rivalProduct,
+            interestRate: this.editRecords.interestRate,
+          },
+        }).then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
         });
-      });
+      } else {
+        this.$httpPost({
+          url: "/api/customersRecords/appAddCompetitor",
+          data: {
+            customerCode: this.editRecords.customerCode,
+            semCode: this.editRecords.code,
+            rivalName: this.editRecords.rivalName,
+            rivalProduct: this.editRecords.rivalProduct,
+            interestRate: this.editRecords.interestRate,
+          },
+        }).then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+        });
+      }
     },
     async modifyPicture() {
-      this.$httpPut({
-        url: "/api/semCustomersRecords/updateScreenage",
-        data: {
-          customerCode: this.editRecords.customerCode,
-          semCode: this.editRecords.code,
-          // semCode: this.resultCode,
-          id: this.editRecords.id,
-          imageInfo: this.pictureId.join(","),
-        },
-      }).then((res) => {
-        Toast({
-          message: "保存成功",
-          position: "middle",
+      if (this.editRecords.imageId) {
+        this.$httpPut({
+          url: "/api/semCustomersRecords/updateScreenage",
+          data: {
+            customerCode: this.customerCode,
+            semCode: this.editRecords.code,
+            // semCode: this.resultCode,
+            id: this.editRecords.imageId,
+            imageInfo: this.pictureId.join(","),
+          },
+        }).then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
         });
-      });
+      } else {
+        this.$httpPost({
+          url: "/api/customersRecords/appAddImage",
+          data: {
+            imageInfo: this.pictureId.join(","),
+            customerCode: this.editRecords.customerCode,
+            semCode: this.editRecords.code,
+          },
+        }).then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+        });
+      }
     },
     /**
      * 获取图片接口
      */
     async editPicture() {
-      console.log(this.pictureId);
-      console.log(this.pictureId[0]);
       if (this.pictureId) {
-        this.$httpGet({
-          url: "/api/show/image/base64",
-          params: {
-            id: this.pictureId[0],
-          },
-        }).then((res) => {
-          this.fileList.push({
-            url: "data:image/jpg;base64," + res.data,
-            isImage: true,
+        this.pictureId.forEach((el) => {
+          this.$httpGet({
+            url: "/api/show/image/base64",
+            params: {
+              id: el,
+            },
+          }).then((res) => {
+            this.fileList.push({
+              url: "data:image/jpg;base64," + res.data,
+              isImage: true,
+            });
           });
         });
       }
@@ -402,7 +437,7 @@ export default {
     afterRead(file) {
       let formData = new FormData();
       formData.append("file", file.file);
-      // console.log(file);
+      console.log(file);
       this.$httpPost({
         url: "/api/upload/attachment",
         headers: { "Content-Type": "multipart/form-data" },
