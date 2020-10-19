@@ -74,6 +74,7 @@
         ></my-overlay>
       </template>
 
+      <!-- 资源类型网格 -->
       <template v-for="(item, index) in typeIdsData">
         <my-overlay
           :key="index + 'type'"
@@ -414,6 +415,7 @@ export default {
       eyeMe: true,
       redFlagPostionArr: [],
       showPopup: false,
+      markerArr: []
     };
   },
   created() {
@@ -440,6 +442,7 @@ export default {
       this.typeIds = data.typeIds;
       if (this.typeIds) {
         this.map.clearOverlays();
+        this.typeIdsData = [];
         this.queryResources();
       }
       this.showPopup = false;
@@ -534,7 +537,8 @@ export default {
         var marker = new BMap.Marker(
           new BMap.Point(...data_info[i]["position"].split(","))
         ); // 创建标注
-        map.addOverlay(marker); // 将标注添加到地图中
+        const markerInstance = map.addOverlay(marker); // 将标注添加到地图中
+        data || this.markerArr.push(marker); //data存在说明执行的是添加，并不是筛选后的操作不需要把实例添加到数组中
         const content = `
           <p style="margin-top: 0rem">名称：${data_info[i]["name"]}</p>
           <p>电话：${data_info[i]["telphone"]}</p>
@@ -571,14 +575,18 @@ export default {
             },
           })
             .then((res) => {
-              // this.typeIdsData.splice(index, 1);
-              this.map.clearOverlays();
-              Toast({
-                message: "删除成功",
-                position: "middle",
-              });
-              this.createInfoWindow(this.map);
-              this.queryResources();
+              console.log(this.markerArr);
+              this.map.removeOverlay(this.markerArr[index])
+              this.typeIdsData.splice(index, 1);              
+              // this.map.removeOverlay(this.markerArr[index])
+              this.map.closeInfoWindow();
+              // this.map.clearOverlays();
+              // Toast({
+              //   message: "删除成功",
+              //   position: "middle",
+              // });
+              // this.createInfoWindow(this.map);
+              // this.queryResources();
             })
             .catch(() => {});
         })

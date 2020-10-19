@@ -44,24 +44,24 @@ export default {
   },
   methods: {
     onFailed(errorInfo) {
-      // console.log("failed", errorInfo);
+      // //console.log("failed", errorInfo);
     },
     getDic() {
       this.$httpGet({
         url: "/dics/tree",
       }).then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
         const data = res.data.find((it) => it.type === "dic_client_grade").childs;
-        console.log(data);
+        //console.log(data);
         localStorage.setItem('dic', JSON.stringify(data))
         const product = res.data.find((it) => it.type === "dic_product_type").childs;
-        console.log(product);
+        //console.log(product);
         localStorage.setItem('dicProduct', JSON.stringify(product))
         const clientWill = res.data.find((it) => it.type === "dic_client_will").childs;
-        console.log(clientWill);
+        //console.log(clientWill);
         localStorage.setItem('dicClientWill', JSON.stringify(clientWill))
         const gridResource = res.data.find((it) => it.type === "dic_grid_resource_type").childs;
-        console.log(gridResource);
+        //console.log(gridResource);
         localStorage.setItem('dicGridResource', JSON.stringify(gridResource))
         // 学历
         const education = res.data.find((it) => it.type === "dic_education").childs;
@@ -70,8 +70,8 @@ export default {
       });
     },
     async onSubmit(values) {
-      // console.log("submit", values);
-      // console.log(values.txtUserName);
+      // //console.log("submit", values);
+      // //console.log(values.txtUserName);
       var bcrypt = require("bcryptjs"); //引入bcryptjs库
       // var salt = bcrypt.genSaltSync(12); //定义密码加密的计算强度,默认10
       var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
@@ -89,7 +89,7 @@ export default {
       })
         .then((res) => {
           if (res.access_token) {
-            // console.log(res);
+            // //console.log(res);
             localStorage.setItem("_token", res.access_token);
             localStorage.setItem("username", res.username);
             this.getDic();
@@ -97,7 +97,7 @@ export default {
           }
         })
         .catch((err) => {
-          // console.log(err);
+          // //console.log(err);
         });
     },
   },
