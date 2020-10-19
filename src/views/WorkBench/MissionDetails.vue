@@ -115,7 +115,8 @@
         />
         <ul class="tabList">
           <li @click="tab1(0)" :class="tabId1 == 0 ? 'cur' : ''">网格客户</li>
-          <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">潜在客户</li>
+          <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">关注客户</li>
+          <li @click="tab1(2)" :class="tabId1 == 2 ? 'cur' : ''">潜在客户</li>
         </ul>
         <div v-show="tabId1 === 0">
           <div class="customer_list">
@@ -147,7 +148,10 @@
                 <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
                   {{ thisItem.custName }}
                 </p>
-                <p style="width: 70%; display: flex;justify-content: flex-end;" class="approval">
+                <p
+                  style="width: 70%; display: flex; justify-content: flex-end"
+                  class="approval"
+                >
                   <span
                     :class="
                       thisItem.isSem == '1'
@@ -157,7 +161,7 @@
                     >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
                   >
                   <span
-                  v-show="thisItem.intention"
+                    v-show="thisItem.intention"
                     :class="
                       thisItem.intention == '1'
                         ? 'approval_Passed'
@@ -166,7 +170,7 @@
                     >{{ thisItem.intention | dic_client_will }}</span
                   >
                   <span
-                  v-show="thisItem.isSucceed"
+                    v-show="thisItem.isSucceed"
                     :class="
                       thisItem.isSucceed == '1'
                         ? 'approval_Passed'
@@ -227,7 +231,10 @@
                 <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
                   {{ thisItem.custName }}
                 </p>
-                <p style="width: 70%; display: flex" class="approval">
+                <p
+                  style="width: 70%; display: flex; justify-content: flex-end"
+                  class="approval"
+                >
                   <span
                     :class="
                       thisItem.isSem == '1'
@@ -237,6 +244,7 @@
                     >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
                   >
                   <span
+                    v-show="thisItem.intention"
                     :class="
                       thisItem.intention == '1'
                         ? 'approval_Passed'
@@ -245,6 +253,90 @@
                     >{{ thisItem.intention | dic_client_will }}</span
                   >
                   <span
+                    v-show="thisItem.isSucceed"
+                    :class="
+                      thisItem.isSucceed == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{
+                      thisItem.isSucceed == "0"
+                        ? "失败"
+                        : thisItem.isSucceed == "1"
+                        ? "成功"
+                        : thisItem.isSucceed == "2"
+                        ? "未成功"
+                        : ""
+                    }}
+                  </span>
+                </p>
+                <p
+                  v-if="thisItem.remark"
+                  class="schedule_star"
+                  style="width: 80%"
+                >
+                  {{ thisItem.remark }}
+                </p>
+                <p class="schedule_star" style="width: 20%">
+                  {{ thisItem.lastTime }}
+                </p>
+              </router-link>
+            </ul>
+          </div>
+        </div>
+        <div v-show="tabId1 === 2">
+          <div class="customer_list">
+            <ul>
+              <router-link
+                tag="li"
+                :to="{
+                  name: 'MarketingDetails',
+                  query: {
+                    title: '营销客户详情',
+                    custName: thisItem.custName,
+                    telephone: thisItem.telephone,
+                    intention: thisItem.intention,
+                    customerCode: thisItem.customerCode,
+                    gridCode: thisItem.gridCode,
+                    telphone: thisItem.telphone,
+                    address: thisItem.address,
+                    productName: productName,
+                    productCode: productCode,
+                    custId: thisItem.id,
+                    taskId: id,
+                    id: taskQuery.id,
+                    location: thisItem.location,
+                  },
+                }"
+                v-for="(thisItem, index) in MarketingRecordPotential"
+                :key="index"
+              >
+                <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
+                  {{ thisItem.custName }}
+                </p>
+                <p
+                  style="width: 70%; display: flex; justify-content: flex-end"
+                  class="approval"
+                >
+                  <span
+                    :class="
+                      thisItem.isSem == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
+                  >
+                  <span
+                    v-show="thisItem.intention"
+                    :class="
+                      thisItem.intention == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{ thisItem.intention | dic_client_will }}</span
+                  >
+                  <span
+                    v-show="thisItem.isSucceed"
                     :class="
                       thisItem.isSucceed == '1'
                         ? 'approval_Passed'
@@ -301,6 +393,7 @@ export default {
       MarketingRecord: [],
       MarketingRecord1: [],
       MarketingRecordClaim: [],
+      MarketingRecordPotential: [],
       marketed: 1,
 
       marketing: "",
@@ -397,6 +490,7 @@ export default {
         params: {
           limit: 10,
           page: 1,
+          customerType: 1,
         },
       }).then((res) => {
         this.MarketingRecord = res.data;
@@ -437,6 +531,7 @@ export default {
         params: {
           limit: 10,
           page: 1,
+          customerType: 2,
         },
       }).then((res) => {
         this.MarketingRecordClaim = res.data;
@@ -458,6 +553,34 @@ export default {
         }
       });
     },
+    getMarketingCustomers2() {
+      this.$httpGet({
+        url: "/api/appPotentialCust/custInfo",
+        params: {
+          limit: 10,
+          page: 1,
+          customerType: 3,
+        },
+      }).then((res) => {
+        this.MarketingRecordPotential = res.data;
+        if (
+          this.MarketingRecordPotential.customerCode &&
+          this.MarketingRecordPotential.gridCode
+        ) {
+          this.$httpGet({
+            url: "/api/appMarket/marketRecord",
+            params: {
+              customerCode: this.MarketingRecordPotential.customerCode,
+              limit: 10,
+              gridCode: this.MarketingRecordPotential.gridCode,
+              page: 1,
+            },
+          }).then((res) => {
+            this.MarketingRecord1 = res.data;
+          });
+        }
+      });
+    },
     onSearch(val) {
       if (this.tabId1 == 0) {
         this.$httpGet({
@@ -465,21 +588,35 @@ export default {
           params: {
             limit: 10,
             page: 1,
+            customerType: 1,
             custInfo: val,
           },
         }).then((res) => {
           this.MarketingRecord = res.data;
         });
-      } else {
+      } else if (this.tabId1 == 1) {
         this.$httpGet({
           url: "/api/appMarketClaim/custInfo",
           params: {
             limit: 10,
             page: 1,
+            customerType: 2,
             custInfo: val,
           },
         }).then((res) => {
           this.MarketingRecordClaim = res.data;
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/appPotentialCust/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            customerType: 3,
+            custInfo: val,
+          },
+        }).then((res) => {
+          this.MarketingRecordPotential = res.data;
         });
       }
     },
@@ -490,21 +627,35 @@ export default {
           params: {
             limit: 10,
             page: 1,
+            customerType: 1,
             isSem: val,
           },
         }).then((res) => {
           this.MarketingRecord = res.data;
         });
-      } else {
+      } else if (this.tabId1 == 1) {
         this.$httpGet({
           url: "/api/appMarketClaim/custInfo",
           params: {
             limit: 10,
             page: 1,
+            customerType: 2,
             isSem: val,
           },
         }).then((res) => {
           this.MarketingRecordClaim = res.data;
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/appPotentialCust/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            customerType: 3,
+            custInfo: val,
+          },
+        }).then((res) => {
+          this.MarketingRecordPotential = res.data;
         });
       }
     },
@@ -515,21 +666,35 @@ export default {
           params: {
             limit: 10,
             page: 1,
+            customerType: 1,
             intention: val,
           },
         }).then((res) => {
           this.MarketingRecord = res.data;
         });
-      } else {
+      } else if (this.tabId1 == 1) {
         this.$httpGet({
           url: "/api/appMarketClaim/custInfo",
           params: {
             limit: 10,
             page: 1,
+            customerType: 2,
             intention: val,
           },
         }).then((res) => {
           this.MarketingRecordClaim = res.data;
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/appPotentialCust/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            customerType: 3,
+            custInfo: val,
+          },
+        }).then((res) => {
+          this.MarketingRecordPotential = res.data;
         });
       }
     },
@@ -540,21 +705,35 @@ export default {
           params: {
             limit: 10,
             page: 1,
+            customerType: 1,
             isSucceed: val,
           },
         }).then((res) => {
           this.MarketingRecord = res.data;
         });
-      } else {
+      } else if (this.tabId1 == 1) {
         this.$httpGet({
           url: "/api/appMarketClaim/custInfo",
           params: {
             limit: 10,
             page: 1,
+            customerType: 2,
             isSucceed: val,
           },
         }).then((res) => {
           this.MarketingRecordClaim = res.data;
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/appPotentialCust/custInfo",
+          params: {
+            limit: 10,
+            page: 1,
+            customerType: 3,
+            custInfo: val,
+          },
+        }).then((res) => {
+          this.MarketingRecordPotential = res.data;
         });
       }
     },
@@ -565,6 +744,9 @@ export default {
       }
       if (ev == 0) {
         this.getMarketingCustomers();
+      }
+      if (ev == 2) {
+        this.getMarketingCustomers2();
       }
     },
   },

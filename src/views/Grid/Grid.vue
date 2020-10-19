@@ -58,7 +58,7 @@
       class="bm-view"
       @ready="mapReady"
       :center="mapCenter"
-      :zoom="16"
+      :zoom="zoomNum"
       ak="YOUR_APP_KEY"
     >
       <!-- 网格经理网格名称 -->
@@ -84,7 +84,6 @@
           :address="item.name"
           :data-val="item"
           @touchEvent="showTypeIds(item)"
-          
         ></my-overlay>
       </template>
 
@@ -274,6 +273,9 @@
           alt
         />
       </p> -->
+      <p @click="appMessage">
+        <img src="../../assets/grid/current_location.svg" alt />
+      </p>
     </div>
 
     <div v-show="isPopupVisibleSign" class="isPopupVisibleSign">
@@ -416,7 +418,10 @@ export default {
       eyeMe: true,
       redFlagPostionArr: [],
       showPopup: false,
-      markerArr: []
+      markerArr: [],
+      locationLng: "",
+      locationLat: "",
+      zoomNum:15
     };
   },
   created() {
@@ -439,6 +444,26 @@ export default {
     window.dic_grid_resource_type = this.dic_grid_resource_type;
   },
   methods: {
+    appMessage(str) {
+      str = String(str);
+      var u = navigator.userAgent,
+        app = navigator.appVersion;
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Linux") > -1; //android终端或者uc浏览器
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+      console.log(11);
+      if (isAndroid) {
+        window.android.getLocation((el) => {
+          console.log(el);
+          this.mapCenter.lng = el.split(",")[0];
+          this.mapCenter.lat = el.split(",")[1];
+          this.zoomNum=16
+        });
+      } else if (isiOS) {
+        // window.webkit.messageHandlers.AppModel.postMessage({
+        //   str: str,
+        // });
+      }
+    },
     resourceEmit(data) {
       this.typeIds = data.typeIds;
       if (this.typeIds) {
@@ -577,8 +602,8 @@ export default {
           })
             .then((res) => {
               console.log(this.markerArr);
-              this.map.removeOverlay(this.markerArr[index])
-              this.typeIdsData.splice(index, 1);              
+              this.map.removeOverlay(this.markerArr[index]);
+              this.typeIdsData.splice(index, 1);
               // this.map.removeOverlay(this.markerArr[index])
               this.map.closeInfoWindow();
               // this.map.clearOverlays();
