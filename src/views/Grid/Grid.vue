@@ -446,7 +446,9 @@ export default {
   },
   methods: {
     appMessage() {
-      alert(window.android.getLocation())
+      let postionArr =  window.android.getLocation().split(',')
+      this.mapCenter = {lng: postionArr[0], lat: postionArr[1]}
+      this.zoomNum = 16;
     },
     // appMessage(str) {
     //   str = String(str);

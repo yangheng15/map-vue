@@ -15,10 +15,12 @@
               <p style="margin: 0">客户数</p>
             </li>
             <li>
-              <p class="total_money">23人</p>
+              <p class="total_money">
+                {{ countNum.custNumMap.thisMonthCustNum }}人
+              </p>
               <p :class="23 ? 'down_color' : 'up_color'">
-                21%
-                <img
+                {{ countNum.custNumMap.custRatio }}
+                <!-- <img
                   style="
                     transform: rotate(180deg);
                     -ms-transform: rotate(180deg);
@@ -30,7 +32,7 @@
                   "
                   src="../../assets/home/arrow-alt-down.svg"
                   alt
-                />
+                /> -->
               </p>
             </li>
           </ul>
@@ -46,10 +48,12 @@
               <p style="margin: 0">存款额</p>
             </li>
             <li>
-              <p class="total_money">100万</p>
+              <p class="total_money">
+                {{ countNum.depositMap.thisMonthDeposit }}万
+              </p>
               <p :class="23 ? 'down_color' : 'up_color'">
-                10%
-                <img
+                {{ countNum.depositMap.depositRatio }}
+                <!-- <img
                   style="
                     transform: rotate(180deg);
                     -ms-transform: rotate(180deg);
@@ -61,7 +65,7 @@
                   "
                   src="../../assets/home/arrow-alt-up.svg"
                   alt
-                />
+                /> -->
               </p>
             </li>
           </ul>
@@ -77,10 +81,10 @@
               <p style="margin: 0">贷款额</p>
             </li>
             <li>
-              <p class="total_money">100万</p>
+              <p class="total_money">{{ countNum.loanMap.thisMonthLoan }}万</p>
               <p :class="23 ? 'down_color' : 'up_color'">
-                15%
-                <img
+                {{ countNum.loanMap.loanRatio }}
+                <!-- <img
                   style="
                     transform: rotate(180deg);
                     -ms-transform: rotate(180deg);
@@ -92,7 +96,7 @@
                   "
                   src="../../assets/home/arrow-alt-down.svg"
                   alt
-                />
+                /> -->
               </p>
             </li>
           </ul>
@@ -100,18 +104,16 @@
         <dt>
           <ul class="text_content">
             <li>
-              <img
-                class="img_content"
-                src="../../assets/home/licaie.svg"
-                alt
-              />
+              <img class="img_content" src="../../assets/home/licaie.svg" alt />
               <p style="margin: 0">理财额</p>
             </li>
             <li>
-              <p class="total_money">100万</p>
+              <p class="total_money">
+                {{ countNum.licaiMap.thisMonthLicai }}万
+              </p>
               <p :class="23 ? 'down_color' : 'up_color'">
-                15%
-                <img
+                {{ countNum.licaiMap.licaiRatio }}
+                <!-- <img
                   style="
                     transform: rotate(180deg);
                     -ms-transform: rotate(180deg);
@@ -123,7 +125,7 @@
                   "
                   src="../../assets/home/arrow-alt-up.svg"
                   alt
-                />
+                /> -->
               </p>
             </li>
           </ul>
@@ -338,6 +340,7 @@ export default {
         },
       ],
       taskNum: "",
+      countNum: {custNumMap: {thisMonthCustNum: ''}},
     };
   },
   components: {
