@@ -63,6 +63,10 @@ export default {
         const gridResource = res.data.find((it) => it.type === "dic_grid_resource_type").childs;
         console.log(gridResource);
         localStorage.setItem('dicGridResource', JSON.stringify(gridResource))
+        // 学历
+        const education = res.data.find((it) => it.type === "dic_education").childs;
+        console.log(education);
+        localStorage.setItem('dicEducation', JSON.stringify(education))
       });
     },
     async onSubmit(values) {

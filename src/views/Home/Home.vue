@@ -262,6 +262,7 @@ export default {
         url: "/api/homePage/countNum",
       }).then((res) => {
         console.log(res.data);
+        this.countNum = res.data;
       });
     },
     tab(ev) {

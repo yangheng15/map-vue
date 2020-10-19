@@ -108,7 +108,7 @@ export default {
       text: "本季度",
       text1: "存款",
       tabId: 1,
-      tabId1: "活期存款",
+      tabId1: "支付工具",
       product_option: [],
       moneyAll: "",
       targetAmount: "",
@@ -301,7 +301,7 @@ export default {
       this.$httpGet({
         url: "/api/taskFinish/thisMonth",
         params: {
-          productType: "活期存款",
+          productType: "支付工具",
           dateType: 1,
         },
       }).then((res) => {
@@ -319,7 +319,7 @@ export default {
       this.$httpGet({
         url: "/api/taskFinish/monthTrends",
         params: {
-          productType: "三方存管",
+          productType: "支付工具",
         },
       }).then((res) => {
        let mounthArr = Object.keys(res['data']).sort((a, b) =>{

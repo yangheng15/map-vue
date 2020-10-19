@@ -312,9 +312,9 @@ export default {
       intention_option: [],
       marketing_option: [
         { text: "营销结果", value: "" },
-        { text: "营销成功", value: 0 },
-        { text: "尚未成功", value: 1 },
-        { text: "营销失败", value: 2 },
+        { text: "营销成功", value: 1 },
+        { text: "尚未成功", value: 2 },
+        { text: "营销失败", value: 0 },
       ],
       taskQuery: {
         taskCompletion: 0,

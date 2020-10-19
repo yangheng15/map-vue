@@ -68,7 +68,7 @@
               readonly
               clickable
               name="picker"
-              :value="education_level_txt"
+              :value="CustomerViewDetails.education"
               label="教育程度："
               placeholder="点击选择教育程度"
               @click="education_level = true"
@@ -147,14 +147,13 @@
             />
             <van-calendar v-model="showDateBirth" @confirm="onDateBirth" />
             <van-field
-              readonly
-              clickable
-              name="picker"
-              :value="CustomerViewDetails.children"
+              v-model="CustomerViewDetails.children"
+              name="子女状况："
               label="子女状况："
-              placeholder="点击选择子女状况"
-              @click="childrenStatus = true"
+              placeholder="单行输入"
+              :rules="[{ required: true, message: '请填写子女状况' }]"
             />
+            <!-- @click="childrenStatus = true" -->
             <van-popup v-model="childrenStatus" position="bottom">
               <van-picker
                 show-toolbar
@@ -309,12 +308,14 @@
             :key="index"
           >
             <div>
-              <p>{{ thisItem.university }}</p>
-              <p>{{ thisItem.education }}</p>
-              <p>{{ thisItem.date }}</p>
+              <p>{{ thisItem.school }}</p>
+              <p>{{ thisItem.education | dic_education }}</p>
+              <p>{{ thisItem.createdTime | transform }}</p>
             </div>
-            <p>{{ thisItem.major }}</p>
-            <p class="delete">删除</p>
+            <p>{{ thisItem.profession }}</p>
+            <p class="delete" @click="deleteCustomersAcademic(thisItem.id)">
+              删除
+            </p>
           </div>
           <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
           <span class="add_record" @click="showPopupEducation()">+</span>
@@ -357,7 +358,7 @@
                 placeholder="单行输入"
                 :rules="[{ required: true, message: '请填写专业' }]"
               />
-              <van-field
+              <!-- <van-field
                 readonly
                 clickable
                 name="calendar"
@@ -382,12 +383,12 @@
               <van-calendar
                 v-model="showGraduation_time"
                 @confirm="onGraduation_time"
-              />
+              /> -->
               <van-field
                 readonly
                 clickable
                 name="picker"
-                :value="education_level_txt"
+                :value="education_level_txt.text"
                 label="学历："
                 placeholder="点击选择学历"
                 @click="education_level = true"
@@ -405,7 +406,7 @@
                   style="margin-right: 1rem"
                   round
                   type="primary"
-                  @click="closePopupEducation()"
+                  @click="addCustomersAcademic()"
                   >保存</van-button
                 >
                 <van-button round type="primary" @click="closePopupEducation()"
@@ -418,15 +419,15 @@
         <div v-show="tabId === 3">
           <div
             class="stock stock_education"
-            v-for="(thisItem, index) in work"
+            v-for="(thisItem, index) in workList"
             :key="index"
           >
             <div>
-              <p>{{ thisItem.university }}</p>
-              <p>{{ thisItem.date }}</p>
+              <p>{{ thisItem.companyName }}</p>
+              <p>{{ thisItem.createdTime | transform }}</p>
             </div>
-            <p>{{ thisItem.major }}</p>
-            <p class="delete">删除</p>
+            <p>{{ thisItem.post }}</p>
+            <p class="delete" @click="deleteCustomersWork(thisItem.id)">删除</p>
           </div>
           <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
           <span class="add_record" @click="showPopupWork()">+</span>
@@ -474,7 +475,7 @@
                   style="margin-right: 1rem"
                   round
                   type="primary"
-                  @click="closePopupWork()"
+                  @click="addCustomersWork()"
                   >保存</van-button
                 >
                 <van-button round type="primary" @click="closePopupWork()"
@@ -491,6 +492,7 @@
 <script>
 import ChildNav from "../../components/Public/ChildNav";
 import con from "../../assets/grid/location_map.svg";
+import { Toast, Dialog } from "vant";
 export default {
   components: {
     ChildNav,
@@ -504,17 +506,8 @@ export default {
       choose_gender_list: ["男", "女"],
       choose_gender: false,
       religious_belief: "无",
-      education_level_txt: "博士",
-      education_level_list: [
-        "博士",
-        "硕士",
-        "本科",
-        "大专",
-        "中专",
-        "高中",
-        "初中",
-        "小学",
-      ],
+      education_level_txt: "",
+      education_level_list: [],
       education_level: false,
       marital_status_txt: "已婚",
       marital_status_list: ["已婚", "未婚"],
@@ -624,21 +617,8 @@ export default {
       value3: "",
       value4: "",
       value5: "",
-      educationList: [
-        {
-          university: "上海交通大学",
-          date: "2005~2008",
-          education: "硕士",
-          major: "计算机科学",
-        },
-        {
-          university: "上海交通大学",
-          date: "2001~2005",
-          education: "本科",
-          major: "计算机科学",
-        },
-      ],
-      work: [
+      educationList: [],
+      workList: [
         {
           university: "XXXX商贸公司",
           date: "2005~2008",
@@ -685,18 +665,35 @@ export default {
       this.tabId = ev;
       if (this.tabId === 2) {
         this.getCustomersAcademic();
+      } else if (this.tabId === 3) {
+        this.getCustomersWor();
+        // GET /api/customersWork/query
       }
     },
     getCustomersAcademic() {
       this.$httpGet({
         url: "/api/customersAcademic/query",
         params: {
-          customersCode:this.CustomerViewDetails.code,
+          customersCode: this.CustomerViewDetails.code,
           limit: 10,
           page: 1,
         },
       }).then((res) => {
         console.log(res.data);
+        this.educationList = res.data;
+      });
+    },
+    getCustomersWor() {
+      this.$httpGet({
+        url: "/api/customersWork/query",
+        params: {
+          customersCode: this.CustomerViewDetails.code,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.workList = res.data;
       });
     },
     addBasicInformation() {
@@ -715,14 +712,14 @@ export default {
           faith: this.CustomerViewDetails.faith,
           marriage: this.CustomerViewDetails.marriage,
           children: this.CustomerViewDetails.children,
-          education: this.CustomerViewDetails.education,
+          education: this.prospect_detailsEdit.education,
           interest: this.CustomerViewDetails.interest,
           profession: this.CustomerViewDetails.profession,
           telphone: this.CustomerViewDetails.telphone,
           qq: this.CustomerViewDetails.qq,
           wechat: this.CustomerViewDetails.wechat,
           address: this.CustomerViewDetails.address,
-          gridding: this.CustomerViewDetails.gridding,
+          gridding: this.prospect_detailsEdit.gridding,
           location: this.CustomerViewDetails.location,
           workUnit: this.CustomerViewDetails.workUnit,
           contactAddr: this.CustomerViewDetails.contactAddr,
@@ -742,7 +739,17 @@ export default {
     enumData1(val, data) {
       let find = "";
       if (val && data.length > 0) {
-        find = data.find((it) => it.index === val);
+        find = data.find((it) => it.index == val);
+        console.log(find);
+        return find ? find.text : "";
+      } else {
+        return "";
+      }
+    },
+    enumData(val, data) {
+      console.log(val, data);
+      if (val && data.length > 0) {
+        const find = data.find((it) => it.index == val);
         console.log(find);
         return find ? find.text : "";
       } else {
@@ -750,6 +757,24 @@ export default {
       }
     },
     dic_nation() {
+      // 最高学历
+      this.$httpGet({
+        url: "/dic/type/dic_education",
+      }).then((res) => {
+        console.log(res.data);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        console.log(transformDara);
+        this.education_level_list = transformDara;
+        this.CustomerViewDetails.education = this.enumData(
+          this.CustomerViewDetails.education,
+          this.education_level_list
+        );
+      });
       this.$httpGet({
         url: "/api/semGridding/query",
         params: {
@@ -775,18 +800,17 @@ export default {
       const { lng, lat } = point;
       this.CustomerViewDetails.location = `${lng},${lat}`;
     },
-    getCustomerView() {
-      this.$httpGet({
+    async getCustomerView() {
+      const res = await this.$httpGet({
         url: `/api/customersBasicInfo/get/${this.id}`,
+      });
+      console.log(res.data);
+      this.CustomerViewDetails = res.data;
+      this.$httpGet({
+        url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
       }).then((res) => {
-        console.log(res.data);
-        this.CustomerViewDetails = res.data;
-        this.$httpGet({
-          url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
-        }).then((res) => {
-          console.log(res.data.codeText);
-          this.level = res.data.codeText;
-        });
+        console.log(res.data.codeText);
+        this.level = res.data.codeText;
       });
     },
     onFamily_type(value) {
@@ -825,7 +849,8 @@ export default {
       this.choose_gender = false;
     },
     onEducation_level(value) {
-      this.education_level_txt = value;
+      this.prospect_detailsEdit.education = value.index;
+      this.CustomerViewDetails.education = value.text;
       this.education_level = false;
     },
     onMarital_status(value) {
@@ -943,6 +968,88 @@ export default {
     showPopupEducation() {
       this.isPopupVisibleEducation = true;
     },
+    // 添加学历
+    addCustomersAcademic() {
+      this.$httpPost({
+        url: "/api/customersAcademic/add",
+        data: {
+          customersCode: this.CustomerViewDetails.code,
+          school: this.school,
+          profession: this.major,
+          education: this.prospect_detailsEdit.education,
+        },
+      })
+        .then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+          this.getCustomersAcademic();
+          this.isPopupVisibleEducation = false;
+        })
+        .catch((err) => {
+          // console.log(err);
+        });
+    },
+    deleteCustomersAcademic(val) {
+      Dialog.confirm({
+        title: "你确定移除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customersAcademic/delete",
+            params: {
+              ids: val,
+            },
+          })
+            .then((res) => {
+              this.getCustomersAcademic();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    },
+    // 添加工作
+    addCustomersWork() {
+      this.$httpPost({
+        url: "/api/customersWork/add",
+        data: {
+          customerCode: this.CustomerViewDetails.code,
+          companyName: this.corporate_name,
+          post: this.position,
+          workingStatus:1
+        },
+      })
+        .then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+          this.getCustomersWor();
+          this.isPopupVisibleWork = false;
+        })
+        .catch((err) => {
+          // console.log(err);
+        });
+    },
+    deleteCustomersWork(val) {
+      Dialog.confirm({
+        title: "你确定移除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customersWork/delete",
+            params: {
+              ids: val,
+            },
+          })
+            .then((res) => {
+              this.getCustomersWor();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    },
     closePopupEducation() {
       this.isPopupVisibleEducation = false;
     },
@@ -950,7 +1057,19 @@ export default {
       this.isPopupVisibleWork = true;
     },
     closePopupWork() {
+      // addCustomersWork
       this.isPopupVisibleWork = false;
+    },
+  },
+  filters: {
+    dic_education(val) {
+      console.log(val);
+      console.log(JSON.parse(localStorage.getItem("dicEducation")));
+      const findWill = JSON.parse(localStorage.getItem("dicEducation")).find(
+        (it) => +it.key == val
+      );
+      console.log(findWill);
+      return findWill ? findWill.value : "";
     },
   },
 };
