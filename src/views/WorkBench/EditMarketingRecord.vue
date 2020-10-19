@@ -148,6 +148,7 @@
               :after-read="afterRead"
               v-model="fileList"
               multiple
+              @delete="deleteImage"
             />
             <!-- <input type="file" accept="image/*" capture="camera"> -->
           </div>
@@ -238,6 +239,10 @@ export default {
   },
   updated() {},
   methods: {
+    deleteImage({url}) {
+      const index = this.fileList.findIndex(it => it.url === url);
+      this.pictureId.splice(index, 1);
+    },
     appMessage(str) {
       str = String(str);
       var u = navigator.userAgent,
