@@ -28,7 +28,7 @@
           <p>网格经理：{{ table.principalName }}</p>
           <p>认领日期：{{ table.allocateTime | transform }}</p>
           <p>客户数量：{{ table.recordsNum }}</p>
-          <p>人口数量：{{ table.population }}</p>
+          <p>人口数量(万人)：{{ table.population }}</p>
           <p>营销状态：{{ table.marketStatus }}</p>
         </div>
         <div style="margin-top: 1.5rem" class="save">
@@ -233,11 +233,11 @@
       </template>
 
       <!-- 右下角定位的图标 -->
-      <bm-geolocation
+      <!-- <bm-geolocation
         anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
         :showAddressBar="true"
         :autoLocation="true"
-      ></bm-geolocation>
+      ></bm-geolocation> -->
     </baidu-map>
     <!-- 搜索框 -->
 

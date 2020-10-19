@@ -89,7 +89,7 @@
             </ul>
             <ul>
               <li>{{ item.productName }}</li>
-              <li>{{ item.updatedTime | transform }}前</li>
+              <li>{{ item.endTime | transform }}前</li>
             </ul>
           </router-link>
         </div>
