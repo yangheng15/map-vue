@@ -113,11 +113,11 @@
           placeholder="客户编号，客户名称"
           @search="onSearch"
         />
-        <ul class="tabList">
+        <!-- <ul class="tabList">
           <li @click="tab1(0)" :class="tabId1 == 0 ? 'cur' : ''">网格客户</li>
           <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">关注客户</li>
-        </ul>
-        <div v-show="tabId1 === 0">
+        </ul> -->
+        <!-- <div v-show="tabId1 === 0"> -->
           <div class="customer_list">
             <ul>
               <router-link
@@ -147,7 +147,7 @@
                 <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
                   {{ thisItem.custName }}
                 </p>
-                <p style="width: 70%; display: flex" class="approval">
+                <p style="width: 70%; display: flex;justify-content: flex-end;" class="approval">
                   <span
                     :class="
                       thisItem.isSem == '1'
@@ -157,6 +157,7 @@
                     >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
                   >
                   <span
+                  v-show="thisItem.intention"
                     :class="
                       thisItem.intention == '1'
                         ? 'approval_Passed'
@@ -165,6 +166,7 @@
                     >{{ thisItem.intention | dic_client_will }}</span
                   >
                   <span
+                  v-show="thisItem.isSucceed"
                     :class="
                       thisItem.isSucceed == '1'
                         ? 'approval_Passed'
@@ -194,7 +196,7 @@
               </router-link>
             </ul>
           </div>
-        </div>
+        <!-- </div> -->
         <div v-show="tabId1 === 1">
           <div class="customer_list">
             <ul>
@@ -299,7 +301,7 @@ export default {
       MarketingRecord: [],
       MarketingRecord1: [],
       MarketingRecordClaim: [],
-      marketed: 0,
+      marketed: 1,
 
       marketing: "",
       marketed_option: [

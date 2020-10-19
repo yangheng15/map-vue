@@ -5,7 +5,13 @@
       v-model="searchVal"
       placeholder="网格名称、客户名称、资源名称"
     />
-    <van-popup v-model="showPopup" position="middle" round :closeable="true" :style="{ width: '80%',marginLeft:'10%',borderRadius: '5%' }">
+    <van-popup
+      v-model="showPopup"
+      position="middle"
+      round
+      :closeable="true"
+      :style="{ width: '80%', marginLeft: '10%', borderRadius: '5%' }"
+    >
       <resource-selection @resourceEmit="resourceEmit" />
     </van-popup>
     <van-popup v-model="introduce">
@@ -21,9 +27,9 @@
           <p>所属机构：{{ table.orgName }}</p>
           <p>网格经理：{{ table.principalName }}</p>
           <p>认领日期：{{ table.allocateTime | transform }}</p>
-          <p>客户数量：{{ table.customer_num }}</p>
-          <!-- <p>人口数量：{{ table.population_num }}</p> -->
-          <p>营销状态：{{ table.status }}</p>
+          <p>客户数量：{{ table.recordsNum }}</p>
+          <p>人口数量：{{ table.population }}</p>
+          <p>营销状态：{{ table.marketStatus }}</p>
         </div>
         <div style="margin-top: 1.5rem" class="save">
           <van-button
@@ -204,7 +210,7 @@
           size: { width: 30, height: 30 },
         }"
       ></bm-marker>
-<!-- ../../assets/grid/location_map.svg -->
+      <!-- ../../assets/grid/location_map.svg -->
       <!-- 🚩红旗 -->
       <template>
         <bm-marker
@@ -333,7 +339,7 @@
         <van-field
           v-model="signData.sign_remarks"
           rows="2"
-          name= "description"
+          name="description"
           autosize
           label="备注"
           type="textarea"
@@ -360,7 +366,7 @@
 import MyOverlay from "./MyOverlay";
 import MyNav from "../../components/Public/MyNav";
 import myTabbar from "../../components/Public/MyTabbar";
-import { Toast , Dialog } from "vant";
+import { Toast, Dialog } from "vant";
 import resourceSelection from "./ResourceSelection";
 export default {
   name: "Grid",
@@ -427,6 +433,7 @@ export default {
     this.owner = this.$route.params.owner;
     // this.eyeTrueFalse()
     window.deleteBut = this.deleteBut;
+    window.dic_grid_resource_type = this.dic_grid_resource_type;
   },
   methods: {
     resourceEmit(data) {
@@ -445,9 +452,9 @@ export default {
         this.map_data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
-        this.polygonDl.forEach(it => {
-         this.map.removeOverlay(it);
-        })
+        this.polygonDl.forEach((it) => {
+          this.map.removeOverlay(it);
+        });
         this.createPolygon(this.map);
       });
     },
@@ -465,18 +472,18 @@ export default {
         console.log(this.polygonDl);
         const arr = [
           {
-            position: '114.67031644407975,33.6463360959123',
+            position: "114.67031644407975,33.6463360959123",
           },
           {
-            position: '114.6535001649329,33.62836207529424'
+            position: "114.6535001649329,33.62836207529424",
           },
           {
-            postion: '114.65069745174183,33.63046616699806'
-          }
-        ]
-        this.polygonDl.forEach(it => {
-         this.map.removeOverlay(it);
-        })
+            postion: "114.65069745174183,33.63046616699806",
+          },
+        ];
+        this.polygonDl.forEach((it) => {
+          this.map.removeOverlay(it);
+        });
         res.data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
@@ -521,7 +528,7 @@ export default {
         height: 80, // 信息窗口高度
         title: "信息窗口", // 信息窗口标题
         enableMessage: true, //设置允许信息窗发送短息
-        offset: {width: -25, height: 30}
+        offset: { width: -25, height: 30 },
       };
       for (var i = 0; i < data_info.length; i++) {
         var marker = new BMap.Marker(
@@ -533,6 +540,7 @@ export default {
           <p>电话：${data_info[i]["telphone"]}</p>
           <p>地址：${data_info[i]["address"]}</p>
           <p>坐标：${data_info[i]["position"]}</p>
+          <p>资源类型：${data_info[i]["type"] | dic_grid_resource_type}</p>
           <p>备注：${data_info[i]["description"]}</p>
           <p class="deleteBut" onclick="deleteBut('${i}')">删除</p>
         `;
@@ -550,7 +558,7 @@ export default {
         map.openInfoWindow(infoWindow, point); //开启信息窗口
       }
     },
-    deleteBut(index){
+    deleteBut(index) {
       console.log(index);
       Dialog.confirm({
         title: "你确定删除吗",
@@ -559,7 +567,7 @@ export default {
           this.$httpDelete({
             url: "/api/semResource/delete",
             params: {
-              ids: this.typeIdsData[index]['id'],
+              ids: this.typeIdsData[index]["id"],
             },
           })
             .then((res) => {
@@ -747,7 +755,7 @@ export default {
         ...values,
         postion: { lng: posArr[0], lat: posArr[1] },
       });
-      this.createInfoWindow(this.map, [values])
+      this.createInfoWindow(this.map, [values]);
       // console.log(this.redFlagPostionArr);
 
       const code = this.filterData.find(
@@ -772,6 +780,17 @@ export default {
         this.signData = {};
         this.markerPostion = { lng: 114.655, lat: 33.625 };
       });
+    },
+  },
+  filters: {
+    dic_grid_resource_type(val) {
+      console.log(val);
+      console.log(JSON.parse(localStorage.getItem("dicGridResource")));
+      const findWill = JSON.parse(localStorage.getItem("dicGridResource")).find(
+        (it) => +it.key == val
+      );
+      console.log(findWill);
+      return findWill ? findWill.value : "";
     },
   },
 };

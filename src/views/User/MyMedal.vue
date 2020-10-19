@@ -1,20 +1,20 @@
 productCode<template>
   <div class="MyMedal">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='我的勋章'">
+    <div v-if="typeCN == '我的勋章'">
       <div class="customer_list">
-        <ul v-for="(thisItem,index) in peasant_household" :key="index">
+        <ul v-for="(thisItem, index) in peasant_household" :key="index">
           <li>
             <img src="../../assets/User/medal.png" alt class="li_img" />
-            <p>{{thisItem.medalName}}</p>
-            <p>{{thisItem.createdTime | transform}}</p>
+            <p>{{ thisItem.medalName }}</p>
+            <p>{{ thisItem.createdTime | transform }}</p>
           </li>
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
     </div>
-    <div v-if="typeCN=='我的足迹'">
-      <ul class="time_vant">
+    <div v-if="typeCN == '我的足迹'">
+      <!-- <ul class="time_vant">
         <li>
           <van-cell title="选择日期区间" :value="date" @click="show = true" />
           <van-calendar v-model="show" type="range" @confirm="onConfirm" />
@@ -22,17 +22,32 @@ productCode<template>
         <li class="time_search">
           <button>查询</button>
         </li>
-      </ul>
-      <div class="Footprint_list" v-for="(thisItem,index) in Footprintlist" :key="index">
+      </ul> -->
+      <div
+        class="Footprint_list"
+        style="padding-top:10px"
+        v-for="(thisItem, index) in Footprintlist"
+        :key="index"
+      >
         <ul>
-          <li>{{thisItem.name}}</li>
-          <li>{{thisItem.date}}</li>
+          <li>{{ thisItem.realName }}</li>
+          <li>{{ thisItem.semTime | transform }}</li>
         </ul>
         <ul>
-          <li>{{thisItem.local}}</li>
-          <li>
-            <img style="width:19px" src="../../assets/User/zuji.svg" alt />
-          </li>
+          <li>{{ thisItem.address }}</li>
+          <router-link
+            tag="li"
+            :to="{
+              name: 'MapAddressDisplay',
+              query: {
+                title: '地址',
+                location: thisItem.location,
+                custName: thisItem.realName,
+              },
+            }"
+          >
+            <img style="width: 19px" src="../../assets/User/zuji.svg" alt />
+          </router-link>
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
@@ -88,8 +103,11 @@ export default {
   },
   created() {
     this.typeCN = this.$route.query.title;
-    if(this.typeCN=='我的勋章'){
-this.getMedalOwner();
+    if (this.typeCN == "我的勋章") {
+      this.getMedalOwner();
+    } else if (this.typeCN == "我的足迹") {
+      // GET /api/semCustomersRecords/myTracks
+      this.getCustomersRecords();
     }
   },
   methods: {
@@ -143,7 +161,19 @@ this.getMedalOwner();
           page: 1,
         },
       }).then((res) => {
-        this.peasant_household=res.data
+        this.peasant_household = res.data;
+      });
+    },
+    getCustomersRecords() {
+      this.$httpGet({
+        url: "/api/semCustomersRecords/myTracks",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.Footprintlist = res.data;
       });
     },
 

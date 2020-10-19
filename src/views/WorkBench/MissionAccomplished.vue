@@ -63,7 +63,7 @@
                 padding-bottom: 15px;
               "
             >
-              {{ moneyAll ? moneyAll : 0 | NumFormat }}
+              {{ moneyAll ? moneyAll : 0 | NumFormat }}元
             </p>
           </div>
           <ul>

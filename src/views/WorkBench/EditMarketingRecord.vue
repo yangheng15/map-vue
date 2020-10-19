@@ -368,15 +368,17 @@ export default {
      * 获取图片接口
      */
     async editPicture() {
-      if (this.imageInfo) {
+      console.log(this.pictureId);
+      console.log(this.pictureId[0]);
+      if (this.pictureId) {
         this.$httpGet({
           url: "/api/show/image/base64",
           params: {
-            id: this.imageInfo,
+            id: this.pictureId[0],
           },
         }).then((res) => {
-          this.fileList[0].url = "data:image/jpg;base64," + res.data;
-          this.fileList[0].isImage = true;
+          console.log(res.data);
+          this.fileList.push({ url:  "data:image/jpg;base64," + res.data,isImage:true })
         });
       }
     },

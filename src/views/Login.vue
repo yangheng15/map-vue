@@ -60,6 +60,9 @@ export default {
         const clientWill = res.data.find((it) => it.type === "dic_client_will").childs;
         console.log(clientWill);
         localStorage.setItem('dicClientWill', JSON.stringify(clientWill))
+        const gridResource = res.data.find((it) => it.type === "dic_grid_resource_type").childs;
+        console.log(gridResource);
+        localStorage.setItem('dicGridResource', JSON.stringify(gridResource))
       });
     },
     async onSubmit(values) {

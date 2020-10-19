@@ -44,7 +44,7 @@
               readonly
               clickable
               name="picker"
-              :value="CustomerViewDetails.gender==0?'男':'女'"
+              :value="CustomerViewDetails.gender == 0 ? '男' : '女'"
               label="性别："
               placeholder="点击选择性别"
               @click="choose_gender = true"
@@ -140,7 +140,7 @@
               readonly
               clickable
               name="calendar"
-              :value="date_of_birth"
+              :value="CustomerViewDetails.birthdayGl | transform"
               label="出生日期"
               placeholder="点击选择出生日期"
               @click="showDateBirth = true"
@@ -171,7 +171,11 @@
               :rules="[{ required: true, message: '请填写职业' }]"
             />
             <div class="save">
-              <van-button round block type="primary" @click="prev()"
+              <van-button
+                round
+                block
+                type="primary"
+                @click="addBasicInformation()"
                 >保存</van-button
               >
             </div>
@@ -196,64 +200,84 @@
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写居住地址' }]"
           />
-          <van-field
+          <!-- <van-field
             v-model="work_address"
             name="工作地址："
             label="工作地址："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写工作地址' }]"
-          />
+          /> -->
           <van-field
-            v-model="qq_number"
+            v-model="CustomerViewDetails.qq"
             name="QQ："
             label="QQ："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写QQ' }]"
           />
-          <!-- <van-field
-            readonly
-            clickable
-            name="area"
-            :value="regional_grid_txt"
-            label="所属网格："
-            placeholder="点击选择所属网格"
-            @click="regional_grid = true"
-          />
-          <van-popup v-model="regional_grid" position="bottom">
-            <van-area
-              :area-list="areaList"
-              @confirm="onRegional_grid"
-              @cancel="regional_grid = false"
-            />
-          </van-popup> -->
           <van-field
-            v-model="work_unit"
+            v-model="CustomerViewDetails.workUnit"
             name="工作单位："
             label="工作单位："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写工作单位' }]"
           />
           <van-field
-            v-model="weChat"
+            v-model="CustomerViewDetails.wechat"
             name="微信："
             label="微信："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写微信' }]"
           />
-          <!-- <van-field
-            v-model="user_positioning"
-            name="定位："
-            label="定位："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写定位（经纬度）' }]"
-          /> -->
           <van-field
-            v-model="contact_address"
+            v-model="CustomerViewDetails.contactAddr"
             name="联系地址："
             label="联系地址："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写联系地址' }]"
           />
+          <van-field
+            readonly
+            clickable
+            name="area"
+            :value="CustomerViewDetails.gridding"
+            label="所属网格："
+            placeholder="点击选择所属网格"
+            @click="regional_grid = true"
+          />
+          <van-popup v-model="regional_grid" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="areaList"
+              @cancel="regional_grid = false"
+              @confirm="onRegional_grid"
+            />
+          </van-popup>
+          <van-field
+            v-model="CustomerViewDetails.location"
+            disabled
+            name="位置："
+            label="位置："
+            placeholder="单行输入"
+            :rules="[{ required: true, message: '请填写位置（经纬度）' }]"
+          />
+          <div style="width: 99%; margin: 0.5rem auto">
+            <baidu-map
+              class="bm-view"
+              :center="{ lng: 114.6, lat: 33.6 }"
+              :zoom="14"
+              ak="YOUR_APP_KEY"
+            >
+              <bm-marker
+                :dragging="true"
+                :position="{ lng: 114.6, lat: 33.6 }"
+                @dragend="markerDragend"
+                :icon="{
+                  url: require('../../assets/grid/sign.svg'),
+                  size: { width: 30, height: 30 },
+                }"
+              ></bm-marker>
+            </baidu-map>
+          </div>
 
           <!-- <div style="width: 99%; margin: 0.5rem auto">
             <baidu-map
@@ -513,66 +537,8 @@ export default {
       contact_address: "北京卓越联腾",
 
       regional_grid_txt: "川汇区/陈州回族街道/城关村",
-      areaList: {
-        province_list: {
-          110000: "川汇区",
-          120000: "项城市",
-          130000: "扶沟县",
-          140000: "西华县",
-          150000: "商水县",
-          160000: "沈丘县",
-        },
-        city_list: {
-          110100: "陈州回族街道",
-          110200: "七一路街道",
-          110300: "荷花路街道",
-          110400: "人和街道",
-          110500: "小桥街道",
-          110600: "李埠口乡",
-
-          120100: "花园街道",
-          120200: "水寨街道",
-          120300: "东方街道",
-          120400: "莲花街道",
-          120500: "千佛阁街道",
-          120600: "光武街",
-
-          130100: "桐丘街道",
-          130200: "扶亭街道",
-          130300: "崔桥镇",
-          130400: "江村镇",
-          130500: "白潭镇",
-          130600: "韭园镇",
-        },
-        county_list: {
-          110101: "城关村",
-          110102: "化河村",
-          110205: "王店村",
-          110206: "许湾村",
-          110301: "城关村",
-          110302: "城郊村",
-          110401: "王皮溜镇",
-          110402: "太清宫镇",
-          110505: "迟营村",
-          110506: "田口村",
-          110601: "胡集村",
-          110702: "古郊村",
-
-          120101: "南顿村",
-          120102: "高寺村",
-          120203: "官会村",
-          120204: "丁集村",
-          120305: "郑郭村",
-          120306: "范集村",
-
-          130101: "包屯村",
-          130102: "曹里村",
-          130203: "大李村",
-          130204: "练寺村",
-          130305: "汴岗村",
-          130306: "范集村",
-        },
-      },
+      areaList: [],
+      prospect_detailsEdit: {},
       regional_grid: false,
       school: "",
       major: "",
@@ -979,17 +945,94 @@ export default {
       isPopupVisibleEducation: false,
       isPopupVisibleWork: false,
       id: "",
-      CustomerViewDetails:"",
-      level:"",
+      CustomerViewDetails: "",
+      level: "",
     };
   },
-  created() {
+  async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
-    this.getCustomerView();
+    await this.getCustomerView();
+    this.dic_nation();
   },
 
   methods: {
+    addBasicInformation() {
+      this.$httpPut({
+        url: "/api/customersBasicInfo/update",
+        data: {
+          id: this.CustomerViewDetails.id,
+          code: this.CustomerViewDetails.code,
+          name: this.CustomerViewDetails.name,
+          // telphone: this.CustomerViewDetails.telphone,
+          identifyNo: this.CustomerViewDetails.identifyNo,
+          level:this.level,
+          nationality: this.CustomerViewDetails.nationality,
+          nation: this.CustomerViewDetailsEdit.nation,
+          gender:this.CustomerViewDetails.gender,
+          wechat: this.CustomerViewDetails.wechat,
+          
+          marriage: this.CustomerViewDetailsEdit.marriage,
+          gridding: this.CustomerViewDetailsEdit.gridding,
+          workUnit: this.CustomerViewDetails.workUnit,
+          connectAddress: this.CustomerViewDetails.connectAddress,
+          annualIncome: this.CustomerViewDetails.annualIncome,
+          qq: this.CustomerViewDetails.qq,
+          education: this.CustomerViewDetailsEdit.education,
+          health: this.CustomerViewDetails.health,
+          address: this.CustomerViewDetails.address,
+          location: this.CustomerViewDetails.location,
+          workAddress: this.CustomerViewDetails.workAddress,
+          plateNumber: this.CustomerViewDetails.plateNumber,
+        },
+      })
+        .then((res) => {
+          Toast({
+            message: "修改成功",
+            position: "middle",
+          });
+          this.$router.go(-1);
+        })
+        .catch((err) => {
+          // console.log(err);
+        });
+    },
+    enumData1(val, data) {
+      let find = "";
+      if (val && data.length > 0) {
+        find = data.find((it) => it.index === val);
+        console.log(find);
+        return find ? find.text : "";
+      } else {
+        return "";
+      }
+    },
+    dic_nation() {
+      this.$httpGet({
+        url: "/api/semGridding/query",
+        params: {
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          it.children &&
+            it.children.forEach((ele, index1) => {
+              transformDara.push({ index: ele.code, text: ele.name });
+            });
+        });
+        this.areaList = transformDara;
+        this.CustomerViewDetails.gridding = this.enumData1(
+          this.CustomerViewDetails.gridding,
+          this.areaList
+        );
+      });
+    },
+    markerDragend({ point }) {
+      const { lng, lat } = point;
+      this.CustomerViewDetails.location = `${lng},${lat}`;
+    },
     getCustomerView() {
       this.$httpGet({
         url: `/api/customersBasicInfo/get/${this.id}`,
@@ -1056,7 +1099,9 @@ export default {
       this.childrenStatus = false;
     },
     onDateBirth(date) {
-      this.date_of_birth = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      this.date_of_birth = `${date.getFullYear()}-${
+        date.getMonth() + 1
+      }-${date.getDate()}`;
       this.showDateBirth = false;
     },
     onAdmission_time(date) {
@@ -1067,8 +1112,11 @@ export default {
       this.graduation_time = `${date.getMonth() + 1}/${date.getDate()}`;
       this.showGraduation_time = false;
     },
-    onRegional_grid(values) {
-      this.regional_grid_txt = values.map((item) => item.name).join("/");
+    onRegional_grid(value) {
+      this.prospect_detailsEdit.gridding = value.index;
+      this.CustomerViewDetails.gridding = value.text;
+      // this.regional_grid_txt.text = values.join('/');
+      // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
       this.regional_grid = false;
     },
 
