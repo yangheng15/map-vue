@@ -54,7 +54,8 @@
         </ul>
         <div class="situation">
           <div style="padding-top: 30px">
-            完成情况：{{ text1 | NumFormat }}万元
+            完成情况：
+            {{ text1 | NumFormat }}
             <p
               style="
                 color: #df0f0f;
@@ -192,11 +193,10 @@ export default {
           dateType: ele,
         },
       }).then((res) => {
-        console.log(res);
         this.text1 = res.data.FloatFinishRate;
-        this.moneyAll = res.data.marketAmount;
+        this.moneyAll = res.data.marketAmountByType;
         this.targetAmount = res.data.targetNum;
-        this.percentage = parseFloat(res.data.finishRate);
+        this.percentage = parseFloat(res.data.finishRate*100)<100?parseFloat(res.data.finishRate*100):100;
         option["series"][0]["data"][0] = {
           value: this.percentage,
           name: "完成率",
@@ -213,11 +213,10 @@ export default {
           dateType: this.tabId,
         },
       }).then((res) => {
-        console.log(res);
         this.text1 = res.data.FloatFinishRate;
-        this.moneyAll = res.data.marketAmount;
+        this.moneyAll = res.data.marketAmountByType;
         this.targetAmount = res.data.targetNum;
-        this.percentage = parseFloat(res.data.finishRate);
+        this.percentage = parseFloat(res.data.finishRate*100)<100?parseFloat(res.data.finishRate*100):100;
         option["series"][0]["data"][0] = {
           value: this.percentage,
           name: "完成率",
@@ -234,11 +233,10 @@ export default {
           dateType: this.tabId,
         },
       }).then((res) => {
-        console.log(res);
         this.text1 = res.data.FloatFinishRate;
-        this.moneyAll = res.data.marketAmount;
+        this.moneyAll = res.data.marketAmountByType;
         this.targetAmount = res.data.targetNum;
-        this.percentage = parseFloat(res.data.finishRate);
+        this.percentage = parseFloat(res.data.finishRate*100)<100?parseFloat(res.data.finishRate*100):100;
         option["series"][0]["data"][0] = {
           value: this.percentage,
           name: "完成率",
@@ -247,7 +245,6 @@ export default {
       });
     },
     tab2(ev) {
-      console.log(ev);
       this.tabId1 = ev;
       if (ev === this.tabId1) {
         if (ev == this.taskNum || ev == this.custNum) {
@@ -267,7 +264,6 @@ export default {
             })
             let mounthData = [];
             mounthArr.forEach(it => mounthData.push(res.data[it]))
-            console.log(mounthData);
             option2['xAxis'].data = mounthArr;
             option2['series'][0].data = mounthData;
             this.myChart2.setOption(option2);
@@ -305,11 +301,11 @@ export default {
           dateType: 1,
         },
       }).then((res) => {
-        console.log(res);
         this.text1 = res.data.FloatFinishRate;
-        this.moneyAll = res.data.marketAmount;
+        this.moneyAll = res.data.marketAmountByType;
         this.targetAmount = res.data.targetNum;
-        this.percentage = parseFloat(res.data.finishRate);
+        this.percentage = parseFloat(res.data.finishRate*100)<100?parseFloat(res.data.finishRate*100):100;
+        // this.percentage = parseFloat(res.data.finishRate);
         option["series"][0]["data"][0] = {
           value: this.percentage,
           name: "完成率",

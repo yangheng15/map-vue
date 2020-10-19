@@ -150,6 +150,7 @@
               v-model="fileList"
               multiple
             />
+            <!-- <input type="file" accept="image/*" capture="camera"> -->
           </div>
           <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="modifyPicture()"
@@ -222,7 +223,7 @@ export default {
       fileList: [],
       custName: "",
       prospect_detailsEdit: {},
-      pictureId: []
+      pictureId: [],
     };
   },
   components: {
@@ -238,6 +239,22 @@ export default {
   },
   updated() {},
   methods: {
+    appMessage(str) {
+      str = String(str);
+      var u = navigator.userAgent,
+        app = navigator.appVersion;
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Linux") > -1; //android终端或者uc浏览器
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+      if (isAndroid) {
+        window.android.openCamera((el)=>{
+          console.log(el);
+        });
+      } else if (isiOS) {
+        window.webkit.messageHandlers.AppModel.postMessage({
+          str: str,
+        });
+      }
+    },
     enumData(val, data) {
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
@@ -259,7 +276,6 @@ export default {
           }
         });
         this.columnsCustomer_intention = transformDara;
-        console.log(this.editRecords.intention);
         this.editRecords.intention = this.enumData(
           this.editRecords.intention,
           this.columnsCustomer_intention
@@ -283,11 +299,10 @@ export default {
         },
       });
       this.editRecords = res.data;
-      this.pictureId = res.data.imageInfo ? res.data.imageInfo.split(',') : [];
+      this.pictureId = res.data.imageInfo ? res.data.imageInfo.split(",") : [];
       this.customerCode = res.data.customerCode;
       this.griddingCode = res.data.griddingCode;
       this.products = res.data.products;
-      console.log(this.editRecords.intention);
     },
     onResult(value) {
       this.editRecords.isSucc = value.index;
@@ -377,8 +392,10 @@ export default {
             id: this.pictureId[0],
           },
         }).then((res) => {
-          console.log(res.data);
-          this.fileList.push({ url:  "data:image/jpg;base64," + res.data,isImage:true })
+          this.fileList.push({
+            url: "data:image/jpg;base64," + res.data,
+            isImage: true,
+          });
         });
       }
     },
@@ -392,7 +409,7 @@ export default {
         data: formData,
       }).then((res) => {
         // console.log(res.data.pid);
-        this.pictureId.push(res.data.pid)
+        this.pictureId.push(res.data.pid);
       });
     },
   },

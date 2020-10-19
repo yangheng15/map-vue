@@ -1,5 +1,5 @@
 <template>
-  <bm-overlay v-if="position" ref="customOverlay" :class="{sample: true, active}" pane="labelPane" @draw="draw">
+  <bm-overlay v-if="position" ref="customOverlay" :class="{sample: true, active}" pane="labelPane" @draw="draw" :offset="{width: -35, height: 30}">
     <div class="introduce_content" @touchstart="registerEvent">
       <!-- <img v-if="show" class="introduce_img" :src="img" alt /> -->
       <p :class="name ?'introduce_address':'introduce_address_lv'">{{address}}</p>

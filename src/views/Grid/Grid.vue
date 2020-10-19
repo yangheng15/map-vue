@@ -58,7 +58,7 @@
       class="bm-view"
       @ready="mapReady"
       :center="mapCenter"
-      :zoom="14"
+      :zoom="16"
       ak="YOUR_APP_KEY"
     >
       <!-- 网格经理网格名称 -->
@@ -84,6 +84,7 @@
           :address="item.name"
           :data-val="item"
           @touchEvent="showTypeIds(item)"
+          
         ></my-overlay>
       </template>
 
@@ -265,14 +266,14 @@
         <img v-show="eyeMe" src="../../assets/grid/eyeMine.svg" alt />
         <img v-show="!eyeMe" src="../../assets/grid/eyeNotMine.svg" alt />
       </p>
-      <p>
+      <!-- <p>
         <img src="../../assets/grid/surroundingCustomers.svg" alt />
         <img
           v-show="false"
           src="../../assets/grid/surroundingCustomers.svg"
           alt
         />
-      </p>
+      </p> -->
     </div>
 
     <div v-show="isPopupVisibleSign" class="isPopupVisibleSign">
@@ -544,7 +545,7 @@ export default {
           <p>电话：${data_info[i]["telphone"]}</p>
           <p>地址：${data_info[i]["address"]}</p>
           <p>坐标：${data_info[i]["position"]}</p>
-          <p>资源类型：${data_info[i]["type"] | dic_grid_resource_type}</p>
+          <p>资源类型：${dic_grid_resource_type(data_info[i]["type"])}</p>
           <p>备注：${data_info[i]["description"]}</p>
           <p class="deleteBut" onclick="deleteBut('${i}')">删除</p>
         `;
@@ -591,6 +592,15 @@ export default {
             .catch(() => {});
         })
         .catch(() => {});
+    },
+    dic_grid_resource_type(val) {
+      console.log(val);
+      console.log(JSON.parse(localStorage.getItem("dicGridResource")));
+      const findWill = JSON.parse(localStorage.getItem("dicGridResource")).find(
+        (it) => +it.key == val
+      );
+      console.log(findWill);
+      return findWill ? findWill.value : "";
     },
     selfOverlayClick(data) {
       this.table = data;
@@ -792,8 +802,6 @@ export default {
   },
   filters: {
     dic_grid_resource_type(val) {
-      console.log(val);
-      console.log(JSON.parse(localStorage.getItem("dicGridResource")));
       const findWill = JSON.parse(localStorage.getItem("dicGridResource")).find(
         (it) => +it.key == val
       );

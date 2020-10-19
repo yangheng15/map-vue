@@ -113,11 +113,11 @@
           placeholder="客户编号，客户名称"
           @search="onSearch"
         />
-        <!-- <ul class="tabList">
+        <ul class="tabList">
           <li @click="tab1(0)" :class="tabId1 == 0 ? 'cur' : ''">网格客户</li>
-          <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">关注客户</li>
-        </ul> -->
-        <!-- <div v-show="tabId1 === 0"> -->
+          <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">潜在客户</li>
+        </ul>
+        <div v-show="tabId1 === 0">
           <div class="customer_list">
             <ul>
               <router-link
@@ -196,7 +196,7 @@
               </router-link>
             </ul>
           </div>
-        <!-- </div> -->
+        </div>
         <div v-show="tabId1 === 1">
           <div class="customer_list">
             <ul>
@@ -428,7 +428,6 @@ export default {
             transformDara.push({ value: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.intention_option = transformDara;
       });
     },
@@ -440,7 +439,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
         this.MarketingRecordClaim = res.data;
         if (
           this.MarketingRecordClaim.customerCode &&

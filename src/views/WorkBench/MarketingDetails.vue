@@ -285,8 +285,6 @@ export default {
   },
   filters: {
     dic_client_will(val) {
-      console.log(val);
-      console.log(JSON.parse(localStorage.getItem("dicClientWill")));
       const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
         (it) => +it.key == val
       );

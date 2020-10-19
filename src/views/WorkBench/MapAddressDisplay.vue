@@ -30,7 +30,6 @@ export default {
     this.typeCN = this.$route.query.title;
     this.location = this.$route.query.location;
     this.custName = this.$route.query.custName;
-    console.log(this.location.split(",")[0]);
     this.locationLng=this.location.split(",")[0]
     this.locationLat=this.location.split(",")[1]
   },

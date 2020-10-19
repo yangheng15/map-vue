@@ -12,7 +12,10 @@
             />
             <router-link
               tag="span"
-              :to="{ name: 'CustomerView', query: { title: '客户视图',id:this.id } }"
+              :to="{
+                name: 'CustomerView',
+                query: { title: '客户视图', id: this.id },
+              }"
             >
               <img src="../../../assets/WorkBench/folder.svg" alt />
             </router-link>
@@ -37,7 +40,7 @@
         </li>
         <li>
           <span class="left_title">客户编号：</span>
-          <span class="right_txt">{{CustomerViewDetails.code}}</span>
+          <span class="right_txt">{{ CustomerViewDetails.code }}</span>
         </li>
         <li>
           <span class="left_title">身份证号：</span>
@@ -50,7 +53,7 @@
           </span>
           <span class="right_txt">24</span>
         </li>
-        <li style="position: relative;">
+        <li style="position: relative">
           <span class="left_title">
             手
             <span style="display: inline-block; width: 8px"></span>机
@@ -65,7 +68,9 @@
         </li>
         <li>
           <span class="left_title">客户群体：</span>
-          <span class="right_txt">{{ CustomerViewDetails.customerBaseName }}</span>
+          <span class="right_txt">{{
+            CustomerViewDetails.customerBaseName
+          }}</span>
           <!-- 持续时间 -->
           <!-- <input class="multiple_choice" type="text" placeholder="小微企业主" :value="inpuVal" />
           <img style="vertical-align: middle;" src="../../assets/WorkBench/pencel.svg" alt @click="multiple_choice_ok()" />
@@ -394,18 +399,17 @@ export default {
       CustomerViewDetails: "",
       imgArr: [img1, img2],
       level: "",
-      organization_list:[]
+      organization_list: [],
     };
   },
   components: {
     ChildNav,
   },
-  created() {
+  async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
-    console.log(this.id);
-    this.getCustomerView();
-    this.getDic()
+    await this.getCustomerView();
+    this.getDic();
   },
   methods: {
     onRegional_grid(value) {
@@ -420,7 +424,6 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
     },
     openValue1() {
       this.show1 = !this.show1;
@@ -471,20 +474,30 @@ export default {
           transformDara.push({ index: it.pid, text: it.orgName });
         });
         this.organization_list = transformDara;
+        this.CustomerViewDetails.branchCode = this.enumData(
+          this.CustomerViewDetails.branchCode,
+          this.organization_list
+        );
       });
     },
-    getCustomerView() {
-      this.$httpGet({
+    enumData(val, data) {
+      if (val && data.length > 0) {
+        const find = data.find((it) => it.index == val);
+        console.log(find);
+        return find ? find.text : "";
+      } else {
+        return "";
+      }
+    },
+    async getCustomerView() {
+      const res = await this.$httpGet({
         url: `/api/customersBasicInfo/get/${this.id}`,
+      });
+      this.CustomerViewDetails = res.data;
+      this.$httpGet({
+        url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
       }).then((res) => {
-        console.log(res.data);
-        this.CustomerViewDetails = res.data;
-        this.$httpGet({
-          url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
-        }).then((res) => {
-          console.log(res.data.codeText);
-          this.level = res.data.codeText;
-        });
+        this.level = res.data.codeText;
       });
     },
   },

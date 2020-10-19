@@ -322,9 +322,6 @@ export default {
     },
     enumData(val, data) {
       if (val && data.length > 0) {
-        // console.log(this.prospect_details);
-        console.log(data, val);
-        console.log(+val);
         const find = data.find((it) => it.index === +val);
         return find ? find.text : "";
       } else {
@@ -419,7 +416,6 @@ export default {
               transformDara.push({ index: ele.code, text: ele.name });
             });
         });
-        console.log(transformDara);
         this.areaList = transformDara;
         this.prospect_details.gridding = this.enumData1(
           this.prospect_details.gridding,

@@ -34,12 +34,22 @@
               :rules="[{ required: true, message: '请填写客户编号' }]"
             />
             <van-field
-              v-model="level"
-              name="客户等级："
+              readonly
+              clickable
+              name="picker"
+              :value="CustomerViewDetails.level"
               label="客户等级："
-              placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写客户等级' }]"
+              placeholder="点击选择客户等级"
+              @click="Custome_level = true"
             />
+            <van-popup v-model="Custome_level" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="custome_level_list"
+                @confirm="onCustome_level"
+                @cancel="Custome_level = false"
+              />
+            </van-popup>
             <van-field
               readonly
               clickable
@@ -92,7 +102,7 @@
               readonly
               clickable
               name="picker"
-              :value="marital_status_txt"
+              :value="CustomerViewDetails.marriage"
               label="婚姻状况："
               placeholder="点击选择婚姻状况"
               @click="marital_status = true"
@@ -123,7 +133,7 @@
               readonly
               clickable
               name="picker"
-              :value="nation_txt"
+              :value="CustomerViewDetails.nation"
               label="民族："
               placeholder="点击选择民族"
               @click="nation = true"
@@ -147,13 +157,14 @@
             />
             <van-calendar v-model="showDateBirth" @confirm="onDateBirth" />
             <van-field
-              v-model="CustomerViewDetails.children"
-              name="子女状况："
+              readonly
+              clickable
+              name="picker"
+              :value="CustomerViewDetails.children"
               label="子女状况："
-              placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写子女状况' }]"
+              placeholder="点击选择子女状况"
+              @click="childrenStatus = true"
             />
-            <!-- @click="childrenStatus = true" -->
             <van-popup v-model="childrenStatus" position="bottom">
               <van-picker
                 show-toolbar
@@ -163,12 +174,22 @@
               />
             </van-popup>
             <van-field
-              v-model="occupation"
-              name="职业："
+              readonly
+              clickable
+              name="picker"
+              :value="CustomerViewDetails.profession"
               label="职业："
-              placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写职业' }]"
+              placeholder="点击选择职业"
+              @click="professionStatus = true"
             />
+            <van-popup v-model="professionStatus" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="professionStatus_list"
+                @confirm="onProfessionStatus"
+                @cancel="professionStatus = false"
+              />
+            </van-popup>
             <div class="save">
               <van-button
                 round
@@ -509,15 +530,15 @@ export default {
       education_level_txt: "",
       education_level_list: [],
       education_level: false,
-      marital_status_txt: "已婚",
-      marital_status_list: ["已婚", "未婚"],
+      marital_status_txt: "",
+      marital_status_list: [],
       marital_status: false,
       screen_name: "陈晓坛",
-      nation_txt: "汉族",
-      nation_list: ["汉族"],
+      nation_txt: "",
+      nation_list: [],
       nation: false,
-      childrenStatus_txt: "有",
-      childrenStatus_list: ["有", "无"],
+      childrenStatus_txt: "",
+      childrenStatus_list: [],
       childrenStatus: false,
       customer_hobby: "无",
       customer_id: "110242199702125858",
@@ -651,6 +672,12 @@ export default {
       id: "",
       CustomerViewDetails: "",
       level: "",
+      custome_level_txt: "",
+      custome_level_list: [],
+      Custome_level: false,
+      professionStatus_txt: "",
+      professionStatus_list: [],
+      professionStatus: false,
     };
   },
   async created() {
@@ -679,7 +706,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
         this.educationList = res.data;
       });
     },
@@ -692,7 +718,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
         this.workList = res.data;
       });
     },
@@ -704,17 +729,17 @@ export default {
           code: this.CustomerViewDetails.code,
           name: this.CustomerViewDetails.name,
           identifyNo: this.CustomerViewDetails.identifyNo,
-          level: this.CustomerViewDetails.level,
+          level: this.prospect_detailsEdit.level,
           nationality: this.CustomerViewDetails.nationality,
-          nation: this.CustomerViewDetails.nation,
-          gender: this.CustomerViewDetails.gender,
+          nation: this.prospect_detailsEdit.nation,
+          gender: this.prospect_detailsEdit.gender,
           birthdayGl: this.CustomerViewDetails.birthdayGl,
           faith: this.CustomerViewDetails.faith,
-          marriage: this.CustomerViewDetails.marriage,
-          children: this.CustomerViewDetails.children,
+          marriage: this.prospect_detailsEdit.marriage,
+          children: this.prospect_detailsEdit.children,
           education: this.prospect_detailsEdit.education,
           interest: this.CustomerViewDetails.interest,
-          profession: this.CustomerViewDetails.profession,
+          profession: this.prospect_detailsEdit.profession,
           telphone: this.CustomerViewDetails.telphone,
           qq: this.CustomerViewDetails.qq,
           wechat: this.CustomerViewDetails.wechat,
@@ -733,21 +758,18 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     enumData1(val, data) {
       let find = "";
       if (val && data.length > 0) {
         find = data.find((it) => it.index == val);
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
       }
     },
     enumData(val, data) {
-      console.log(val, data);
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
         console.log(find);
@@ -756,19 +778,27 @@ export default {
         return "";
       }
     },
+    onCustome_level(value) {
+      this.prospect_detailsEdit.level = value.index;
+      this.CustomerViewDetails.level = value.text;
+      this.Custome_level = false;
+    },
+    onProfessionStatus(value) {
+      this.prospect_detailsEdit.profession = value.index;
+      this.CustomerViewDetails.profession = value.text;
+      this.professionStatus = false;
+    },
     dic_nation() {
       // 最高学历
       this.$httpGet({
         url: "/dic/type/dic_education",
       }).then((res) => {
-        console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.education_level_list = transformDara;
         this.CustomerViewDetails.education = this.enumData(
           this.CustomerViewDetails.education,
@@ -795,6 +825,86 @@ export default {
           this.areaList
         );
       });
+      // 客户等级
+      this.$httpGet({
+        url: "/dic/type/dic_client_grade",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.custome_level_list = transformDara;
+        this.CustomerViewDetails.level = this.enumData1(
+          this.CustomerViewDetails.level,
+          this.custome_level_list
+        );
+      });
+      // 婚姻状况
+      this.$httpGet({
+        url: "/dic/type/dic_marital_status",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.marital_status_list = transformDara;
+        this.CustomerViewDetails.marriage = this.enumData1(
+          this.CustomerViewDetails.marriage,
+          this.marital_status_list
+        );
+      });
+      // 子女状况
+      this.$httpGet({
+        url: "/dic/type/dic_children_num",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.childrenStatus_list = transformDara;
+        this.CustomerViewDetails.children = this.enumData1(
+          this.CustomerViewDetails.children,
+          this.childrenStatus_list
+        );
+      });
+      // 职业
+      this.$httpGet({
+        url: "/dic/type/dic_career",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.professionStatus_list = transformDara;
+        this.CustomerViewDetails.profession = this.enumData1(
+          this.CustomerViewDetails.profession,
+          this.professionStatus_list
+        );
+      });
+      // 民族
+      this.$httpGet({
+        url: "/dic/type/dic_nation",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.nation_list = transformDara;
+        this.CustomerViewDetails.nation = this.enumData1(
+          this.CustomerViewDetails.nation,
+          this.nation_list
+        );
+      });
     },
     markerDragend({ point }) {
       const { lng, lat } = point;
@@ -804,12 +914,10 @@ export default {
       const res = await this.$httpGet({
         url: `/api/customersBasicInfo/get/${this.id}`,
       });
-      console.log(res.data);
       this.CustomerViewDetails = res.data;
       this.$httpGet({
         url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
       }).then((res) => {
-        console.log(res.data.codeText);
         this.level = res.data.codeText;
       });
     },
@@ -854,15 +962,18 @@ export default {
       this.education_level = false;
     },
     onMarital_status(value) {
-      this.marital_status_txt = value;
+      this.prospect_detailsEdit.marriage = value.index;
+      this.CustomerViewDetails.marriage = value.text;
       this.marital_status = false;
     },
     onNation(value) {
-      this.nation_txt = value;
+      this.prospect_detailsEdit.nation = value.index;
+      this.CustomerViewDetails.nation = value.text;
       this.nation = false;
     },
     onChildrenStatus(value) {
-      this.childrenStatus_txt = value;
+      this.prospect_detailsEdit.children = value.index;
+      this.CustomerViewDetails.children = value.text;
       this.childrenStatus = false;
     },
     onDateBirth(date) {
@@ -895,7 +1006,6 @@ export default {
       this.showPicker = false;
     },
     handler({ BMap, map }) {
-      // console.log(BMap, map);
       this.center.lng = 116.404;
       this.center.lat = 39.915;
       this.zoom = 15;
@@ -1017,7 +1127,7 @@ export default {
           customerCode: this.CustomerViewDetails.code,
           companyName: this.corporate_name,
           post: this.position,
-          workingStatus:1
+          workingStatus: 1,
         },
       })
         .then((res) => {
@@ -1063,8 +1173,6 @@ export default {
   },
   filters: {
     dic_education(val) {
-      console.log(val);
-      console.log(JSON.parse(localStorage.getItem("dicEducation")));
       const findWill = JSON.parse(localStorage.getItem("dicEducation")).find(
         (it) => +it.key == val
       );

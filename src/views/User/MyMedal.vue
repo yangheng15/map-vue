@@ -67,38 +67,11 @@ export default {
       typeCN: "",
       title: "",
       peasant_household: [],
-      Footprintlist: [
-        {
-          name: "赵敏",
-          date: "2020-09-09",
-          local: "北京市石景山区政达路6号中惠国际大厦",
-        },
-        {
-          name: "李峰",
-          date: "2020-09-09",
-          local: "北京市石景山区政达路6号中惠国际大厦",
-        },
-        {
-          name: "张红",
-          date: "2020-09-09",
-          local: "北京市石景山区政达路6号中惠国际大厦",
-        },
-      ],
+      Footprintlist: [],
       show: false,
       show1: false,
       date: " ",
-      date1: "结束日期",
-      isShowSearch: "true",
       type: "Wholeheartedly",
-      isLGB: true,
-      controlList: "",
-      isDetele: true,
-      isInTime: true,
-      startSubmitDate: 20200306,
-      endSubmitDate: 20200915,
-      // isshow:true,
-      pictureId: 0,
-      baseUrl: "/lgbsmp/api/v1/attachment/download?id=",
     };
   },
   created() {
@@ -106,7 +79,6 @@ export default {
     if (this.typeCN == "我的勋章") {
       this.getMedalOwner();
     } else if (this.typeCN == "我的足迹") {
-      // GET /api/semCustomersRecords/myTracks
       this.getCustomersRecords();
     }
   },
@@ -123,35 +95,6 @@ export default {
       this.show1 = false;
       this.date1 = this.formatDate(date1);
       this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`;
-    },
-    onItemRemove(item, callback) {
-      $dialog
-        .confirm({
-          content: "是否要删除这条信息？",
-          okText: "确定",
-        })
-        .then((confirmResult) => {
-          if (confirmResult) {
-            console.log("Remove Item:", item);
-
-            $loading.show("数据提交中...");
-            this.$axios
-              .delete(
-                "/lgbsmp/api/v1/exchangeAndInteraction?token=" + this.token,
-                {
-                  data: {
-                    ids: [item.id],
-                  },
-                }
-              )
-              .then((res) => {
-                $loading.hide();
-                if (res.resultMessage == "success") {
-                  callback();
-                }
-              });
-          }
-        });
     },
     getMedalOwner() {
       this.$httpGet({
@@ -172,33 +115,8 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
         this.Footprintlist = res.data;
       });
-    },
-
-    showItemView(item) {
-      this.$store.commit("clearReadNum", item.id);
-      this.$router.push(
-        "/LGBCollege/WholeheartedlyView?id=" +
-          item.id +
-          "&type=Wholeheartedly&plan=2"
-      );
-    },
-    getDataList(applyListFunction, pageNum, keywords) {
-      this.$axios
-        .get(
-          "/lgbsmp/api/v1/exchangeAndInteraction?selectPlan=2&type=Wholeheartedly&subjectOrRealName=" +
-            keywords +
-            "&limit=100&page=" +
-            pageNum +
-            "&token=" +
-            this.token
-        )
-        .then(applyListFunction);
-    },
-    date2string(v) {
-      return this.$seeks.date2string(v);
     },
   },
   mounted() {},
