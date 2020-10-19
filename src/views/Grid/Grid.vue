@@ -367,6 +367,7 @@
 </template>
 
 <script>
+
 import MyOverlay from "./MyOverlay";
 import MyNav from "../../components/Public/MyNav";
 import myTabbar from "../../components/Public/MyTabbar";
@@ -444,26 +445,29 @@ export default {
     window.dic_grid_resource_type = this.dic_grid_resource_type;
   },
   methods: {
-    appMessage(str) {
-      str = String(str);
-      var u = navigator.userAgent,
-        app = navigator.appVersion;
-      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Linux") > -1; //android终端或者uc浏览器
-      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-      console.log(11);
-      if (isAndroid) {
-        window.android.getLocation((el) => {
-          console.log(el);
-          this.mapCenter.lng = el.split(",")[0];
-          this.mapCenter.lat = el.split(",")[1];
-          this.zoomNum=16
-        });
-      } else if (isiOS) {
-        // window.webkit.messageHandlers.AppModel.postMessage({
-        //   str: str,
-        // });
-      }
+    appMessage() {
+      alert(window.android.getLocation())
     },
+    // appMessage(str) {
+    //   str = String(str);
+    //   var u = navigator.userAgent,
+    //     app = navigator.appVersion;
+    //   var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Linux") > -1; //android终端或者uc浏览器
+    //   var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    //   console.log(11);
+    //   if (isAndroid) {
+    //     window.android.getLocation((el) => {
+    //       console.log(el);
+    //       this.mapCenter.lng = el.split(",")[0];
+    //       this.mapCenter.lat = el.split(",")[1];
+    //       this.zoomNum=16
+    //     });
+    //   } else if (isiOS) {
+    //     // window.webkit.messageHandlers.AppModel.postMessage({
+    //     //   str: str,
+    //     // });
+    //   }
+    // },
     resourceEmit(data) {
       this.typeIds = data.typeIds;
       if (this.typeIds) {

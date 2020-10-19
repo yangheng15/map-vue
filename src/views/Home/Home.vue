@@ -4,16 +4,20 @@
     <div class="page-content">
       <h4 class="task_execution">本月任务执行</h4>
       <dl class="data_img">
-        <dt v-for="(statistic, index) in my_statistics" :key="index">
+        <dt>
           <ul class="text_content">
             <li>
-              <img class="img_content" :src="statistic.img" alt />
-              <p style="margin: 0">{{ statistic.name }}</p>
+              <img
+                class="img_content"
+                src="../../assets/home/kehushu.svg"
+                alt
+              />
+              <p style="margin: 0">客户数</p>
             </li>
             <li>
-              <p class="total_money">{{ statistic.num }}</p>
-              <p :class="statistic.state ? 'down_color' : 'up_color'">
-                {{ statistic.money }}%
+              <p class="total_money">23人</p>
+              <p :class="23 ? 'down_color' : 'up_color'">
+                21%
                 <img
                   style="
                     transform: rotate(180deg);
@@ -24,7 +28,100 @@
                     width: 15px;
                     vertical-align: text-top;
                   "
-                  :src="statistic.up_down"
+                  src="../../assets/home/arrow-alt-down.svg"
+                  alt
+                />
+              </p>
+            </li>
+          </ul>
+        </dt>
+        <dt>
+          <ul class="text_content">
+            <li>
+              <img
+                class="img_content"
+                src="../../assets/home/cunkuane.svg"
+                alt
+              />
+              <p style="margin: 0">存款额</p>
+            </li>
+            <li>
+              <p class="total_money">100万</p>
+              <p :class="23 ? 'down_color' : 'up_color'">
+                10%
+                <img
+                  style="
+                    transform: rotate(180deg);
+                    -ms-transform: rotate(180deg);
+                    -moz-transform: rotate(180deg);
+                    -webkit-transform: rotate(180deg);
+                    -o-transform: rotate(180deg);
+                    width: 15px;
+                    vertical-align: text-top;
+                  "
+                  src="../../assets/home/arrow-alt-up.svg"
+                  alt
+                />
+              </p>
+            </li>
+          </ul>
+        </dt>
+        <dt>
+          <ul class="text_content">
+            <li>
+              <img
+                class="img_content"
+                src="../../assets/home/daikuane.svg"
+                alt
+              />
+              <p style="margin: 0">贷款额</p>
+            </li>
+            <li>
+              <p class="total_money">100万</p>
+              <p :class="23 ? 'down_color' : 'up_color'">
+                15%
+                <img
+                  style="
+                    transform: rotate(180deg);
+                    -ms-transform: rotate(180deg);
+                    -moz-transform: rotate(180deg);
+                    -webkit-transform: rotate(180deg);
+                    -o-transform: rotate(180deg);
+                    width: 15px;
+                    vertical-align: text-top;
+                  "
+                  src="../../assets/home/arrow-alt-down.svg"
+                  alt
+                />
+              </p>
+            </li>
+          </ul>
+        </dt>
+        <dt>
+          <ul class="text_content">
+            <li>
+              <img
+                class="img_content"
+                src="../../assets/home/licaie.svg"
+                alt
+              />
+              <p style="margin: 0">理财额</p>
+            </li>
+            <li>
+              <p class="total_money">100万</p>
+              <p :class="23 ? 'down_color' : 'up_color'">
+                15%
+                <img
+                  style="
+                    transform: rotate(180deg);
+                    -ms-transform: rotate(180deg);
+                    -moz-transform: rotate(180deg);
+                    -webkit-transform: rotate(180deg);
+                    -o-transform: rotate(180deg);
+                    width: 15px;
+                    vertical-align: text-top;
+                  "
+                  src="../../assets/home/arrow-alt-up.svg"
                   alt
                 />
               </p>

@@ -691,7 +691,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 3,
-            custInfo: val,
+            intention: val,
           },
         }).then((res) => {
           this.MarketingRecordPotential = res.data;
@@ -730,7 +730,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 3,
-            custInfo: val,
+            isSucceed: val,
           },
         }).then((res) => {
           this.MarketingRecordPotential = res.data;
