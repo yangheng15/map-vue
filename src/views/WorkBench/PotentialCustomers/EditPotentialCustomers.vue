@@ -204,7 +204,10 @@
             alt=""
           /> </template
       ></van-field>
-      <div style="width: 99%; margin: 0.5rem auto" v-if="longitudeLatitude">
+      <div
+        style="width: 99%; margin: 0.5rem auto; position: relative"
+        v-if="longitudeLatitude"
+      >
         <baidu-map
           class="bm-view"
           :center="mapCenter"
@@ -222,9 +225,25 @@
             }"
           ></bm-marker>
           <template>
-            <!-- <p @click="appMessage">
-        <img src="../../../assets/grid/current_location.svg" alt />
-      </p> -->
+            <p
+              style="
+                width: 35px;
+                height: 35px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #dedede;
+                border: 1px solid #d8d8d8;
+                border-radius: 5px;
+                position: absolute;
+                right: 20px;
+                margin: 0;
+                top: 20px;
+              "
+              @click="appMessage"
+            >
+              <img src="../../../assets/grid/current_location.svg" alt />
+            </p>
           </template>
         </baidu-map>
       </div>

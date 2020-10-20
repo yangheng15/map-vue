@@ -14,7 +14,7 @@
             <p><a style="color:#000" :href="'tel:' + thisItem.telphone">电话：{{thisItem.telphone}}</a></p>
             <p class="schedule_star">
               <van-rate
-                v-model="star"
+                v-model="thisItem.star"
                 :size="14"
                 color="#ffd21e"
                 void-icon="star"
@@ -140,11 +140,15 @@ export default {
           page: 1,
         },
       }).then((res) => {
+        console.log(res.data);
         this.data_customer_list1 = res.data;
-        this.data_customer_list1.forEach((el)=>{
-          this.starNum = parseInt(el.star)
-          console.log(this.starNum);
-        })
+//         this.data_customer_list1.forEach((el)=>{
+//           console.log(el.star);
+//           if(el.star){
+// this.starNum = parseInt(el.star)
+//           }
+          
+//         })
       });
     },
     onSearch(val){
