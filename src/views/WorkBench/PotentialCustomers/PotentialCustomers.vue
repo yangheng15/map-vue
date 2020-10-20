@@ -9,18 +9,21 @@
       />
       <div class="customer_list">
         <ul>
-          <router-link
-            tag="li"
-            v-for="(thisItem, index) in customer_list"
-            :key="index"
-            :to="{
+          <li v-for="(thisItem, index) in customer_list"
+            :key="index">
+            <router-link tag="p" :to="{
               name: 'EditPotentialCustomers',
               query: { title: '潜在客户详情', id: thisItem.id },
-            }"
-          >
-            <p>{{ thisItem.name }}</p>
-            <p v-if="thisItem.updatedTime">上次联系</p>
-            <p v-if="!thisItem.updatedTime">最近暂无联系</p>
+            }">{{ thisItem.name }}</router-link>
+            <p>
+              <van-button
+                type="primary"
+                color="rgb(61, 66, 94)"
+                size="mini"
+                @click="deleteCustomer(thisItem.id)"
+                >删除</van-button
+              >
+            </p>
             <p class="schedule_star">
               <van-rate
                 v-model="thisItem.starRating"
@@ -31,8 +34,12 @@
                 readonly
               />
             </p>
-            <p>{{ thisItem.updatedTime | transform }}</p>
-          </router-link>
+            <p v-if="thisItem.updatedTime">
+              上次联系{{ thisItem.updatedTime | transform }}
+            </p>
+            <p v-if="!thisItem.updatedTime">最近暂无联系</p>
+            <!-- <p></p> -->
+          </li>
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
@@ -62,6 +69,7 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
+import { Dialog } from "vant";
 export default {
   name: "PotentialCustomers",
   components: {
@@ -92,6 +100,24 @@ export default {
         // console.log(res.data);
         this.customer_list = res.data;
       });
+    },
+    deleteCustomer(val) {
+      Dialog.confirm({
+        title: "你确定移除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customersPotential/delete",
+            params: {
+              ids: val,
+            },
+          })
+            .then((res) => {
+              this.getPotentialCustomers();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
     },
     onSearch(val) {
       // console.log(val);

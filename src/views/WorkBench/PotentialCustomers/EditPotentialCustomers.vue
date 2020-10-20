@@ -210,7 +210,7 @@
       >
         <baidu-map
           class="bm-view"
-          :center="mapCenter"
+          :center="mapCenter1"
           :zoom="14"
           ak="YOUR_APP_KEY"
           @longpress="markerLongpress"
@@ -240,7 +240,7 @@
                 margin: 0;
                 top: 20px;
               "
-              @click="appMessage"
+              @click="appMessage1"
             >
               <img src="../../../assets/grid/current_location.svg" alt />
             </p>
@@ -342,6 +342,7 @@ export default {
       longitude: "114.654102",
       latitude: "33.623741",
       mapCenter: { lng: "114.654102", lat: "33.623741" },
+      mapCenter1: { lng: "114.654102", lat: "33.623741" },
       zoomNum: 15,
       positionMarker: null,
       longitudeLatitude: false,
@@ -368,8 +369,9 @@ export default {
       })
         .then(() => {
           const { lng, lat } = point;
-          alert(lng + "-" + lat);
+          // alert(lng + "-" + lat);
           this.mapCenter = point;
+          this.mapCenter1 = point;
           this.prospect_details.location = `${lng},${lat}`;
         })
         .catch(() => {
@@ -541,6 +543,7 @@ export default {
         const positionArr = this.prospect_details.location.split(",");
         console.log(positionArr);
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
       } else {
         this.appMessage();
       }
@@ -551,7 +554,20 @@ export default {
     appMessage() {
       let positionArr = window.android.getLocation().split(",");
       this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+      this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
       this.prospect_details.location = positionArr.toString();
+    },
+    appMessage1() {
+      let positionArr = window.android.getLocation().split(",");
+      this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      this.createMarker(positionArr);
+    },
+    createMarker(position) {
+      if (this.positionMarker) {
+        this.map.removeOverlay(this.positionMarker);
+      }
+      this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
+      this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
     modifyResult() {
       this.$httpPut({

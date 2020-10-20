@@ -155,23 +155,57 @@
           label="位置："
           placeholder="单行输入"
           :rules="[{ required: true, message: '请填写位置（经纬度）' }]"
-        />
-        <div style="width: 99%; margin: 0.5rem auto">
+        >
+          <template #button>
+            <img
+              @click="getLongitudeLatitude"
+              style="opacity: 0.9; margin-right: 15px"
+              class=""
+              src="../../../assets/grid/sign.svg"
+              alt=""
+            /> </template
+        ></van-field>
+        <div
+          style="width: 99%; margin: 0.5rem auto; position: relative"
+          v-if="longitudeLatitude"
+        >
           <baidu-map
             class="bm-view"
-            :center="{ lng: farmers_details.location.split(',')[0], lat: farmers_details.location.split(',')[1] }"
+            :center="mapCenter1"
             :zoom="14"
             ak="YOUR_APP_KEY"
+            @longpress="markerLongpress"
           >
             <bm-marker
               :dragging="true"
-              :position="{ lng: farmers_details.location.split(',')[0], lat: farmers_details.location.split(',')[1] }"
+              :position="mapCenter"
               @dragend="markerDragend"
               :icon="{
                 url: require('../../../assets/grid/sign.svg'),
                 size: { width: 30, height: 30 },
               }"
             ></bm-marker>
+            <template>
+              <p
+                style="
+                  width: 35px;
+                  height: 35px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  background: #dedede;
+                  border: 1px solid #d8d8d8;
+                  border-radius: 5px;
+                  position: absolute;
+                  right: 20px;
+                  margin: 0;
+                  top: 20px;
+                "
+                @click="appMessage1"
+              >
+                <img src="../../../assets/grid/current_location.svg" alt />
+              </p>
+            </template>
           </baidu-map>
         </div>
         <div class="save">
@@ -943,6 +977,13 @@ export default {
       utilities: "",
       lcme: "",
       otherExpend: "",
+      longitude: "114.654102",
+      latitude: "33.623741",
+      mapCenter: { lng: "114.654102", lat: "33.623741" },
+      mapCenter1: { lng: "114.654102", lat: "33.623741" },
+      zoomNum: 15,
+      positionMarker: null,
+      longitudeLatitude: false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -959,6 +1000,9 @@ export default {
     this.id = this.$route.query.id;
     await this.editFarmers();
     this.dic_nation();
+    if (this.farmers_details.location == "") {
+      this.appMessage();
+    }
   },
 
   methods: {
@@ -972,6 +1016,21 @@ export default {
     markerDragend({ point }) {
       const { lng, lat } = point;
       this.farmers_details.location = `${lng},${lat}`;
+    },
+    markerLongpress({ point }) {
+      Dialog.confirm({
+        message: "要标记当前位置吗？",
+      })
+        .then(() => {
+          const { lng, lat } = point;
+          // alert(lng + "-" + lat);
+          this.mapCenter = point;
+          this.mapCenter1 = point;
+          this.prospect_details.location = `${lng},${lat}`;
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
     enumData(val, data) {
       // debugger
@@ -1263,12 +1322,41 @@ export default {
         },
       });
       this.farmers_details = res.data;
-      localStorage.setItem('familyCode', this.farmers_details.familyCode)
+      localStorage.setItem("familyCode", this.farmers_details.familyCode);
       this.prospect_detailsEdit.type = res.data.type;
+      if (this.farmers_details.location) {
+        const positionArr = this.farmers_details.location.split(",");
+        console.log(positionArr);
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      } else {
+        this.appMessage();
+      }
+    },
+    getLongitudeLatitude() {
+      this.longitudeLatitude = true;
+    },
+    appMessage() {
+      let positionArr = window.android.getLocation().split(",");
+      this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+      this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      this.prospect_details.location = positionArr.toString();
+    },
+    appMessage1() {
+      let positionArr = window.android.getLocation().split(",");
+      this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      this.createMarker(positionArr);
+    },
+    createMarker(position) {
+      if (this.positionMarker) {
+        this.map.removeOverlay(this.positionMarker);
+      }
+      this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
+      this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
     getFamilyPeople() {
       //第一次this中存在familyCode进入详情页后返回需要查询本地
-      const familyCode = localStorage.getItem('familyCode');
+      const familyCode = localStorage.getItem("familyCode");
       this.$httpGet({
         url: "/api/customersFamilyMembers/query",
         params: {
@@ -1285,7 +1373,7 @@ export default {
       });
     },
     getFamilyAssets() {
-      const familyCode = localStorage.getItem('familyCode');
+      const familyCode = localStorage.getItem("familyCode");
       this.$httpGet({
         url: "/api/customersFamilyAssetsLiability/query",
         params: {
@@ -1391,7 +1479,13 @@ export default {
   },
   computed: {
     addExpenditureNum() {
-      if (this.mortgage||this.businessExpend||this.utilities||this.lcme||this.otherExpend) {
+      if (
+        this.mortgage ||
+        this.businessExpend ||
+        this.utilities ||
+        this.lcme ||
+        this.otherExpend
+      ) {
         return (
           Number(this.mortgage) +
           Number(this.businessExpend) +
@@ -1402,15 +1496,20 @@ export default {
       }
     },
     addIncomeNum() {
-      if (this.householdIncome||this.otherIncome) {
-        return (
-          Number(this.householdIncome) +
-          Number(this.otherIncome)
-        );
+      if (this.householdIncome || this.otherIncome) {
+        return Number(this.householdIncome) + Number(this.otherIncome);
       }
     },
     addAllNum() {
-      if (this.householdIncome||this.otherIncome||this.mortgage||this.businessExpend||this.utilities||this.lcme||this.otherExpend) {
+      if (
+        this.householdIncome ||
+        this.otherIncome ||
+        this.mortgage ||
+        this.businessExpend ||
+        this.utilities ||
+        this.lcme ||
+        this.otherExpend
+      ) {
         return (
           Number(this.householdIncome) +
           Number(this.otherIncome) -

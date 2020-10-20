@@ -67,6 +67,10 @@ export default {
         const education = res.data.find((it) => it.type === "dic_education").childs;
         console.log(education);
         localStorage.setItem('dicEducation', JSON.stringify(education))
+        // 家庭类型
+        const familyType = res.data.find((it) => it.type === "dic_family_type").childs;
+        console.log(familyType);
+        localStorage.setItem('dicFamilyType', JSON.stringify(familyType))
       });
     },
     async onSubmit(values) {

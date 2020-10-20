@@ -7,11 +7,19 @@
         <ul>
           <li v-for="(thisItem, index) in data_customer_list1" :key="index">
             <router-link
+            v-if="thisItem.custBasicType==1"
               tag="p"
               :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图',id:thisItem.custId } }"
               >{{ thisItem.custName }}</router-link
             >
-            <p><a style="color:#000" :href="'tel:' + thisItem.telphone">电话：{{thisItem.telphone}}</a></p>
+            <router-link
+            v-if="thisItem.potentialType==2"
+              tag="p"
+              :to="{ name: 'EditPotentialCustomers', query: { title: '潜在客户详情',id:thisItem.potentialId } }"
+              >{{ thisItem.potentialName }}</router-link
+            >
+            <p v-if="thisItem.custBasicType==1"><a style="color:#000" :href="'tel:' + thisItem.telphone">电话：{{thisItem.telphone}}</a></p>
+            <p v-if="thisItem.potentialType==2"><a style="color:#000" :href="'tel:' + thisItem.telphone">电话：{{thisItem.potentialTelphone}}</a></p>
             <p class="schedule_star">
               <van-rate
                 v-model="thisItem.star"

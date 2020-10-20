@@ -9,20 +9,39 @@
       />
       <div class="customer_list">
         <ul>
-          <router-link
-            tag="li"
-            :to="{
-              name: 'FarmersInformation',
-              query: { title: '农户', id: thisItem.id },
-            }"
-            v-for="(thisItem, index) in peasant_household"
-            :key="index"
-          >
-            <p>{{ thisItem.familyCode }}</p>
-            <p>{{ familyCodeName }}</p>
-            <p>户主：{{ thisItem.houseName }}</p>
-            <p>成员数：{{ thisItem.num }}</p>
-          </router-link>
+          <li v-for="(thisItem, index) in peasant_household" :key="index">
+            <div>
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'FarmersInformation',
+                  query: { title: '农户', id: thisItem.id },
+                }"
+                >{{ thisItem.familyCode }}</router-link
+              >
+              <p>{{ thisItem.type | dic_family_type }}</p>
+              <p>
+                <van-button
+                  type="primary"
+                  color="rgb(61, 66, 94)"
+                  size="mini"
+                  @click="deleteCustomer(thisItem.id)"
+                  >删除</van-button
+                >
+              </p>
+            </div>
+            <div>
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'FarmersInformation',
+                  query: { title: '农户', id: thisItem.id },
+                }"
+                >户主：{{ thisItem.houseName }}</router-link
+              >
+              <p>成员数：{{ thisItem.num }}</p>
+            </div>
+          </li>
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
@@ -116,7 +135,7 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-import { Toast } from "vant";
+import { Toast, Dialog } from "vant";
 export default {
   name: "WorkbenchBranch",
   components: {
@@ -133,73 +152,9 @@ export default {
       family_type_list: [],
       family_type: false,
       regional_grid_txt: "",
-      areaList: {
-        province_list: {
-          110000: "川汇区",
-          120000: "项城市",
-          130000: "扶沟县",
-          140000: "西华县",
-          150000: "商水县",
-          160000: "沈丘县",
-        },
-        city_list: {
-          110100: "陈州回族街道",
-          110200: "七一路街道",
-          110300: "荷花路街道",
-          110400: "人和街道",
-          110500: "小桥街道",
-          110600: "李埠口乡",
-
-          120100: "花园街道",
-          120200: "水寨街道",
-          120300: "东方街道",
-          120400: "莲花街道",
-          120500: "千佛阁街道",
-          120600: "光武街",
-
-          130100: "桐丘街道",
-          130200: "扶亭街道",
-          130300: "崔桥镇",
-          130400: "江村镇",
-          130500: "白潭镇",
-          130600: "韭园镇",
-        },
-        county_list: {
-          110101: "城关村",
-          110102: "化河村",
-          110205: "王店村",
-          110206: "许湾村",
-          110301: "城关村",
-          110302: "城郊村",
-          110401: "王皮溜镇",
-          110402: "太清宫镇",
-          110505: "迟营村",
-          110506: "田口村",
-          110601: "胡集村",
-          110702: "古郊村",
-
-          120101: "南顿村",
-          120102: "高寺村",
-          120203: "官会村",
-          120204: "丁集村",
-          120305: "郑郭村",
-          120306: "范集村",
-
-          130101: "包屯村",
-          130102: "曹里村",
-          130203: "大李村",
-          130204: "练寺村",
-          130305: "汴岗村",
-          130306: "范集村",
-        },
-      },
       regional_grid: false,
       residential_address: "",
       user_positioning: "",
-      grid_theme: 0,
-      grid_theme_txt: "",
-      grid_theme_list: ["网格主题", "2020特色存款营销", "etc开通", "助农贷款"],
-      grid_theme: false,
       grid_name: "",
       checked: true,
       value: 1,
@@ -285,26 +240,26 @@ export default {
         this.peasant_household = res.data;
       });
     },
-    getDic() {
-      this.$httpGet({
-        url: `/dic/dic_family_type/${this.familyCode}`,
-      }).then((res) => {
-        // console.log(res.data);
-        this.familyCodeName = res.data.codeText;
-      });
-      this.$httpGet({
-        url: "/dic/type/dic_family_type",
-      }).then((res) => {
-        // console.log(res.data);
-        let transformDara = [];
-        res.data.forEach((it, index) => {
-          if (it.code !== null) {
-            transformDara.push({ index: it.code, text: it.codeText });
-          }
-        });
-        this.family_type_list = transformDara;
-      });
-    },
+    // getDic() {
+    //   this.$httpGet({
+    //     url: `/dic/dic_family_type/${this.familyCode}`,
+    //   }).then((res) => {
+    //     // console.log(res.data);
+    //     this.familyCodeName = res.data.codeText;
+    //   });
+    //   this.$httpGet({
+    //     url: "/dic/type/dic_family_type",
+    //   }).then((res) => {
+    //     // console.log(res.data);
+    //     let transformDara = [];
+    //     res.data.forEach((it, index) => {
+    //       if (it.code !== null) {
+    //         transformDara.push({ index: it.code, text: it.codeText });
+    //       }
+    //     });
+    //     this.family_type_list = transformDara;
+    //   });
+    // },
     addHouseholderName() {
       this.$httpPost({
         url: "/api/customersFamily/add",
@@ -323,6 +278,33 @@ export default {
         });
         this.getFamily();
       });
+    },
+    deleteCustomer(val) {
+      Dialog.confirm({
+        title: "你确定移除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customersFamily/delete",
+            params: {
+              ids: val,
+            },
+          })
+            .then((res) => {
+              this.getFamily();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    },
+  },
+  filters: {
+    dic_family_type(val) {
+      const findWill = JSON.parse(localStorage.getItem("dicFamilyType")).find(
+        (it) => +it.key == val
+      );
+      console.log(findWill);
+      return findWill ? findWill.value : "";
     },
   },
 };
@@ -653,22 +635,16 @@ export default {
   /* margin-top: 10px; */
 }
 .customer_list ul li {
-  display: flex;
-  flex-wrap: wrap;
   padding: 0.5rem 0.5rem;
   border-bottom: 0.001rem solid #e8e8e8 !important;
 }
+.customer_list ul li div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 .customer_list ul li p {
-  width: 60%;
   margin: 5px 0px;
-}
-.customer_list ul li p:nth-child(even) {
-  text-align: right;
-  width: 40%;
-}
-.customer_list .schedule_star img {
-  width: 1.2rem;
-  vertical-align: middle;
 }
 .work_log ul li {
   margin-top: 10px;
