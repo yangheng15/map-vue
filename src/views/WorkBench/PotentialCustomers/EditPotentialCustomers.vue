@@ -207,20 +207,14 @@
       <div style="width: 99%; margin: 0.5rem auto" v-show="longitudeLatitude">
         <baidu-map
           class="bm-view"
-          :center="{
-            lng: longitude,
-            lat: latitude,
-          }"
+          :center="mapCenter"
           :zoom="14"
           ak="YOUR_APP_KEY"
           @longpress="markerLongpress"
         >
           <bm-marker
             :dragging="true"
-            :position="{
-              lng: longitude,
-              lat: latitude,
-            }"
+            :position="mapCenter"
             @dragend="markerDragend"
             :icon="{
               url: require('../../../assets/grid/sign.svg'),
@@ -326,8 +320,9 @@ export default {
       id: "",
       prospect_details: {},
       prospect_detailsEdit: {},
-      longitude: "",
-      latitude: "",
+      longitude: "114.654102",
+      latitude: "33.623741",
+      mapCenter: {lng: '114.654102', lat: '33.623741'},
       zoomNum: 15,
       positionMarker: null,
       longitudeLatitude: false,
@@ -349,20 +344,27 @@ export default {
       this.prospect_details.location = `${lng},${lat}`;
     },
     markerLongpress({ point }) {
-      Dialog.confirm({
-        message: "要标记当前位置吗？",
-      })
-        .then(() => {
-          alert(point);
           const { lng, lat } = point;
-          this.prospect_details.location = `${lng},${lat}`;
-          let positionArr1 = this.prospect_details.location.split(",");
-          this.longitude = positionArr1[0];
-          this.latitude = positionArr1[0];
-        })
-        .catch(() => {
-          // on cancel
-        });
+          alert(lng + '-' + lat);
+          this.mapCenter = point;
+          // this.prospect_details.location = `${lng},${lat}`;
+          // let positionArr1 = this.prospect_details.location.split(",");
+          // this.longitude = positionArr1[0];
+          // this.latitude = positionArr1[0];
+      // Dialog.confirm({
+      //   message: "要标记当前位置吗？",
+      // })
+      //   .then(() => {
+      //     const { lng, lat } = point;
+      //     alert(lng + '-' + lat);
+      //     this.prospect_details.location = `${lng},${lat}`;
+      //     let positionArr1 = this.prospect_details.location.split(",");
+      //     this.longitude = positionArr1[0];
+      //     this.latitude = positionArr1[0];
+      //   })
+      //   .catch(() => {
+      //     // on cancel
+      //   });
     },
     enumData(val, data) {
       if (val && data.length > 0) {
@@ -526,14 +528,11 @@ export default {
       });
       this.prospect_details = res.data;
       if (this.prospect_details.location) {
-        console.log("有经纬度");
-        this.longitude = this.prospect_details.location.split(",")[0];
-        this.latitude = this.prospect_details.location.split(",")[1];
+        const positionArr = this.prospect_details.location.split(",");
+        console.log(positionArr);
+        this.mapCenter = {lng: positionArr[0], lat: positionArr[1]}
       } else {
         this.appMessage();
-        console.log(this.prospect_details.location);
-        console.log(this.longitude);
-        console.log(this.latitude);
       }
     },
     getLongitudeLatitude() {
@@ -541,10 +540,7 @@ export default {
     },
     appMessage() {
       let positionArr = window.android.getLocation().split(",");
-      // let positionArr = [124.281873, 45.514322];
-      // this.prospect_details.location = { lng: positionArr[0], lat: positionArr[1] };
-      this.longitude = positionArr[0];
-      this.latitude = positionArr[1];
+      this.mapCenter = {lng: positionArr[0], lat: positionArr[1]}
       this.prospect_details.location = positionArr.toString();
     },
     modifyResult() {
