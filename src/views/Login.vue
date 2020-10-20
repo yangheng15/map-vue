@@ -21,6 +21,9 @@
         placeholder="请输入密码"
         :rules="[{ required: true, message: '请输入密码' }]"
       />
+      <van-checkbox v-model="remember" checked-color="#3d425e"
+        >记住密码</van-checkbox
+      >
       <a href style="margin: 10px; display: inline-block">忘记密码</a>
       <div style="margin: 20px 16px 16px 16px">
         <van-button round block type="info" native-type="submit"
@@ -40,19 +43,27 @@ export default {
     return {
       username: "",
       password: "",
+      remember: false,
     };
   },
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      //如果token存在跳转首页
-      const token = localStorage.getItem('_token'),
-            username = localStorage.getItem('username');
-      if(token && username) {
-        vm.getDic();
-        vm.$router.push("/home");
-      }
-    });
+  created() {
+    if (localStorage.getItem("passWord")) {
+      this.remember=true
+      this.username = localStorage.getItem("username");
+      this.password = localStorage.getItem("passWord");
+    }
   },
+  // beforeRouteEnter(to, from, next) {
+  //   next((vm) => {
+  //     //如果token存在跳转首页
+  //     const token = localStorage.getItem("_token"),
+  //       username = localStorage.getItem("username");
+  //     if (token && username) {
+  //       vm.getDic();
+  //       vm.$router.push("/home");
+  //     }
+  //   });
+  // },
   methods: {
     onFailed(errorInfo) {
       // //console.log("failed", errorInfo);
@@ -62,26 +73,33 @@ export default {
         url: "/dics/tree",
       }).then((res) => {
         //console.log(res.data);
-        const data = res.data.find((it) => it.type === "dic_client_grade").childs;
+        const data = res.data.find((it) => it.type === "dic_client_grade")
+          .childs;
         //console.log(data);
-        localStorage.setItem('dic', JSON.stringify(data))
-        const product = res.data.find((it) => it.type === "dic_product_type").childs;
+        localStorage.setItem("dic", JSON.stringify(data));
+        const product = res.data.find((it) => it.type === "dic_product_type")
+          .childs;
         //console.log(product);
-        localStorage.setItem('dicProduct', JSON.stringify(product))
-        const clientWill = res.data.find((it) => it.type === "dic_client_will").childs;
+        localStorage.setItem("dicProduct", JSON.stringify(product));
+        const clientWill = res.data.find((it) => it.type === "dic_client_will")
+          .childs;
         //console.log(clientWill);
-        localStorage.setItem('dicClientWill', JSON.stringify(clientWill))
-        const gridResource = res.data.find((it) => it.type === "dic_grid_resource_type").childs;
+        localStorage.setItem("dicClientWill", JSON.stringify(clientWill));
+        const gridResource = res.data.find(
+          (it) => it.type === "dic_grid_resource_type"
+        ).childs;
         //console.log(gridResource);
-        localStorage.setItem('dicGridResource', JSON.stringify(gridResource))
+        localStorage.setItem("dicGridResource", JSON.stringify(gridResource));
         // 学历
-        const education = res.data.find((it) => it.type === "dic_education").childs;
+        const education = res.data.find((it) => it.type === "dic_education")
+          .childs;
         console.log(education);
-        localStorage.setItem('dicEducation', JSON.stringify(education))
+        localStorage.setItem("dicEducation", JSON.stringify(education));
         // 家庭类型
-        const familyType = res.data.find((it) => it.type === "dic_family_type").childs;
+        const familyType = res.data.find((it) => it.type === "dic_family_type")
+          .childs;
         console.log(familyType);
-        localStorage.setItem('dicFamilyType', JSON.stringify(familyType))
+        localStorage.setItem("dicFamilyType", JSON.stringify(familyType));
       });
     },
     async onSubmit(values) {
@@ -104,6 +122,9 @@ export default {
             // //console.log(res);
             localStorage.setItem("_token", res.access_token);
             localStorage.setItem("username", res.username);
+            if (this.remember) {
+              localStorage.setItem("passWord", this.password);
+            }
             this.getDic();
             this.$router.push("/home");
           }
@@ -141,6 +162,14 @@ export default {
 .logo_txt {
   width: 8rem;
   height: 3rem;
+}
+.van-checkbox {
+  padding: 10px 16px;
+  font-size: 14px;
+}
+.van-checkbox__icon >>> .van-icon {
+  width: 1rem;
+  height: 1rem;
 }
 </style>
 <style>
