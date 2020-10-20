@@ -175,6 +175,7 @@
             :zoom="14"
             ak="YOUR_APP_KEY"
             @longpress="markerLongpress"
+            @ready="mapReady"
           >
             <bm-marker
               :dragging="true"
@@ -984,6 +985,7 @@ export default {
       zoomNum: 15,
       positionMarker: null,
       longitudeLatitude: false,
+      map: null,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -1012,6 +1014,9 @@ export default {
     onConfirm1(date) {
       this.show = false;
       this.date = this.formatDate(date);
+    },
+    mapReady({ BMap, map }) {
+      this.map = map;
     },
     markerDragend({ point }) {
       const { lng, lat } = point;
