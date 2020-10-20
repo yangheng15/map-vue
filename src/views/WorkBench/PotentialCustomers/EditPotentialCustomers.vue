@@ -204,7 +204,7 @@
             alt=""
           /> </template
       ></van-field>
-      <div style="width: 99%; margin: 0.5rem auto" v-show="longitudeLatitude">
+      <div style="width: 99%; margin: 0.5rem auto" v-if="longitudeLatitude">
         <baidu-map
           class="bm-view"
           :center="mapCenter"
