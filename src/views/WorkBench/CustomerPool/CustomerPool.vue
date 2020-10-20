@@ -53,7 +53,7 @@
               />
             </p>
             <p style="color: #df0f0f">AUM:{{ thisItem.aum }}</p>
-            <p style="color: #1badf2">{{ thisItem.level |  dic_client_grade}}客户</p>
+            <p v-if="thisItem.level" style="color: #1badf2">{{ thisItem.level |  dic_client_grade}}客户</p>
             <p class="marter">
               <span v-if="!thisItem.business1" class="business1"
                 >{{ thisItem.business1 }}存款</span

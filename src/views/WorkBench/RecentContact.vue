@@ -22,7 +22,8 @@
                 readonly
               />
             </p>
-            <p>上次联系{{ thisItem.contactDays }}天前</p>
+            <p v-if="thisItem.contactDays==0">今天联系过</p>
+            <p v-if="thisItem.contactDays!==0">上次联系{{ thisItem.contactDays }}天前</p>
           </li>
         </ul>
       </div>
@@ -119,7 +120,7 @@ export default {
       date: "",
       show: false,
       tabId: 1,
-      star:"",
+      starNum:"",
       data_customer_list1: [],
     };
   },
@@ -141,7 +142,8 @@ export default {
       }).then((res) => {
         this.data_customer_list1 = res.data;
         this.data_customer_list1.forEach((el)=>{
-          this.star = parseInt(el.star)
+          this.starNum = parseInt(el.star)
+          console.log(this.starNum);
         })
       });
     },

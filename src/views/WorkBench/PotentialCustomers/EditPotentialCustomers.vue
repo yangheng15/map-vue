@@ -213,6 +213,7 @@
           }"
           :zoom="14"
           ak="YOUR_APP_KEY"
+          @longpress="markerLongpress"
         >
           <bm-marker
             :dragging="true"
@@ -243,7 +244,7 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-import { Toast } from "vant";
+import { Toast, Dialog } from "vant";
 export default {
   name: "EditPotentialCustomers",
   components: {
@@ -346,6 +347,22 @@ export default {
     markerDragend({ point }) {
       const { lng, lat } = point;
       this.prospect_details.location = `${lng},${lat}`;
+    },
+    markerLongpress({ point }) {
+      Dialog.confirm({
+        message: "要标记当前位置吗？",
+      })
+        .then(() => {
+          alert(point);
+          const { lng, lat } = point;
+          this.prospect_details.location = `${lng},${lat}`;
+          let positionArr1 = this.prospect_details.location.split(",");
+          this.longitude = positionArr1[0];
+          this.latitude = positionArr1[0];
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
     enumData(val, data) {
       if (val && data.length > 0) {
@@ -523,8 +540,8 @@ export default {
       this.longitudeLatitude = true;
     },
     appMessage() {
-      // let positionArr = window.android.getLocation().split(",");
-      let positionArr = [124.281873, 45.514322];
+      let positionArr = window.android.getLocation().split(",");
+      // let positionArr = [124.281873, 45.514322];
       // this.prospect_details.location = { lng: positionArr[0], lat: positionArr[1] };
       this.longitude = positionArr[0];
       this.latitude = positionArr[1];
