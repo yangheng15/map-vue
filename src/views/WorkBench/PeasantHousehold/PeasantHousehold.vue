@@ -909,12 +909,6 @@ export default {
   * {
     font-size: 13px;
   }
-  .customer_list ul li p {
-    width: 57%;
-  }
-  .customer_list ul li p:nth-child(even) {
-    width: 43%;
-  }
 
   .end_line {
     font-size: 0.8rem;
