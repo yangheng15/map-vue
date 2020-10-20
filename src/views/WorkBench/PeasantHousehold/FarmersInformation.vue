@@ -159,13 +159,13 @@
         <div style="width: 99%; margin: 0.5rem auto">
           <baidu-map
             class="bm-view"
-            :center="{ lng: 114.6, lat: 33.6 }"
+            :center="{ lng: farmers_details.location.split(',')[0], lat: farmers_details.location.split(',')[1] }"
             :zoom="14"
             ak="YOUR_APP_KEY"
           >
             <bm-marker
               :dragging="true"
-              :position="{ lng: 114.6, lat: 33.6 }"
+              :position="{ lng: farmers_details.location.split(',')[0], lat: farmers_details.location.split(',')[1] }"
               @dragend="markerDragend"
               :icon="{
                 url: require('../../../assets/grid/sign.svg'),

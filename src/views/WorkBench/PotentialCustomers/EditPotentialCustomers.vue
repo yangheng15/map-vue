@@ -190,28 +190,47 @@
       />
       <van-field
         v-model="prospect_details.location"
-        disabled 
+        disabled
         name="经纬度："
         label="经纬度："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写定位（经纬度）' }]"
-      />
-      <div style="width: 99%; margin: 0.5rem auto">
+        placeholder="点击按钮标记经纬度"
+      >
+        <template #button>
+          <img
+            @click="getLongitudeLatitude"
+            style="opacity: 0.9; margin-right: 15px"
+            class=""
+            src="../../../assets/grid/sign.svg"
+            alt=""
+          /> </template
+      ></van-field>
+      <div style="width: 99%; margin: 0.5rem auto" v-show="longitudeLatitude">
         <baidu-map
           class="bm-view"
-          :center="{ lng: 114.6, lat: 33.6 }"
+          :center="{
+            lng: longitude,
+            lat: latitude,
+          }"
           :zoom="14"
           ak="YOUR_APP_KEY"
         >
           <bm-marker
             :dragging="true"
-            :position="{ lng: 114.6, lat: 33.6 }"
+            :position="{
+              lng: longitude,
+              lat: latitude,
+            }"
             @dragend="markerDragend"
             :icon="{
               url: require('../../../assets/grid/sign.svg'),
               size: { width: 30, height: 30 },
             }"
           ></bm-marker>
+          <template>
+            <!-- <p @click="appMessage">
+        <img src="../../../assets/grid/current_location.svg" alt />
+      </p> -->
+          </template>
         </baidu-map>
       </div>
       <div class="save">
@@ -306,6 +325,11 @@ export default {
       id: "",
       prospect_details: {},
       prospect_detailsEdit: {},
+      longitude: "",
+      latitude: "",
+      zoomNum: 15,
+      positionMarker: null,
+      longitudeLatitude: false,
     };
   },
   async created() {
@@ -313,6 +337,9 @@ export default {
     this.id = this.$route.query.id;
     await this.editRecord();
     this.dic_nation();
+    if (this.prospect_details.location == "") {
+      this.appMessage();
+    }
   },
   updated() {},
   methods: {
@@ -481,6 +508,27 @@ export default {
         },
       });
       this.prospect_details = res.data;
+      if (this.prospect_details.location) {
+        console.log("有经纬度");
+        this.longitude = this.prospect_details.location.split(",")[0];
+        this.latitude = this.prospect_details.location.split(",")[1];
+      } else {
+        this.appMessage();
+        console.log(this.prospect_details.location);
+        console.log(this.longitude);
+        console.log(this.latitude);
+      }
+    },
+    getLongitudeLatitude() {
+      this.longitudeLatitude = true;
+    },
+    appMessage() {
+      // let positionArr = window.android.getLocation().split(",");
+      let positionArr = [124.281873, 45.514322];
+      // this.prospect_details.location = { lng: positionArr[0], lat: positionArr[1] };
+      this.longitude = positionArr[0];
+      this.latitude = positionArr[1];
+      this.prospect_details.location = positionArr.toString();
     },
     modifyResult() {
       this.$httpPut({

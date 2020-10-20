@@ -367,7 +367,6 @@
 </template>
 
 <script>
-
 import MyOverlay from "./MyOverlay";
 import MyNav from "../../components/Public/MyNav";
 import myTabbar from "../../components/Public/MyTabbar";
@@ -422,7 +421,8 @@ export default {
       markerArr: [],
       locationLng: "",
       locationLat: "",
-      zoomNum:15
+      zoomNum: 15,
+      positionMarker: null,
     };
   },
   created() {
@@ -445,31 +445,20 @@ export default {
     window.dic_grid_resource_type = this.dic_grid_resource_type;
   },
   methods: {
-    appMessage() {
-      let postionArr =  window.android.getLocation().split(',')
-      this.mapCenter = {lng: postionArr[0], lat: postionArr[1]}
-      this.zoomNum = 16;
+    createMarker(position) {
+      if (this.positionMarker) {
+        this.map.removeOverlay(this.positionMarker);
+      }
+      this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
+      this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
-    // appMessage(str) {
-    //   str = String(str);
-    //   var u = navigator.userAgent,
-    //     app = navigator.appVersion;
-    //   var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Linux") > -1; //android终端或者uc浏览器
-    //   var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-    //   console.log(11);
-    //   if (isAndroid) {
-    //     window.android.getLocation((el) => {
-    //       console.log(el);
-    //       this.mapCenter.lng = el.split(",")[0];
-    //       this.mapCenter.lat = el.split(",")[1];
-    //       this.zoomNum=16
-    //     });
-    //   } else if (isiOS) {
-    //     // window.webkit.messageHandlers.AppModel.postMessage({
-    //     //   str: str,
-    //     // });
-    //   }
-    // },
+    appMessage() {
+      let positionArr = window.android.getLocation().split(",");
+      // let positionArr = [124.281873, 45.514322]
+      this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+      this.zoomNum = 16;
+      this.createMarker(positionArr);
+    },
     resourceEmit(data) {
       this.typeIds = data.typeIds;
       if (this.typeIds) {

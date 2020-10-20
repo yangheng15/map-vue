@@ -652,7 +652,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 3,
-            custInfo: val,
+            isSem: val,
           },
         }).then((res) => {
           this.MarketingRecordPotential = res.data;
