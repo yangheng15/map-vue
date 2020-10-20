@@ -322,7 +322,7 @@ export default {
       prospect_detailsEdit: {},
       longitude: "114.654102",
       latitude: "33.623741",
-      mapCenter: {lng: '114.654102', lat: '33.623741'},
+      mapCenter: { lng: "114.654102", lat: "33.623741" },
       zoomNum: 15,
       positionMarker: null,
       longitudeLatitude: false,
@@ -344,27 +344,18 @@ export default {
       this.prospect_details.location = `${lng},${lat}`;
     },
     markerLongpress({ point }) {
+      Dialog.confirm({
+        message: "要标记当前位置吗？",
+      })
+        .then(() => {
           const { lng, lat } = point;
-          alert(lng + '-' + lat);
+          alert(lng + "-" + lat);
           this.mapCenter = point;
-          // this.prospect_details.location = `${lng},${lat}`;
-          // let positionArr1 = this.prospect_details.location.split(",");
-          // this.longitude = positionArr1[0];
-          // this.latitude = positionArr1[0];
-      // Dialog.confirm({
-      //   message: "要标记当前位置吗？",
-      // })
-      //   .then(() => {
-      //     const { lng, lat } = point;
-      //     alert(lng + '-' + lat);
-      //     this.prospect_details.location = `${lng},${lat}`;
-      //     let positionArr1 = this.prospect_details.location.split(",");
-      //     this.longitude = positionArr1[0];
-      //     this.latitude = positionArr1[0];
-      //   })
-      //   .catch(() => {
-      //     // on cancel
-      //   });
+          this.prospect_details.location = `${lng},${lat}`;
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
     enumData(val, data) {
       if (val && data.length > 0) {
@@ -530,7 +521,7 @@ export default {
       if (this.prospect_details.location) {
         const positionArr = this.prospect_details.location.split(",");
         console.log(positionArr);
-        this.mapCenter = {lng: positionArr[0], lat: positionArr[1]}
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
       } else {
         this.appMessage();
       }
@@ -540,7 +531,7 @@ export default {
     },
     appMessage() {
       let positionArr = window.android.getLocation().split(",");
-      this.mapCenter = {lng: positionArr[0], lat: positionArr[1]}
+      this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
       this.prospect_details.location = positionArr.toString();
     },
     modifyResult() {
