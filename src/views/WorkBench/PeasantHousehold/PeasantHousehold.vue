@@ -240,26 +240,26 @@ export default {
         this.peasant_household = res.data;
       });
     },
-    // getDic() {
-    //   this.$httpGet({
-    //     url: `/dic/dic_family_type/${this.familyCode}`,
-    //   }).then((res) => {
-    //     // console.log(res.data);
-    //     this.familyCodeName = res.data.codeText;
-    //   });
-    //   this.$httpGet({
-    //     url: "/dic/type/dic_family_type",
-    //   }).then((res) => {
-    //     // console.log(res.data);
-    //     let transformDara = [];
-    //     res.data.forEach((it, index) => {
-    //       if (it.code !== null) {
-    //         transformDara.push({ index: it.code, text: it.codeText });
-    //       }
-    //     });
-    //     this.family_type_list = transformDara;
-    //   });
-    // },
+    getDic() {
+      this.$httpGet({
+        url: `/dic/dic_family_type/${this.familyCode}`,
+      }).then((res) => {
+        // console.log(res.data);
+        this.familyCodeName = res.data.codeText;
+      });
+      this.$httpGet({
+        url: "/dic/type/dic_family_type",
+      }).then((res) => {
+        // console.log(res.data);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.code !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.family_type_list = transformDara;
+      });
+    },
     addHouseholderName() {
       this.$httpPost({
         url: "/api/customersFamily/add",

@@ -1,5 +1,7 @@
 // http.js
 import axios from 'axios'
+import qs from "qs";
+import md5 from "js-md5";
 import {
   Toast
 } from "vant";
@@ -41,19 +43,76 @@ axios.interceptors.response.use(response => {
     return Promise.reject(response)
   }
 }, error => {
+  console.log(this);//this请求不到
   // 我们可以在这里对异常状态作统一处理
   if (error.response.status) {
     // 处理请求失败的情况
     // 对不同返回码对相应处理
     if (error.response.status == 401) {
-      console.log(error.response.data.error_description);
-      Toast.fail({
-        message: error.response.data.error_description,
-        position: "middle",
-      });
-      this.$router.push("/");
-      // android.exit(); //告诉安卓退出了
-      localStorage.clear();
+      console.log(error.response.status);
+      // Toast.fail({
+      //   message: error.response.data.error_description,
+      //   position: "middle",
+      // });
+      // 如果token过期
+      // console.log(this);
+      // this.$router.push("/login")
+      // localStorage.clear();
+      console.log(localStorage.getItem("username"));
+      console.log(localStorage.getItem("passWord"));
+      if (localStorage.getItem("username") && localStorage.getItem("passWord")) {
+        console.log(1111);
+        var bcrypt = require("bcryptjs"); //引入bcryptjs库
+        // var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
+        // localStorage.clear();
+        // 自动调用登录
+        httpPost({
+            url: "/oauth/token",
+            data: qs.stringify({
+              username: localStorage.getItem("username"),
+              password: bcrypt.hashSync(md5(localStorage.getItem("passWord"))),
+              grant_type: "password",
+              client_id: "test",
+              client_secret: "test",
+              scope: "all",
+            }),
+          })
+          .then((res) => {
+            console.log(res);
+            if (res.access_token) {
+              console.log(res);
+              localStorage.setItem("_token", res.access_token);
+              localStorage.setItem("username", res.username);
+              localStorage.setItem("passWord", this.password);
+              // 获取字典数据
+              this.$httpGet({
+                url: "/dics/tree",
+              }).then((res) => {
+                const data = res.data.find((it) => it.type === "dic_client_grade").childs;
+                localStorage.setItem("dic", JSON.stringify(data));
+                const product = res.data.find((it) => it.type === "dic_product_type").childs;
+                localStorage.setItem("dicProduct", JSON.stringify(product));
+                const clientWill = res.data.find((it) => it.type === "dic_client_will").childs;
+                localStorage.setItem("dicClientWill", JSON.stringify(clientWill));
+                const gridResource = res.data.find((it) => it.type === "dic_grid_resource_type").childs;
+                localStorage.setItem("dicGridResource", JSON.stringify(gridResource));
+                // 学历
+                const education = res.data.find((it) => it.type === "dic_education").childs;
+                localStorage.setItem("dicEducation", JSON.stringify(education));
+                // 家庭类型
+                const familyType = res.data.find((it) => it.type === "dic_family_type").childs;
+                localStorage.setItem("dicFamilyType", JSON.stringify(familyType));
+              });
+              this.$router.push("/home");
+            }
+          })
+          .catch((err) => {
+            // //console.log(err);
+          });
+      } else {
+        this.$router.push("/login");
+      }
+
     }
     if (error.response.status == 400) {
       console.log(error.response);

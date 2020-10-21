@@ -56,9 +56,9 @@ export default {
     next((vm) => {
       //如果token存在跳转首页
       const token = localStorage.getItem("_token"),
-        username = localStorage.getItem("username");
-        passWord = localStorage.getItem("passWord");
-      if (token && username && passWord) {
+        username = localStorage.getItem("username"),
+        password = localStorage.getItem("passWord");
+      if (token && username && password) {
         vm.getDic();
         vm.$router.push("/home");
       }

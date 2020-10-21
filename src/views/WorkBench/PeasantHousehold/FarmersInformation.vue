@@ -1000,8 +1000,9 @@ export default {
   async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
-    await this.editFarmers();
     this.dic_nation();
+    await this.editFarmers();
+    
     if (this.farmers_details.location == "") {
       this.appMessage();
     }
@@ -1071,6 +1072,7 @@ export default {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
+        console.log(transformDara);
         this.family_type_list = transformDara;
         this.farmers_details.type = this.enumData(
           this.farmers_details.type,
