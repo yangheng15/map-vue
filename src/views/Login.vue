@@ -22,7 +22,7 @@
         :rules="[{ required: true, message: '请输入密码' }]"
       />
       <!-- <van-checkbox v-model="remember" checked-color="#3d425e">记住密码</van-checkbox -->
-      >
+      <!-- > -->
       <a href style="margin: 10px; display: inline-block">忘记密码</a>
       <div style="margin: 20px 16px 16px 16px">
         <van-button round block type="info" native-type="submit"
@@ -57,7 +57,8 @@ export default {
       //如果token存在跳转首页
       const token = localStorage.getItem("_token"),
         username = localStorage.getItem("username");
-      if (token && username) {
+        passWord = localStorage.getItem("passWord");
+      if (token && username && passWord) {
         vm.getDic();
         vm.$router.push("/home");
       }
@@ -121,6 +122,7 @@ export default {
             // //console.log(res);
             localStorage.setItem("_token", res.access_token);
             localStorage.setItem("username", res.username);
+            localStorage.setItem("passWord", this.password);
             if (this.remember) {
               localStorage.setItem("passWord", this.password);
             }

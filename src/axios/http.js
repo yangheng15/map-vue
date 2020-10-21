@@ -46,14 +46,17 @@ axios.interceptors.response.use(response => {
     // 处理请求失败的情况
     // 对不同返回码对相应处理
     if (error.response.status == 401) {
-      // console.log(error.response.data.error_description);
+      console.log(error.response.data.error_description);
       Toast.fail({
         message: error.response.data.error_description,
         position: "middle",
       });
+      this.$router.push("/");
+      // android.exit(); //告诉安卓退出了
+      localStorage.clear();
     }
     if (error.response.status == 400) {
-      // console.log(error.response.data.resultMsg);
+      console.log(error.response);
       Toast.fail({
         message: error.response.data.resultMsg,
         position: "middle",
