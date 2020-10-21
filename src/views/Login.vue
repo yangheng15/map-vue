@@ -21,8 +21,7 @@
         placeholder="请输入密码"
         :rules="[{ required: true, message: '请输入密码' }]"
       />
-      <van-checkbox v-model="remember" checked-color="#3d425e"
-        >记住密码</van-checkbox
+      <!-- <van-checkbox v-model="remember" checked-color="#3d425e">记住密码</van-checkbox -->
       >
       <a href style="margin: 10px; display: inline-block">忘记密码</a>
       <div style="margin: 20px 16px 16px 16px">
@@ -53,17 +52,17 @@ export default {
       this.password = localStorage.getItem("passWord");
     }
   },
-  // beforeRouteEnter(to, from, next) {
-  //   next((vm) => {
-  //     //如果token存在跳转首页
-  //     const token = localStorage.getItem("_token"),
-  //       username = localStorage.getItem("username");
-  //     if (token && username) {
-  //       vm.getDic();
-  //       vm.$router.push("/home");
-  //     }
-  //   });
-  // },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      //如果token存在跳转首页
+      const token = localStorage.getItem("_token"),
+        username = localStorage.getItem("username");
+      if (token && username) {
+        vm.getDic();
+        vm.$router.push("/home");
+      }
+    });
+  },
   methods: {
     onFailed(errorInfo) {
       // //console.log("failed", errorInfo);

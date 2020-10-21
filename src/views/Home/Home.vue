@@ -200,6 +200,7 @@
           >
             <ul>
               <router-link
+              v-if="item.custBasicType==1"
                 tag="li"
                 :to="{
                   name: 'CustomerViewPresentation',
@@ -207,9 +208,29 @@
                 }"
                 >{{ item.custName }}</router-link
               >
-              <a style="color: #000" :href="'tel:' + item.telphone">
-                <li>
+              <router-link
+              v-if="item.potentialType==2"
+                tag="li"
+                :to="{
+                  name: 'EditPotentialCustomers',
+                  query: { title: '潜在客户详情', id: item.potentialId },
+                }"
+                >{{ item.potentialName }}</router-link
+              >
+              <a v-if="item.custBasicType==1" style="color: #000" :href="'tel:' + item.telphone">
+                <li >
                   {{ item.telphone }}
+                  <img
+                    style="width: 16px"
+                    src="../../assets/home/md-phone.svg"
+                    alt
+                  />
+                </li>
+                
+              </a>
+              <a v-if="item.potentialType==2" style="color: #000" :href="'tel:' + item.potentialTelphone">
+                <li >
+                  {{ item.potentialTelphone }}
                   <img
                     style="width: 16px"
                     src="../../assets/home/md-phone.svg"
@@ -220,7 +241,8 @@
             </ul>
             <ul>
               <li>{{ item.productType }}</li>
-              <li>{{ item.contactDays }}天前</li>
+              <li v-if="item.contactDays==0">今天联系过</li>
+              <li v-if="item.contactDays!==0">上次联系{{ item.contactDays }}天前</li>
             </ul>
           </div>
           <!-- <div
@@ -251,96 +273,16 @@ export default {
   data() {
     return {
       title: "首页",
-      istrue: 0,
       tabId: 0,
-      items: [],
-      infiniteCount: 0,
-      loginInfo: {
-        token: "",
-        isLgbWorker: 0,
-      },
-      isloaded: false,
-      newsList: [],
-      voluntaryURL: "",
-      userId: "",
-      imgList: [],
-      PayList: [],
-      newsLists: [],
-      swiperList: [],
-      noticeList: [],
-      LGBActivityBadge: 0,
-      customsNum: 0,
-      swiperOption: {
-        loop: true,
-        pagination: {
-          el: ".swiper-pagination",
-          type: "bullets",
-          clickable: true,
-          dynamicBullets: true,
-        },
-        speed: 1000,
-        autoplay: {
-          delay: 1000,
-          autoplayDisableOnInteraction: true,
-          disableOnInteraction: false,
-        },
-        effect: "slide",
-      },
-      swiperNotice: {
-        loop: true,
-        direction: "vertical",
-        pagination: {
-          el: ".swiper-pagination",
-          type: "bullets",
-          clickable: true,
-          dynamicBullets: true,
-        },
-        speed: 1000,
-        autoplay: {
-          delay: 2500,
-          autoplayDisableOnInteraction: true,
-          disableOnInteraction: false,
-        },
-        effect: "slide",
-      },
       latest_tasks: [],
       recent_contact: [],
-      my_statistics: [
-        {
-          img: kehushu,
-          name: "客户数",
-          num: "23人",
-          money: "21",
-          up_down: down,
-          state: true,
-        },
-        {
-          img: cunkuane,
-          name: "存款额",
-          num: "100万",
-          money: "10",
-          up_down: up,
-          state: false,
-        },
-        {
-          img: daikuane,
-          name: "贷款额",
-          num: "110万",
-          money: "21",
-          up_down: up,
-          state: false,
-        },
-        {
-          img: licaie,
-          name: "理财额",
-          num: "200万",
-          money: "20",
-          up_down: down,
-          state: true,
-        },
-      ],
       taskNum: "",
-      countNum: {custNumMap: {thisMonthCustNum: ''}},
+      countNum: {
+        custNumMap: { thisMonthCustNum: "" },
+        depositMap: { thisMonthDeposit: "" },
+        loanMap: { thisMonthLoan: "" },
+        licaiMap: { thisMonthLicai: "" },
+      },
     };
   },
   components: {
@@ -361,7 +303,6 @@ export default {
       this.$httpGet({
         url: "/api/homePage/countNum",
       }).then((res) => {
-        console.log(res.data);
         this.countNum = res.data;
       });
     },
