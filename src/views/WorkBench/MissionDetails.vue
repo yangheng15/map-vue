@@ -60,7 +60,7 @@
           class="bm-view"
           :center="{ lng: 114.654102, lat: 33.623741 }"
           :zoom="14"
-          ak="YOUR_APP_KEY"
+          ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
         >
           <!-- :position="{
                 lng:

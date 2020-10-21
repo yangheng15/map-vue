@@ -195,7 +195,7 @@
           class="bm-view"
           :center="{ lng: 114.6, lat: 33.6 }"
           :zoom="14"
-          ak="YOUR_APP_KEY"
+          ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
         >
           <bm-marker
             :dragging="true"

@@ -36,6 +36,7 @@
 <script>
 import qs from "qs";
 import md5 from "js-md5";
+import moment from "moment";
 export default {
   name: "login",
   data() {
@@ -43,6 +44,8 @@ export default {
       username: "",
       password: "",
       remember: false,
+      expires_in:null,
+      aData:null
     };
   },
   created() {
@@ -119,8 +122,14 @@ export default {
       })
         .then((res) => {
           if (res.access_token) {
-            // //console.log(res);
+            console.log(res);
+            console.log(moment(new Date()).valueOf());
+            let expires_in=moment(new Date()).valueOf()+res.expires_in
+
+            this.aData = new Date();
             localStorage.setItem("_token", res.access_token);
+            localStorage.setItem("refresh_token", res.refresh_token);
+            localStorage.setItem("expires_in", expires_in);
             localStorage.setItem("username", res.username);
             localStorage.setItem("passWord", this.password);
             if (this.remember) {

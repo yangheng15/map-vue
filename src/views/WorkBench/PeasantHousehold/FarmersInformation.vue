@@ -173,7 +173,7 @@
             class="bm-view"
             :center="mapCenter1"
             :zoom="14"
-            ak="YOUR_APP_KEY"
+            ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
             @longpress="markerLongpress"
             @ready="mapReady"
           >

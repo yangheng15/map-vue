@@ -17,7 +17,7 @@
           class="bm-view"
           :center="{ lng: 114.65, lat: 33.37 }"
           :zoom="11"
-          ak="YOUR_APP_KEY"
+          ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
         >
           <!-- <bm-overlay
             pane="labelPane"

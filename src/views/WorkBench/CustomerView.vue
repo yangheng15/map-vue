@@ -285,7 +285,7 @@
               class="bm-view"
               :center="{ lng: 114.6, lat: 33.6 }"
               :zoom="14"
-              ak="YOUR_APP_KEY"
+              ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
             >
               <bm-marker
                 :dragging="true"
@@ -304,7 +304,7 @@
               class="bm-view"
               :center="{ lng: 114.65, lat: 33.37 }"
               :zoom="12"
-              ak="YOUR_APP_KEY"
+              ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
             >
               <bm-marker
                 :position="{ lng: 114.73, lat: 33.33 }"

@@ -59,7 +59,7 @@
       @ready="mapReady"
       :center="mapCenter"
       :zoom="zoomNum"
-      ak="YOUR_APP_KEY"
+      ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
     >
       <!-- 网格经理网格名称 -->
       <template v-for="(item, index) in map_data">
