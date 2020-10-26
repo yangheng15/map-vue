@@ -213,7 +213,8 @@
           :center="mapCenter1"
           :zoom="14"
           ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
-          @longpress="markerLongpress"
+          @touchstart="touchstart"
+          @touchend="touchend"
           @ready="mapReady"
         >
           <bm-marker
@@ -348,6 +349,7 @@ export default {
       positionMarker: null,
       longitudeLatitude: false,
       map: null,
+      timeOutEvent: 0,
     };
   },
   async created() {
@@ -368,7 +370,7 @@ export default {
       const { lng, lat } = point;
       this.prospect_details.location = `${lng},${lat}`;
     },
-    markerLongpress({ point }) {
+    markerLongpress(point) {
       Dialog.confirm({
         message: "要标记当前位置吗？",
       })
@@ -382,6 +384,19 @@ export default {
         .catch(() => {
           // on cancel
         });
+    },
+    touchstart({ point }) {
+      clearTimeout(this.timeOutEvent);
+      this.timeOutEvent = 0;
+      this.timeOutEvent = setTimeout(() => {
+        //执行长按要执行的内容
+        this.markerLongpress(point);
+        this.timeOutEvent = 0;
+      }, 600);
+    },
+    touchend() {
+      clearTimeout(this.timeOutEvent);
+      this.timeOutEvent = 0;
     },
     enumData(val, data) {
       if (val && data.length > 0) {

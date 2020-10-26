@@ -453,11 +453,24 @@ export default {
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
     appMessage() {
-      let positionArr = window.android.getLocation().split(",");
-      // let positionArr = [124.281873, 45.514322]
-      this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-      this.zoomNum = 16;
-      this.createMarker(positionArr);
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let positionArr = window.android.getLocation().split(",");
+        // let positionArr = [124.281873, 45.514322]
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.zoomNum = 16;
+        this.createMarker(positionArr);
+      }
+      if (isiOS) {
+        let positionArr = window.prompt("getLocation").split(",");
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.zoomNum = 16;
+        this.createMarker(positionArr);
+      }
     },
     resourceEmit(data) {
       this.typeIds = data.typeIds;

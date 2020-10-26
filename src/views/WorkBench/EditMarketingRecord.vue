@@ -149,6 +149,26 @@
               v-model="fileList"
               multiple
               @delete="deleteImage"
+              :capture="cameraList"
+              ref="uploadImg"
+            />
+            <span
+              style="
+                display: inline-block;
+                height: 80px;
+                width: 80px;
+                z-index: 1;
+                background: red;
+              "
+              @click="handleClick"
+            ></span>
+            <van-action-sheet
+              v-model="isconfirm"
+              :actions="actions"
+              @select="onSelect"
+              cancel-text="取消"
+              close-on-click-action
+              @cancel="onCancel"
             />
             <!-- <input type="file" accept="image/*" capture="camera"> -->
           </div>
@@ -192,7 +212,7 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import { Toast } from "vant";
+import { Toast, Dialog } from "vant";
 export default {
   data() {
     return {
@@ -224,6 +244,9 @@ export default {
       custName: "",
       prospect_detailsEdit: {},
       pictureId: [],
+      isconfirm: false,
+      cameraList: null,
+      actions: [{ name: "相机" }, { name: "相册" }],
     };
   },
   components: {
@@ -450,9 +473,26 @@ export default {
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        // console.log(res.data.pid);
+        console.log(res.data);
         this.pictureId.push(res.data.pid);
       });
+    },
+    handleClick() {
+      this.isconfirm = true;
+    },
+    onSelect(item) {
+      this.isconfirm = false;
+      // Toast(item.name);
+      if (item.name == "相册") {
+        this.cameraList = "camera";
+        this.$refs.uploadImg.chooseFile();
+      } else if (item.name == "相机") {
+        this.cameraList = null;
+        this.$refs.uploadImg.chooseFile();
+      }
+    },
+    onCancel() {
+      Toast("取消");
     },
   },
 };

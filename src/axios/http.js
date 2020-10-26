@@ -10,9 +10,9 @@ import router from '../router/index';
 // 环境的切换
 if (process.env.NODE_ENV === 'development') {
   // axios.defaults.baseURL = '/api'
-  axios.defaults.baseURL = 'http://39.106.51.28:8091'
+  axios.defaults.baseURL = 'http://123.56.238.192:8199'
 } else if (process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = 'http://39.106.51.28:8091'
+  axios.defaults.baseURL = 'http://123.56.238.192:8199'
 }
 let flag = true;
 // 请求拦截器
