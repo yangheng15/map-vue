@@ -152,7 +152,7 @@
               :capture="cameraList"
               ref="uploadImg"
             />
-            <span
+            <!-- <span
               style="
                 display: inline-block;
                 height: 80px;
@@ -161,7 +161,7 @@
                 background: red;
               "
               @click="handleClick"
-            ></span>
+            ></span> -->
             <van-action-sheet
               v-model="isconfirm"
               :actions="actions"
