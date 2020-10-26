@@ -5,6 +5,7 @@ import qs from "qs";
 import {
   Toast
 } from "vant";
+import router from '../router/index';
 
 // 环境的切换
 if (process.env.NODE_ENV === 'development') {
@@ -13,32 +14,39 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = 'http://39.106.51.28:8091'
 }
-
+let flag = true;
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-    console.log(config);
+    // console.log(config);
     const token = localStorage.getItem('_token')
-    if (config.url !== '/oauth/token') {
+    if (localStorage.getItem('refresh_token')) {
       const refresh_token = localStorage.getItem('refresh_token'),
         expires_in = localStorage.getItem('expires_in'),
         aData = moment(new Date()).valueOf()
       console.log(aData, expires_in);
-      if (aData > expires_in) {
-        console.log(222222);
-        httpPost({
-          url: "/oauth/token",
-          data: qs.stringify({
-            grant_type: "refresh_token",
-            refresh_token: refresh_token,
-            client_id: "test",
-            client_secret: "test",
-          }),
-        }).then((res) => {})
-      } else {
-
+      if (flag) {
+        flag = false;
+        if (aData > expires_in) {
+          console.log(222222);
+          console.log(aData);
+          console.log(expires_in);
+          httpPost({
+            url: "/oauth/token",
+            params: {
+              grant_type: "refresh_token",
+              refresh_token: refresh_token,
+              client_id: "test",
+              client_secret: "test",
+            },
+          }).then((res) => {
+            localStorage.setItem('_token', res.access_token)
+            flag = true;
+          })
+        }
       }
     }
+
 
     token && (config.headers.Authorization = `Bearer ${token}`)
     return config
@@ -66,16 +74,17 @@ axios.interceptors.response.use(response => {
     return Promise.reject(response)
   }
 }, error => {
-  // 我们可以在这里对异常状态作统一处理
   if (error.response.status) {
     // 处理请求失败的情况
     // 对不同返回码对相应处理
     if (error.response.status == 401) {
       // console.log(error.response.data.error_description);
       Toast.fail({
-        message: error.response.data.error_description,
+        message: "请重新登录",
         position: "middle",
       });
+      localStorage.clear();
+      router.push('/login')
     }
     if (error.response.status == 400) {
       // console.log(error.response.data.resultMsg);

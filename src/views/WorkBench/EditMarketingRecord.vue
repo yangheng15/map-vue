@@ -239,8 +239,8 @@ export default {
   },
   updated() {},
   methods: {
-    deleteImage({url}) {
-      const index = this.fileList.findIndex(it => it.url === url);
+    deleteImage({ url }) {
+      const index = this.fileList.findIndex((it) => it.url === url);
       this.pictureId.splice(index, 1);
     },
     appMessage(str) {
@@ -295,6 +295,8 @@ export default {
         if (this.editRecords.imageId) {
           this.editPicture();
         }
+      } else {
+        this.fileList = [];
       }
     },
     async editRecord(val) {

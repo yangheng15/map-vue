@@ -1000,8 +1000,8 @@ export default {
   async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
-    this.dic_nation();
     await this.editFarmers();
+    this.dic_nation();
     
     if (this.farmers_details.location == "") {
       this.appMessage();
@@ -1043,7 +1043,7 @@ export default {
       if (val && data.length > 0) {
         // console.log(this.prospect_details);
         // console.log(data, val);
-        const find = data.find((it) => it.index === val);
+        const find = data.find((it) => it.index == val);
         // debugger
         return find ? find.text : "";
       } else {

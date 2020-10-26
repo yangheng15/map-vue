@@ -121,8 +121,9 @@ export default {
         }),
       })
         .then((res) => {
+          console.log(res);
           if (res.access_token) {
-            console.log(res);
+            
             console.log(moment(new Date()).valueOf());
             let expires_in=moment(new Date()).valueOf()+res.expires_in
 
