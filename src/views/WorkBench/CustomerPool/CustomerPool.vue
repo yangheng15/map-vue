@@ -53,7 +53,9 @@
               />
             </p>
             <p style="color: #df0f0f">AUM:{{ thisItem.aum }}</p>
-            <p v-if="thisItem.level" style="color: #1badf2">{{ thisItem.level |  dic_client_grade}}客户</p>
+            <p v-if="thisItem.level" style="color: #1badf2">
+              {{ thisItem.level | dic_client_grade }}客户
+            </p>
             <p class="marter">
               <span v-if="!thisItem.business1" class="business1"
                 >{{ thisItem.business1 }}存款</span
@@ -215,22 +217,22 @@ export default {
       customer_pool: [],
       empty_heart: true,
       imgArr: [img1, img2],
-      star:"",
+      star: "",
     };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
+      console.log(vm);
       console.log(from);
-      if (from.name !== "ScreenCustomerPool") {
+      if (from.path === "/ScreenCustomerPool/") {
+        vm.customer_pool = vm.$store.state.screenCustomerPoolData;
+      } else {
         vm.getCustomerPool();
-      }else {
-        vm.customer_pool = vm.$store.state.screenCustomerPoolData
       }
     });
   },
   created() {
     this.typeCN = this.$route.query.title;
-    
   },
   // computed: {
   //   customer_pool() {
@@ -258,9 +260,9 @@ export default {
         },
       }).then((res) => {
         this.customer_pool = res.data;
-        this.customer_pool.forEach((el)=>{
-          this.star = parseInt(el.star)
-        })
+        this.customer_pool.forEach((el) => {
+          this.star = parseInt(el.star);
+        });
       });
     },
     getdic() {
@@ -280,9 +282,9 @@ export default {
         },
       }).then((res) => {
         this.customer_pool = res.data;
-        this.customer_pool.forEach((el)=>{
-          this.star = parseInt(el.star)
-        })
+        this.customer_pool.forEach((el) => {
+          this.star = parseInt(el.star);
+        });
       });
     },
     joinCust(item) {
@@ -311,16 +313,17 @@ export default {
     },
   },
   computed: {
-    customer_poolshi(){
-      return this.$store.state.customer_poolshi
-    }
+    customer_poolshi() {
+      return this.$store.state.customer_poolshi;
+    },
   },
   filters: {
     dic_client_grade(val) {
       console.log(val);
-     return JSON.parse(localStorage.getItem('dic')).find(it => it.key == val).value;
-    }
-  }
+      return JSON.parse(localStorage.getItem("dic")).find((it) => it.key == val)
+        .value;
+    },
+  },
 };
 </script>
 <style scoped>

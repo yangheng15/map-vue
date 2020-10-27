@@ -40,7 +40,10 @@ axios.interceptors.request.use(
               client_secret: "test",
             },
           }).then((res) => {
+            console.log("换新token");
             localStorage.setItem('_token', res.access_token)
+            let expires_in = moment(new Date()).valueOf() + res.expires_in
+            localStorage.setItem("expires_in", expires_in);
             flag = true;
           })
         }
@@ -79,15 +82,15 @@ axios.interceptors.response.use(response => {
     // 对不同返回码对相应处理
     if (error.response.status == 401) {
       // console.log(error.response.data.error_description);
-      Toast.fail({
-        message: "请重新登录",
-        position: "middle",
-      });
-      localStorage.clear();
-      router.push('/login')
+      // Toast.fail({
+      //   message: "请重新登录",
+      //   position: "middle",
+      // });
+      // localStorage.clear();
+      // router.push('/login')
     }
     if (error.response.status == 400) {
-      // console.log(error.response.data.resultMsg);
+      // console.log(error.response);
       Toast.fail({
         message: error.response.data.resultMsg,
         position: "middle",

@@ -3,14 +3,15 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '农户'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本</li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">联系</li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
+        <!-- <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">联系</li> -->
         <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
           三有三无
         </li>
         <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">成员</li>
         <li @click="tab(4)" :class="tabId == 4 ? 'cur' : 'ordinary'">资产</li>
         <li @click="tab(5)" :class="tabId == 5 ? 'cur' : 'ordinary'">收支</li>
+        <!-- <li @click="tab(6)" :class="tabId == 6 ? 'cur' : 'ordinary'">走访结论</li> -->
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -99,13 +100,6 @@
           placeholder="请输入对家庭及主要成员的评价"
           show-word-limit
         />
-        <div class="save">
-          <van-button round block type="primary" @click="modifyResult()"
-            >保存</van-button
-          >
-        </div>
-      </div>
-      <div v-show="tabId === 1">
         <van-field
           v-model="farmers_details.address"
           name="详细地址："
@@ -209,11 +203,11 @@
             </template>
           </baidu-map>
         </div>
-        <div class="save">
+        <!-- <div class="save">
           <van-button round block type="primary" @click="modifyResult()"
             >保存</van-button
           >
-        </div>
+        </div> -->
         <div
           v-show="isPopupVisible"
           style="
@@ -318,6 +312,14 @@
             <button @click="closePopup()">确定</button>
           </div>
         </div>
+        <div class="save">
+          <van-button round block type="primary" @click="modifyResult()"
+            >保存</van-button
+          >
+        </div>
+      </div>
+      <div v-show="tabId === 1">
+        
       </div>
       <div v-show="tabId === 2" class="household_have">
         <van-field name="radio" label="有无固定场所：">

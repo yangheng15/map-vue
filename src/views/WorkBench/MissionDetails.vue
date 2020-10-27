@@ -145,11 +145,11 @@
                 v-for="(thisItem, index) in MarketingRecord"
                 :key="index"
               >
-                <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
+                <p style="font-weight: 600; width: 25%; font-size: 0.9rem">
                   {{ thisItem.custName }}
                 </p>
                 <p
-                  style="width: 70%; display: flex; justify-content: flex-end"
+                  style="width: 75%; display: flex; justify-content: flex-end"
                   class="approval"
                 >
                   <span
@@ -228,11 +228,11 @@
                 v-for="(thisItem, index) in MarketingRecordClaim"
                 :key="index"
               >
-                <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
+                <p style="font-weight: 600; width: 25%; font-size: 0.9rem">
                   {{ thisItem.custName }}
                 </p>
                 <p
-                  style="width: 70%; display: flex; justify-content: flex-end"
+                  style="width: 75%; display: flex; justify-content: flex-end"
                   class="approval"
                 >
                   <span
@@ -311,11 +311,11 @@
                 v-for="(thisItem, index) in MarketingRecordPotential"
                 :key="index"
               >
-                <p style="font-weight: 600; width: 30%; font-size: 0.9rem">
+                <p style="font-weight: 600; width: 25%; font-size: 0.9rem">
                   {{ thisItem.custName }}
                 </p>
                 <p
-                  style="width: 70%; display: flex; justify-content: flex-end"
+                  style="width: 75%; display: flex; justify-content: flex-end"
                   class="approval"
                 >
                   <span
@@ -778,7 +778,7 @@ export default {
 .cur {
   color: #df0f0f;
   font-weight: 500;
-  font-size: 0.9rem;
+  /* font-size: 0.9rem; */
 }
 .mission_details {
   background: #fff;
@@ -874,10 +874,10 @@ export default {
 }
 .approval .approval_Passed {
   display: inline-block;
-  line-height: 2rem;
+  line-height: 1.6rem;
   text-align: center;
   width: 33%;
-  height: 2rem;
+  height: 1.6rem;
   font-size: 1rem;
   border: 1px solid #3cc8ab;
   color: #3cc8ab;
@@ -886,10 +886,10 @@ export default {
 }
 .approval .approval_Passed1 {
   display: inline-block;
-  line-height: 2rem;
+  line-height: 1.6rem;
   text-align: center;
   width: 33%;
-  height: 2rem;
+  height: 1.6rem;
   font-size: 1rem;
   border: 1px solid #c1b9b9;
   color: #c1b9b9;

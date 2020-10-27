@@ -282,7 +282,7 @@ export default {
       annual_income: "",
       qq_number: "",
       country_txt: "",
-      country_list: [{ index: 0, text: "中国" }],
+      country_list: [{ index: 1, text: "中国" }],
       country: false,
       residential_address: "",
       user_positioning: "",

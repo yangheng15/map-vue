@@ -5,9 +5,15 @@
       <div class="customer_view">
         <div class="sanjiaoxing">
           <p class="customer_view_name">
-            {{ CustomerViewDetails.name }}
+            {{ CustomerViewName }}
             <img
-              :src="CustomerViewDetails.gender == 2 ? imgArr[1] : imgArr[0]"
+              :src="
+                CustomerViewGender == 2
+                  ? imgArr[1]
+                  : CustomerViewGender == 0
+                  ? imgArr[0]
+                  : ''
+              "
               alt
             />
             <router-link
@@ -29,7 +35,7 @@
           <span class="left_title">客户星级：</span>
           <p class="schedule_star">
             <van-rate
-              v-model="CustomerViewDetails.star"
+              v-model="CustomerViewStar"
               :size="18"
               color="#0078D7"
               void-icon="star"
@@ -40,11 +46,11 @@
         </li>
         <li>
           <span class="left_title">客户编号：</span>
-          <span class="right_txt">{{ CustomerViewDetails.code }}</span>
+          <span class="right_txt">{{ CustomerViewCode }}</span>
         </li>
         <li>
           <span class="left_title">身份证号：</span>
-          <span class="right_txt">{{ CustomerViewDetails.identifyNo }}</span>
+          <span class="right_txt">{{ CustomerViewIdentifyNo }}</span>
         </li>
         <li>
           <span class="left_title">
@@ -59,18 +65,16 @@
             <span style="display: inline-block; width: 8px"></span>机
             <span style="display: inline-block; width: 8px"></span>号：
           </span>
-          <span class="right_txt">{{ CustomerViewDetails.telphone }}</span>
-          <a class="img4" :href="'tel:' + CustomerViewDetails.telphone"></a>
+          <span class="right_txt">{{ CustomerViewTelphone }}</span>
+          <a class="img4" :href="'tel:' + CustomerViewTelphone"></a>
         </li>
         <li>
           <span class="left_title">所属机构：</span>
-          <span class="right_txt">{{ CustomerViewDetails.branchCode }}</span>
+          <span class="right_txt">{{ CustomerViewBranchCode }}</span>
         </li>
         <li>
           <span class="left_title">客户群体：</span>
-          <span class="right_txt">{{
-            CustomerViewDetails.customerBaseName
-          }}</span>
+          <span class="right_txt">{{ CustomerViewCustomerBaseName }}</span>
           <!-- 持续时间 -->
           <!-- <input class="multiple_choice" type="text" placeholder="小微企业主" :value="inpuVal" />
           <img style="vertical-align: middle;" src="../../assets/WorkBench/pencel.svg" alt @click="multiple_choice_ok()" />
@@ -215,7 +219,7 @@ export default {
         },
       ],
       regional_grid: false,
-      value: "",
+      value: null,
       start_txt: 1,
       showPicker: false,
       tabId: 0,
@@ -397,6 +401,14 @@ export default {
       ],
       id: "",
       CustomerViewDetails: "",
+      CustomerViewName: "",
+      CustomerViewGender: null,
+      CustomerViewStar: "",
+      CustomerViewCode: null,
+      CustomerViewIdentifyNo: null,
+      CustomerViewTelphone: null,
+      CustomerViewBranchCode: "",
+      CustomerViewCustomerBaseName: "",
       imgArr: [img1, img2],
       level: "",
       organization_list: [],
@@ -460,10 +472,10 @@ export default {
       this.value5 = item.name;
       this.show5 = false;
     },
-    onConfirm(value) {
-      this.value = value;
-      this.showPicker = false;
-    },
+    // onConfirm(value) {
+    //   this.value = value;
+    //   this.showPicker = false;
+    // },
     getDic() {
       // 所属机构
       this.$httpGet({
@@ -474,8 +486,8 @@ export default {
           transformDara.push({ index: it.pid, text: it.orgName });
         });
         this.organization_list = transformDara;
-        this.CustomerViewDetails.branchCode = this.enumData(
-          this.CustomerViewDetails.branchCode,
+        this.CustomerViewBranchCode = this.enumData(
+          this.CustomerViewBranchCode,
           this.organization_list
         );
       });
@@ -494,11 +506,21 @@ export default {
         url: `/api/customersBasicInfo/get/${this.id}`,
       });
       this.CustomerViewDetails = res.data;
-      this.$httpGet({
-        url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
-      }).then((res) => {
-        this.level = res.data.codeText;
-      });
+      this.CustomerViewStar = res.data.star;
+      this.CustomerViewName = res.data.name;
+      this.CustomerViewGender = res.data.gender;
+      this.CustomerViewCode = res.data.code;
+      this.CustomerViewIdentifyNo = res.data.identifyNo;
+      this.CustomerViewTelphone = res.data.telphone;
+      this.CustomerViewBranchCode = res.data.branchCode;
+      this.CustomerViewCustomerBaseName = res.data.customerBaseName;
+      if (this.CustomerViewDetails.level) {
+        this.$httpGet({
+          url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
+        }).then((res) => {
+          this.level = res.data.codeText;
+        });
+      }
     },
   },
 };

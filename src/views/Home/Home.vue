@@ -289,6 +289,13 @@ export default {
     CustomNav,
     MyTabbar,
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (from.path === "/EditPotentialCustomers") {
+        vm.tab(1);
+      }
+    });
+  },
   created() {
     this.queryNewTask();
     this.getNum();

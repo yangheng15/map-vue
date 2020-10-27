@@ -119,8 +119,7 @@
                       ? 'approval_Passed'
                       : 'approval_Passed1'
                   "
-                  >{{
-                    thisItem.intention | dic_client_will }}</span
+                  >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
                   :class="
@@ -250,18 +249,18 @@ export default {
     },
     getMarkedRecord() {
       // if (this.customerCode && this.gridCode) {
-        this.$httpGet({
-          url: "/api/appMarket/marketRecord",
-          params: {
-            customerCode: this.customerCode,
-            limit: 10,
-            gridCode: this.gridCode,
-            taskId: this.taskId,
-            page: 1,
-          },
-        }).then((res) => {
-          this.MarketingRecord = res.data;
-        });
+      this.$httpGet({
+        url: "/api/appMarket/marketRecord",
+        params: {
+          customerCode: this.customerCode,
+          limit: 10,
+          gridCode: this.gridCode,
+          taskId: this.taskId,
+          page: 1,
+        },
+      }).then((res) => {
+        this.MarketingRecord = res.data;
+      });
       // }
     },
     deleteRemark(val) {
@@ -336,10 +335,10 @@ export default {
 }
 .approval .approval_Passed {
   display: inline-block;
-  line-height: 2rem;
+  line-height: 1.6rem;
   text-align: center;
   width: 6.5rem;
-  height: 2rem;
+  height: 1.6rem;
   font-size: 0.7rem;
   border: 1px solid #3cc8ab;
   color: #3cc8ab;
@@ -347,10 +346,10 @@ export default {
 }
 .approval .approval_Passed1 {
   display: inline-block;
-  line-height: 2rem;
+  line-height: 1.6rem;
   text-align: center;
   width: 6.5rem;
-  height: 2rem;
+  height: 1.6rem;
   font-size: 0.7rem;
   border: 1px solid #c1b9b9;
   color: #c1b9b9;
@@ -422,7 +421,7 @@ export default {
   align-items: center;
   width: 4rem;
   height: 4rem;
-  /* font-size: 1.3rem; */
+  font-size: 0.8rem;
   border-radius: 100%;
   background-color: #3d425e;
   color: #fff;
@@ -482,6 +481,11 @@ export default {
 .competitor li p {
   width: 25%;
   line-height: 2rem;
+}
+.van-button--mini {
+  height: 24px;
+  padding: 0 8px;
+  font-size: 12px;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,

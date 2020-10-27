@@ -757,8 +757,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     enumData1(val, data) {
       let find = "";
@@ -915,11 +914,13 @@ export default {
         url: `/api/customersBasicInfo/get/${this.id}`,
       });
       this.CustomerViewDetails = res.data;
-      this.$httpGet({
-        url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
-      }).then((res) => {
-        this.level = res.data.codeText;
-      });
+      if (this.CustomerViewDetails.level) {
+        this.$httpGet({
+          url: `/dic/dic_client_grade/${this.CustomerViewDetails.level}`,
+        }).then((res) => {
+          this.level = res.data.codeText;
+        });
+      }
     },
     onFamily_type(value) {
       this.family_type_txt = value;
