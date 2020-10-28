@@ -3,7 +3,9 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '农户'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
+          基本信息
+        </li>
         <!-- <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">联系</li> -->
         <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
           三有三无
@@ -11,7 +13,9 @@
         <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">成员</li>
         <li @click="tab(4)" :class="tabId == 4 ? 'cur' : 'ordinary'">资产</li>
         <li @click="tab(5)" :class="tabId == 5 ? 'cur' : 'ordinary'">收支</li>
-        <!-- <li @click="tab(6)" :class="tabId == 6 ? 'cur' : 'ordinary'">走访结论</li> -->
+        <li @click="tab(6)" :class="tabId == 6 ? 'cur' : 'ordinary'">
+          走访结论
+        </li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -318,9 +322,7 @@
           >
         </div>
       </div>
-      <div v-show="tabId === 1">
-        
-      </div>
+      <div v-show="tabId === 1"></div>
       <div v-show="tabId === 2" class="household_have">
         <van-field name="radio" label="有无固定场所：">
           <template #input>
@@ -784,6 +786,62 @@
           >
         </div>
       </div>
+      <div v-show="tabId === 6">
+        <van-field
+          required
+          readonly
+          clickable
+          name="datetimePicker"
+          :value="currentDate"
+          label="最近走访时间"
+          placeholder="点击选择最近走访时间"
+          @click="showDateBirth = true"
+        />
+        <van-popup v-model="showDateBirth" position="bottom">
+          <van-datetime-picker
+            type="date"
+            title="选择最近走访时间"
+            @confirm="onDateBirth"
+            @cancel="showPicker = false"
+          />
+        </van-popup>
+        <van-field
+          required
+          readonly
+          clickable
+          name="picker"
+          :value="suitableProducts_txt.text"
+          label="适合产品："
+          placeholder="点击选择适合产品"
+          @click="suitableProducts = true"
+        />
+        <van-popup v-model="suitableProducts" position="bottom">
+          <van-picker
+            show-toolbar
+            :columns="suitableProducts_list"
+            @confirm="onSuitableProducts"
+            @cancel="suitableProducts = false"
+          />
+        </van-popup>
+        <van-field
+          v-model="remarks"
+          rows="1"
+          autosize
+          label="备注说明"
+          type="textarea"
+          placeholder="请输入备注说明"
+        />
+        <van-field required name="uploader" label="现场影像">
+          <template #input>
+            <van-uploader v-model="uploader" />
+          </template>
+        </van-field>
+        <div class="save" style="margin-top: 20px">
+          <van-button round block type="primary" @click="addResult()"
+            >保存</van-button
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -797,80 +855,22 @@ export default {
   },
   data() {
     return {
+      remarks: "",
+      currentDate: "",
+      currentDate1: "",
+      uploader: [],
+      minDate: new Date(1950, 0, 1),
       radio: "2",
-      customer_number: "112346546",
-      customer_rating: "二级",
-      choose_gender_txt: "女",
-      choose_gender_list: ["男", "女"],
-      choose_gender: false,
-      religious_belief: "无",
-      education_level_txt: "博士",
-      education_level_list: [
-        "博士",
-        "硕士",
-        "本科",
-        "大专",
-        "中专",
-        "高中",
-        "初中",
-        "小学",
-      ],
-      education_level: false,
-      marital_status_txt: "已婚",
-      marital_status_list: ["已婚", "未婚"],
-      marital_status: false,
-      screen_name: "陈晓坛",
-      nation_txt: "汉族",
-      nation_list: ["汉族"],
-      nation: false,
-      childrenStatus_txt: "有",
-      childrenStatus_list: ["有", "无"],
-      childrenStatus: false,
-      customer_hobby: "无",
       customer_id: "",
-      date_of_birth: "9/20",
       showDateBirth: false,
-      occupation: "程序员",
       phone_number: "",
-      residential_address: "郑州周口市",
-      work_address: "郑州周口市",
-      qq_number: "2548456723",
-      work_unit: "北京卓越联腾",
-      weChat: "45483567953",
-      user_positioning: "175.255,33.71",
-      contact_address: "北京卓越联腾",
-
-      regional_grid_txt: "",
       areaList: [],
       regional_grid: false,
-      school: "",
-      major: "",
-      admission_time: "",
-      showAdmission_time: false,
-      graduation_time: "",
-      showGraduation_time: false,
-      corporate_name: "",
       position: "",
-
-      family_number: "154235945121",
-      family_type_txt: "",
       family_type_list: [],
       family_type: false,
-      property_situation_txt: "商品房",
-      property_situation_list: ["无房", "自建", "商品房"],
-      property_situation: false,
-      vehicle_condition_txt: "一辆",
-      vehicle_condition_list: ["无车", "一辆", "两辆", "三辆以上"],
-      vehicle_condition: false,
-      credit_epresentative: "张军",
-      credit_amount: "600",
-      credit_amount: "1000",
-      family_num: "4",
       business_opening:
         "活期存款、定期存款、网上银行、手机银行、支付宝支付、信用卡",
-      mainEvaluation: "大家都非常好",
-      detailed_address: "吉林省白城市大安市安广镇大田村",
-      contacts: "",
       household_name: "",
       household_age: "",
       annual_income: "",
@@ -896,31 +896,10 @@ export default {
       debt_type_list: ["房产", "汽车"],
       debt_type: false,
       evaluation_value: "",
-      amount_liabilities: "",
       message_income: "",
-      active: false,
       tabId: 0,
-      token: "",
-      title: "详情",
-      textTitle: "--",
       content: "",
-      deliverTime: "",
-      deliverDepartment: "",
-      deliverPerson: "",
-      articleId: "",
-      isPlaying: false,
-      dataURL: "",
-      pictureId: undefined,
-      show1: false,
-      show2: false,
-      show3: false,
-      show4: false,
-      show5: false,
-      value1: "",
-      value2: "",
-      value3: "",
-      value4: "",
-      value5: "",
+
       education: [
         {
           university: "上海交通大学",
@@ -933,18 +912,6 @@ export default {
           date: "2001~2005",
           education: "本科",
           major: "计算机科学",
-        },
-      ],
-      work: [
-        {
-          university: "XXXX商贸公司",
-          date: "2005~2008",
-          major: "副总经理",
-        },
-        {
-          university: "XXX外贸公司",
-          date: "2001~2005",
-          major: "职员",
         },
       ],
       family_member: [],
@@ -988,6 +955,10 @@ export default {
       positionMarker: null,
       longitudeLatitude: false,
       map: null,
+      birthdayGl: "",
+      suitableProducts: false,
+      suitableProducts_txt: "",
+      suitableProducts_list: [],
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -1004,19 +975,40 @@ export default {
     this.id = this.$route.query.id;
     await this.editFarmers();
     this.dic_nation();
-    
+
     if (this.farmers_details.location == "") {
       this.appMessage();
     }
   },
 
   methods: {
+    addResult() {
+      this.$httpPost({
+        url: "/api/semCustomersRecords/add",
+        data: {
+          visitDate: this.currentDate1,
+          products: this.suitableProducts_txt.value,
+          remark: this.remarks,
+          screenageId: this.id,
+          customerCode: this.farmers_details.familyCode,
+        },
+      }).then((res) => {
+        Toast({
+          message: "保存成功",
+          position: "middle",
+        });
+      });
+    },
     formatDate(date) {
       return `${date.getMonth() + 1}-${date.getDate()}`;
     },
     onConfirm1(date) {
       this.show = false;
       this.date = this.formatDate(date);
+    },
+    onSuitableProducts(value) {
+      this.suitableProducts_txt = value;
+      this.suitableProducts = false;
     },
     mapReady({ BMap, map }) {
       this.map = map;
@@ -1063,6 +1055,18 @@ export default {
       }
     },
     dic_nation() {
+      // 产品
+      this.$httpGet({
+        url: "/dic/type/dic_product_type",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ value: it.code, text: it.codeText });
+          }
+        });
+        this.suitableProducts_list = transformDara;
+      });
       // 家庭类型
       this.$httpGet({
         url: "/dic/type/dic_family_type",
@@ -1159,8 +1163,11 @@ export default {
       this.childrenStatus_txt = value;
       this.childrenStatus = false;
     },
-    onDateBirth(date) {
-      this.date_of_birth = `${date.getMonth() + 1}/${date.getDate()}`;
+    onDateBirth(time) {
+      this.currentDate1=time
+      this.currentDate = `${time.getFullYear()}年${
+        time.getMonth() + 1
+      }月${time.getDate()}日`;
       this.showDateBirth = false;
     },
     onAdmission_time(date) {
@@ -1555,8 +1562,8 @@ export default {
   justify-content: space-between;
   padding: 0rem 1rem;
 }
-.van-radio__icon {
-  height: 1.25rem;
+.van-radio--horizontal >>> .van-radio__icon {
+  height: 1.4rem;
 }
 input {
   border-radius: 0.3rem;

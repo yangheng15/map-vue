@@ -77,17 +77,18 @@ axios.interceptors.response.use(response => {
     return Promise.reject(response)
   }
 }, error => {
+  console.log(error);
   if (error.response.status) {
     // 处理请求失败的情况
     // 对不同返回码对相应处理
     if (error.response.status == 401) {
       // console.log(error.response.data.error_description);
-      // Toast.fail({
-      //   message: "请重新登录",
-      //   position: "middle",
-      // });
-      // localStorage.clear();
-      // router.push('/login')
+      Toast.fail({
+        message: "请重新登录",
+        position: "middle",
+      });
+      localStorage.clear();
+      router.push('/login')
     }
     if (error.response.status == 400) {
       // console.log(error.response);

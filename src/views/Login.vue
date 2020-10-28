@@ -75,14 +75,14 @@ export default {
       this.$httpGet({
         url: "/dics/tree",
       }).then((res) => {
-        //console.log(res.data);
+        //客户等级
         const data = res.data.find((it) => it.type === "dic_client_grade")
           .childs;
         //console.log(data);
         localStorage.setItem("dic", JSON.stringify(data));
         const product = res.data.find((it) => it.type === "dic_product_type")
           .childs;
-        //console.log(product);
+        //客户意向
         localStorage.setItem("dicProduct", JSON.stringify(product));
         const clientWill = res.data.find((it) => it.type === "dic_client_will")
           .childs;
