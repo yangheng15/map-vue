@@ -406,7 +406,7 @@ export default {
       resource_type_txt: "",
       resource_type_list: [],
       resource_type: false,
-      markerPostion: { lng: 114.665, lat: 33.635 },
+      markerPostion: { lng: 114.655, lat: 33.63 },
       filterData: [],
       map: null,
       typeIds: "",
@@ -434,10 +434,7 @@ export default {
           lat: it.location.split(",")[1],
         });
       });
-      // console.log(this.polylinePath);
     }
-    // console.log(this.pathIds);
-
     this.specialSubject = this.$route.params.specialSubject;
     this.owner = this.$route.params.owner;
     // this.eyeTrueFalse()
@@ -506,7 +503,6 @@ export default {
           owner: _username,
         },
       }).then((res) => {
-        console.log(this.polygonDl);
         const arr = [
           {
             position: "114.67031644407975,33.6463360959123",
@@ -557,7 +553,6 @@ export default {
       });
     },
     createInfoWindow(map, data) {
-      console.log(this.typeIdsData);
       map.centerAndZoom(new BMap.Point(114.664477, 33.640232), 15);
       var data_info = data || this.typeIdsData;
       var opts = {
@@ -597,7 +592,6 @@ export default {
       }
     },
     deleteBut(index) {
-      console.log(index);
       Dialog.confirm({
         title: "你确定删除吗",
       })
@@ -609,7 +603,6 @@ export default {
             },
           })
             .then((res) => {
-              console.log(this.markerArr);
               this.map.removeOverlay(this.markerArr[index]);
               this.typeIdsData.splice(index, 1);
               // this.map.removeOverlay(this.markerArr[index])
@@ -627,12 +620,9 @@ export default {
         .catch(() => {});
     },
     dic_grid_resource_type(val) {
-      console.log(val);
-      console.log(JSON.parse(localStorage.getItem("dicGridResource")));
       const findWill = JSON.parse(localStorage.getItem("dicGridResource")).find(
         (it) => +it.key == val
       );
-      console.log(findWill);
       return findWill ? findWill.value : "";
     },
     selfOverlayClick(data) {
@@ -659,17 +649,12 @@ export default {
       }
     },
     createPolygon(map) {
-      // console.log(BMap);
       let polygonArr = [];
-      // console.log(this.map_data);
       this.map_data.forEach((line) => {
-        // console.log(line.mapPlaning);
-        // console.log(this.BMap === BMap);
         line.mapPlaning &&
           polygonArr.push(
             new BMap.Polygon(
               line.mapPlaning.map((position) => {
-                // console.log(BMap === this.BMap);
                 return new BMap.Point(position.lng, position.lat);
               }),
               {
@@ -684,11 +669,9 @@ export default {
           );
       });
       polygonArr.forEach((polygon) => map.addOverlay(polygon));
-      // console.log(polygonArr);
       this.polygonDl = polygonArr;
     },
     markerDragend({ point }) {
-      // console.log(point);
       this.markerPostion = point;
     },
     clickBack(item) {
@@ -704,8 +687,6 @@ export default {
         }).then((res) => {
           this.mapPlaning();
           // const index = this.map_data.findIndex((it) => it === item);
-          // console.log(index);
-          // console.log(this.polygonArr);
           // this.map_data.splice(index, 1)
           // this.polygonDl[index].setStrokeColor("#0FB38F");
           // this.mapCenter = {
@@ -798,7 +779,6 @@ export default {
       });
     },
     async onSubmit(values) {
-      console.log("submit", values);
       //显示红旗
       this.markerTure = false;
       const posArr = this.signData.sign_position.split(",");
@@ -807,7 +787,6 @@ export default {
         postion: { lng: posArr[0], lat: posArr[1] },
       });
       this.createInfoWindow(this.map, [values]);
-      // console.log(this.redFlagPostionArr);
 
       const code = this.filterData.find(
         (it) => it.codeText === this.resource_type_txt
@@ -838,7 +817,6 @@ export default {
       const findWill = JSON.parse(localStorage.getItem("dicGridResource")).find(
         (it) => +it.key == val
       );
-      console.log(findWill);
       return findWill ? findWill.value : "";
     },
   },

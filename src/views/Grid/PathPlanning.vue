@@ -77,7 +77,6 @@ export default {
     return {
       checkAllFlag: false,
       typeCN: "",
-      // checked: false,
       currentPage: 1,
       customers: "",
       path_planning: [],
@@ -92,7 +91,6 @@ export default {
   },
   methods: {
     back() {
-      // console.log(this.resultArr);
       this.$router.push({
         name: "Grid",
         params: { pathIds: this.resultArr },
@@ -105,7 +103,6 @@ export default {
       );
     },
     selectItem(thisItem) {
-      // console.log(thisItem);
       if (typeof thisItem.checked == "undefined") {
         this.$set(thisItem, "checked", true);
       } else {

@@ -1,7 +1,6 @@
 // http.js
 import axios from 'axios'
 import moment from "moment";
-import qs from "qs";
 import {
   Toast
 } from "vant";
@@ -18,19 +17,14 @@ let flag = true;
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-    // console.log(config);
     const token = localStorage.getItem('_token')
     if (localStorage.getItem('refresh_token')) {
       const refresh_token = localStorage.getItem('refresh_token'),
         expires_in = localStorage.getItem('expires_in'),
         aData = moment(new Date()).valueOf()
-      console.log(aData, expires_in);
       if (flag) {
         flag = false;
         if (aData > expires_in) {
-          console.log(222222);
-          console.log(aData);
-          console.log(expires_in);
           httpPost({
             url: "/oauth/token",
             params: {
@@ -40,7 +34,6 @@ axios.interceptors.request.use(
               client_secret: "test",
             },
           }).then((res) => {
-            console.log("换新token");
             localStorage.setItem('_token', res.access_token)
             let expires_in = moment(new Date()).valueOf() + res.expires_in
             localStorage.setItem("expires_in", expires_in);
@@ -77,12 +70,10 @@ axios.interceptors.response.use(response => {
     return Promise.reject(response)
   }
 }, error => {
-  console.log(error);
   if (error.response.status) {
     // 处理请求失败的情况
     // 对不同返回码对相应处理
     if (error.response.status == 401) {
-      // console.log(error.response.data.error_description);
       Toast.fail({
         message: "请重新登录",
         position: "middle",
@@ -91,7 +82,6 @@ axios.interceptors.response.use(response => {
       router.push('/login')
     }
     if (error.response.status == 400) {
-      // console.log(error.response);
       Toast.fail({
         message: error.response.data.resultMsg,
         position: "middle",

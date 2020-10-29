@@ -837,9 +837,7 @@
           </template>
         </van-field>
         <div class="save" style="margin-top: 20px">
-          <van-button round block type="primary" @click="addResult()"
-            >保存</van-button
-          >
+          <van-button round block type="primary" @click="addResult()">保存</van-button>
         </div>
       </div>
     </div>

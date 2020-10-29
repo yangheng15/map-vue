@@ -5,14 +5,18 @@
       <van-dropdown-item v-model="value1" :options="option1" />
       <van-dropdown-item v-model="value2" :options="option2" />
     </van-dropdown-menu>
-    <div v-for="(item,index) in recent_contact" :key="index" class="latest_tasks">
+    <div
+      v-for="(item, index) in recent_contact"
+      :key="index"
+      class="latest_tasks"
+    >
       <ul>
-        <li style="font-weight:550">{{item.name1}}</li>
-        <li class="set_up">{{item.set_up}}</li>
-        <li>{{item.date}}</li>
+        <li style="font-weight: 550">{{ item.name1 }}</li>
+        <li class="set_up">{{ item.set_up }}</li>
+        <li>{{ item.date }}</li>
       </ul>
       <ul>
-        <li>{{item.name2}}</li>
+        <li>{{ item.name2 }}</li>
       </ul>
     </div>
     <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
@@ -60,7 +64,7 @@ export default {
 };
 </script>
 <style scoped>
-.remind{
+.remind {
   padding-top: 46px;
 }
 .latest_tasks {
@@ -80,8 +84,8 @@ export default {
 .set_up {
   color: #1432e3;
 }
-.van-dropdown-menu >>> .van-dropdown-menu__bar{
-  box-shadow:none;
+.van-dropdown-menu >>> .van-dropdown-menu__bar {
+  box-shadow: none;
   border-bottom: 1px solid #e8e8e8;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {

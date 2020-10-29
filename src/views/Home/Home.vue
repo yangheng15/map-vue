@@ -20,19 +20,15 @@
               </p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.custNumMap.custRatio }}
-                <!-- <img
-                  style="
-                    transform: rotate(180deg);
-                    -ms-transform: rotate(180deg);
-                    -moz-transform: rotate(180deg);
-                    -webkit-transform: rotate(180deg);
-                    -o-transform: rotate(180deg);
-                    width: 15px;
-                    vertical-align: text-top;
+                <img
+                  class="growthFalling"
+                  :src="
+                    this.countNum.custNumMap.thisMonthCustNum <= 0
+                      ? growthPicture
+                      : fallingPicture
                   "
-                  src="../../assets/home/arrow-alt-down.svg"
                   alt
-                /> -->
+                />
               </p>
             </li>
           </ul>
@@ -53,19 +49,15 @@
               </p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.depositMap.depositRatio }}
-                <!-- <img
-                  style="
-                    transform: rotate(180deg);
-                    -ms-transform: rotate(180deg);
-                    -moz-transform: rotate(180deg);
-                    -webkit-transform: rotate(180deg);
-                    -o-transform: rotate(180deg);
-                    width: 15px;
-                    vertical-align: text-top;
+                <img
+                  class="growthFalling"
+                  :src="
+                    this.countNum.depositMap.thisMonthDeposit <= 0
+                      ? growthPicture
+                      : fallingPicture
                   "
-                  src="../../assets/home/arrow-alt-up.svg"
                   alt
-                /> -->
+                />
               </p>
             </li>
           </ul>
@@ -84,19 +76,15 @@
               <p class="total_money">{{ countNum.loanMap.thisMonthLoan }}万</p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.loanMap.loanRatio }}
-                <!-- <img
-                  style="
-                    transform: rotate(180deg);
-                    -ms-transform: rotate(180deg);
-                    -moz-transform: rotate(180deg);
-                    -webkit-transform: rotate(180deg);
-                    -o-transform: rotate(180deg);
-                    width: 15px;
-                    vertical-align: text-top;
+                <img
+                  class="growthFalling"
+                  :src="
+                    this.countNum.loanMap.thisMonthLoan <= 0
+                      ? growthPicture
+                      : fallingPicture
                   "
-                  src="../../assets/home/arrow-alt-down.svg"
                   alt
-                /> -->
+                />
               </p>
             </li>
           </ul>
@@ -113,31 +101,19 @@
               </p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.licaiMap.licaiRatio }}
-                <!-- <img
-                  style="
-                    transform: rotate(180deg);
-                    -ms-transform: rotate(180deg);
-                    -moz-transform: rotate(180deg);
-                    -webkit-transform: rotate(180deg);
-                    -o-transform: rotate(180deg);
-                    width: 15px;
-                    vertical-align: text-top;
+                <img
+                  class="growthFalling"
+                  :src="
+                    this.countNum.licaiMap.thisMonthLicai <= 0
+                      ? growthPicture
+                      : fallingPicture
                   "
-                  src="../../assets/home/arrow-alt-up.svg"
                   alt
-                /> -->
+                />
               </p>
             </li>
           </ul>
         </dt>
-      </dl>
-      <dl class="progress_content">
-        <!-- <dt>本月任务执行</dt> -->
-        <!-- <dd>
-          <div class="progress">
-            <div class="progress-done" data-done="68" style="width: 62%;">62%</div>
-          </div>
-        </dd>-->
       </dl>
       <ul class="data_display">
         <li>
@@ -200,7 +176,7 @@
           >
             <ul>
               <router-link
-              v-if="item.custBasicType==1"
+                v-if="item.custBasicType == 1"
                 tag="li"
                 :to="{
                   name: 'CustomerViewPresentation',
@@ -209,7 +185,7 @@
                 >{{ item.custName }}</router-link
               >
               <router-link
-              v-if="item.potentialType==2"
+                v-if="item.potentialType == 2"
                 tag="li"
                 :to="{
                   name: 'EditPotentialCustomers',
@@ -217,8 +193,12 @@
                 }"
                 >{{ item.potentialName }}</router-link
               >
-              <a v-if="item.custBasicType==1" style="color: #000" :href="'tel:' + item.telphone">
-                <li >
+              <a
+                v-if="item.custBasicType == 1"
+                style="color: #000"
+                :href="'tel:' + item.telphone"
+              >
+                <li>
                   {{ item.telphone }}
                   <img
                     style="width: 16px"
@@ -226,10 +206,13 @@
                     alt
                   />
                 </li>
-                
               </a>
-              <a v-if="item.potentialType==2" style="color: #000" :href="'tel:' + item.potentialTelphone">
-                <li >
+              <a
+                v-if="item.potentialType == 2"
+                style="color: #000"
+                :href="'tel:' + item.potentialTelphone"
+              >
+                <li>
                   {{ item.potentialTelphone }}
                   <img
                     style="width: 16px"
@@ -241,17 +224,12 @@
             </ul>
             <ul>
               <li>{{ item.productType }}</li>
-              <li v-if="item.contactDays==0">今天联系过</li>
-              <li v-if="item.contactDays!==0">上次联系{{ item.contactDays }}天前</li>
+              <li v-if="item.contactDays == 0">今天联系过</li>
+              <li v-if="item.contactDays !== 0">
+                上次联系{{ item.contactDays }}天前
+              </li>
             </ul>
           </div>
-          <!-- <div
-            style="text-align: center;padding: 30px;color: #aaaaaa;padding-top:0px;"
-            @click="$router.push('/ContentManage/ArticleList4Notice/wttdfczs?title=待办事项')"
-          >
-            加载更多
-            <i class="icon ion-ios-arrow-right"></i>
-          </div>-->
         </div>
       </div>
     </div>
@@ -283,6 +261,8 @@ export default {
         loanMap: { thisMonthLoan: "" },
         licaiMap: { thisMonthLicai: "" },
       },
+      growthPicture: up,
+      fallingPicture: down,
     };
   },
   components: {
@@ -368,6 +348,15 @@ export default {
   height: 1px;
   background: #df0f0f;
 }
+.growthFalling {
+  transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  width: 15px;
+  vertical-align: text-top;
+}
 .page-content {
   padding-top: 0px;
 }
@@ -417,39 +406,11 @@ export default {
     }
   }
 }
-.progress_content {
-  margin-left: 2%;
-  color: #878787;
-}
-.progress_content,
-.progress_content dt {
-  margin-bottom: 10px;
-}
-.progress {
-  background-color: rgba(100, 100, 100, 0.2);
-  position: relative;
-  height: 26px;
-  width: 96%;
-  border: 1px solid #cecece;
-  border-radius: 5px;
-}
-.progress-done {
-  /* background: linear-gradient(to left, rgb(52, 204, 1), rgb(247, 247, 203)); */
-  background: linear-gradient(to left, rgb(242, 112, 156), rgb(245, 212, 103));
-  box-shadow: 0 3px 3px -5px rgb(242, 112, 156), 0 2px 5px rgb(242, 112, 156);
-  border-radius: 5px;
-  height: 26px;
-  width: 0;
-  transition: width 1s ease 0.3s;
-  text-align: right;
-  color: #fff;
-  padding-right: 5px;
-  line-height: 26px;
-}
 .data_display {
   width: 96%;
   margin-left: 2%;
   display: flex;
+  margin-top: 10px;
 
   li:first-child {
     margin-left: 0;
@@ -503,15 +464,6 @@ export default {
   .page-content .data_img dt .text_content li {
     font-size: 12px;
   }
-  .page-content .progress_content dt {
-    font-size: 13px;
-  }
-  .progress {
-    height: 15px;
-  }
-  .progress-done {
-    height: 15px;
-  }
   .data_display li p {
     font-size: 13px;
   }
@@ -530,6 +482,9 @@ export default {
     top: 70%;
   }
   .latest_tasks {
+    font-size: 13px;
+  }
+  .latest_tasks ul li {
     font-size: 13px;
   }
 }

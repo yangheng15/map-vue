@@ -113,8 +113,6 @@ export default {
           this.tipsFail();
           return;
         } else {
-          // console.log(res.code);
-          // console.log(res.message);
           Dialog.alert({
             title: "提示",
             message: "修改成功！",

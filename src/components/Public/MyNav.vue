@@ -10,18 +10,14 @@ export default {
   name: "MyNav",
   props: {
     title: {
-      default: '',
-      type: String
-    }
+      default: "",
+      type: String,
+    },
   },
-  data () {
-    return{
-
-    }
+  data() {
+    return {};
   },
-  created() {
-    // console.log(this.title);
-  }
+  created() {},
 };
 </script>
 <style scoped>

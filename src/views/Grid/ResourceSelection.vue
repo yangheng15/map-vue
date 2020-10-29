@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     back() {
-      this.$emit('resourceEmit', { typeIds: this.resultArr.join(",") })
+      this.$emit("resourceEmit", { typeIds: this.resultArr.join(",") });
       // console.log(this.resultArr.join(","));
       // this.$router.push({
       //   name: "Grid",
@@ -203,7 +203,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
-.new_selection_three{
+.new_selection_three {
   padding: 0rem 1rem;
 }
 .new_selection_two ul {

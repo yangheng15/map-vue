@@ -17,7 +17,7 @@
             readonly
           />
         </div>
-        <div v-show="MedalOwner!==[]" class="personal_introduction">
+        <div v-show="MedalOwner !== []" class="personal_introduction">
           <div v-for="(item, index) in MedalOwner" :key="index">
             <img src="../../assets/User/medal.png" alt />
             <p>{{ item.medalName ? item.medalName : "荣誉勋章(0)" }}</p>
@@ -125,7 +125,6 @@ export default {
       this.$httpGet({
         url: `/api/v1/user/byname/${_username}`,
       }).then((res) => {
-        // console.log(res.row);
         this.userNameTxt = res.row;
         this.userNameTxt.level = parseInt(res.row.level);
       });

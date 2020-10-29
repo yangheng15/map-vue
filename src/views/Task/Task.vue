@@ -107,9 +107,6 @@
         >
           <div class="new_task">
             <p style="font-weight: 550">{{ thisItem.name }}</p>
-            <!-- <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
-              目标：{{ thisItem.targetNum | NumFormat }}
-            </p> -->
             <p style="text-align: center !important">
               目标：{{ thisItem.targetNum | NumFormat }}
             </p>
@@ -117,7 +114,6 @@
           </div>
           <div class="new_task">
             <p>{{ thisItem.productName }}</p>
-            <!-- <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">已过期</p> -->
             <p style="text-align: center !important">
               完成：{{ thisItem.taskAmount | NumFormat }}
             </p>
@@ -160,7 +156,6 @@ export default {
   methods: {
     tab(ev) {
       this.tabId = ev;
-      // localStorage.setItem("indexTabId", this.tabId);
       if (ev == 1) {
         let _username = localStorage.getItem("username");
         this.$httpGet({
@@ -171,7 +166,6 @@ export default {
             page: 1,
           },
         }).then((res) => {
-          // console.log(res.data);
           this.new_task1 = res.data;
         });
       }
@@ -185,7 +179,6 @@ export default {
             page: 1,
           },
         }).then((res) => {
-          // console.log(res.data);
           this.new_task2 = res.data;
         });
       }
@@ -200,7 +193,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        // console.log(res.data);
         this.new_task = res.data;
       });
     },
@@ -232,7 +224,6 @@ export default {
 }
 .teshu2 {
   text-align: center !important;
-  /* width: 33% !important; */
   color: #0fb38f !important;
 }
 .list {

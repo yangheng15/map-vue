@@ -24,7 +24,7 @@ const PutRecord = () => import('@/views/WorkBench/PutRecord.vue');
 const MapAddressDisplay = () => import('@/views/WorkBench/MapAddressDisplay.vue');
 //客户视图、农户
 const CustomerView = () => import('@/views/WorkBench/CustomerView.vue');
-//客户视图s
+//客户视图
 const CustomerViewPresentation = () => import('@/views/WorkBench/CustomerViewPresentation/CustomerViewPresentation.vue');
 //任务详情
 const MissionDetails = () => import('@/views/WorkBench/MissionDetails.vue');

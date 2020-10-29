@@ -25,7 +25,7 @@ productCode<template>
       </ul> -->
       <div
         class="Footprint_list"
-        style="padding-top:10px"
+        style="padding-top: 10px"
         v-for="(thisItem, index) in Footprintlist"
         :key="index"
       >
