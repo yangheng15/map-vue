@@ -192,9 +192,7 @@ export default {
     return {
       typeCN: "",
       check_content: false,
-      // chosenTopics: [],
       inpuVal: "",
-      // topics: ["小微企业主", "大企业主", "个体", "农户", "工薪阶层"],
       regional_grid_txt: "",
       regional_grid_list: [
         {
@@ -472,10 +470,6 @@ export default {
       this.value5 = item.name;
       this.show5 = false;
     },
-    // onConfirm(value) {
-    //   this.value = value;
-    //   this.showPicker = false;
-    // },
     getDic() {
       // 所属机构
       this.$httpGet({

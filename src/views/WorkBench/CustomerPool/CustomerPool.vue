@@ -20,11 +20,6 @@
           :key="index"
           class="cartItem"
         >
-          <!-- <van-checkbox
-            class="selctBtn"
-            v-model="thisItem.id"
-            shape="square"
-          ></van-checkbox> -->
           <p class="selctBtn" @click="joinCust(thisItem)">
             <img
               style="width: 20px"
@@ -222,10 +217,18 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      console.log(vm);
-      console.log(from);
       if (from.path === "/ScreenCustomerPool/") {
-        vm.customer_pool = vm.$store.state.screenCustomerPoolData;
+        vm.$store
+          .dispatch("UPDATESCREEN", vm.$store.state.screeningCriteria)
+          .then(() => {
+            vm.customer_pool = vm.$store.state.screenCustomerPoolData;
+            if (vm.customer_pool) {
+              vm.customer_pool.forEach((el) => {
+                console.log(el.star);
+                vm.star = parseInt(el.star);
+              });
+            }
+          });
       } else {
         vm.getCustomerPool();
       }
@@ -259,8 +262,11 @@ export default {
           page: 1,
         },
       }).then((res) => {
+        console.log(res);
         this.customer_pool = res.data;
+        console.log(this.customer_pool);
         this.customer_pool.forEach((el) => {
+          console.log(el.star);
           this.star = parseInt(el.star);
         });
       });

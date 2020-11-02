@@ -67,8 +67,22 @@
         placeholder="请输入描述"
         show-word-limit
       />
-      <!-- <van-cell title="清查日期" :value="date" @click="show = true" />
-            <van-calendar v-model="show" @confirm="onConfirm1" /> -->
+      <van-field
+        readonly
+        clickable
+        name="datetimePicker"
+        :value="currentDate | transform"
+        label="时间选择"
+        placeholder="点击选择时间"
+        @click="showPicker = true"
+      />
+      <van-popup v-model="showPicker" position="bottom">
+        <van-datetime-picker
+          type="date"
+          @confirm="onConfirm"
+          @cancel="showPicker = false"
+        />
+      </van-popup>
       <div class="save">
         <van-button round block type="primary" @click="modifyResult()"
           >保存</van-button
@@ -107,6 +121,9 @@ export default {
         },
       ],
       select_type: false,
+      currentDate: '',
+      showPicker: false,
+      currentDate1:''
     };
   },
   async created() {
@@ -159,11 +176,19 @@ export default {
       this.prospect_details.nation = value.text;
       this.nation = false;
     },
+    onConfirm(time) {
+      this.currentDate = `${time.getFullYear()}-${
+        time.getMonth() + 1
+      }-${time.getDate()}`;
+      this.currentDate1 = time
+      this.showPicker = false;
+    },
     async editRecord(val) {
       const res = await this.$httpGet({
         url: `/api/customersFamilyAssetsLiability/get/${this.id}`,
       });
       this.prospect_details = res.data;
+      this.currentDate = this.prospect_details.checkTime 
     },
     modifyResult() {
       this.$httpPut({
@@ -175,6 +200,7 @@ export default {
           type: this.prospect_details.type,
           description: this.prospect_details.description,
           amount: this.prospect_details.amount,
+          checkTime:this.currentDate1
         },
       })
         .then((res) => {
@@ -216,7 +242,7 @@ export default {
   text-align: center;
   color: #fff;
 }
-.van-cell >>> .van-field__label{
+.van-cell >>> .van-field__label {
   width: 43%;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {

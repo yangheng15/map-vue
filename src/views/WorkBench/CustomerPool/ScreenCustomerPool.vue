@@ -273,6 +273,27 @@ export default {
       showPicker: false,
     };
   },
+  beforeRouteLeave (to, from, next) {
+    this.$store.commit('SCREENING', {
+          limit: 10,
+          page: 1,
+          name: this.screen_name,
+          code: this.screen_number,
+          branchCode: this.organization_txt.index,
+          isPpoint: this.key_customers_txt.index,
+          customer_base:this.customer_base,
+          level: this.custome_level_txt.index,
+          recommended_products:this.recommended_products,
+          education: this.education_level_txt.index,
+          gridding: this.regional_grid_txt.index,
+          gender: this.choose_gender_txt.index,
+          age:this.screen_age,
+          profession: this.occupation_category_txt.index,
+          products_held_txt:this.products_held_txt.index,
+          regional_grid_txt:this.regional_grid_txt.index,
+        })
+        next();
+  },
   created() {
     this.typeCN = this.$route.query.title;
     this.dic_nation();

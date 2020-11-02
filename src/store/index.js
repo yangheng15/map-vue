@@ -6,7 +6,8 @@ const store = new Vuex.Store({
   state: {
     screenCustomerPoolData: [],
     screenMyCustomerData: [],
-    tabId: 0
+    tabId: 0,
+    screeningCriteria: {},
   },
   mutations: {
     ['UPDATESCREEN'](state, data) {
@@ -17,6 +18,9 @@ const store = new Vuex.Store({
     },
     ['SETTABID'](state, data) {
       state.tabId = data;
+    },
+    ['SCREENING'](state, data){
+      state.screeningCriteria = data;
     }
   },
   actions: {
