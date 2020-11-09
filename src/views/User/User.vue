@@ -17,7 +17,7 @@
             readonly
           />
         </div>
-        <div v-show="MedalOwner !== []" class="personal_introduction">
+        <div v-show="MedalOwner != 0" class="personal_introduction">
           <div v-for="(item, index) in MedalOwner" :key="index">
             <img src="../../assets/User/medal.png" alt />
             <p>{{ item.medalName ? item.medalName : "荣誉勋章(0)" }}</p>
@@ -30,7 +30,7 @@
           >
         </div>
         <van-empty
-          v-show="MedalOwner == []"
+          v-show="MedalOwner.length == 0"
           class="personal_introduction"
           image="https://img.yzcdn.cn/vant/custom-empty-image.png"
           description="荣誉勋章(0)"
@@ -137,6 +137,7 @@ export default {
           page: 1,
         },
       }).then((res) => {
+        console.log(res.data);
         this.MedalOwner = res.data;
       });
     },
@@ -146,7 +147,7 @@ export default {
 <style scoped>
 .personal_introduction >>> .van-empty__image {
   width: 90px;
-  height: 40px;
+  height: 78px;
 }
 .personal_introduction >>> .van-empty__description {
   margin: 0;
@@ -239,6 +240,10 @@ export default {
   * {
     font-size: 13px;
   }
+  .personal_introduction >>> .van-empty__image {
+  width: 90px;
+  height: 48px;
+}
   .head_portrait .personal_introduction div,
   .head_portrait .personal_introduction div p {
     font-size: 13px;

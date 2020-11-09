@@ -23,8 +23,8 @@
       />
       <!-- <van-checkbox v-model="remember" checked-color="#3d425e">记住密码</van-checkbox -->
       <!-- > -->
-      <a href style="margin: 10px; display: inline-block">忘记密码</a>
-      <div style="margin: 20px 16px 16px 16px">
+      <!-- <a href style="margin: 10px; display: inline-block">忘记密码</a> -->
+      <div style="margin: 4 0px 16px 16px 16px">
         <van-button round block type="info" native-type="submit"
           >提交</van-button
         >

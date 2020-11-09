@@ -3,7 +3,7 @@
     <my-nav title="网格"></my-nav>
     <van-search
       v-model="searchVal"
-      placeholder="网格名称、客户名称、资源名称"
+      placeholder="网格名称、客户名称"
     />
     <van-popup
       v-model="showPopup"
