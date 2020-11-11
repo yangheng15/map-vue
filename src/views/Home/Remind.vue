@@ -13,12 +13,12 @@
         @change="screenChange2"
       />
     </van-dropdown-menu>
-    <!-- <van-list
+    <van-list
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
       @load="onLoad"
-    > -->
+    >
     <div
       v-for="(item, index) in recent_contact"
       :key="index"
@@ -26,7 +26,7 @@
     >
       <ul>
         <li style="font-weight: 550">{{ item.typeName }}</li>
-        <li class="set_up" @click="updateStatus(item)" v-preventReClick>
+        <li class="set_up" @click="updateStatus(item)">
           {{
             item.status == 1 ? "设为已读" : item.status == 2 ? "设为未读" : ""
           }}
@@ -37,8 +37,8 @@
         <li>{{ item.content }}</li>
       </ul>
     </div>
-    <!-- </van-list> -->
-    <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
+    </van-list>
+    <!-- <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider> -->
   </div>
 </template>
 <script>
@@ -59,16 +59,20 @@ export default {
       option2: [],
       loading: false,
       finished: false,
+      throttleTime: {
+        lastTime: 0,
+        nowTime: 0
+      }
     };
   },
   created() {
     this.dic_nation();
-    this.queryTask();
+    // this.queryTask();
   },
   methods: {
     queryTask() {
       let _username = localStorage.getItem("username");
-      this.$httpGet({
+      return this.$httpGet({
         url: "/api/userMessage/query",
         params: {
           userName: _username,
@@ -77,7 +81,7 @@ export default {
         },
       }).then((res) => {
         this.recent_contact = res.data;
-      });
+      })
     },
     dic_nation() {
       this.$httpGet({
@@ -132,43 +136,52 @@ export default {
       });
     },
     updateStatus(item) {
-      this.$httpPut({
-        url: "/api/userMessage/updateMessageStatus",
-        params: {
-          messageId: item.id,
-        },
-      }).then((res) => {
-        if (res.code == 400) {
-          Toast({
-            message: res.resultMessage,
-            position: "middle",
+      this.throttleTime.nowTime = new Date().getTime();
+      if(this.throttleTime.nowTime - this.throttleTime.lastTime > 2000) {
+           this.throttleTime.lastTime = this.throttleTime.nowTime;
+           this.$httpPut({
+            url: "/api/userMessage/updateMessageStatus",
+            params: {
+              messageId: item.id,
+            },
+          }).then((res) => {
+            if (res.code == 400) {
+              Toast({
+                message: res.resultMessage,
+                position: "middle",
+              });
+            } else {
+              this.queryTask();
+              Toast({
+                message: res.resultMessage,
+                position: "middle",
+              });
+            }
           });
-        } else {
-          this.queryTask();
-          Toast({
-            message: res.resultMessage,
-            position: "middle",
-          });
-        }
-      });
+      }
+     
     },
-    // onLoad() {
-    //   // 异步更新数据
-    //   // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-    //   setTimeout(() => {
-    //     for (let i = 0; i < 10; i++) {
-    //       this.recent_contact.push(this.recent_contact.length + 1);
-    //     }
+    onLoad() {
+      console.log(123);
+      this.queryTask().then(() => {
+        this.finished = true
+      })
+      // 异步更新数据
+      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.recent_contact.push(this.recent_contact.length + 1);
+      //   }
 
-    //     // 加载状态结束
-    //     this.loading = false;
+      //   // 加载状态结束
+      //   this.loading = false;
 
-    //     // 数据全部加载完成
-    //     if (this.recent_contact.length >= 40) {
-    //       this.finished = true;
-    //     }
-    //   }, 1000);
-    // },
+      //   // 数据全部加载完成
+      //   if (this.recent_contact.length >= 40) {
+      //     this.finished = true;
+      //   }
+      // }, 1000);
+    },
   },
 };
 </script>
