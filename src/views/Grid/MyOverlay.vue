@@ -59,7 +59,7 @@ export default {
 .introduce_content {
   text-align: center;
   width: 6rem;
-  margin-top: -13px;
+  margin-top: -8px;
   margin-left: 10px;
   display: flex;
   flex-wrap: wrap;

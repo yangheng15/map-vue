@@ -4,7 +4,7 @@
       <div class="head_portrait">
         <img
           style="width: 60px; border-radius: 50%"
-          src="../../assets/User/men.png"
+          :src="userNameSex==2?women:men"
         />
         <div style="font-size: 18px; color: #fff; margin-top: 4px">
           {{ userNameTxt.realName }}
@@ -89,6 +89,8 @@
 <script>
 import MyNav from "../../components/Public/MyNav";
 import MyTabbar from "../../components/Public/MyTabbar";
+import icon1 from "../../assets/User/men.png"
+import icon2 from "../../assets/User/men1.jpg"
 import { Dialog } from "vant";
 export default {
   name: "WorkBench",
@@ -100,6 +102,9 @@ export default {
     return {
       userNameTxt: [],
       MedalOwner: [],
+      userNameSex:"",
+      women:icon1,
+      men:icon2
     };
   },
   created() {
@@ -127,6 +132,7 @@ export default {
       }).then((res) => {
         this.userNameTxt = res.row;
         this.userNameTxt.level = parseInt(res.row.level);
+        this.userNameSex = res.row.sex
       });
     },
     getMedalOwner() {
