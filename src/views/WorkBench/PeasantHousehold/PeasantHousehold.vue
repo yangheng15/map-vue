@@ -292,6 +292,7 @@ export default {
           })
             .then((res) => {
               this.getFamily();
+              
             })
             .catch(() => {});
         })

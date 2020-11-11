@@ -8,23 +8,26 @@
     <van-form @failed="onFailed" @submit="onSubmit">
       <van-field
         v-model="username"
+        type="text"
         name="txtUserName"
         left-icon="manager"
         placeholder="请输入账号"
-        :rules="[{ required: true, message: '请输入账号' }]"
       />
       <van-field
         v-model="password"
-        type="password"
+        :type="flag == true ? 'password' : 'text'"
         name="txtPwd"
+        :mask="false"
         left-icon="lock"
         placeholder="请输入密码"
-        :rules="[{ required: true, message: '请输入密码' }]"
-      />
+      >
+        <template #button>
+          <van-icon v-show="flag" name="closed-eye" @click="changeType()" />
+          <van-icon v-show="!flag" name="eye-o" @click="changeType()" />
+        </template>
+      </van-field>
       <!-- <van-checkbox v-model="remember" checked-color="#3d425e">记住密码</van-checkbox -->
-      <!-- > -->
-      <!-- <a href style="margin: 10px; display: inline-block">忘记密码</a> -->
-      <div style="margin: 4 0px 16px 16px 16px">
+      <div style="margin: 40px 30px 16px 30px">
         <van-button round block type="info" native-type="submit"
           >提交</van-button
         >
@@ -37,6 +40,7 @@
 import qs from "qs";
 import md5 from "js-md5";
 import moment from "moment";
+import { Dialog } from "vant";
 export default {
   name: "login",
   data() {
@@ -44,13 +48,14 @@ export default {
       username: "",
       password: "",
       remember: false,
-      expires_in:null,
-      aData:null
+      expires_in: null,
+      aData: null,
+      flag: true,
     };
   },
   created() {
     if (localStorage.getItem("passWord")) {
-      this.remember=true
+      this.remember = true;
       this.username = localStorage.getItem("username");
       this.password = localStorage.getItem("passWord");
     }
@@ -70,6 +75,10 @@ export default {
   methods: {
     onFailed(errorInfo) {
       // //console.log("failed", errorInfo);
+    },
+    changeType() {
+      console.log(111);
+      this.flag = !this.flag;
     },
     getDic() {
       this.$httpGet({
@@ -106,6 +115,20 @@ export default {
       });
     },
     async onSubmit(values) {
+      if (this.username == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入用户名！",
+        });
+        return;
+      }
+      if (this.password == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入密码！",
+        });
+        return;
+      }
       var bcrypt = require("bcryptjs"); //引入bcryptjs库
       var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
       localStorage.clear();
@@ -123,9 +146,8 @@ export default {
         .then((res) => {
           console.log(res);
           if (res.access_token) {
-            
             console.log(moment(new Date()).valueOf());
-            let expires_in=moment(new Date()).valueOf()+res.expires_in
+            let expires_in = moment(new Date()).valueOf() + res.expires_in;
 
             this.aData = new Date();
             localStorage.setItem("_token", res.access_token);
@@ -181,6 +203,9 @@ export default {
 .van-checkbox__icon >>> .van-icon {
   width: 1rem;
   height: 1rem;
+}
+.van-field__body >>> .van-field__button {
+  display: flex;
 }
 </style>
 <style>

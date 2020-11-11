@@ -2,28 +2,48 @@
   <div class="remind">
     <child-nav :title="title"></child-nav>
     <van-dropdown-menu>
-      <van-dropdown-item v-model="value1" :options="option1" />
-      <van-dropdown-item v-model="value2" :options="option2" />
+      <van-dropdown-item
+        v-model="value1"
+        :options="option1"
+        @change="screenChange1"
+      />
+      <van-dropdown-item
+        v-model="value2"
+        :options="option2"
+        @change="screenChange2"
+      />
     </van-dropdown-menu>
+    <!-- <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    > -->
     <div
       v-for="(item, index) in recent_contact"
       :key="index"
       class="latest_tasks"
     >
       <ul>
-        <li style="font-weight: 550">{{ item.name1 }}</li>
-        <li class="set_up">{{ item.set_up }}</li>
-        <li>{{ item.date }}</li>
+        <li style="font-weight: 550">{{ item.typeName }}</li>
+        <li class="set_up" @click="updateStatus(item)" v-preventReClick>
+          {{
+            item.status == 1 ? "设为已读" : item.status == 2 ? "设为未读" : ""
+          }}
+        </li>
+        <li>{{ item.createdTime | transform }}</li>
       </ul>
       <ul>
-        <li>{{ item.name2 }}</li>
+        <li>{{ item.content }}</li>
       </ul>
     </div>
+    <!-- </van-list> -->
     <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
   </div>
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
+import { Dialog, Toast } from "vant";
 export default {
   name: "Remind",
   components: {
@@ -32,34 +52,123 @@ export default {
   data() {
     return {
       title: "提醒",
-      recent_contact: [
-        {
-          name1: "网格分配",
-          set_up: "设为未读",
-          name2: "有新的网格分配给您，网格名称：一起营销",
-          date: "2020-09-09",
-        },
-        {
-          name1: "生日提醒",
-          set_up: "设为未读",
-          name2: "客户张三将于2020-11-15过生日",
-          date: "2020-09-09",
-        },
-      ],
-      value1: 0,
-      value2: "a",
-      option1: [
-        { text: "生日提醒", value: 0 },
-        { text: "理财到期", value: 1 },
-        { text: "网格分配", value: 2 },
-        { text: "任务分配", value: 3 },
-        { text: "工作提醒", value: 4 },
-      ],
-      option2: [
-        { text: "已读", value: "a" },
-        { text: "未读", value: "b" },
-      ],
+      recent_contact: [],
+      value1: "0",
+      value2: "0",
+      option1: [],
+      option2: [],
+      loading: false,
+      finished: false,
     };
+  },
+  created() {
+    this.dic_nation();
+    this.queryTask();
+  },
+  methods: {
+    queryTask() {
+      let _username = localStorage.getItem("username");
+      this.$httpGet({
+        url: "/api/userMessage/query",
+        params: {
+          userName: _username,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.recent_contact = res.data;
+      });
+    },
+    dic_nation() {
+      this.$httpGet({
+        url: "/dic/type/dic_message_type",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ value: it.code, text: it.codeText });
+          }
+        });
+        this.option1 = transformDara;
+      });
+      this.$httpGet({
+        url: "/dic/type/dic_message_status",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ value: it.code, text: it.codeText });
+          }
+        });
+        this.option2 = transformDara;
+      });
+    },
+    screenChange1(val) {
+      let _username = localStorage.getItem("username");
+      this.$httpGet({
+        url: "/api/userMessage/query",
+        params: {
+          userName: _username,
+          limit: 10,
+          page: 1,
+          type: val,
+        },
+      }).then((res) => {
+        this.recent_contact = res.data;
+      });
+    },
+    screenChange2(val) {
+      let _username = localStorage.getItem("username");
+      this.$httpGet({
+        url: "/api/userMessage/query",
+        params: {
+          userName: _username,
+          limit: 10,
+          page: 1,
+          status: val,
+        },
+      }).then((res) => {
+        this.recent_contact = res.data;
+      });
+    },
+    updateStatus(item) {
+      this.$httpPut({
+        url: "/api/userMessage/updateMessageStatus",
+        params: {
+          messageId: item.id,
+        },
+      }).then((res) => {
+        if (res.code == 400) {
+          Toast({
+            message: res.resultMessage,
+            position: "middle",
+          });
+        } else {
+          this.queryTask();
+          Toast({
+            message: res.resultMessage,
+            position: "middle",
+          });
+        }
+      });
+    },
+    // onLoad() {
+    //   // 异步更新数据
+    //   // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+    //   setTimeout(() => {
+    //     for (let i = 0; i < 10; i++) {
+    //       this.recent_contact.push(this.recent_contact.length + 1);
+    //     }
+
+    //     // 加载状态结束
+    //     this.loading = false;
+
+    //     // 数据全部加载完成
+    //     if (this.recent_contact.length >= 40) {
+    //       this.finished = true;
+    //     }
+    //   }, 1000);
+    // },
   },
 };
 </script>

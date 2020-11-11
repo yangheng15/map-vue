@@ -5,6 +5,8 @@ import VueAMap from 'vue-amap';
 import store from './store/index';
 import Vant from 'vant';
 import 'vant/lib/index.css';
+import preventReClick from './store/preventReClick.js'; //防多次点击，重复提交
+Vue.use(preventReClick);
 // import moment from 'moment'; 
 import BaiduMap from 'vue-baidu-map'
 import {
@@ -26,7 +28,6 @@ import {
 } from 'vant';
 Vue.use(Dialog);
 Vue.use(VueAMap);
-// Vue.use(moment);
 Vue.prototype.$httpGet = httpGet;
 Vue.prototype.$httpPost = httpPost;
 Vue.prototype.$httpPut = httpPut;

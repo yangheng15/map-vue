@@ -3,7 +3,8 @@
     <van-nav-bar :title="title">
       <template #right>
         <router-link :to='{ name: "Remind", query: { title: "提醒" }}'>
-        <img src="../../assets/images/remind.svg" alt />
+        <!-- <img src="../../assets/images/remind.svg" alt /> -->
+        <van-icon name="bell" badge="9" color="#fff"/>
         </router-link>
       </template>
     </van-nav-bar>
@@ -26,6 +27,9 @@ export default {
   top: 0;
   left: 0;
   z-index: 1000000;
+}
+.van-icon{
+  font-size: 20px;
 }
 .van-nav-bar {
   background-color: rgb(61, 66, 94);

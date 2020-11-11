@@ -1,10 +1,7 @@
 <template>
   <div class="grid">
     <my-nav title="网格"></my-nav>
-    <van-search
-      v-model="searchVal"
-      placeholder="网格名称、客户名称"
-    />
+    <van-search v-model="searchVal" placeholder="网格名称、客户名称" />
     <van-popup
       v-model="showPopup"
       position="middle"
@@ -86,7 +83,12 @@
           @touchEvent="showTypeIds(item)"
         ></my-overlay>
       </template>
-
+      <!-- <bm-marker
+        :position="{ lng: 114.66083033789431, lat: 33.62595722378967 }"
+        :dragging="true"
+        animation="BMAP_ANIMATION_BOUNCE"
+      > -->
+      <!-- </bm-marker> -->
       <!-- 弹窗 -->
       <!-- <bm-overlay
         v-if="introduce"
