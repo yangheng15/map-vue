@@ -71,9 +71,7 @@ export default {
                     params: params,
                 })
                     .then((res) => {
-                        console.log(res);
                         if (res.data.length > 0) {
-                            console.log(1111);
                             let result = {
                                 total: res.count,
                                 pageIndex: 1,
@@ -92,10 +90,7 @@ export default {
             // debugger
             this.loading = true;
             this.queryTask().then((res) => {
-                console.log(res);
                 this.recent_contact = this.recent_contact.concat(res.recent_contact);
-                // debugger
-                console.log(this.recent_contact.length);
                 if (this.recent_contact.length >= res.total) {
                     this.finished = true;
                 } else {
@@ -163,7 +158,7 @@ export default {
         },
         updateStatus(item) {
             this.throttleTime.nowTime = new Date().getTime();
-            if (this.throttleTime.nowTime - this.throttleTime.lastTime > 2000) {
+            if (this.throttleTime.nowTime - this.throttleTime.lastTime > 1000) {
                 this.throttleTime.lastTime = this.throttleTime.nowTime;
                 this.$httpPut({
                     url: '/api/userMessage/updateMessageStatus',

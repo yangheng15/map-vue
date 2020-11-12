@@ -4,7 +4,7 @@
       <van-nav-bar :title="title">
         <template #right>
           <router-link :to="{ name: 'Remind', query: { title: '提醒' } }">
-            <van-icon name="bell" badge="9" color="#fff" @click="send" />
+            <van-icon name="bell" badge="9" color="#fff"/>
           </router-link>
         </template>
       </van-nav-bar>
@@ -353,6 +353,7 @@ export default {
         this.socket.onerror = this.error;
         // 监听socket消息
         this.socket.onmessage = this.getMessage;
+        console.log(this.socket.readyState);
       }
     },
     open() {
@@ -365,12 +366,8 @@ export default {
       console.log("socket连接失败重连");
     },
     getMessage(msg) {
+      // 数据接收
       console.log(msg.data);
-    },
-    send() {
-      let actions = { test: "12345" };
-      this.socket.send(JSON.stringify(actions));
-      console.log("shiyishi");
     },
     close() {
       console.log("socket已经关闭");
