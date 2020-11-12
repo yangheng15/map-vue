@@ -78,6 +78,10 @@ export default {
       loading: false, // 滚动加载中
       finished: false, // 滚动加载完成
       charityData: [],
+      throttleTime: {
+          nowTime: 0,
+          lastTime: 0
+      }
     };
   },
   created() {
@@ -114,6 +118,7 @@ export default {
     },
     // 滚动加载更多
     onLoad() {
+        // debugger
       this.loading = true;
       this.queryTask().then((res) => {
         console.log(res);
@@ -202,6 +207,7 @@ export default {
             });
           } else {
             this.queryTask();
+            item.status = item.status === 1 ? 2 : 1;
             Toast({
               message: res.resultMessage,
               position: "middle",
