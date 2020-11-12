@@ -1,6 +1,14 @@
 <template>
   <div class="home">
-    <custom-nav :title="title"></custom-nav>
+    <div class="public_nav">
+      <van-nav-bar :title="title">
+        <template #right>
+          <router-link :to="{ name: 'Remind', query: { title: '提醒' } }">
+            <van-icon name="bell" badge="9" color="#fff" @click="send" />
+          </router-link>
+        </template>
+      </van-nav-bar>
+    </div>
     <div class="page-content">
       <h4 class="task_execution">本月任务执行</h4>
       <dl class="data_img">
@@ -263,6 +271,7 @@ export default {
       },
       growthPicture: up,
       fallingPicture: down,
+      socket: "",
     };
   },
   components: {
@@ -279,6 +288,10 @@ export default {
   created() {
     this.queryNewTask();
     this.getNum();
+  },
+  mounted() {
+    // 初始化
+    this.initWebSocket();
   },
   methods: {
     getNum() {
@@ -323,6 +336,48 @@ export default {
         this.recent_contact = res.data;
       });
     },
+    initWebSocket() {
+      //初始化weosocket
+      if (typeof WebSocket === "undefined") {
+        alert("您的浏览器不支持socket");
+      } else {
+        console.log("zouzouzou");
+        // ws://192.168.1.116:12345
+        // wss://echo.websocket.org
+        const wsuri = "ws://192.168.1.116:12345";
+        // 实例化socket
+        this.socket = new WebSocket(wsuri);
+        // 监听socket连接
+        this.socket.onopen = this.open;
+        // 监听socket错误信息
+        this.socket.onerror = this.error;
+        // 监听socket消息
+        this.socket.onmessage = this.getMessage;
+      }
+    },
+    open() {
+      console.log("socket连接成功");
+      let actions = { test: "12345" };
+      this.socket.send(JSON.stringify(actions));
+    },
+    error() {
+      this.initWebSocket();
+      console.log("socket连接失败重连");
+    },
+    getMessage(msg) {
+      console.log(msg.data);
+    },
+    send() {
+      let actions = { test: "12345" };
+      this.socket.send(JSON.stringify(actions));
+      console.log("shiyishi");
+    },
+    close() {
+      console.log("socket已经关闭");
+    },
+  },
+  destroyed() {
+    this.socket.onclose = this.close; //离开路由之后断开websocket连接
   },
 };
 </script>
@@ -489,5 +544,27 @@ export default {
   }
 }
 </style>
-
+<style scoped>
+.public_nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000000;
+}
+.van-icon {
+  font-size: 20px;
+}
+.van-nav-bar {
+  background-color: rgb(61, 66, 94);
+}
+.van-nav-bar >>> .van-nav-bar__title {
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 600;
+}
+.van-nav-bar__right img {
+  width: 20px;
+}
+</style>
 
