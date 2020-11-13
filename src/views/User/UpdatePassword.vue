@@ -5,25 +5,40 @@
       <van-field
         v-model="currentPassword"
         clearable
+        :type="flag == true ? 'password' : 'text'"
         name="当前密码"
         label="当前密码"
-        placeholder="当前密码"
-        :rules="[{ required: true, message: '请填写当前密码' }]"
-      />
+        placeholder="请填写当前密码"
+      >
+        <template #button>
+          <van-icon v-show="flag" name="closed-eye" @click="changeType()" />
+          <van-icon v-show="!flag" name="eye-o" @click="changeType()" />
+        </template>
+      </van-field>
       <van-field
         v-model="password1"
+        :type="flag1 == true ? 'password' : 'text'"
         name="新密码"
         label="新密码"
-        placeholder="新密码"
-        :rules="[{ required: true, message: '请填写新密码' }]"
-      />
+        placeholder="请填写新密码"
+      >
+        <template #button>
+          <van-icon v-show="flag1" name="closed-eye" @click="changeType1()" />
+          <van-icon v-show="!flag1" name="eye-o" @click="changeType1()" />
+        </template>
+      </van-field>
       <van-field
         v-model="password2"
+        :type="flag2 == true ? 'password' : 'text'"
         name="确认新密码"
         label="确认新密码"
-        placeholder="确认新密码"
-        :rules="[{ required: true, message: '请填写确认新密码' }]"
-      />
+        placeholder="请确认新密码"
+      >
+        <template #button>
+          <van-icon v-show="flag2" name="closed-eye" @click="changeType2()" />
+          <van-icon v-show="!flag2" name="eye-o" @click="changeType2()" />
+        </template>
+      </van-field>
       <van-button
         round
         block
@@ -52,12 +67,24 @@ export default {
       currentPassword: "",
       password1: "",
       password2: "",
+      flag: true,
+      flag1: true,
+      flag2: true,
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
   },
   methods: {
+    changeType() {
+      this.flag = !this.flag;
+    },
+    changeType1() {
+      this.flag1 = !this.flag1;
+    },
+    changeType2() {
+      this.flag2 = !this.flag2;
+    },
     tipsFail() {
       Toast({
         message: "用户名密码错误",
