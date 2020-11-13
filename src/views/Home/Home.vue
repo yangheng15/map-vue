@@ -346,7 +346,7 @@ export default {
         console.log(new Date().getTime());
         // ws://192.168.1.116:12345
         // wss://echo.websocket.org
-        const wsuri = "ws://192.168.1.120:12345/ws";
+        const wsuri = "ws://123.56.238.192:8199/ws";
         // 实例化socket
         this.socket = new WebSocket(wsuri);
         // 监听socket连接
