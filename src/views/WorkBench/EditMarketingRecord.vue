@@ -244,7 +244,7 @@ export default {
       prospect_detailsEdit: {},
       pictureId: [],
       isconfirm: false,
-      cameraList: null,
+      capture:['camera'],
       actions: [{ name: "相机" }, { name: "相册" }],
     };
   },

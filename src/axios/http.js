@@ -11,9 +11,11 @@ if (process.env.NODE_ENV === 'development') {
   // axios.defaults.baseURL = '/api'
   axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // axios.defaults.baseURL = 'http://192.168.1.106:8091'
+  // axios.defaults.baseURL = 'http://112.125.27.140:10003/'
 } else if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // axios.defaults.baseURL = 'http://192.168.1.106:8091'
+  // axios.defaults.baseURL = 'http://112.125.27.140:10003/'
 }
 let flag = true;
 // 请求拦截器

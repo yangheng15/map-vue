@@ -458,17 +458,21 @@ export default {
       //iOS终端
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
       if (isAndroid) {
+        if(window.android.getLocation() != false){
         let positionArr = window.android.getLocation().split(",");
         // let positionArr = [124.281873, 45.514322]
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
         this.zoomNum = 16;
         this.createMarker(positionArr);
+        }
       }
       if (isiOS) {
-        let positionArr = window.prompt("getLocation").split(",");
-        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.zoomNum = 16;
-        this.createMarker(positionArr);
+        if (window.prompt("getLocation") != false) {
+          let positionArr = window.prompt("getLocation").split(",");
+          this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+          this.zoomNum = 16;
+          this.createMarker(positionArr);
+        }
       }
     },
     resourceEmit(data) {
