@@ -4,7 +4,7 @@
       <van-nav-bar :title="title">
         <template #right>
           <router-link :to="{ name: 'Remind', query: { title: '提醒' } }">
-            <van-icon name="bell" badge="9" color="#fff"/>
+            <van-icon name="bell" badge="9" color="#fff" />
           </router-link>
         </template>
       </van-nav-bar>
@@ -272,6 +272,7 @@ export default {
       growthPicture: up,
       fallingPicture: down,
       socket: "",
+      positionArr:""
     };
   },
   components: {
@@ -342,9 +343,10 @@ export default {
         alert("您的浏览器不支持socket");
       } else {
         console.log("zouzouzou");
+        console.log(new Date().getTime());
         // ws://192.168.1.116:12345
         // wss://echo.websocket.org
-        const wsuri = "ws://192.168.1.116:12345";
+        const wsuri = "ws://192.168.1.120:12345/ws";
         // 实例化socket
         this.socket = new WebSocket(wsuri);
         // 监听socket连接
@@ -356,10 +358,33 @@ export default {
         console.log(this.socket.readyState);
       }
     },
+    appMessage() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        this.positionArr = window.android.getLocation();
+      }
+      if (isiOS) {
+        this.positionArr = window.prompt("getLocation")
+      }
+    },
     open() {
       console.log("socket连接成功");
-      let actions = { test: "12345" };
-      this.socket.send(JSON.stringify(actions));
+      this.appMessage()
+      let time = new Date().getTime();
+      let username = localStorage.getItem("username");
+      let messageText =this.positionArr
+      let actions = {
+        "messageText": messageText,
+        "messageType": "MAPLOCUS",
+        "sender": username,
+        "time": time,
+      };
+      console.log(JSON.stringify(actions))
+      this.socket.send(JSON.stringify(actions))
     },
     error() {
       this.initWebSocket();
@@ -367,7 +392,7 @@ export default {
     },
     getMessage(msg) {
       // 数据接收
-      console.log(msg.data);
+      console.log(msg);
     },
     close() {
       console.log("socket已经关闭");

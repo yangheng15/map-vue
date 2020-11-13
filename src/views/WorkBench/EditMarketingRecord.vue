@@ -141,15 +141,13 @@
               flex-wrap: wrap;
             "
           >
-            <!-- <img style="width:100px;height:100px" :src="'data:image/jpg;base64,'+this.pictureData" alt=""> -->
-            <!-- <van-uploader v-model="fileList1" multiple /> -->
             <van-uploader
               result-type="dataUrl"
               :after-read="afterRead"
               v-model="fileList"
               multiple
               @delete="deleteImage"
-              :capture="cameraList"
+              :capture="capture"
               ref="uploadImg"
             />
             <!-- <span
@@ -161,7 +159,7 @@
                 background: red;
               "
               @click="handleClick"
-            ></span> -->
+            ></span>  -->
             <van-action-sheet
               v-model="isconfirm"
               :actions="actions"
@@ -245,7 +243,7 @@ export default {
       prospect_detailsEdit: {},
       pictureId: [],
       isconfirm: false,
-      cameraList: null,
+      capture:['camera'],
       actions: [{ name: "相机" }, { name: "相册" }],
     };
   },
