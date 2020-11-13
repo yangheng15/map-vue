@@ -141,15 +141,16 @@
               flex-wrap: wrap;
             "
           >
-            <van-uploader
+            <!-- <img style="width:100px;height:100px" :src="'data:image/jpg;base64,'+this.pictureData" alt=""> -->
+            <!-- <van-uploader v-model="fileList1" multiple /> -->
+            <!-- <van-uploader
               result-type="dataUrl"
               :after-read="afterRead"
               v-model="fileList"
               multiple
               @delete="deleteImage"
-              :capture="capture"
               ref="uploadImg"
-            />
+            /> -->
             <!-- <span
               style="
                 display: inline-block;
@@ -159,16 +160,16 @@
                 background: red;
               "
               @click="handleClick"
-            ></span>  -->
-            <van-action-sheet
+            ></span> -->
+            <!-- <van-action-sheet
               v-model="isconfirm"
               :actions="actions"
               @select="onSelect"
               cancel-text="取消"
               close-on-click-action
               @cancel="onCancel"
-            />
-            <!-- <input type="file" accept="image/*" capture="camera"> -->
+            /> -->
+            <input type="file" accept="image/*" multiple>
           </div>
           <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="modifyPicture()"
