@@ -710,9 +710,20 @@ export default {
     this.id = this.$route.query.id;
     await this.getCustomerView();
     this.dic_nation();
+    console.log(this.CustomerViewDetails.location );
+    if (this.CustomerViewDetails.location == "") {
+      debugger
+      this.appMessage();
+    }
   },
 
   methods: {
+    appMessage() {
+      let positionArr = window.android.getLocation().split(",");
+      this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+      this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      this.CustomerViewDetails.location = positionArr.toString();
+    },
     appMessage1() {
       var u = navigator.userAgent;
       //Android终端
@@ -1009,6 +1020,14 @@ export default {
         }).then((res) => {
           this.level = res.data.codeText;
         });
+      }
+      if (this.CustomerViewDetails.location) {
+        const positionArr = this.CustomerViewDetails.location.split(",");
+        console.log(positionArr);
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      } else {
+        this.appMessage();
       }
     },
     onFamily_type(value) {
