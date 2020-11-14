@@ -9,19 +9,21 @@ import router from '../router/index';
 // 环境的切换
 if (process.env.NODE_ENV === 'development') {
   // axios.defaults.baseURL = '/api'
-  axios.defaults.baseURL = 'http://123.56.238.192:8199'
+  axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
+  // axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // axios.defaults.baseURL = 'http://192.168.1.106:8091'
   // axios.defaults.baseURL = 'http://112.125.27.140:10003/'
 } else if (process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = 'http://123.56.238.192:8199'
+  axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
+  // axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // axios.defaults.baseURL = 'http://192.168.1.106:8091'
   // axios.defaults.baseURL = 'http://112.125.27.140:10003/'
 }
 let flag = true;
 // 请求拦截器
 axios.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('_token')
+  async (config)  => {
+    let token = localStorage.getItem('_token')
     if (localStorage.getItem('refresh_token')) {
       const refresh_token = localStorage.getItem('refresh_token'),
         expires_in = localStorage.getItem('expires_in'),
@@ -29,7 +31,7 @@ axios.interceptors.request.use(
       if (flag) {
         flag = false;
         if (aData > expires_in) {
-          httpPost({
+          await httpPost({
             url: "/oauth/token",
             params: {
               grant_type: "refresh_token",
@@ -39,6 +41,8 @@ axios.interceptors.request.use(
             },
           }).then((res) => {
             localStorage.setItem('_token', res.access_token)
+            token = res.access_token
+            console.log(token);
             let expires_in = moment(new Date()).valueOf() + res.expires_in
             localStorage.setItem("expires_in", expires_in);
             flag = true;

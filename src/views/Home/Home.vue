@@ -28,15 +28,15 @@
               </p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.custNumMap.custRatio }}
-                <!-- <img
+                <img
                   class="growthFalling"
                   :src="
-                    this.countNum.custNumMap.thisMonthCustNum <= 0
+                    this.countNum.custNumMap.custIncrease == -1
                       ? growthPicture
-                      : fallingPicture
+                      :this.countNum.custNumMap.custIncrease == 1? fallingPicture:''
                   "
                   alt
-                /> -->
+                />
               </p>
             </li>
           </ul>
@@ -57,15 +57,15 @@
               </p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.depositMap.depositRatio }}
-                <!-- <img
+                <img
                   class="growthFalling"
                   :src="
-                    this.countNum.depositMap.thisMonthDeposit <= 0
+                    this.countNum.depositMap.depositIncrease == -1
                       ? growthPicture
-                      : fallingPicture
+                      :this.countNum.depositMap.depositIncrease == 1? fallingPicture:''
                   "
                   alt
-                /> -->
+                />
               </p>
             </li>
           </ul>
@@ -84,15 +84,15 @@
               <p class="total_money">{{ countNum.loanMap.thisMonthLoan }}万</p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.loanMap.loanRatio }}
-                <!-- <img
+                 <img
                   class="growthFalling"
                   :src="
-                    this.countNum.loanMap.thisMonthLoan <= 0
+                    this.countNum.loanMap.loanIncrease == -1
                       ? growthPicture
-                      : fallingPicture
+                      :this.countNum.loanMap.loanIncrease == 1? fallingPicture:''
                   "
                   alt
-                /> -->
+                />
               </p>
             </li>
           </ul>
@@ -109,15 +109,15 @@
               </p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.licaiMap.licaiRatio }}
-                <!-- <img
+                <img
                   class="growthFalling"
                   :src="
-                    this.countNum.licaiMap.thisMonthLicai <= 0
+                    this.countNum.licaiMap.licaiIncrease == -1
                       ? growthPicture
-                      : fallingPicture
+                      :this.countNum.licaiMap.licaiIncrease == 1? fallingPicture:''
                   "
                   alt
-                /> -->
+                />
               </p>
             </li>
           </ul>
