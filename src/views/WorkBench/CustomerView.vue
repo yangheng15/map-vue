@@ -731,16 +731,16 @@ export default {
       //iOS终端
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
       if (isAndroid) {
-        // let positionArr = window.android.getLocation().split(",");
-        let positionArr = [124.281873, 45.514322]
+        let positionArr = window.android.getLocation().split(",");
+        // let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1
         this.zoomNum = 16;
         this.createMarker(positionArr);
       }
       if (isiOS) {
-        // let positionArr = window.prompt("getLocation").split(",");
-        let positionArr = [124.281873, 45.514322]
+        let positionArr = window.prompt("getLocation").split(",");
+        // let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1
         this.zoomNum = 16;
