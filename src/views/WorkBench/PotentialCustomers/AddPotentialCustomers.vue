@@ -188,14 +188,29 @@
         v-model="user_positioning"
         name="经纬度："
         label="经纬度："
-        placeholder="拖拽地图上图标获取经纬度"
-      />
-      <div style="width: 99%; margin: 0.5rem auto">
+        placeholder="点击按钮标记经纬度"
+      >
+        <template #button>
+          <img
+            @click="getLongitudeLatitude"
+            style="opacity: 0.9; margin-right: 15px"
+            class=""
+            src="../../../assets/grid/sign.svg"
+            alt=""
+          /> </template
+      ></van-field>
+      <div
+        style="width: 99%; margin: 0.5rem auto; position: relative"
+        v-if="longitudeLatitude"
+      >
         <baidu-map
           class="bm-view"
           :center="{ lng: 114.6, lat: 33.6 }"
           :zoom="14"
           ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
+          @touchstart="touchstart"
+          @touchend="touchend"
+          @ready="mapReady"
         >
           <bm-marker
             :dragging="true"
@@ -206,6 +221,27 @@
               size: { width: 30, height: 30 },
             }"
           ></bm-marker>
+          <template>
+            <p
+              style="
+                width: 35px;
+                height: 35px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #dedede;
+                border: 1px solid #d8d8d8;
+                border-radius: 5px;
+                position: absolute;
+                right: 20px;
+                margin: 0;
+                top: 20px;
+              "
+              @click="appMessage1"
+            >
+              <img src="../../../assets/grid/current_location.svg" alt />
+            </p>
+          </template>
         </baidu-map>
       </div>
       <div class="save">
@@ -283,17 +319,105 @@ export default {
       value: "",
       customer_name: "",
       card_number: "",
+      longitudeLatitude: false,
     };
   },
-  created() {
+  // created() {
+  //   this.typeCN = this.$route.query.title;
+  //   this.dic_nation();
+  // },
+  async created() {
     this.typeCN = this.$route.query.title;
+    // this.id = this.$route.query.id;
+    await this.editRecord();
     this.dic_nation();
+    if (this.prospect_details.location == "") {
+      this.appMessage();
+    }
   },
   updated() {},
   methods: {
+    mapReady({ BMap, map }) {
+      this.map = map;
+    },
     markerDragend({ point }) {
       const { lng, lat } = point;
       this.user_positioning = `${lng},${lat}`;
+    },
+    markerLongpress(point) {
+      Dialog.confirm({
+        message: "要标记当前位置吗？",
+      })
+        .then(() => {
+          const { lng, lat } = point;
+          // alert(lng + "-" + lat);
+          this.mapCenter = point;
+          this.mapCenter1 = point;
+          this.user_positioning = `${lng},${lat}`;
+        })
+        .catch(() => {
+          // on cancel
+        });
+    },
+    touchstart({ point }) {
+      clearTimeout(this.timeOutEvent);
+      this.timeOutEvent = 0;
+      this.timeOutEvent = setTimeout(() => {
+        //执行长按要执行的内容
+        this.markerLongpress(point);
+        this.timeOutEvent = 0;
+      }, 600);
+    },
+    touchend() {
+      clearTimeout(this.timeOutEvent);
+      this.timeOutEvent = 0;
+    },
+     async editRecord(val) {
+      // console.log(val);
+      const res = await this.$httpGet({
+        url: `/api/customersPotential/get/${this.id}`,
+        data: {
+          id: this.id,
+        },
+      });
+      this.prospect_details = res.data;
+      if (this.prospect_details.location) {
+        const positionArr = this.prospect_details.location.split(",");
+        console.log(positionArr);
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      } else {
+        this.appMessage();
+      }
+    },
+    getLongitudeLatitude() {
+      this.longitudeLatitude = true;
+    },
+    appMessage1() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let positionArr = window.android.getLocation().split(",");
+        // let positionArr = [124.281873, 45.514322]
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.zoomNum = 16;
+        this.createMarker(positionArr);
+      }
+      if (isiOS) {
+        let positionArr = window.prompt("getLocation").split(",");
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.zoomNum = 16;
+        this.createMarker(positionArr);
+      }
+    },
+       appMessage() {
+      let positionArr = window.android.getLocation().split(",");
+      this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+      this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      this.prospect_details.location = positionArr.toString();
     },
     dic_nation() {
       // 民族

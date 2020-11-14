@@ -578,9 +578,24 @@ export default {
       this.prospect_details.location = positionArr.toString();
     },
     appMessage1() {
-      let positionArr = window.android.getLocation().split(",");
-      this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-      this.createMarker(positionArr);
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let positionArr = window.android.getLocation().split(",");
+        // let positionArr = [124.281873, 45.514322]
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.zoomNum = 16;
+        this.createMarker(positionArr);
+      }
+      if (isiOS) {
+        let positionArr = window.prompt("getLocation").split(",");
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.zoomNum = 16;
+        this.createMarker(positionArr);
+      }
     },
     createMarker(position) {
       if (this.positionMarker) {

@@ -28,7 +28,7 @@
               </p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.custNumMap.custRatio }}
-                <img
+                <!-- <img
                   class="growthFalling"
                   :src="
                     this.countNum.custNumMap.thisMonthCustNum <= 0
@@ -36,7 +36,7 @@
                       : fallingPicture
                   "
                   alt
-                />
+                /> -->
               </p>
             </li>
           </ul>
@@ -57,7 +57,7 @@
               </p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.depositMap.depositRatio }}
-                <img
+                <!-- <img
                   class="growthFalling"
                   :src="
                     this.countNum.depositMap.thisMonthDeposit <= 0
@@ -65,7 +65,7 @@
                       : fallingPicture
                   "
                   alt
-                />
+                /> -->
               </p>
             </li>
           </ul>
@@ -84,7 +84,7 @@
               <p class="total_money">{{ countNum.loanMap.thisMonthLoan }}万</p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.loanMap.loanRatio }}
-                <img
+                <!-- <img
                   class="growthFalling"
                   :src="
                     this.countNum.loanMap.thisMonthLoan <= 0
@@ -92,7 +92,7 @@
                       : fallingPicture
                   "
                   alt
-                />
+                /> -->
               </p>
             </li>
           </ul>
@@ -109,7 +109,7 @@
               </p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.licaiMap.licaiRatio }}
-                <img
+                <!-- <img
                   class="growthFalling"
                   :src="
                     this.countNum.licaiMap.thisMonthLicai <= 0
@@ -117,7 +117,7 @@
                       : fallingPicture
                   "
                   alt
-                />
+                /> -->
               </p>
             </li>
           </ul>
@@ -346,7 +346,7 @@ export default {
         console.log(new Date().getTime());
         // ws://192.168.1.116:12345
         // wss://echo.websocket.org
-        const wsuri = "ws://123.56.238.192:8199/ws";
+        const wsuri = "ws://123.56.238.192:12345/ws";
         // 实例化socket
         this.socket = new WebSocket(wsuri);
         // 监听socket连接
