@@ -172,7 +172,7 @@
             :center="mapCenter1"
             :zoom="14"
             ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
-            @longpress="markerLongpress"
+            @longpress="longpress"
             @ready="mapReady"
           >
             <bm-marker
@@ -933,7 +933,7 @@ export default {
       isPopupVisibleEducation: false,
       isPopupVisibleWork: false,
       id: "",
-      farmers_details: "",
+      farmers_details: {},
       prospect_detailsEdit: {},
       date: "",
       show: false,
@@ -1025,13 +1025,13 @@ export default {
           // alert(lng + "-" + lat);
           this.mapCenter = point;
           this.mapCenter1 = point;
-          this.prospect_details.location = `${lng},${lat}`;
+          this.farmers_details.location = `${lng},${lat}`;
         })
         .catch(() => {
           // on cancel
         });
     },
-        longpress({ point }) {
+    longpress({ point }) {
       console.log(123);
       const zoom = this.map.getZoom();
       if( Math.abs(zoom - this.zoom) > 0) {
@@ -1384,15 +1384,15 @@ export default {
       //iOS终端
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
       if (isAndroid) {
-        let positionArr = window.android.getLocation().split(",");
-        // let positionArr = [124.281873, 45.514322]
+        // let positionArr = window.android.getLocation().split(",");
+        let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.zoomNum = 16;
         this.createMarker(positionArr);
       }
       if (isiOS) {
-        let positionArr = window.prompt("getLocation").split(",");
-        // let positionArr = [124.281873, 45.514322]
+        // let positionArr = window.prompt("getLocation").split(",");
+        let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.zoomNum = 16;
         this.createMarker(positionArr);
