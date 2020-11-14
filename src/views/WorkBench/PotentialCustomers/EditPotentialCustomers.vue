@@ -211,10 +211,9 @@
         <baidu-map
           class="bm-view"
           :center="mapCenter1"
-          :zoom="14"
+          :zoom="zoom"
           ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
-          @touchstart="touchstart"
-          @touchend="touchend"
+          @longpress="longpress"
           @ready="mapReady"
         >
           <bm-marker
@@ -350,6 +349,7 @@ export default {
       longitudeLatitude: false,
       map: null,
       timeOutEvent: 0,
+      zoom: 14
     };
   },
   async created() {
@@ -385,19 +385,26 @@ export default {
           // on cancel
         });
     },
-    touchstart({ point }) {
-      clearTimeout(this.timeOutEvent);
-      this.timeOutEvent = 0;
-      this.timeOutEvent = setTimeout(() => {
-        //执行长按要执行的内容
-        this.markerLongpress(point);
-        this.timeOutEvent = 0;
-      }, 600);
+    longpress({ point }) {
+      console.log(123);
+      const zoom = this.map.getZoom();
+      if( Math.abs(zoom - this.zoom) > 0) {
+          this.zoom = zoom
+          return;
+      }
+      this.markerLongpress(point)
+      // clearTimeout(this.timeOutEvent);
+      // // this.timeOutEvent = 0;
+      // this.timeOutEvent = setTimeout(() => {
+      //   //执行长按要执行的内容
+      //   this.markerLongpress(point);
+      //   this.timeOutEvent = 0;
+      // }, 600);
     },
-    touchend() {
-      clearTimeout(this.timeOutEvent);
-      this.timeOutEvent = 0;
-    },
+    // touchend() {
+    //   clearTimeout(this.timeOutEvent);
+    //   this.timeOutEvent = 0;
+    // },
     enumData(val, data) {
       if (val && data.length > 0) {
         const find = data.find((it) => it.index === +val);
@@ -591,7 +598,8 @@ export default {
         this.createMarker(positionArr);
       }
       if (isiOS) {
-        let positionArr = window.prompt("getLocation").split(",");
+        // let positionArr = window.prompt("getLocation").split(",");
+        let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.zoomNum = 16;
         this.createMarker(positionArr);

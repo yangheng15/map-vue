@@ -125,18 +125,39 @@
                 placeholder="单行输入"
                 :rules="[{ required: true, message: '请填写车牌号' }]"
             />
-            <van-field disabled v-model="user_positioning" name="经纬度：" label="经纬度：" placeholder="拖拽地图上图标获取经纬度" />
-            <div style="width: 99%; margin: 0.5rem auto">
-                <baidu-map class="bm-view" :center="{ lng: 114.6, lat: 33.6 }" :zoom="14" ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6">
+            <van-field v-model="user_positioning" disabled name="经纬度：" label="经纬度：" placeholder="点击按钮标记经纬度">
+                <template #button>
+                    <img
+                        @click="longitudeLatitude = true"
+                        style="opacity: 0.9; margin-right: 15px"
+                        class=""
+                        src="../../../assets/grid/sign.svg"
+                        alt=""
+                    /> </template
+            ></van-field>
+            <div style="width: 99%; margin: 0.5rem auto;position: relative" v-if="longitudeLatitude">
+                <baidu-map
+                    class="bm-view"
+                    :center="mapCenter"
+                    :zoom="zoom"
+                    ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
+                    @ready="mapReady"
+                    @longpress="longpress"
+                >
                     <bm-marker
                         :dragging="true"
-                        :position="{ lng: 114.6, lat: 33.6 }"
+                        :position="mapCenter"
                         @dragend="markerDragend"
                         :icon="{
                             url: require('../../../assets/grid/sign.svg'),
                             size: { width: 30, height: 30 },
                         }"
                     ></bm-marker>
+                    <template>
+                        <p class="local-marker" @click="getLocation">
+                            <img src="../../../assets/grid/current_location.svg" alt />
+                        </p>
+                    </template>
                 </baidu-map>
             </div>
             <div class="save">
@@ -147,7 +168,8 @@
 </template>
 <script>
 import ChildNav from '../../../components/Public/ChildNav';
-import { Toast } from 'vant';
+import { Toast, Dialog } from "vant";
+
 export default {
     name: 'AddPotentialCustomers',
     components: {
@@ -212,14 +234,64 @@ export default {
             value: '',
             customer_name: '',
             card_number: '',
+            prospect_details: {},
+            longitudeLatitude: false,
+            map: null,
+            positionMarker: null,
+            mapCenter: { lng: '114.654102', lat: '33.623741' },
+            moveStatus: false,
+            zoom: 14
         };
     },
     created() {
         this.typeCN = this.$route.query.title;
         this.dic_nation();
     },
-    updated() {},
     methods: {
+        mapReady({ BMap, map }) {
+            this.map = map;
+        },
+        touchmove() {
+            console.log('move');
+            this.moveStatus = true;
+        },
+        longpress({ type, target, point,pixel}) {
+            // alert(this.map.getZoom() + '-' + this.zoom);
+            // if(this.moveStatus) {
+            //     this.moveStatus = false;
+            //     return
+            // };
+            // alert('123')
+            const zoom = this.map.getZoom();
+            if( Math.abs(zoom - this.zoom) > 0) {
+                this.zoom = zoom
+                return;
+            }
+            this.markerLongpress(point)
+            // alert('123')
+            // console.log(123);
+            // clearTimeout(this.timeOutEvent);
+            // this.timeOutEvent = 0;
+            // this.timeOutEvent = setTimeout(() => {
+            //     //执行长按要执行的内容
+            //     this.markerLongpress(point);
+            //     this.timeOutEvent = 0;
+            // }, 600);
+        },
+        markerLongpress(point) {
+            Dialog.confirm({
+                message: '要标记当前位置吗？',
+            })
+                .then(() => {
+                    const { lng, lat } = point;
+                    // alert(lng + "-" + lat);
+                    this.mapCenter = point;
+                    this.user_positioning = `${lng},${lat}`;
+                })
+                .catch(() => {
+                    // on cancel
+                });
+        },
         markerDragend({ point }) {
             const { lng, lat } = point;
             this.user_positioning = `${lng},${lat}`;
@@ -364,6 +436,35 @@ export default {
                     // console.log(err);
                 });
         },
+        getLocation() {
+            var u = navigator.userAgent;
+            //Android终端
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+            //iOS终端
+            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+            if (isAndroid) {
+                // let positionArr = window.android.getLocation().split(',');
+                let positionArr = [124.281873, 45.514322];
+                this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+                this.zoomNum = 16;
+                this.createMarker(positionArr);
+            }
+            if (isiOS) {
+                // let positionArr = window.prompt('getLocation').split(',');
+                let positionArr = [124.281873, 45.514322];
+                this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+                this.zoomNum = 16;
+                this.createMarker(positionArr);
+            }
+        },
+        createMarker(position) {
+            // debugger
+            if (this.positionMarker) {
+                this.map.removeOverlay(this.positionMarker);
+            }
+            this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
+            this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
+        },
     },
 };
 </script>
@@ -418,5 +519,19 @@ export default {
         /* Internet Explorer 10-11 */
         font-size: 13px !important;
     }
+}
+.local-marker {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #dedede;
+    border: 1px solid #d8d8d8;
+    border-radius: 5px;
+    position: absolute;
+    right: 20px;
+    margin: 0;
+    top: 20px;
 }
 </style>
