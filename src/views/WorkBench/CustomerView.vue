@@ -279,39 +279,60 @@
             label="位置："
             placeholder="单行输入"
             :rules="[{ required: true, message: '请填写位置（经纬度）' }]"
-          />
-          <div style="width: 99%; margin: 0.5rem auto">
+          >
+          <template #button>
+            <img
+              @click="longitudeLatitude = true"
+              style="opacity: 0.9; margin-right: 15px"
+              class=""
+              src="../../assets/grid/sign.svg"
+              alt=""
+            /> </template>
+          </van-field>
+          <div
+            style="width: 99%; margin: 0.5rem auto; position: relative"
+            v-if="longitudeLatitude"
+          >
             <baidu-map
               class="bm-view"
-              :center="{ lng: 114.6, lat: 33.6 }"
-              :zoom="14"
+              :center="mapCenter1"
+              :zoom="zoom"
               ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
+              @longpress="longpress"
+              @ready="mapReady"
             >
               <bm-marker
                 :dragging="true"
-                :position="{ lng: 114.6, lat: 33.6 }"
+                :position="mapCenter"
                 @dragend="markerDragend"
                 :icon="{
                   url: require('../../assets/grid/sign.svg'),
                   size: { width: 30, height: 30 },
                 }"
               ></bm-marker>
+              <template>
+                <p
+                  style="
+                    width: 35px;
+                    height: 35px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background: #dedede;
+                    border: 1px solid #d8d8d8;
+                    border-radius: 5px;
+                    position: absolute;
+                    right: 20px;
+                    margin: 0;
+                    top: 20px;
+                  "
+                  @click="appMessage1"
+                >
+                  <img src="../../assets/grid/current_location.svg" alt />
+                </p>
+              </template>
             </baidu-map>
           </div>
-
-          <!-- <div style="width: 99%; margin: 0.5rem auto">
-            <baidu-map
-              class="bm-view"
-              :center="{ lng: 114.65, lat: 33.37 }"
-              :zoom="12"
-              ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
-            >
-              <bm-marker
-                :position="{ lng: 114.73, lat: 33.33 }"
-                :icon="{ url: con1, size: { width: 50, height: 50 } }"
-              ></bm-marker>
-            </baidu-map>
-          </div> -->
           <div class="save" style="margin-top: 20px">
             <van-button
               round
@@ -678,6 +699,10 @@ export default {
       professionStatus_txt: "",
       professionStatus_list: [],
       professionStatus: false,
+      longitudeLatitude: false,
+      mapCenter: { lng: "114.654102", lat: "33.623741" },
+      mapCenter1: { lng: "114.654102", lat: "33.623741" },
+      zoom: 14
     };
   },
   async created() {
@@ -688,6 +713,70 @@ export default {
   },
 
   methods: {
+    appMessage1() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        // let positionArr = window.android.getLocation().split(",");
+        let positionArr = [124.281873, 45.514322]
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter = this.mapCenter1
+        this.zoomNum = 16;
+        this.createMarker(positionArr);
+      }
+      if (isiOS) {
+        // let positionArr = window.prompt("getLocation").split(",");
+        let positionArr = [124.281873, 45.514322]
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter = this.mapCenter1
+        this.zoomNum = 16;
+        this.createMarker(positionArr);
+      }
+    },
+    createMarker(position) {
+      if (this.positionMarker) {
+        this.map.removeOverlay(this.positionMarker);
+      }
+      this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
+      this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
+    },
+    mapReady({ BMap, map }) {
+      this.map = map;
+    },
+    longpress({ point }) {
+      console.log(123);
+      const zoom = this.map.getZoom();
+      if( Math.abs(zoom - this.zoom) > 0) {
+          this.zoom = zoom
+          return;
+      }
+      this.markerLongpress(point)
+      // clearTimeout(this.timeOutEvent);
+      // // this.timeOutEvent = 0;
+      // this.timeOutEvent = setTimeout(() => {
+      //   //执行长按要执行的内容
+      //   this.markerLongpress(point);
+      //   this.timeOutEvent = 0;
+      // }, 600);
+    },
+    markerLongpress(point) {
+      Dialog.confirm({
+        message: "要标记当前位置吗？",
+      })
+        .then(() => {
+          const { lng, lat } = point;
+          // alert(lng + "-" + lat);
+          this.mapCenter = point;
+          this.mapCenter1 = point;
+          this.prospect_details.location = `${lng},${lat}`;
+        })
+        .catch(() => {
+          // on cancel
+        });
+    },
     tab(ev) {
       this.tabId = ev;
       if (this.tabId === 2) {

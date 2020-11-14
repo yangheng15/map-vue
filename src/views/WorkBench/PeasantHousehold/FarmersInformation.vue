@@ -1016,7 +1016,7 @@ export default {
       const { lng, lat } = point;
       this.farmers_details.location = `${lng},${lat}`;
     },
-    markerLongpress({ point }) {
+    markerLongpress( point ) {
       Dialog.confirm({
         message: "要标记当前位置吗？",
       })
@@ -1377,7 +1377,7 @@ export default {
       this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
       this.prospect_details.location = positionArr.toString();
     },
-     appMessage1() {
+    appMessage1() {
       var u = navigator.userAgent;
       //Android终端
       var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
@@ -1387,6 +1387,7 @@ export default {
         // let positionArr = window.android.getLocation().split(",");
         let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter = this.mapCenter1
         this.zoomNum = 16;
         this.createMarker(positionArr);
       }
@@ -1394,6 +1395,7 @@ export default {
         // let positionArr = window.prompt("getLocation").split(",");
         let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter = this.mapCenter1
         this.zoomNum = 16;
         this.createMarker(positionArr);
       }
