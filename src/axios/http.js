@@ -9,13 +9,13 @@ import router from '../router/index';
 // 环境的切换
 if (process.env.NODE_ENV === 'development') {
   // axios.defaults.baseURL = '/api'
-  axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
-  // axios.defaults.baseURL = 'http://123.56.238.192:8199'
+  // axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
+  axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // axios.defaults.baseURL = 'http://192.168.1.106:8091'
   // axios.defaults.baseURL = 'http://112.125.27.140:10003/'
 } else if (process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
-  // axios.defaults.baseURL = 'http://123.56.238.192:8199'
+  // axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
+  axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // axios.defaults.baseURL = 'http://192.168.1.106:8091'
   // axios.defaults.baseURL = 'http://112.125.27.140:10003/'
 }
@@ -86,7 +86,14 @@ axios.interceptors.response.use(response => {
         message: "请重新登录",
         position: "middle",
       });
+      // android.exit(); //告诉安卓退出了
+      let _username = localStorage.getItem("username");
+      let password = localStorage.getItem("passWord");
       localStorage.clear();
+      localStorage.setItem("username", _username);
+      if (password) {
+        localStorage.setItem("passWord", password);
+      }
       router.push('/login')
     }
     if (error.response.status == 400) {

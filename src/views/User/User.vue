@@ -4,7 +4,7 @@
       <div class="head_portrait">
         <img
           style="width: 60px; border-radius: 50%"
-          :src="userNameSex==2?women:men"
+          :src="userNameSex == 2 ? women : men"
         />
         <div style="font-size: 18px; color: #fff; margin-top: 4px">
           {{ userNameTxt.realName }}
@@ -89,8 +89,8 @@
 <script>
 import MyNav from "../../components/Public/MyNav";
 import MyTabbar from "../../components/Public/MyTabbar";
-import icon1 from "../../assets/User/men.png"
-import icon2 from "../../assets/User/men1.jpg"
+import icon1 from "../../assets/User/men.png";
+import icon2 from "../../assets/User/men1.jpg";
 import { Dialog } from "vant";
 export default {
   name: "WorkBench",
@@ -102,9 +102,9 @@ export default {
     return {
       userNameTxt: [],
       MedalOwner: [],
-      userNameSex:"",
-      women:icon1,
-      men:icon2
+      userNameSex: "",
+      women: icon1,
+      men: icon2,
     };
   },
   created() {
@@ -120,7 +120,13 @@ export default {
           if (res) {
             this.$router.push("/");
             // android.exit(); //告诉安卓退出了
+            let _username = localStorage.getItem("username");
+            let password = localStorage.getItem("passWord");
             localStorage.clear();
+            localStorage.setItem("username", _username);
+            if (password) {
+              localStorage.setItem("passWord", password);
+            }
           }
         })
         .catch(() => {});
@@ -132,7 +138,7 @@ export default {
       }).then((res) => {
         this.userNameTxt = res.row;
         this.userNameTxt.level = parseInt(res.row.level);
-        this.userNameSex = res.row.sex
+        this.userNameSex = res.row.sex;
       });
     },
     getMedalOwner() {
@@ -247,9 +253,9 @@ export default {
     font-size: 13px;
   }
   .personal_introduction >>> .van-empty__image {
-  width: 90px;
-  height: 48px;
-}
+    width: 90px;
+    height: 48px;
+  }
   .head_portrait .personal_introduction div,
   .head_portrait .personal_introduction div p {
     font-size: 13px;

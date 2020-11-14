@@ -26,7 +26,7 @@
           <van-icon v-show="!flag" name="eye-o" @click="changeType()" />
         </template>
       </van-field>
-      <!-- <van-checkbox v-model="remember" checked-color="#3d425e">记住密码</van-checkbox> -->
+      <van-checkbox v-model="remember" checked-color="#3d425e">记住密码</van-checkbox>
       <div style="margin: 40px 30px 16px 30px">
         <van-button round block type="info" native-type="submit"
           >提交</van-button
@@ -54,7 +54,7 @@ export default {
     };
   },
   created() {
-    if (localStorage.getItem("passWord")) {
+    if (localStorage.getItem("passWord") != null) {
       this.remember = true;
       this.username = localStorage.getItem("username");
       this.password = localStorage.getItem("passWord");
@@ -154,7 +154,7 @@ export default {
             localStorage.setItem("refresh_token", res.refresh_token);
             localStorage.setItem("expires_in", expires_in);
             localStorage.setItem("username", res.username);
-            localStorage.setItem("passWord", this.password);
+            // localStorage.setItem("passWord", this.password);
             if (this.remember) {
               localStorage.setItem("passWord", this.password);
             }
