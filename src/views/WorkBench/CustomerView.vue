@@ -771,7 +771,7 @@ export default {
           // alert(lng + "-" + lat);
           this.mapCenter = point;
           this.mapCenter1 = point;
-          this.prospect_details.location = `${lng},${lat}`;
+          this.CustomerViewDetails.location = `${lng},${lat}`;
         })
         .catch(() => {
           // on cancel
