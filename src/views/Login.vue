@@ -29,7 +29,7 @@
       <van-checkbox v-model="remember" checked-color="#3d425e">记住密码</van-checkbox>
       <div style="margin: 40px 30px 16px 30px">
         <van-button round block type="info" native-type="submit"
-          >提交</van-button
+          >登录</van-button
         >
       </div>
     </van-form>

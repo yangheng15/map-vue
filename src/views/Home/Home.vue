@@ -399,24 +399,24 @@ export default {
     open() {
       console.log("socket连接成功");
       console.log(this);
-      this.appMessage();
-      let time = new Date().getTime();
-      let username = localStorage.getItem("username");
-      let messageText = this.positionArr;
-      let actions = {
-        messageText: messageText,
-        messageType: "MAPLOCUS",
-        sender: username,
-        time: time,
-      };
+
       console.log(this.IntervalTime);
       // debugger
       window.clearInterval(this.timer);
       this.timer = setInterval(() => {
+        this.appMessage();
+        let time = new Date().getTime();
+        let username = localStorage.getItem("username");
+        let messageText = this.positionArr;
+        let actions = {
+          messageText: messageText,
+          messageType: "MAPLOCUS",
+          sender: username,
+          time: time,
+        };
         console.log(JSON.stringify(actions));
-         this.socket.send(JSON.stringify(actions))
-       },this.IntervalTime
-      );
+        this.socket.send(JSON.stringify(actions));
+      }, this.IntervalTime);
       // setInterval(function(){ alert("Hello"); }, 3000);
     },
     error() {
