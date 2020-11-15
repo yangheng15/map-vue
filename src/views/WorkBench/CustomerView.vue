@@ -282,7 +282,7 @@
           >
           <template #button>
             <img
-              @click="longitudeLatitude = true"
+              @click="getLongitudeLatitude"
               style="opacity: 0.9; margin-right: 15px"
               class=""
               src="../../assets/grid/sign.svg"
@@ -702,7 +702,8 @@ export default {
       longitudeLatitude: false,
       mapCenter: { lng: "114.654102", lat: "33.623741" },
       mapCenter1: { lng: "114.654102", lat: "33.623741" },
-      zoom: 14
+      zoomNum: 19,
+      zoom: 20
     };
   },
   async created() {
@@ -718,6 +719,9 @@ export default {
   },
 
   methods: {
+    getLongitudeLatitude() {
+      this.longitudeLatitude = !this.longitudeLatitude;
+    },
     appMessage() {
       let positionArr = window.android.getLocation().split(",");
       this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
@@ -735,7 +739,7 @@ export default {
         // let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1
-        this.zoomNum = 16;
+        this.zoomNum = 20;
         this.createMarker(positionArr);
       }
       if (isiOS) {
@@ -743,7 +747,7 @@ export default {
         // let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1
-        this.zoomNum = 16;
+        this.zoomNum = 20;
         this.createMarker(positionArr);
       }
     },

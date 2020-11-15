@@ -82,9 +82,13 @@ axios.interceptors.response.use(response => {
     // 处理请求失败的情况
     // 对不同返回码对相应处理
     if (error.response.status == 401) {
-      Toast.fail({
-        message: "请重新登录",
-        position: "middle",
+      // Toast.fail({
+      //   message: "请重新登录",
+      //   position: "middle",
+      // });
+      Toast({
+        message: '请重新登录！',
+        position: 'middle',
       });
       // android.exit(); //告诉安卓退出了
       let _username = localStorage.getItem("username");

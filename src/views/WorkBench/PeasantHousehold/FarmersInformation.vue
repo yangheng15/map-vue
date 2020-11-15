@@ -170,7 +170,7 @@
           <baidu-map
             class="bm-view"
             :center="mapCenter1"
-            :zoom="14"
+            :zoom="zoom"
             ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
             @longpress="longpress"
             @ready="mapReady"
@@ -968,7 +968,7 @@ export default {
       latitude: "33.623741",
       mapCenter: { lng: "114.654102", lat: "33.623741" },
       mapCenter1: { lng: "114.654102", lat: "33.623741" },
-      zoomNum: 15,
+      zoomNum: 19,
       positionMarker: null,
       longitudeLatitude: false,
       map: null,
@@ -976,7 +976,7 @@ export default {
       suitableProducts: false,
       suitableProducts_txt: "",
       suitableProducts_list: [],
-      zoom: 14,
+      zoom: 20,
       inventoryDate:"",
       inventoryDate1:"",
       showInventoryDate:false,
@@ -1398,7 +1398,7 @@ export default {
       }
     },
     getLongitudeLatitude() {
-      this.longitudeLatitude = true;
+      this.longitudeLatitude = !this.longitudeLatitude;
     },
     appMessage() {
       let positionArr = window.android.getLocation().split(",");
@@ -1417,7 +1417,7 @@ export default {
         // let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1;
-        this.zoomNum = 16;
+        this.zoomNum = 20;
         this.createMarker(positionArr);
       }
       if (isiOS) {
@@ -1425,7 +1425,7 @@ export default {
         // let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1;
-        this.zoomNum = 16;
+        this.zoomNum = 20;
         this.createMarker(positionArr);
       }
     },

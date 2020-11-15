@@ -452,6 +452,10 @@ export default {
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
     appMessage() {
+      Toast({
+          message: "重新定位中...",
+          position: "middle",
+        });
       var u = navigator.userAgent;
       //Android终端
       var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
