@@ -33,7 +33,9 @@
                   :src="
                     this.countNum.custNumMap.custIncrease == -1
                       ? growthPicture
-                      :this.countNum.custNumMap.custIncrease == 1? fallingPicture:''
+                      : this.countNum.custNumMap.custIncrease == 1
+                      ? fallingPicture
+                      : ''
                   "
                   alt
                 />
@@ -62,7 +64,9 @@
                   :src="
                     this.countNum.depositMap.depositIncrease == -1
                       ? growthPicture
-                      :this.countNum.depositMap.depositIncrease == 1? fallingPicture:''
+                      : this.countNum.depositMap.depositIncrease == 1
+                      ? fallingPicture
+                      : ''
                   "
                   alt
                 />
@@ -84,12 +88,14 @@
               <p class="total_money">{{ countNum.loanMap.thisMonthLoan }}万</p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.loanMap.loanRatio }}
-                 <img
+                <img
                   class="growthFalling"
                   :src="
                     this.countNum.loanMap.loanIncrease == -1
                       ? growthPicture
-                      :this.countNum.loanMap.loanIncrease == 1? fallingPicture:''
+                      : this.countNum.loanMap.loanIncrease == 1
+                      ? fallingPicture
+                      : ''
                   "
                   alt
                 />
@@ -114,7 +120,9 @@
                   :src="
                     this.countNum.licaiMap.licaiIncrease == -1
                       ? growthPicture
-                      :this.countNum.licaiMap.licaiIncrease == 1? fallingPicture:''
+                      : this.countNum.licaiMap.licaiIncrease == 1
+                      ? fallingPicture
+                      : ''
                   "
                   alt
                 />
@@ -272,7 +280,9 @@ export default {
       growthPicture: up,
       fallingPicture: down,
       socket: "",
-      positionArr:""
+      positionArr: "",
+      IntervalTime: "",
+      timer:"",
     };
   },
   components: {
@@ -305,6 +315,8 @@ export default {
         url: "/api/homePage/countNum",
       }).then((res) => {
         this.countNum = res.data;
+        this.IntervalTime = res.data.IntervalTime*1000;
+        console.log(this.IntervalTime);
       });
     },
     tab(ev) {
@@ -368,23 +380,24 @@ export default {
         this.positionArr = window.android.getLocation();
       }
       if (isiOS) {
-        this.positionArr = window.prompt("getLocation")
+        this.positionArr = window.prompt("getLocation");
       }
     },
     open() {
       console.log("socket连接成功");
-      this.appMessage()
+      this.appMessage();
       let time = new Date().getTime();
       let username = localStorage.getItem("username");
-      let messageText =this.positionArr
+      let messageText = this.positionArr;
       let actions = {
-        "messageText": messageText,
-        "messageType": "MAPLOCUS",
-        "sender": username,
-        "time": time,
+        messageText: messageText,
+        messageType: "MAPLOCUS",
+        sender: username,
+        time: time,
       };
-      console.log(JSON.stringify(actions))
-      this.socket.send(JSON.stringify(actions))
+      console.log(JSON.stringify(actions));
+      window.clearInterval(this.timer)
+      this.timer = setInterval(this.socket.send(JSON.stringify(actions)), this.IntervalTime);
     },
     error() {
       this.initWebSocket();
@@ -399,7 +412,7 @@ export default {
     },
   },
   destroyed() {
-    this.socket.onclose = this.close; //离开路由之后断开websocket连接
+    // this.socket.onclose = this.close; //离开路由之后断开websocket连接
   },
 };
 </script>
