@@ -465,27 +465,31 @@ export default {
         if(window.android.getLocation() != false){
         let positionArr = window.android.getLocation().split(",");
         if(positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {// 如果当前的 中心点和之前的中心点一样
-          this.mapCenter = { lng: positionArr[0], lat: positionArr[1]+0.001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.mapCenter = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.zoomNum = this.map.getZoom()
           return
         }
         // let positionArr = [124.281873, 45.514322]
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.zoomNum = 16;
+        this.zoomNum = this.map.getZoom()
         this.createMarker(positionArr);
         }
       }
       if (isiOS) {
         if (window.prompt("getLocation") != false) {
-          let positionArr = window.prompt("getLocation").split(",");
-          // let positionArr = [124.281873, 45.514322];
+          // let positionArr = window.prompt("getLocation").split(",");
+          let positionArr = [124.281873, 45.514322];
           // debugger
           if(positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {// 如果当前的 中心点和之前的中心点一样
-            this.mapCenter = { lng: positionArr[0], lat: positionArr[1]+0.001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
+            this.mapCenter = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点]
+            // console.log(this.map.getZoom());
+            this.zoomNum = this.map.getZoom()
             return
           }
           this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
           // this.map.setCenter({ lng: positionArr[0], lat: positionArr[1] })
-          this.zoomNum = 16;
+          // this.zoomNum = 16;
+          this.zoomNum = this.map.getZoom()
           this.createMarker(positionArr);
         }
       }
