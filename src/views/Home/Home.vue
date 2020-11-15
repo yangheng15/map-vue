@@ -363,6 +363,18 @@ export default {
         this.socket = new WebSocket(wsuri);
         // 监听socket连接
         this.socket.onopen = this.open;
+        // this.socket.onopen = function() {
+        //   console.log('连接成功');
+        //   console.log(this.send);
+        //   // setInterval(() => {
+        //   //   this.send(JSON.stringify({
+        //   //   messageText: '123',
+        //   //   messageType: "MAPLOCUS",
+        //   //   sender: '123',
+        //   //   time: 123,
+        //   // }))
+        //   }, 1000);
+        // }
         // 监听socket错误信息
         this.socket.onerror = this.error;
         // 监听socket消息
@@ -385,6 +397,7 @@ export default {
     },
     open() {
       console.log("socket连接成功");
+      console.log(this);
       this.appMessage();
       let time = new Date().getTime();
       let username = localStorage.getItem("username");
@@ -395,16 +408,13 @@ export default {
         sender: username,
         time: time,
       };
-      console.log(JSON.stringify(actions));
+      console.log(this.IntervalTime);
+      debugger
       window.clearInterval(this.timer);
-      if (this.IntervalTime) {
-        this.timer = setInterval(
-          this.socket.send(JSON.stringify(actions)),
-          this.IntervalTime
-        );
-      } else {
-        this.socket.send(JSON.stringify(actions));
-      }
+       this.timer = setInterval(() => {
+         this.socket.send(JSON.stringify(actions))
+       },this.IntervalTime || 600000
+      );
     },
     error() {
       this.initWebSocket();
