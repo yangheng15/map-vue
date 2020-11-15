@@ -439,7 +439,7 @@
                 <van-picker
                   show-toolbar
                   :columns="education_level_list"
-                  @confirm="onEducation_level"
+                  @confirm="onEducation_level1"
                   @cancel="education_level = false"
                 />
               </van-popup>
@@ -1068,6 +1068,10 @@ export default {
     onEducation_level(value) {
       this.prospect_detailsEdit.education = value.index;
       this.CustomerViewDetails.education = value.text;
+      this.education_level = false;
+    },
+    onEducation_level1(value) {
+      this.education_level_txt = value;
       this.education_level = false;
     },
     onMarital_status(value) {

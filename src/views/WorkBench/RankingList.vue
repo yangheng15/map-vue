@@ -109,7 +109,7 @@ export default {
     return {
       title: "",
       typeCN: "",
-      tabId: 1,
+      tabId: 2,
       tabId1: "三方存管",
       achievements_list: [],
       product_option: "",

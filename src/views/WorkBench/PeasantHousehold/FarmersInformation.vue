@@ -678,6 +678,23 @@
               placeholder="请输入描述"
               show-word-limit
             />
+            <van-field
+              readonly
+              clickable
+              name="datetimePicker"
+              :value="inventoryDate"
+              label="清查日期"
+              placeholder="点击选择清查日期"
+              @click="showInventoryDate = true"
+            />
+            <van-popup v-model="showInventoryDate" position="bottom">
+              <van-datetime-picker
+                type="date"
+                title="清查日期"
+                @confirm="onInventoryDate"
+                @cancel="showInventoryDate = false"
+              />
+            </van-popup>
             <!-- <van-cell title="清查日期" :value="date" @click="show = true" />
             <van-calendar v-model="show" @confirm="onConfirm1" /> -->
             <div style="margin-top: 3rem" class="save_pop">
@@ -837,7 +854,9 @@
           </template>
         </van-field>
         <div class="save" style="margin-top: 20px">
-          <van-button round block type="primary" @click="addResult()">保存</van-button>
+          <van-button round block type="primary" @click="addResult()"
+            >保存</van-button
+          >
         </div>
       </div>
     </div>
@@ -957,7 +976,10 @@ export default {
       suitableProducts: false,
       suitableProducts_txt: "",
       suitableProducts_list: [],
-      zoom: 14
+      zoom: 14,
+      inventoryDate:"",
+      inventoryDate1:"",
+      showInventoryDate:false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -1016,7 +1038,7 @@ export default {
       const { lng, lat } = point;
       this.farmers_details.location = `${lng},${lat}`;
     },
-    markerLongpress( point ) {
+    markerLongpress(point) {
       Dialog.confirm({
         message: "要标记当前位置吗？",
       })
@@ -1034,11 +1056,11 @@ export default {
     longpress({ point }) {
       console.log(123);
       const zoom = this.map.getZoom();
-      if( Math.abs(zoom - this.zoom) > 0) {
-          this.zoom = zoom
-          return;
+      if (Math.abs(zoom - this.zoom) > 0) {
+        this.zoom = zoom;
+        return;
       }
-      this.markerLongpress(point)
+      this.markerLongpress(point);
       // clearTimeout(this.timeOutEvent);
       // // this.timeOutEvent = 0;
       // this.timeOutEvent = setTimeout(() => {
@@ -1183,7 +1205,7 @@ export default {
       this.childrenStatus = false;
     },
     onDateBirth(time) {
-      this.currentDate1=time
+      this.currentDate1 = time;
       this.currentDate = `${time.getFullYear()}年${
         time.getMonth() + 1
       }月${time.getDate()}日`;
@@ -1196,6 +1218,13 @@ export default {
     onGraduation_time(date) {
       this.graduation_time = `${date.getMonth() + 1}/${date.getDate()}`;
       this.showGraduation_time = false;
+    },
+    onInventoryDate(time) {
+      this.inventoryDate = `${time.getFullYear()}-${
+        time.getMonth() + 1
+      }-${time.getDate()}`;
+      this.inventoryDate1 = time
+      this.showInventoryDate = false;
     },
     onRegional_grid(value) {
       this.prospect_detailsEdit.gridding = value.index;
@@ -1280,7 +1309,7 @@ export default {
           type: this.select_type_txt.index,
           description: this.message_income,
           amount: this.evaluation_value,
-          // checkTime:this.date,
+          checkTime:this.inventoryDate1,
         },
       }).then((res) => {
         this.getFamilyAssets();
@@ -1387,7 +1416,7 @@ export default {
         let positionArr = window.android.getLocation().split(",");
         // let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter = this.mapCenter1
+        this.mapCenter = this.mapCenter1;
         this.zoomNum = 16;
         this.createMarker(positionArr);
       }
@@ -1395,7 +1424,7 @@ export default {
         let positionArr = window.prompt("getLocation").split(",");
         // let positionArr = [124.281873, 45.514322]
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter = this.mapCenter1
+        this.mapCenter = this.mapCenter1;
         this.zoomNum = 16;
         this.createMarker(positionArr);
       }
@@ -1825,7 +1854,7 @@ textarea {
   top: 1rem;
   color: #3cc8ab;
   font-size: 0.8rem;
-  left: 17%;
+  left: 25%;
 }
 .approval_Passed1 {
   position: absolute;
@@ -1837,7 +1866,7 @@ textarea {
   top: 1rem;
   color: #7e4a46;
   font-size: 0.8rem;
-  left: 17%;
+  left: 25%;
 }
 .income_expenditure {
   background: #fff;

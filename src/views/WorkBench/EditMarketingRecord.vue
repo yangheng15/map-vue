@@ -461,6 +461,9 @@ export default {
         });
       }
     },
+     beforeRead(file) {
+      alert('file')
+    },
     afterRead(file) {
       let formData = new FormData();
       formData.append("file", file.file);

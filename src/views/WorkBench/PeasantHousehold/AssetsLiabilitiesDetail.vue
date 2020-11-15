@@ -72,7 +72,7 @@
         clickable
         name="datetimePicker"
         :value="currentDate | transform"
-        label="时间选择"
+        label="清查日期"
         placeholder="点击选择时间"
         @click="showPicker = true"
       />
@@ -177,9 +177,10 @@ export default {
       this.nation = false;
     },
     onConfirm(time) {
-      this.currentDate = `${time.getFullYear()}-${
-        time.getMonth() + 1
-      }-${time.getDate()}`;
+      // this.currentDate = `${time.getFullYear()}-${
+      //   time.getMonth() + 1
+      // }-${time.getDate()}`;
+      this.currentDate = time
       this.currentDate1 = time
       this.showPicker = false;
     },
