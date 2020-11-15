@@ -300,10 +300,7 @@ export default {
     this.queryNewTask();
     this.getNum();
   },
-  mounted() {
-    // 初始化
-    this.initWebSocket();
-  },
+  mounted() {},
   methods: {
     getNum() {
       this.$httpGet({
@@ -317,6 +314,10 @@ export default {
         this.countNum = res.data;
         this.IntervalTime = res.data.IntervalTime * 1000;
         console.log(this.IntervalTime);
+        // 初始化
+        if (this.IntervalTime) {
+          this.initWebSocket();
+        }
       });
     },
     tab(ev) {
@@ -409,12 +410,14 @@ export default {
         time: time,
       };
       console.log(this.IntervalTime);
-      debugger
+      // debugger
       window.clearInterval(this.timer);
-       this.timer = setInterval(() => {
+      this.timer = setInterval(() => {
+        console.log(JSON.stringify(actions));
          this.socket.send(JSON.stringify(actions))
-       },this.IntervalTime || 600000
+       },this.IntervalTime
       );
+      // setInterval(function(){ alert("Hello"); }, 3000);
     },
     error() {
       this.initWebSocket();
