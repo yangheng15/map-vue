@@ -282,7 +282,7 @@ export default {
       socket: "",
       positionArr: "",
       IntervalTime: "",
-      timer:"",
+      timer: "",
     };
   },
   components: {
@@ -315,7 +315,7 @@ export default {
         url: "/api/homePage/countNum",
       }).then((res) => {
         this.countNum = res.data;
-        this.IntervalTime = res.data.IntervalTime*1000;
+        this.IntervalTime = res.data.IntervalTime * 1000;
         console.log(this.IntervalTime);
       });
     },
@@ -396,8 +396,15 @@ export default {
         time: time,
       };
       console.log(JSON.stringify(actions));
-      window.clearInterval(this.timer)
-      this.timer = setInterval(this.socket.send(JSON.stringify(actions)), this.IntervalTime);
+      window.clearInterval(this.timer);
+      if (this.IntervalTime) {
+        this.timer = setInterval(
+          this.socket.send(JSON.stringify(actions)),
+          this.IntervalTime
+        );
+      } else {
+        this.socket.send(JSON.stringify(actions));
+      }
     },
     error() {
       this.initWebSocket();
