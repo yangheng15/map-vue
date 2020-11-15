@@ -469,11 +469,13 @@ export default {
       if (isiOS) {
         if (window.prompt("getLocation") != false) {
           let positionArr = window.prompt("getLocation").split(",");
+          // let positionArr = [124.281873, 45.514322]
           this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
           this.zoomNum = 16;
           this.createMarker(positionArr);
         }
       }
+      this.markerPostion = {...this.mapCenter};
     },
     resourceEmit(data) {
       this.typeIds = data.typeIds;
