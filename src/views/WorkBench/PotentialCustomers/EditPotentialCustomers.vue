@@ -591,8 +591,8 @@ export default {
       //iOS终端
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
       if (isAndroid) {
-        // let positionArr = window.android.getLocation().split(",");
-        let positionArr = [124.281873, 45.514322]
+        let positionArr = window.android.getLocation().split(",");
+        // let positionArr = [124.281873, 45.514322]
         if(positionArr[0] === this.mapCenter1.lng && positionArr[1] === this.mapCenter1.lat) {// 如果当前的 中心点和之前的中心点一样
           this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
           this.zoomNum = this.map.getZoom()
@@ -603,8 +603,8 @@ export default {
         this.createMarker(positionArr);
       }
       if (isiOS) {
-        // let positionArr = window.prompt("getLocation").split(",");
-        let positionArr = [124.281873, 45.514322]
+        let positionArr = window.prompt("getLocation").split(",");
+        // let positionArr = [124.281873, 45.514322]
         if(positionArr[0] === this.mapCenter1.lng && positionArr[1] === this.mapCenter1.lat) {// 如果当前的 中心点和之前的中心点一样
           this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
           this.zoomNum = this.map.getZoom()
