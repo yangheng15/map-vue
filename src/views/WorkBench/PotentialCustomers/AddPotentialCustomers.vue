@@ -185,7 +185,7 @@
       />
       <van-field
         v-model="user_positioning"
-        disabled
+        readonly
         name="经纬度："
         label="经纬度："
         placeholder="点击按钮标记经纬度"

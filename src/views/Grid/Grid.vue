@@ -284,29 +284,31 @@
       <van-form class="isPopupVisibleSign_content" @submit="onSubmit">
         <p class="pop_title">地图标记</p>
         <van-field
+        required
           v-model="signData.sign_name"
           name="name"
           label="名称："
-          placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写名称' }]"
+          placeholder="请填写名称"
+          :rules="[{ required: true }]"
         />
         <van-field
           v-model="signData.sign_phone"
           name="telphone"
           label="电话："
-          placeholder="单行输入"
+          placeholder="请填写电话"
         />
         <van-field
           v-model="signData.sign_address"
           name="address"
           label="地址："
+          placeholder="请填写地址"
         />
         <van-field
-          disabled
+          readonly 
           v-model="signData.sign_position"
           name="position"
           label="位置："
-          placeholder="单行输入"
+          placeholder="请填写位置"
         />
         <van-field
           readonly

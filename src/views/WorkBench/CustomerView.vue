@@ -274,11 +274,10 @@
           </van-popup>
           <van-field
             v-model="CustomerViewDetails.location"
-            disabled
+            readonly
             name="位置："
             label="位置："
             placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写位置（经纬度）' }]"
           >
           <template #button>
             <img

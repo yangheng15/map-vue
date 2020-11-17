@@ -26,7 +26,9 @@
           <van-icon v-show="!flag" name="eye-o" @click="changeType()" />
         </template>
       </van-field>
-      <van-checkbox v-model="remember" checked-color="#3d425e">记住密码</van-checkbox>
+      <van-checkbox v-model="remember" checked-color="#3d425e"
+        >记住密码</van-checkbox
+      >
       <div style="margin: 40px 30px 16px 30px">
         <van-button round block type="info" native-type="submit"
           >登录</van-button
@@ -54,24 +56,33 @@ export default {
     };
   },
   created() {
-    if (localStorage.getItem("passWord") != null) {
-      this.remember = true;
-      this.username = localStorage.getItem("username");
-      this.password = localStorage.getItem("passWord");
+    const token = localStorage.getItem("_token"),
+      username = localStorage.getItem("username"),
+      password = localStorage.getItem("passWord");
+    if (token && username && password) {
+      this.getDic();
+      this.locationUpload();
+      this.$router.push("/home");
     }
+    // else if(localStorage.getItem("passWord") != null) {
+    //   this.remember = true;
+    //   this.username = localStorage.getItem("username");
+    //   this.password = localStorage.getItem("passWord");
+    // }
   },
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      //如果token存在跳转首页
-      const token = localStorage.getItem("_token"),
-        username = localStorage.getItem("username"),
-        password = localStorage.getItem("passWord");
-      if (token && username && password) {
-        vm.getDic();
-        vm.$router.push("/home");
-      }
-    });
-  },
+  // beforeRouteEnter(to, from, next) {
+  //   next((vm) => {
+  //     //如果token存在跳转首页
+  //     const token = localStorage.getItem("_token"),
+  //       username = localStorage.getItem("username"),
+  //       password = localStorage.getItem("passWord");
+  //     if (token && username && password) {
+  //       vm.getDic();
+  //       this.locationUpload();
+  //       vm.$router.push("/home");
+  //     }
+  //   });
+  // },
   methods: {
     onFailed(errorInfo) {
       // //console.log("failed", errorInfo);
@@ -114,6 +125,22 @@ export default {
         localStorage.setItem("dicFamilyType", JSON.stringify(familyType));
       });
     },
+    locationUpload() {
+      console.log(localStorage.getItem("username"));
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let username = localStorage.getItem("username");
+        window.android.locationUpload(username);
+      }
+      if (isiOS) {
+        let username = localStorage.getItem("username");
+        window.webkit.messageHandlers.locationUpload.postMessage(username);
+      }
+    },
     async onSubmit(values) {
       if (this.username == "") {
         Dialog.alert({
@@ -145,6 +172,7 @@ export default {
       })
         .then((res) => {
           console.log(res);
+
           if (res.access_token) {
             console.log(moment(new Date()).valueOf());
             let expires_in = moment(new Date()).valueOf() + res.expires_in;
@@ -160,6 +188,8 @@ export default {
             }
             this.getDic();
             this.$router.push("/home");
+            this.locationUpload();
+            console.log(localStorage.getItem("username"));
           }
         })
         .catch((err) => {

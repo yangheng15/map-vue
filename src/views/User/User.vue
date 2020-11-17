@@ -112,12 +112,27 @@ export default {
     this.getMedalOwner();
   },
   methods: {
+    cancelLocationUpload() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        window.android.cancelLocationUpload();
+      }
+      if (isiOS) {
+        // window.webkit.messageHandlers.cancelLocationUpload.postMessage();
+        window.prompt("cancelLocationUpload")
+      }
+    },
     endLogin() {
       Dialog.confirm({
         title: "确定是否退出",
       })
         .then((res) => {
           if (res) {
+            this.cancelLocationUpload()
             this.$router.push("/");
             // android.exit(); //告诉安卓退出了
             let _username = localStorage.getItem("username");

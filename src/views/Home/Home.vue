@@ -312,12 +312,12 @@ export default {
         url: "/api/homePage/countNum",
       }).then((res) => {
         this.countNum = res.data;
-        this.IntervalTime = res.data.IntervalTime * 1000;
-        console.log(this.IntervalTime);
+        // this.IntervalTime = res.data.IntervalTime * 1000;
+        // console.log(this.IntervalTime);
         // 初始化
-        if (this.IntervalTime) {
-          this.initWebSocket();
-        }
+        // if (this.IntervalTime) {
+        //   this.initWebSocket();
+        // }
       });
     },
     tab(ev) {
@@ -350,86 +350,103 @@ export default {
         this.recent_contact = res.data;
       });
     },
-    initWebSocket() {
-      //初始化weosocket
-      if (typeof WebSocket === "undefined") {
-        alert("您的浏览器不支持socket");
-      } else {
-        console.log("zouzouzou");
-        console.log(new Date().getTime());
-        // ws://192.168.1.116:12345
-        // wss://echo.websocket.org
-        const wsuri = "ws://123.56.238.192:12345/ws";
-        // 实例化socket
-        this.socket = new WebSocket(wsuri);
-        // 监听socket连接
-        this.socket.onopen = this.open;
-        // this.socket.onopen = function() {
-        //   console.log('连接成功');
-        //   console.log(this.send);
-        //   // setInterval(() => {
-        //   //   this.send(JSON.stringify({
-        //   //   messageText: '123',
-        //   //   messageType: "MAPLOCUS",
-        //   //   sender: '123',
-        //   //   time: 123,
-        //   // }))
-        //   }, 1000);
-        // }
-        // 监听socket错误信息
-        this.socket.onerror = this.error;
-        // 监听socket消息
-        this.socket.onmessage = this.getMessage;
-        console.log(this.socket.readyState);
-      }
-    },
-    appMessage() {
-      var u = navigator.userAgent;
-      //Android终端
-      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
-      //iOS终端
-      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-      if (isAndroid) {
-        this.positionArr = window.android.getLocation();
-      }
-      if (isiOS) {
-        this.positionArr = window.prompt("getLocation");
-      }
-    },
-    open() {
-      console.log("socket连接成功");
-      console.log(this);
+    // initWebSocket() {
+    //   //初始化weosocket
+    //   if (typeof WebSocket === "undefined") {
+    //     alert("您的浏览器不支持socket");
+    //   } else {
+    //     console.log("zouzouzou");
+    //     console.log(new Date().getTime());
+    //     // ws://192.168.1.116:12345
+    //     // wss://echo.websocket.org
+    //     // const wsuri = "ws://112.125.27.140:12345/ws";
+    //     // const wsuri = "ws://123.56.238.192:12345/ws";
+    //     const wsuri = "ws://39.106.51.28:12345/ws";
+    //     // 实例化socket
+    //     this.socket = new WebSocket(wsuri);
+    //     // 监听socket连接
+    //     this.socket.onopen = this.open;
+    //     // this.socket.onopen = function() {
+    //     //   console.log('连接成功');
+    //     //   console.log(this.send);
+    //     //   // setInterval(() => {
+    //     //   //   this.send(JSON.stringify({
+    //     //   //   messageText: '123',
+    //     //   //   messageType: "MAPLOCUS",
+    //     //   //   sender: '123',
+    //     //   //   time: 123,
+    //     //   // }))
+    //     //   }, 1000);
+    //     // }
+    //     // 监听socket错误信息
+    //     this.socket.onerror = this.error;
+    //     // 监听socket消息
+    //     this.socket.onmessage = this.getMessage;
+    //     console.log(this.socket.readyState);
+    //   }
+    // },
+    // appMessage() {
+    //   var u = navigator.userAgent;
+    //   //Android终端
+    //   var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+    //   //iOS终端
+    //   var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+    //   if (isAndroid) {
+    //     this.positionArr = window.android.getLocation();
+    //   }
+    //   if (isiOS) {
+    //     this.positionArr = window.prompt("getLocation");
+    //   }
+    // },
+    // open() {
+    //   console.log("socket连接成功");
+    //   console.log(this.positionArr);
+    //   alert(this.positionArr)
+    //   setTimeout(() => {
+    //     this.appMessage();
+    //     let time = new Date().getTime();
+    //     let username = localStorage.getItem("username");
+    //     let messageText = this.positionArr;
+    //     let actions = {
+    //       messageText: messageText,
+    //       messageType: "MAPLOCUS",
+    //       sender: username,
+    //       time: time,
+    //     };
+    //     console.log(JSON.stringify(actions));
+    //     this.socket.send(JSON.stringify(actions));
+    //   }, 300);
 
-      console.log(this.IntervalTime);
-      // debugger
-      window.clearInterval(this.timer);
-      this.timer = setInterval(() => {
-        this.appMessage();
-        let time = new Date().getTime();
-        let username = localStorage.getItem("username");
-        let messageText = this.positionArr;
-        let actions = {
-          messageText: messageText,
-          messageType: "MAPLOCUS",
-          sender: username,
-          time: time,
-        };
-        console.log(JSON.stringify(actions));
-        this.socket.send(JSON.stringify(actions));
-      }, this.IntervalTime);
-      // setInterval(function(){ alert("Hello"); }, 3000);
-    },
-    error() {
-      this.initWebSocket();
-      console.log("socket连接失败重连");
-    },
-    getMessage(msg) {
-      // 数据接收
-      console.log(msg);
-    },
-    close() {
-      console.log("socket已经关闭");
-    },
+    //   console.log(this.IntervalTime);
+    //   // debugger
+    //   window.clearInterval(this.timer);
+    //   this.timer = setInterval(() => {
+    //     this.appMessage();
+    //     let time = new Date().getTime();
+    //     let username = localStorage.getItem("username");
+    //     let messageText = this.positionArr;
+    //     let actions = {
+    //       messageText: messageText,
+    //       messageType: "MAPLOCUS",
+    //       sender: username,
+    //       time: time,
+    //     };
+    //     console.log(JSON.stringify(actions));
+    //     this.socket.send(JSON.stringify(actions));
+    //   }, this.IntervalTime);
+    //   // setInterval(function(){ alert("Hello"); }, 3000);
+    // },
+    // error() {
+    //   this.initWebSocket();
+    //   console.log("socket连接失败重连");
+    // },
+    // getMessage(msg) {
+    //   // 数据接收
+    //   console.log(msg);
+    // },
+    // close() {
+    //   console.log("socket已经关闭");
+    // },
   },
   destroyed() {
     // this.socket.onclose = this.close; //离开路由之后断开websocket连接
