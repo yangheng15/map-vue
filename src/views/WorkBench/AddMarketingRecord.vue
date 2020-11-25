@@ -110,6 +110,22 @@
             placeholder="请输入客户反馈意见"
             show-word-limit
           />
+          <van-field
+            readonly
+            clickable
+            name="datetimePicker"
+            :value="currentDate | transform"
+            label="清查日期"
+            placeholder="点击选择时间"
+            @click="showPicker = true"
+          />
+          <van-popup v-model="showPicker" position="bottom">
+            <van-datetime-picker
+              type="date"
+              @confirm="onConfirm"
+              @cancel="showPicker = false"
+            />
+          </van-popup>
           <div class="save">
             <van-button type="primary" block @click="addResult()"
               >保存</van-button
@@ -203,6 +219,9 @@ export default {
       resultCode: "",
       fileList: [],
       pictureId: [],
+      currentDate: '',
+      showPicker: false,
+      currentDate1:''
     };
   },
   components: {
@@ -220,6 +239,14 @@ export default {
   },
   updated() {},
   methods: {
+    onConfirm(time) {
+      // this.currentDate = `${time.getFullYear()}-${
+      //   time.getMonth() + 1
+      // }-${time.getDate()}`;
+      this.currentDate = time
+      this.currentDate1 = time
+      this.showPicker = false;
+    },
     dic_nation() {
       // 客户意向
       this.$httpGet({

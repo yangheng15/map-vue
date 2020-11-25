@@ -66,6 +66,8 @@ const PotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/Po
 const MyClients = () => import('@/views/WorkBench/MyClients/MyClients.vue');
 // 对公客户
 const CorporateClients = () => import('@/views/WorkBench/CorporateClients/CorporateClients.vue');
+//对公客户建档
+const PublicCustomerRecord = () => import('@/views/WorkBench/CorporateClients/PublicCustomerRecord.vue');
 // 我的客户筛选
 const ScreenMyCustomers = () => import('@/views/WorkBench/MyClients/ScreenMyCustomers.vue');
 // 添加潜在客户
@@ -272,6 +274,11 @@ const routes = [{
     path: '/CorporateClients',
     name: 'CorporateClients',
     component: CorporateClients,
+  },
+  {
+    path: '/PublicCustomerRecord',
+    name: 'PublicCustomerRecord',
+    component: PublicCustomerRecord,
   },
   {
     path: '/ScreenMyCustomers',

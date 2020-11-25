@@ -126,6 +126,22 @@
             placeholder="请输入客户反馈意见"
             show-word-limit
           />
+          <van-field
+            readonly
+            clickable
+            name="datetimePicker"
+            :value="currentDate | transform"
+            label="清查日期"
+            placeholder="点击选择时间"
+            @click="showPicker = true"
+          />
+          <van-popup v-model="showPicker" position="bottom">
+            <van-datetime-picker
+              type="date"
+              @confirm="onConfirm"
+              @cancel="showPicker = false"
+            />
+          </van-popup>
           <div class="save">
             <van-button type="primary" block @click="modifyResult()"
               >保存</van-button
@@ -242,8 +258,11 @@ export default {
       prospect_detailsEdit: {},
       pictureId: [],
       isconfirm: false,
-      capture:['camera'],
+      capture: ["camera"],
       actions: [{ name: "相机" }, { name: "相册" }],
+      currentDate: '',
+      showPicker: false,
+      currentDate1:''
     };
   },
   components: {
@@ -259,6 +278,14 @@ export default {
   },
   updated() {},
   methods: {
+    onConfirm(time) {
+      // this.currentDate = `${time.getFullYear()}-${
+      //   time.getMonth() + 1
+      // }-${time.getDate()}`;
+      this.currentDate = time
+      this.currentDate1 = time
+      this.showPicker = false;
+    },
     deleteImage({ url }) {
       const index = this.fileList.findIndex((it) => it.url === url);
       this.pictureId.splice(index, 1);
@@ -331,6 +358,7 @@ export default {
       this.customerCode = res.data.customerCode;
       this.griddingCode = res.data.griddingCode;
       this.products = res.data.products;
+      // this.currentDate = this.data.checkTime
     },
     onResult(value) {
       this.editRecords.isSucc = value.index;
@@ -363,6 +391,7 @@ export default {
           marketAmount: this.editRecords.marketAmount,
           remark: this.editRecords.remark,
           feedback: this.editRecords.feedback,
+          checkTime:this.currentDate1
         },
       }).then((res) => {
         Toast({
@@ -461,8 +490,8 @@ export default {
         });
       }
     },
-     beforeRead(file) {
-      alert('file')
+    beforeRead(file) {
+      alert("file");
     },
     afterRead(file) {
       let formData = new FormData();

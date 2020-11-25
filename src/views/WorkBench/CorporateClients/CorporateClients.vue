@@ -55,8 +55,8 @@
             class="add_record"
             tag="span"
             :to="{
-              name: 'AddPotentialCustomers',
-              query: { title: '潜在客户添加' },
+              name: 'PublicCustomerRecord',
+              query: { title: '对公客户建档' },
             }"
             >+</router-link
           >
@@ -88,12 +88,13 @@
         </ul>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
-      
+
       <van-overlay :show="isPopupVisibleScreen">
         <van-form @submit="onSubmit" class="screenPopUp">
+          <van-icon class="closeBtn" size="20" name="cross" @click="isPopupVisibleScreen=false"/>
           <h1 class="popUpTitle">客户查询</h1>
           <van-field
-            v-model="username"
+            v-model="customerGroup"
             name="所属客户群体"
             label="所属客户群体"
             placeholder="所属客户群体"
@@ -115,26 +116,42 @@
               @cancel="showxuanzeqi = false"
             />
           </van-popup>
-          <van-field name="radio" label="需求类型">
+          <van-field name="checkboxGroup" label="需求类型">
             <template #input>
-              <van-radio-group v-model="duanxuan" direction="horizontal">
-                <van-radio name="1">存款</van-radio>
-                <van-radio name="2">贷款</van-radio>
-                <van-radio name="3">理财</van-radio>
-                <van-radio name="4">支付工具</van-radio>
-                <van-radio name="5">网银</van-radio>
-                <van-radio name="6">手机银行</van-radio>
-              </van-radio-group>
+              <van-checkbox-group v-model="duanxuan" direction="horizontal">
+                <van-checkbox name="1" checked-color="rgb(61, 66, 94)"
+                  >存款</van-checkbox
+                >
+                <van-checkbox name="2" checked-color="rgb(61, 66, 94)"
+                  >贷款</van-checkbox
+                >
+                <van-checkbox name="3" checked-color="rgb(61, 66, 94)"
+                  >理财</van-checkbox
+                >
+                <van-checkbox name="4" checked-color="rgb(61, 66, 94)"
+                  >支付工具</van-checkbox
+                >
+                <van-checkbox name="5" checked-color="rgb(61, 66, 94)"
+                  >网银</van-checkbox
+                >
+                <van-checkbox name="6" checked-color="rgb(61, 66, 94)"
+                  >手机银行</van-checkbox
+                >
+              </van-checkbox-group>
             </template>
           </van-field>
           <van-field
-            v-model="username"
+            v-model="distanceRange"
             name="距离范围(公里)"
             label="距离范围（公里）"
             placeholder="距离范围（公里）"
           />
-          <div style="padding: 16px">
-            <van-button color=" rgb(61, 66, 94)" type="info" native-type="submit">
+          <div style="padding: 16px; display: flex; justify-content: center">
+            <van-button
+              color=" rgb(61, 66, 94)"
+              type="info"
+              native-type="submit"
+            >
               查询
             </van-button>
           </div>
@@ -155,9 +172,17 @@ export default {
     return {
       title: "",
       typeCN: "",
-      duanxuan: "",
+      customerGroup: "",
+      distanceRange: "",
+      duanxuan: [],
       xuanzeqi: "",
-      xuanzeqilist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
+      xuanzeqilist: [
+        "所属行业",
+        "传媒",
+        "电子和其他电动设备",
+        "房地产",
+        "服饰和纺织品",
+      ],
       showxuanzeqi: false,
       value: 1,
       search_txt: "",
@@ -200,6 +225,10 @@ export default {
     // this.getMyClients();
   },
   methods: {
+    onSubmit() {
+      this.isPopupVisibleScreen = false;
+      console.log(1);
+    },
     onxuanzeqi(value) {
       this.xuanzeqi = value;
       this.showxuanzeqi = false;
@@ -335,7 +364,7 @@ export default {
   font-size: 14px;
 }
 .van-checkbox__icon {
-  height: 20px;
+  height: inherit;
 }
 /* 对公客户 */
 .corporateList {
@@ -366,9 +395,18 @@ export default {
   margin: 0px 2px;
 }
 .screenPopUp {
-  margin: 80px 35px 0px 35px;
+  position: relative;
   background-color: #fff;
   border-radius: 10px;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  transform: translate(-50%, -50%);
+}
+.closeBtn{
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 .popUpTitle {
   padding: 10px;
@@ -383,13 +421,13 @@ export default {
 .CorporateClients {
   padding-top: 46px;
 }
-.van-button--normal{
-    height: 30px;
-    width: 30%;
-    border-radius: 8px;
+.van-button--normal {
+  height: 30px;
+  width: 30%;
+  border-radius: 8px;
 }
-.van-radio--horizontal{
-    margin-bottom: 10px;
+.van-checkbox--horizontal {
+  margin-bottom: 6px;
 }
 /* 对公客户 */
 .time_frame {
