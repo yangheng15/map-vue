@@ -57,7 +57,7 @@
             年
             <span style="display: inline-block; width: 32px"></span>龄：
           </span>
-          <span class="right_txt">24</span>
+          <span class="right_txt">{{CustomerViewage}}</span>
         </li>
         <li style="position: relative">
           <span class="left_title">
@@ -66,7 +66,7 @@
             <span style="display: inline-block; width: 8px"></span>号：
           </span>
           <span class="right_txt">{{ CustomerViewTelphone }}</span>
-          <a class="img4" :href="'tel:' + CustomerViewTelphone"></a>
+          <a v-if="CustomerViewTelphone" class="img4" :href="'tel:' + CustomerViewTelphone"></a>
         </li>
         <li>
           <span class="left_title">所属机构：</span>
@@ -248,23 +248,23 @@ export default {
       stock: [
         {
           menoy_name: "存款余额",
-          menoy: "500,000.00",
+          menoy: "0.00",
         },
         {
           menoy_name: "活期存款余额",
-          menoy: "500,000.00",
+          menoy: "0.00",
         },
         {
           menoy_name: "定期存款余额",
-          menoy: "500,000.00",
+          menoy: "0.00",
         },
         {
           menoy_name: "大额存单余额",
-          menoy: "500,000.00",
+          menoy: "0.00",
         },
         {
           menoy_name: "贷款余额",
-          menoy: "500,000.00",
+          menoy: "0.00",
         },
         {
           menoy_name: "历史贷款类型",
@@ -400,6 +400,7 @@ export default {
       id: "",
       CustomerViewDetails: "",
       CustomerViewName: "",
+      CustomerViewage: "",
       CustomerViewGender: null,
       CustomerViewStar: "",
       CustomerViewCode: null,

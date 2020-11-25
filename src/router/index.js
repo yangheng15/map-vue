@@ -64,6 +64,8 @@ const TaskManagement = () => import('@/views/WorkBench/TaskManagement/TaskManage
 const PotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/PotentialCustomers.vue');
 // 我的客户
 const MyClients = () => import('@/views/WorkBench/MyClients/MyClients.vue');
+// 对公客户
+const CorporateClients = () => import('@/views/WorkBench/CorporateClients/CorporateClients.vue');
 // 我的客户筛选
 const ScreenMyCustomers = () => import('@/views/WorkBench/MyClients/ScreenMyCustomers.vue');
 // 添加潜在客户
@@ -265,6 +267,11 @@ const routes = [{
     path: '/MyClients',
     name: 'MyClients',
     component: MyClients,
+  },
+  {
+    path: '/CorporateClients',
+    name: 'CorporateClients',
+    component: CorporateClients,
   },
   {
     path: '/ScreenMyCustomers',

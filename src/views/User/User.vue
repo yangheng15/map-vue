@@ -70,13 +70,13 @@
         </p>
         <van-icon name="arrow" />
       </router-link>
-      <divclass="calendar">
+      <div class="calendar">
         <p>
           <img src="../../assets/User/versionNo.svg" alt />
           版本号
         </p>
         <p style="color: #234243">{{ versionNo }}</p>
-      </divclass=>
+      </div>
     </div>
 
     <div style="padding: 16px 16px 40px 16px">

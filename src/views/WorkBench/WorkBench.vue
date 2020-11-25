@@ -7,7 +7,7 @@
         class="c-link-box"
         style="text-align: center; border-bottom: 1px dotted #e8e8e8"
       >
-        <router-link
+        <!-- <router-link
           tag="div"
           class="function_men"
           :to="{ name: 'CustomerPool', query: { title: '客户池' } }"
@@ -16,8 +16,18 @@
             <img src="../../assets/WorkBench/kehuchi.svg" alt />
           </span>
           <p class="function_name">客户池</p>
-        </router-link>
+        </router-link> -->
         <router-link
+          tag="div"
+          class="function_men"
+          :to="{ name: 'CorporateClients', query: { title: '对公客户' } }"
+        >
+          <span class="c-link-card" style="background: #d33e42">
+            <img src="../../assets/WorkBench/kehuchi.svg" alt />
+          </span>
+          <p class="function_name">对公客户</p>
+        </router-link>
+        <!-- <router-link
           tag="div"
           class="function_men"
           :to="{ name: 'PotentialCustomers', query: { title: '潜在客户' } }"
@@ -26,18 +36,19 @@
             <img src="../../assets/WorkBench/qianzai.svg" alt />
           </span>
           <p class="function_name">潜在客户</p>
-        </router-link>
+        </router-link> -->
         <router-link
           tag="div"
           class="function_men"
-          :to="{ name: 'RecentContact', query: { title: '最近联系' } }"
+          :to="{ name: 'MyClients', query: { title: '我的客户' } }"
         >
-          <span class="c-link-card" style="background: #ecd14a">
-            <img src="../../assets/WorkBench/zuijin.svg" alt />
+          <span class="c-link-card" style="background: #e18d25">
+            <img src="../../assets/WorkBench/qianzai.svg" alt />
             <!-- <span v-if="countsMap.grief>0">{{countsMap.grief}}</span> -->
           </span>
-          <p class="function_name">最近联系</p>
+          <p class="function_name">个人客户</p>
         </router-link>
+
         <router-link
           tag="div"
           class="function_men"
@@ -52,14 +63,24 @@
         <router-link
           tag="div"
           class="function_men"
+          :to="{ name: 'RecentContact', query: { title: '最近联系' } }"
+        >
+          <span class="c-link-card" style="background: #ecd14a">
+            <img src="../../assets/WorkBench/zuijin.svg" alt />
+            <!-- <span v-if="countsMap.grief>0">{{countsMap.grief}}</span> -->
+          </span>
+          <p class="function_name">最近联系</p>
+        </router-link>
+        <!-- <router-link
+          tag="div"
+          class="function_men"
           :to="{ name: 'MyClients', query: { title: '我的客户' } }"
         >
           <span class="c-link-card" style="background: #3d425e">
             <img src="../../assets/WorkBench/kehu.svg" alt />
-            <!-- <span v-if="countsMap.grief>0">{{countsMap.grief}}</span> -->
           </span>
           <p class="function_name">我的客户</p>
-        </router-link>
+        </router-link> -->
         <!-- <router-link
           tag="div"
           class="function_men"

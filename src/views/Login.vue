@@ -64,7 +64,7 @@ export default {
     //   this.locationUpload();
     //   this.$router.push("/home");
     // }
-    if(localStorage.getItem("passWord") != null) {
+    if (localStorage.getItem("passWord") != null) {
       this.remember = true;
       this.username = localStorage.getItem("username");
       this.password = localStorage.getItem("passWord");
@@ -88,7 +88,6 @@ export default {
       // //console.log("failed", errorInfo);
     },
     changeType() {
-      console.log(111);
       this.flag = !this.flag;
     },
     getDic() {
@@ -98,7 +97,6 @@ export default {
         //客户等级
         const data = res.data.find((it) => it.type === "dic_client_grade")
           .childs;
-        //console.log(data);
         localStorage.setItem("dic", JSON.stringify(data));
         const product = res.data.find((it) => it.type === "dic_product_type")
           .childs;
@@ -106,28 +104,23 @@ export default {
         localStorage.setItem("dicProduct", JSON.stringify(product));
         const clientWill = res.data.find((it) => it.type === "dic_client_will")
           .childs;
-        //console.log(clientWill);
         localStorage.setItem("dicClientWill", JSON.stringify(clientWill));
         const gridResource = res.data.find(
           (it) => it.type === "dic_grid_resource_type"
         ).childs;
-        //console.log(gridResource);
         localStorage.setItem("dicGridResource", JSON.stringify(gridResource));
         // 学历
         const education = res.data.find((it) => it.type === "dic_education")
           .childs;
-        console.log(education);
         localStorage.setItem("dicEducation", JSON.stringify(education));
         // 家庭类型
         const familyType = res.data.find((it) => it.type === "dic_family_type")
           .childs;
-        console.log(familyType);
         localStorage.setItem("dicFamilyType", JSON.stringify(familyType));
         // 潜在客户需求
         const potentialNeedType = res.data.find(
           (it) => it.type === "potential_need_type"
         ).childs;
-        console.log(potentialNeedType);
         localStorage.setItem(
           "dicPotentialNeedType",
           JSON.stringify(potentialNeedType)
@@ -135,7 +128,6 @@ export default {
       });
     },
     locationUpload() {
-      console.log(localStorage.getItem("username"));
       var u = navigator.userAgent;
       //Android终端
       var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
@@ -161,9 +153,7 @@ export default {
         return permission;
       }
       if (isiOS) {
-        let permission = window.webkit.messageHandlers.checkPermission.postMessage(
-          username
-        );
+        let permission = window.prompt("checkPermission");
         return permission;
       }
     },
@@ -182,13 +172,13 @@ export default {
         });
         return;
       }
-      if (whetherPermission() != true) {
-        Dialog.alert({
-          title: "提示",
-          message: "没有定位权限，请授权",
-        });
-        return;
-      } else {
+      // if (this.whetherPermission() != true) {
+      //   Dialog.alert({
+      //     title: "提示",
+      //     message: "没有定位权限，请在设置中授权",
+      //   });
+      //   return;
+      // } else {
         var bcrypt = require("bcryptjs"); //引入bcryptjs库
         var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
         localStorage.clear();
@@ -204,10 +194,7 @@ export default {
           }),
         })
           .then((res) => {
-            console.log(res);
-
             if (res.access_token) {
-              console.log(moment(new Date()).valueOf());
               let expires_in = moment(new Date()).valueOf() + res.expires_in;
 
               this.aData = new Date();
@@ -222,13 +209,12 @@ export default {
               this.getDic();
               this.$router.push("/home");
               this.locationUpload();
-              console.log(localStorage.getItem("username"));
             }
           })
           .catch((err) => {
             // //console.log(err);
           });
-      }
+      // }
     },
   },
 };
