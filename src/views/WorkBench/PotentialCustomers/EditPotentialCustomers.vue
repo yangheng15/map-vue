@@ -3,18 +3,18 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '潜在客户详情'">
       <van-field
-        v-model="prospect_details.name"
+        v-model="prospect_details_name"
         name="客户名称："
         label="客户名称："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写客户名称' }]"
+        required
       />
       <van-field
-        v-model="prospect_details.telphone"
+        v-model="prospect_details_telphone"
         name="手机号："
         label="手机号："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写手机号' }]"
+        required
       >
         <template #button>
           <a class="img4" :href="'tel:' + prospect_details.telphone"></a>
@@ -25,14 +25,12 @@
         name="证件号码："
         label="证件号码："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写证件号码' }]"
       />
       <van-field
         v-model="prospect_details.wechat"
         name="微信："
         label="微信："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写微信' }]"
       />
       <van-field
         readonly
@@ -92,28 +90,24 @@
         name="工作单位："
         label="工作单位："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写工作单位' }]"
       />
       <van-field
         v-model="prospect_details.connectAddress"
         name="联系地址："
         label="联系地址："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写联系地址' }]"
       />
       <van-field
         v-model="prospect_details.annualIncome"
         name="年收入："
         label="年收入："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写年收入' }]"
       />
       <van-field
         v-model="prospect_details.qq"
         name="QQ："
         label="QQ："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写QQ' }]"
       />
       <van-field
         readonly
@@ -155,14 +149,12 @@
         name="居住地址："
         label="居住地址："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写居住地址' }]"
       />
       <van-field
         v-model="prospect_details.workAddress"
         name="工作地址："
         label="工作地址："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写工作地址' }]"
       />
       <van-field
         readonly
@@ -186,7 +178,6 @@
         name="车牌号："
         label="车牌号："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写车牌号' }]"
       />
       <van-field
         v-model="prospect_details.location"
@@ -340,6 +331,8 @@ export default {
       id: "",
       prospect_details: {},
       prospect_detailsEdit: {},
+      prospect_details_name: "",
+      prospect_details_telphone: "",
       longitude: "114.654102",
       latitude: "33.623741",
       mapCenter: { lng: "114.654102", lat: "33.623741" },
@@ -349,7 +342,7 @@ export default {
       longitudeLatitude: false,
       map: null,
       timeOutEvent: 0,
-      zoom: 20
+      zoom: 20,
     };
   },
   async created() {
@@ -388,11 +381,11 @@ export default {
     longpress({ point }) {
       console.log(123);
       const zoom = this.map.getZoom();
-      if( Math.abs(zoom - this.zoom) > 0) {
-          this.zoom = zoom
-          return;
+      if (Math.abs(zoom - this.zoom) > 0) {
+        this.zoom = zoom;
+        return;
       }
-      this.markerLongpress(point)
+      this.markerLongpress(point);
       // clearTimeout(this.timeOutEvent);
       // // this.timeOutEvent = 0;
       // this.timeOutEvent = setTimeout(() => {
@@ -566,6 +559,8 @@ export default {
         },
       });
       this.prospect_details = res.data;
+      this.prospect_details_name = res.data.name;
+      this.prospect_details_telphone = res.data.telphone;
       if (this.prospect_details.location) {
         const positionArr = this.prospect_details.location.split(",");
         console.log(positionArr);
@@ -593,25 +588,39 @@ export default {
       if (isAndroid) {
         let positionArr = window.android.getLocation().split(",");
         // let positionArr = [124.281873, 45.514322]
-        if(positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {// 如果当前的 中心点和之前的中心点一样
-          this.mapCenter = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
-          this.zoomNum = this.map.getZoom()
-          return
+        if (
+          positionArr[0] === this.mapCenter.lng &&
+          positionArr[1] === this.mapCenter.lat
+        ) {
+          // 如果当前的 中心点和之前的中心点一样
+          this.mapCenter = {
+            lng: positionArr[0],
+            lat: positionArr[1] + 0.0001,
+          }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.zoomNum = this.map.getZoom();
+          return;
         }
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.zoomNum = this.map.getZoom()
+        this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
       }
       if (isiOS) {
         let positionArr = window.prompt("getLocation").split(",");
         // let positionArr = [124.281873, 45.514322]
-        if(positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {// 如果当前的 中心点和之前的中心点一样
-          this.mapCenter = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
-          this.zoomNum = this.map.getZoom()
-          return
+        if (
+          positionArr[0] === this.mapCenter.lng &&
+          positionArr[1] === this.mapCenter.lat
+        ) {
+          // 如果当前的 中心点和之前的中心点一样
+          this.mapCenter = {
+            lng: positionArr[0],
+            lat: positionArr[1] + 0.0001,
+          }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.zoomNum = this.map.getZoom();
+          return;
         }
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.zoomNum = this.map.getZoom()
+        this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
       }
     },
@@ -623,12 +632,26 @@ export default {
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
     modifyResult() {
+      if (this.prospect_details_name == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入客户名称！",
+        });
+        return;
+      }
+      if (this.prospect_details_telphone == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入手机号！",
+        });
+        return;
+      }
       this.$httpPut({
         url: "/api/customersPotential/update",
         data: {
           id: this.id,
-          name: this.prospect_details.name,
-          telphone: this.prospect_details.telphone,
+          name: this.prospect_details_name,
+          telphone: this.prospect_details_telphone,
           identifyNo: this.prospect_details.identifyNo,
           wechat: this.prospect_details.wechat,
           nation: this.prospect_detailsEdit.nation,

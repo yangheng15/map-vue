@@ -70,6 +70,18 @@
         </p>
         <van-icon name="arrow" />
       </router-link>
+      <router-link
+        tag="div"
+        class="calendar"
+        :to="{ name: 'UpdatePassword', query: { title: '密码修改' } }"
+      >
+        <p>
+          <img src="../../assets/User/versionNo.svg" alt />
+          版本号
+        </p>
+        <p style="color: #234243">{{ versionNo }}</p>
+        <!-- <van-icon name="arrow" /> -->
+      </router-link>
     </div>
 
     <div style="padding: 16px 16px 40px 16px">
@@ -105,13 +117,36 @@ export default {
       userNameSex: "",
       women: icon1,
       men: icon2,
+      versionNo: "",
     };
   },
   created() {
     this.getRealName();
     this.getMedalOwner();
+    this.getversion();
   },
   methods: {
+    getversion() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        this.$httpGet({
+          url: `/api/version/get/android`,
+        }).then((res) => {
+          this.versionNo = res.data.versionNo;
+        });
+      }
+      if (isiOS) {
+        this.$httpGet({
+          url: `/api/version/get/ios`,
+        }).then((res) => {
+          this.versionNo = res.data.versionNo;
+        });
+      }
+    },
     cancelLocationUpload() {
       var u = navigator.userAgent;
       //Android终端
@@ -123,7 +158,7 @@ export default {
       }
       if (isiOS) {
         // window.webkit.messageHandlers.cancelLocationUpload.postMessage();
-        window.prompt("cancelLocationUpload")
+        window.prompt("cancelLocationUpload");
       }
     },
     endLogin() {
@@ -132,7 +167,7 @@ export default {
       })
         .then((res) => {
           if (res) {
-            this.cancelLocationUpload()
+            this.cancelLocationUpload();
             this.$router.push("/");
             // android.exit(); //告诉安卓退出了
             let _username = localStorage.getItem("username");
@@ -164,7 +199,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res.data);
         this.MedalOwner = res.data;
       });
     },

@@ -86,6 +86,14 @@
             size="large"
             >失败</van-tag
           >
+          <van-tag
+            v-if="thisItem.status == 0"
+            class="status_success"
+            color="#201F25"
+            plain
+            size="large"
+            >已过期</van-tag
+          >
         </router-link>
         <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>

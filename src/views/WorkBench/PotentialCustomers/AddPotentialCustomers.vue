@@ -7,28 +7,26 @@
         name="客户名称："
         label="客户名称："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写客户名称' }]"
+        required
       />
       <van-field
         v-model="phone_number"
         name="手机号："
         label="手机号："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写手机号' }]"
+        required
       />
       <van-field
         v-model="card_number"
         name="证件号码："
         label="证件号码："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写证件号码' }]"
       />
       <van-field
         v-model="weChat"
         name="微信："
         label="微信："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写微信' }]"
       />
       <van-field
         readonly
@@ -87,28 +85,24 @@
         name="工作单位："
         label="工作单位："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写工作单位' }]"
       />
       <van-field
         v-model="contact_address"
         name="联系地址："
         label="联系地址："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写联系地址' }]"
       />
       <van-field
         v-model="annual_income"
         name="年收入："
         label="年收入："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写年收入' }]"
       />
       <van-field
         v-model="qq_number"
         name="QQ："
         label="QQ："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写QQ' }]"
       />
       <van-field
         readonly
@@ -150,14 +144,12 @@
         name="居住地址："
         label="居住地址："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写居住地址' }]"
       />
       <van-field
         v-model="work_address"
         name="工作地址："
         label="工作地址："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写工作地址' }]"
       />
       <van-field
         readonly
@@ -181,7 +173,6 @@
         name="车牌号："
         label="车牌号："
         placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写车牌号' }]"
       />
       <van-field
         v-model="user_positioning"
@@ -475,6 +466,20 @@ export default {
       this.longitudeLatitude = !this.longitudeLatitude;
     },
     addResult() {
+      if (this.customer_name == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入客户名称！",
+        });
+        return;
+      }
+      if (this.phone_number == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入手机号！",
+        });
+        return;
+      }
       this.$httpPost({
         url: "/api/customersPotential/add",
         data: {
@@ -518,25 +523,39 @@ export default {
       if (isAndroid) {
         let positionArr = window.android.getLocation().split(",");
         // let positionArr = [124.281873, 45.514322];
-        if(positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {// 如果当前的 中心点和之前的中心点一样
-          this.mapCenter = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
-          this.zoomNum = this.map.getZoom()
-          return
+        if (
+          positionArr[0] === this.mapCenter.lng &&
+          positionArr[1] === this.mapCenter.lat
+        ) {
+          // 如果当前的 中心点和之前的中心点一样
+          this.mapCenter = {
+            lng: positionArr[0],
+            lat: positionArr[1] + 0.0001,
+          }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.zoomNum = this.map.getZoom();
+          return;
         }
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.zoomNum = this.map.getZoom()
+        this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
       }
       if (isiOS) {
         let positionArr = window.prompt("getLocation").split(",");
         // let positionArr = [124.281873, 45.514322];
-        if(positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {// 如果当前的 中心点和之前的中心点一样
-          this.mapCenter = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
-          this.zoomNum = this.map.getZoom()
-          return
+        if (
+          positionArr[0] === this.mapCenter.lng &&
+          positionArr[1] === this.mapCenter.lat
+        ) {
+          // 如果当前的 中心点和之前的中心点一样
+          this.mapCenter = {
+            lng: positionArr[0],
+            lat: positionArr[1] + 0.0001,
+          }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.zoomNum = this.map.getZoom();
+          return;
         }
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.zoomNum = this.map.getZoom()
+        this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
         alert("");
       }

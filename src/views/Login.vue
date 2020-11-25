@@ -59,30 +59,30 @@ export default {
     const token = localStorage.getItem("_token"),
       username = localStorage.getItem("username"),
       password = localStorage.getItem("passWord");
-    if (token && username && password) {
-      this.getDic();
-      this.locationUpload();
-      this.$router.push("/home");
-    }
-    // else if(localStorage.getItem("passWord") != null) {
-    //   this.remember = true;
-    //   this.username = localStorage.getItem("username");
-    //   this.password = localStorage.getItem("passWord");
+    // if (token && username && password) {
+    //   this.getDic();
+    //   this.locationUpload();
+    //   this.$router.push("/home");
     // }
+    if(localStorage.getItem("passWord") != null) {
+      this.remember = true;
+      this.username = localStorage.getItem("username");
+      this.password = localStorage.getItem("passWord");
+    }
   },
-  // beforeRouteEnter(to, from, next) {
-  //   next((vm) => {
-  //     //如果token存在跳转首页
-  //     const token = localStorage.getItem("_token"),
-  //       username = localStorage.getItem("username"),
-  //       password = localStorage.getItem("passWord");
-  //     if (token && username && password) {
-  //       vm.getDic();
-  //       this.locationUpload();
-  //       vm.$router.push("/home");
-  //     }
-  //   });
-  // },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      //如果token存在跳转首页
+      const token = localStorage.getItem("_token"),
+        username = localStorage.getItem("username"),
+        password = localStorage.getItem("passWord");
+      if (token && username && password) {
+        vm.getDic();
+        this.locationUpload();
+        vm.$router.push("/home");
+      }
+    });
+  },
   methods: {
     onFailed(errorInfo) {
       // //console.log("failed", errorInfo);
@@ -123,6 +123,15 @@ export default {
           .childs;
         console.log(familyType);
         localStorage.setItem("dicFamilyType", JSON.stringify(familyType));
+        // 潜在客户需求
+        const potentialNeedType = res.data.find(
+          (it) => it.type === "potential_need_type"
+        ).childs;
+        console.log(potentialNeedType);
+        localStorage.setItem(
+          "dicPotentialNeedType",
+          JSON.stringify(potentialNeedType)
+        );
       });
     },
     locationUpload() {
@@ -141,6 +150,23 @@ export default {
         window.webkit.messageHandlers.locationUpload.postMessage(username);
       }
     },
+    whetherPermission() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let permission = window.android.checkPermission();
+        return permission;
+      }
+      if (isiOS) {
+        let permission = window.webkit.messageHandlers.checkPermission.postMessage(
+          username
+        );
+        return permission;
+      }
+    },
     async onSubmit(values) {
       if (this.username == "") {
         Dialog.alert({
@@ -156,45 +182,53 @@ export default {
         });
         return;
       }
-      var bcrypt = require("bcryptjs"); //引入bcryptjs库
-      var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
-      localStorage.clear();
-      this.$httpPost({
-        url: "/oauth/token",
-        data: qs.stringify({
-          username: this.username,
-          password: bcrypt.hashSync(md5(this.password)),
-          grant_type: "password",
-          client_id: "test",
-          client_secret: "test",
-          scope: "all",
-        }),
-      })
-        .then((res) => {
-          console.log(res);
-
-          if (res.access_token) {
-            console.log(moment(new Date()).valueOf());
-            let expires_in = moment(new Date()).valueOf() + res.expires_in;
-
-            this.aData = new Date();
-            localStorage.setItem("_token", res.access_token);
-            localStorage.setItem("refresh_token", res.refresh_token);
-            localStorage.setItem("expires_in", expires_in);
-            localStorage.setItem("username", res.username);
-            // localStorage.setItem("passWord", this.password);
-            if (this.remember) {
-              localStorage.setItem("passWord", this.password);
-            }
-            this.getDic();
-            this.$router.push("/home");
-            this.locationUpload();
-            console.log(localStorage.getItem("username"));
-          }
-        })
-        .catch((err) => {
-          // //console.log(err);
+      if (whetherPermission() != true) {
+        Dialog.alert({
+          title: "提示",
+          message: "没有定位权限，请授权",
         });
+        return;
+      } else {
+        var bcrypt = require("bcryptjs"); //引入bcryptjs库
+        var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
+        localStorage.clear();
+        this.$httpPost({
+          url: "/oauth/token",
+          data: qs.stringify({
+            username: this.username,
+            password: bcrypt.hashSync(md5(this.password)),
+            grant_type: "password",
+            client_id: "test",
+            client_secret: "test",
+            scope: "all",
+          }),
+        })
+          .then((res) => {
+            console.log(res);
+
+            if (res.access_token) {
+              console.log(moment(new Date()).valueOf());
+              let expires_in = moment(new Date()).valueOf() + res.expires_in;
+
+              this.aData = new Date();
+              localStorage.setItem("_token", res.access_token);
+              localStorage.setItem("refresh_token", res.refresh_token);
+              localStorage.setItem("expires_in", expires_in);
+              localStorage.setItem("username", res.username);
+              // localStorage.setItem("passWord", this.password);
+              if (this.remember) {
+                localStorage.setItem("passWord", this.password);
+              }
+              this.getDic();
+              this.$router.push("/home");
+              this.locationUpload();
+              console.log(localStorage.getItem("username"));
+            }
+          })
+          .catch((err) => {
+            // //console.log(err);
+          });
+      }
     },
   },
 };
