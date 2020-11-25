@@ -70,18 +70,13 @@
         </p>
         <van-icon name="arrow" />
       </router-link>
-      <router-link
-        tag="div"
-        class="calendar"
-        :to="{ name: 'UpdatePassword', query: { title: '密码修改' } }"
-      >
+      <divclass="calendar">
         <p>
           <img src="../../assets/User/versionNo.svg" alt />
           版本号
         </p>
         <p style="color: #234243">{{ versionNo }}</p>
-        <!-- <van-icon name="arrow" /> -->
-      </router-link>
+      </divclass=>
     </div>
 
     <div style="padding: 16px 16px 40px 16px">
