@@ -1,21 +1,18 @@
 <template>
-  <div class="CorporateClients">
+  <div class="IndividualCustomers">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN == '对公客户'">
-      <div class="searchFixed">
-        <van-search
-          v-model="search_txt"
-          show-action
-          placeholder="客户名称"
-          @search="getFollow"
-        >
-          <template #action>
-            <div @click="getFollow">搜索</div>
-          </template>
-        </van-search>
-        <van-button @click="popUp()" type="default">高级筛选</van-button>
-      </div>
-
+    <div v-if="typeCN == '个人客户'">
+      <van-search
+        class="searchFixed"
+        v-model="search_txt"
+        show-action
+        placeholder="客户名称"
+        @search="onSearch"
+      >
+        <template #action>
+          <div @click="popUp()">筛选</div>
+        </template>
+      </van-search>
       <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
         <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">我的客户</li>
         <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">客户池</li>
@@ -33,35 +30,30 @@
           v-for="(thisItem, index) in publicCustomerPool"
           :key="index"
         >
-          <router-link
-            tag="li"
-            :to="{
-              name: 'EditPublicCustomerRecord',
-              query: { title: '对公客户建档' },
-            }"
-          >
+          <li>
             <div class="corporateFlex">
-              <p class="corporateManage">{{ thisItem.name }}</p>
-              <van-tag
-                v-if="thisItem.sourceFlag"
-                plain
-                color="#7232dd"
-                size="medium"
-                >{{ thisItem.sourceTxt }}
-              </van-tag>
-              <p>{{ thisItem.marketingIntervalDay }}天内营销</p>
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditIndividualCustomersRecord',
+                  query: { title: '个人客户建档' },
+                }"
+                >{{ thisItem.name }}</router-link
+              >
+              <van-tag plain color="#101010" size="medium">来自分享 </van-tag>
+              <p>天内营销</p>
             </div>
             <div class="corporateFlex">
-              <p class="corporateManageAddress">
-                {{ thisItem.address }}
-                <!-- <img
+              <p style="display: flex; align-items: center">
+                详细地址
+                <img
                   src="../../../assets/newCorporate/locationImg.svg"
                   alt=""
-                /> -->
+                />
               </p>
-              <p>上次成单：{{ thisItem.lastSuccessTime | transform }}</p>
+              <p>上次成单：2020-10-5</p>
             </div>
-          </router-link>
+          </li>
         </ul>
         <div
           style="
@@ -78,8 +70,8 @@
             class="add_record"
             tag="span"
             :to="{
-              name: 'PublicCustomerRecord',
-              query: { title: '对公客户建档' },
+              name: 'IndividualCustomersRecord',
+              query: { title: '个人客户建档' },
             }"
             >+</router-link
           >
@@ -100,19 +92,25 @@
         >
           <li>
             <div class="corporateFlex">
-              <p class="corporateManage1">{{ thisItem.name }}</p>
-              <p style="color: #1432e3" @click="showBack(thisItem.id)">认领</p>
+              <p>{{ thisItem.name }}</p>
+              <p style="color: #1432e3" @click="showBack(thisItem.code)">
+                认领
+              </p>
             </div>
             <div class="corporateFlex">
               <p style="display: flex; align-items: center">
-                {{ thisItem.address }}
+                详细地址
+                <img
+                  src="../../../assets/newCorporate/locationImg.svg"
+                  alt=""
+                />
               </p>
             </div>
           </li>
         </ul>
       </van-list>
       <van-overlay :show="isPopupVisibleScreen">
-        <van-form @submit="getFollow" class="screenPopUp">
+        <van-form @submit="onSubmit" class="screenPopUp">
           <van-icon
             class="closeBtn"
             size="20"
@@ -120,12 +118,12 @@
             @click="isPopupVisibleScreen = false"
           />
           <h1 class="popUpTitle">客户查询</h1>
-          <!-- <van-field
+          <van-field
             v-model="customerGroup"
             name="所属客户群体"
             label="所属客户群体"
             placeholder="所属客户群体"
-          /> -->
+          />
           <van-field
             readonly
             clickable
@@ -183,7 +181,7 @@
 import ChildNav from "../../../components/Public/ChildNav";
 import { Dialog } from "vant";
 export default {
-  name: "CorporateClients",
+  name: "IndividualCustomers",
   components: {
     ChildNav,
   },
@@ -231,26 +229,30 @@ export default {
       },
     };
   },
-  // beforeRouteEnter(to, from, next) {
-  //   next((vm) => {
-  //     console.log(from);
-  //     if (from.name !== "ScreenMyCustomers") {
-  //       vm.getMyClients();
-  //     } else {
-  //       console.log(vm.$store.state.screenMyCustomerData);
-  //       if (vm.$store.state.tabId == 0) {
-  //         vm.newCustomerList = vm.$store.state.screenMyCustomerData;
-  //       } else {
-  //         vm.newCustomerList1 = vm.$store.state.screenMyCustomerData;
-  //       }
-  //     }
-  //   });
-  // },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      console.log(from);
+      if (from.name !== "ScreenMyCustomers") {
+        vm.getMyClients();
+      } else {
+        console.log(vm.$store.state.screenMyCustomerData);
+        if (vm.$store.state.tabId == 0) {
+          vm.newCustomerList = vm.$store.state.screenMyCustomerData;
+        } else {
+          vm.newCustomerList1 = vm.$store.state.screenMyCustomerData;
+        }
+      }
+    });
+  },
   created() {
     this.typeCN = this.$route.query.title;
     this.tabId = this.$store.state.tabId || 0;
   },
   methods: {
+    onSubmit() {
+      this.isPopupVisibleScreen = false;
+      console.log(1);
+    },
     onindustry_type(value) {
       this.industry_type = value;
       this.showindustry_type = false;
@@ -263,6 +265,7 @@ export default {
       this.tabId = ev;
       this.publicCustomerPool = [];
       this.publicCustomerPool1 = [];
+      //   this.getFollow(ev);
       this.onLoad();
     },
     getFollow(type) {
@@ -271,10 +274,6 @@ export default {
           page: this.pageNo,
           limit: this.pageSize,
           type: this.tabId,
-          // name: type,
-          industryType:this.industry_type.text,
-          demandType:this.potentialNeedType,
-          distanceRange:this.distanceRange
         };
         this.$httpGet({
           url: "/api/publicCustomerPool/query",
@@ -303,12 +302,10 @@ export default {
             reject(err);
           });
       });
-      
     },
     // 滚动加载更多
     onLoad() {
       // debugger
-      this.publicCustomerPool=[]
       this.loading = true;
       this.getFollow().then((res) => {
         if (this.tabId == 0) {
@@ -334,7 +331,6 @@ export default {
           }
         }
       });
-      this.isPopupVisibleScreen = false
     },
     getdic() {
       // 潜在客户需求
@@ -367,41 +363,37 @@ export default {
       });
     },
     onSearch(val) {
-      return new Promise((resolve, reject) => {
-        console.log(val);
-        let params = {
-          page: this.pageNo,
-          limit: this.pageSize,
-          type: this.tabId,
-          name: val,
-        };
+      if (this.tabId == 0) {
         this.$httpGet({
-          url: "/api/publicCustomerPool/query",
-          params: params,
-        })
-          .then((res) => {
-            if (res.data.length > 0) {
-              if (this.tabId == 0) {
-                let result = {
-                  total: res.count,
-                  pageIndex: 1,
-                  publicCustomerPool: res.data,
-                };
-                resolve(result);
-              } else if (this.tabId == 1) {
-                let result = {
-                  total: res.count,
-                  pageIndex: 1,
-                  publicCustomerPool1: res.data,
-                };
-                resolve(result);
-              }
-            }
-          })
-          .catch((err) => {
-            reject(err);
+          url: "/api/customer/appOwner",
+          params: {
+            limit: 10,
+            page: 1,
+            name: val,
+          },
+        }).then((res) => {
+          // console.log(res.data);
+          this.newCustomerList = res.data;
+          this.newCustomerList.forEach((it) => {
+            this.star = it.star;
           });
-      });
+        });
+      } else {
+        this.$httpGet({
+          url: "/api/customer/appOwnerClaim",
+          params: {
+            limit: 10,
+            page: 1,
+            name: val,
+          },
+        }).then((res) => {
+          // console.log(res.data);
+          this.newCustomerList1 = res.data;
+          this.newCustomerList1.forEach((it) => {
+            this.star1 = it.star;
+          });
+        });
+      }
     },
     showPopupScreen() {
       this.isPopupVisibleScreen = true;
@@ -469,17 +461,11 @@ export default {
   font-size: 14px;
 }
 .searchFixed {
-  display: flex;
-  align-items: center;
-  background: #fff;
   position: fixed;
   top: 46px;
   left: 0px;
   width: 100%;
   z-index: 1;
-}
-.van-search {
-  width: 80%;
 }
 .van-checkbox__icon {
   height: inherit;
@@ -488,7 +474,6 @@ export default {
 .corporateList {
   padding: 10px;
   border-bottom: 1px solid #f8f8f8;
-  position: relative;
 }
 .corporateFlex {
   display: flex;
@@ -534,35 +519,19 @@ export default {
   font-weight: 500;
   color: rgb(77, 75, 75);
 }
-.CorporateClients {
+.van-search {
+  width: 100%;
+}
+.IndividualCustomers {
   padding-top: 46px;
 }
 .van-button--normal {
   height: 30px;
   width: 30%;
-  border: none;
   border-radius: 8px;
 }
 .van-checkbox--horizontal {
   margin-bottom: 6px;
-}
-.corporateManage {
-  width: 40%;
-  overflow: hidden; /*超出部分隐藏*/
-  white-space: nowrap; /*不换行*/
-  text-overflow: ellipsis; /*超出部分文字以...显示*/
-}
-.corporateManage1 {
-  width: 70%;
-  overflow: hidden; /*超出部分隐藏*/
-  white-space: nowrap; /*不换行*/
-  text-overflow: ellipsis; /*超出部分文字以...显示*/
-}
-.corporateManageAddress {
-  width: 45%;
-  overflow: hidden; /*超出部分隐藏*/
-  white-space: nowrap; /*不换行*/
-  text-overflow: ellipsis; /*超出部分文字以...显示*/
 }
 /* 对公客户 */
 .time_frame {

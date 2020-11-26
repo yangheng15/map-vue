@@ -64,10 +64,20 @@ const TaskManagement = () => import('@/views/WorkBench/TaskManagement/TaskManage
 const PotentialCustomers = () => import('@/views/WorkBench/PotentialCustomers/PotentialCustomers.vue');
 // 我的客户
 const MyClients = () => import('@/views/WorkBench/MyClients/MyClients.vue');
+// 分享
+const CorporateClientsShare = () => import('@/views/WorkBench/CorporateClientsShare/CorporateClientsShare.vue');
+// 个人客户
+const IndividualCustomers = () => import('@/views/WorkBench/IndividualCustomers/IndividualCustomers.vue');
+// 个人客户建档
+const IndividualCustomersRecord = () => import('@/views/WorkBench/IndividualCustomers/IndividualCustomersRecord.vue');
+// 个人客户建档修改
+const EditIndividualCustomersRecord = () => import('@/views/WorkBench/IndividualCustomers/EditIndividualCustomersRecord.vue');
 // 对公客户
 const CorporateClients = () => import('@/views/WorkBench/CorporateClients/CorporateClients.vue');
 //对公客户建档
 const PublicCustomerRecord = () => import('@/views/WorkBench/CorporateClients/PublicCustomerRecord.vue');
+//对公客户修改
+const EditPublicCustomerRecord = () => import('@/views/WorkBench/CorporateClients/EditPublicCustomerRecord.vue');
 // 我的客户筛选
 const ScreenMyCustomers = () => import('@/views/WorkBench/MyClients/ScreenMyCustomers.vue');
 // 添加潜在客户
@@ -279,6 +289,31 @@ const routes = [{
     path: '/PublicCustomerRecord',
     name: 'PublicCustomerRecord',
     component: PublicCustomerRecord,
+  },
+  {
+    path: '/EditPublicCustomerRecord',
+    name: 'EditPublicCustomerRecord',
+    component: EditPublicCustomerRecord,
+  },
+  {
+    path: '/CorporateClientsShare',
+    name: 'CorporateClientsShare',
+    component: CorporateClientsShare,
+  },
+  {
+    path: '/IndividualCustomers',
+    name: 'IndividualCustomers',
+    component: IndividualCustomers,
+  },
+  {
+    path: '/IndividualCustomersRecord',
+    name: 'IndividualCustomersRecord',
+    component: IndividualCustomersRecord,
+  },
+  {
+    path: '/EditIndividualCustomersRecord',
+    name: 'EditIndividualCustomersRecord',
+    component: EditIndividualCustomersRecord,
   },
   {
     path: '/ScreenMyCustomers',

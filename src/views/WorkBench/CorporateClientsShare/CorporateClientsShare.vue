@@ -1,90 +1,44 @@
 <template>
-  <div class="CorporateClients">
+  <div class="CorporateClientsShare">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN == '对公客户'">
-      <div class="searchFixed">
+    <div v-if="typeCN == '线索分享'">
+      <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">创建分享</li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">分享记录</li>
+      </ul>
+      <div v-show="tabId == 0">
         <van-search
           v-model="search_txt"
           show-action
-          placeholder="客户名称"
+          placeholder="客户经理名称或编号"
           @search="getFollow"
         >
           <template #action>
             <div @click="getFollow">搜索</div>
           </template>
         </van-search>
-        <van-button @click="popUp()" type="default">高级筛选</van-button>
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          :offset="offset"
+          finished-text="已加载完毕"
+          @load="onLoad"
+        >
+          <van-button @click="checkAll">全行分享</van-button>
+          <van-checkbox-group v-model="shareList" ref="checkboxGroup">
+            <van-checkbox
+              v-for="(thisItem, index) in publicCustomerPool"
+              :key="index"
+              class="corporateList"
+              :name="thisItem.id"
+            >
+              <p class="corporateManage">{{ thisItem.name }}</p></van-checkbox
+            >
+          </van-checkbox-group>
+        </van-list>
+        <van-button @click="checkAll">分享</van-button>
       </div>
 
-      <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">我的客户</li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">客户池</li>
-      </ul>
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        :offset="offset"
-        finished-text="已加载完毕"
-        @load="onLoad"
-        v-show="tabId == 0"
-      >
-        <ul
-          class="corporateList"
-          v-for="(thisItem, index) in publicCustomerPool"
-          :key="index"
-        >
-          <router-link
-            tag="li"
-            :to="{
-              name: 'EditPublicCustomerRecord',
-              query: { title: '对公客户建档' },
-            }"
-          >
-            <div class="corporateFlex">
-              <p class="corporateManage">{{ thisItem.name }}</p>
-              <van-tag
-                v-if="thisItem.sourceFlag"
-                plain
-                color="#7232dd"
-                size="medium"
-                >{{ thisItem.sourceTxt }}
-              </van-tag>
-              <p>{{ thisItem.marketingIntervalDay }}天内营销</p>
-            </div>
-            <div class="corporateFlex">
-              <p class="corporateManageAddress">
-                {{ thisItem.address }}
-                <!-- <img
-                  src="../../../assets/newCorporate/locationImg.svg"
-                  alt=""
-                /> -->
-              </p>
-              <p>上次成单：{{ thisItem.lastSuccessTime | transform }}</p>
-            </div>
-          </router-link>
-        </ul>
-        <div
-          style="
-            margin-left: 85%;
-            position: fixed !important;
-            float: right;
-            z-index: 1;
-            align-items: right;
-            bottom: 50px;
-            right: 5%;
-          "
-        >
-          <router-link
-            class="add_record"
-            tag="span"
-            :to="{
-              name: 'PublicCustomerRecord',
-              query: { title: '对公客户建档' },
-            }"
-            >+</router-link
-          >
-        </div>
-      </van-list>
       <van-list
         v-model="loading"
         :finished="finished"
@@ -99,15 +53,10 @@
           :key="index"
         >
           <li>
-            <div class="corporateFlex">
-              <p class="corporateManage1">{{ thisItem.name }}</p>
-              <p style="color: #1432e3" @click="showBack(thisItem.id)">认领</p>
-            </div>
-            <div class="corporateFlex">
-              <p style="display: flex; align-items: center">
-                {{ thisItem.address }}
-              </p>
-            </div>
+            <p class="corporateManage">{{ thisItem.name }}</p>
+            <p class="corporateManage">
+              {{ thisItem.address }}
+            </p>
           </li>
         </ul>
       </van-list>
@@ -183,7 +132,7 @@
 import ChildNav from "../../../components/Public/ChildNav";
 import { Dialog } from "vant";
 export default {
-  name: "CorporateClients",
+  name: "CorporateClientsShare",
   components: {
     ChildNav,
   },
@@ -229,28 +178,17 @@ export default {
         nowTime: 0,
         lastTime: 0,
       },
+      shareList: [],
     };
   },
-  // beforeRouteEnter(to, from, next) {
-  //   next((vm) => {
-  //     console.log(from);
-  //     if (from.name !== "ScreenMyCustomers") {
-  //       vm.getMyClients();
-  //     } else {
-  //       console.log(vm.$store.state.screenMyCustomerData);
-  //       if (vm.$store.state.tabId == 0) {
-  //         vm.newCustomerList = vm.$store.state.screenMyCustomerData;
-  //       } else {
-  //         vm.newCustomerList1 = vm.$store.state.screenMyCustomerData;
-  //       }
-  //     }
-  //   });
-  // },
   created() {
     this.typeCN = this.$route.query.title;
     this.tabId = this.$store.state.tabId || 0;
   },
   methods: {
+    checkAll() {
+      this.$refs.checkboxGroup.toggleAll(true);
+    },
     onindustry_type(value) {
       this.industry_type = value;
       this.showindustry_type = false;
@@ -272,9 +210,9 @@ export default {
           limit: this.pageSize,
           type: this.tabId,
           // name: type,
-          industryType:this.industry_type.text,
-          demandType:this.potentialNeedType,
-          distanceRange:this.distanceRange
+          industryType: this.industry_type.text,
+          demandType: this.potentialNeedType,
+          distanceRange: this.distanceRange,
         };
         this.$httpGet({
           url: "/api/publicCustomerPool/query",
@@ -303,12 +241,11 @@ export default {
             reject(err);
           });
       });
-      
     },
     // 滚动加载更多
     onLoad() {
       // debugger
-      this.publicCustomerPool=[]
+      this.publicCustomerPool = [];
       this.loading = true;
       this.getFollow().then((res) => {
         if (this.tabId == 0) {
@@ -334,7 +271,7 @@ export default {
           }
         }
       });
-      this.isPopupVisibleScreen = false
+      this.isPopupVisibleScreen = false;
     },
     getdic() {
       // 潜在客户需求
@@ -479,7 +416,7 @@ export default {
   z-index: 1;
 }
 .van-search {
-  width: 80%;
+  width: 100%;
 }
 .van-checkbox__icon {
   height: inherit;
@@ -488,7 +425,6 @@ export default {
 .corporateList {
   padding: 10px;
   border-bottom: 1px solid #f8f8f8;
-  position: relative;
 }
 .corporateFlex {
   display: flex;
@@ -534,7 +470,7 @@ export default {
   font-weight: 500;
   color: rgb(77, 75, 75);
 }
-.CorporateClients {
+.CorporateClientsShare {
   padding-top: 46px;
 }
 .van-button--normal {
@@ -547,13 +483,14 @@ export default {
   margin-bottom: 6px;
 }
 .corporateManage {
-  width: 40%;
+  margin: 5px 0px;
+  width: 85%;
   overflow: hidden; /*超出部分隐藏*/
   white-space: nowrap; /*不换行*/
   text-overflow: ellipsis; /*超出部分文字以...显示*/
 }
 .corporateManage1 {
-  width: 70%;
+  width: 90%;
   overflow: hidden; /*超出部分隐藏*/
   white-space: nowrap; /*不换行*/
   text-overflow: ellipsis; /*超出部分文字以...显示*/
@@ -571,7 +508,7 @@ export default {
   background-color: #fff;
   /* margin: 0.3rem; */
   display: flex;
-  padding: 54px 1rem 0rem 1rem;
+  padding: 1rem 1rem 0rem 1rem;
   justify-content: space-around;
 }
 .cur {

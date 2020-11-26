@@ -1,7 +1,18 @@
 <template>
   <div class="FarmersInformation">
-    <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN == '对公客户建档'">
+    <div class="public_nav">
+      <van-nav-bar left-arrow @click-left="onClickLeft" :title="typeCN">
+        <template #right>
+          <router-link
+            class="share"
+            :to="{ name: 'Remind', query: { title: '提醒' } }"
+          >
+            分享
+          </router-link>
+        </template>
+      </van-nav-bar>
+    </div>
+    <div v-if="typeCN == '个人客户建档'">
       <ul class="tabList">
         <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
           基本信息
@@ -120,12 +131,12 @@
             />
           </template>
         </van-field>
-        <!-- <van-field
+        <van-field
           v-model="sourceClues"
           name="线索来源："
           label="线索来源："
           placeholder="单行输入"
-        /> -->
+        />
         <div
           style="width: 99%; margin: 0.5rem auto; position: relative"
           v-if="longitudeLatitude"
@@ -206,7 +217,7 @@
           placeholder="多行输入"
         />
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="modifyResult()"
+          <van-button round block type="primary" @click="modifyResult()()"
             >保存</van-button
           >
         </div>
@@ -216,13 +227,9 @@
   </div>
 </template>
 <script>
-import ChildNav from "../../../components/Public/ChildNav";
 import { Toast, Dialog } from "vant";
 import moment from "moment";
 export default {
-  components: {
-    ChildNav,
-  },
   data() {
     return {
       publicCustomerName: "",
@@ -240,7 +247,7 @@ export default {
       publicCustomerLocation: "",
       sourceClues: "",
 
-      potential_need_type:[],
+      potential_need_type: [],
       otherTxt: "",
 
       radio: "2",
@@ -272,6 +279,9 @@ export default {
   },
 
   methods: {
+    onClickLeft() {
+      this.$router.go(-1);
+    },
     onIndustryShow(value) {
       this.industry = value;
       this.industryShow = false;
@@ -500,6 +510,34 @@ export default {
 };
 </script>
 <style scoped>
+.public_nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000000;
+}
+.van-icon {
+  font-size: 20px;
+}
+.van-nav-bar {
+  background-color: rgb(61, 66, 94);
+}
+.van-nav-bar >>> .van-nav-bar__title {
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 600;
+}
+.van-nav-bar__right img {
+  width: 20px;
+}
+.share {
+  color: #fff;
+  font-weight: 600;
+}
+.van-nav-bar >>> .van-icon {
+  color: #fff;
+}
 .income_expenditure .van-cell >>> .van-field__label {
   width: 75%;
 }

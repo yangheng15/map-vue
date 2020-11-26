@@ -40,7 +40,7 @@
         <router-link
           tag="div"
           class="function_men"
-          :to="{ name: 'MyClients', query: { title: '我的客户' } }"
+          :to="{ name: 'IndividualCustomers', query: { title: '个人客户' } }"
         >
           <span class="c-link-card" style="background: #e18d25">
             <img src="../../assets/WorkBench/qianzai.svg" alt />

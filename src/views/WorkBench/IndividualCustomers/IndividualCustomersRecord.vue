@@ -1,7 +1,7 @@
 <template>
   <div class="FarmersInformation">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN == '对公客户建档'">
+    <div v-if="typeCN == '个人客户建档'">
       <ul class="tabList">
         <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
           基本信息
@@ -206,7 +206,7 @@
           placeholder="多行输入"
         />
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="modifyResult()"
+          <van-button round block type="primary" @click="modifyResult()()"
             >保存</van-button
           >
         </div>

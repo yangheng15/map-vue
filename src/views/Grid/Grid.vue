@@ -429,9 +429,9 @@ export default {
                 }
             }
             if (isiOS) {
-                // if (window.prompt("getLocation") != false) {
-                // let positionArr = window.prompt("getLocation").split(",");
-                let positionArr = [124.281873, 45.514322];
+                if (window.prompt("getLocation") != false) {
+                let positionArr = window.prompt("getLocation").split(",");
+                // let positionArr = [124.281873, 45.514322];
                 // debugger
                 if (positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {
                     // 如果当前的 中心点和之前的中心点一样
@@ -445,7 +445,7 @@ export default {
                 // this.zoomNum = 16;
                 this.zoomNum = this.map.getZoom();
                 this.createMarker(positionArr);
-                // }
+                }
             }
             this.markerPostion = { ...this.mapCenter };
         },
