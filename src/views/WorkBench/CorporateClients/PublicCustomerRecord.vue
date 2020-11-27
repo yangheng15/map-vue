@@ -307,6 +307,8 @@
 import ChildNav from "../../../components/Public/ChildNav";
 import { Toast, Dialog } from "vant";
 import moment from "moment";
+import BaiduMap from 'vue-baidu-map'
+
 export default {
   components: {
     ChildNav,
@@ -599,7 +601,7 @@ export default {
         this.pictureId.push(res.data.pid);
       });
     },
-    modifyResult() {
+    async modifyResult() {
       if (this.publicCustomerName == "") {
         Dialog.alert({
           title: "提示",
@@ -629,7 +631,8 @@ export default {
         return;
       }
       //逆向解析
-      this.analysIsAddress(this.publicCustomerAddress)
+      // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
+      // console.log(this.publicCustomerAddress);
       this.$httpPost({
         url: "/api/pulicCustomersInfo/add",
         data: {
@@ -657,8 +660,36 @@ export default {
           // console.log(err);
         });
     },
-    analysIsAddress(address) {
+    initMap() {
+      const AK = "WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e";
+      const BMap_URL = "https://api.map.baidu.com/api?v=2.0&ak="+ AK +"&s=1&callback=onBMapCallback";
+      return new Promise((resolve, reject) => {
+        // 如果已加载直接返回
+        if(typeof BMap !== "undefined") {
+          resolve(BMap);
+          return true;
+        }
+        // 百度地图异步加载回调处理
+        window.onBMapCallback = function () {
+          console.log("百度地图脚本初始化成功...");
+          resolve(BMap);
+        };
 
+        // 插入script脚本
+        let scriptNode = document.createElement("script");
+        scriptNode.setAttribute("type", "text/javascript");
+        scriptNode.setAttribute("src", BMap_URL);
+        document.body.appendChild(scriptNode);
+      });
+    },
+    async analysIsAddress(address) {
+      let BMap = await this.initMap();
+      let Geo = new BMap.Geocoder()
+      let point;
+      Geo.getPoint(address, (res) => {
+        console.log(res);
+        point = res;
+      })
     }
   },
 };
