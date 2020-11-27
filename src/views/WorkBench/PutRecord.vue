@@ -95,7 +95,7 @@
       <!-- PutRecord -->
     </div>
     <div v-if="typeCN=='地址'">
-      <baidu-map class="map" :center="{lng:114.65, lat: 33.37}" :zoom="12" ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6">
+      <baidu-map class="map" :center="{lng:114.65, lat: 33.37}" :zoom="12" ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e">
         <bm-geolocation
           anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
           :showAddressBar="true"

@@ -16,7 +16,7 @@ import {
   httpDelete
 } from '@/axios/http';
 // 全局注册
-const YOUR_APP_KEY='vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6'
+const YOUR_APP_KEY='WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e'
 Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: YOUR_APP_KEY
