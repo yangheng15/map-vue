@@ -131,7 +131,7 @@
             clickable
             name="datetimePicker"
             :value="currentDate | transform"
-            label="清查日期"
+            label="到期日期"
             placeholder="点击选择时间"
             @click="showPicker = true"
           />
