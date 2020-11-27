@@ -515,6 +515,8 @@ export default {
         });
         return;
       }
+      // 逆向解析
+      this.analysIsAddress(this.publicCustomerAddress)
       this.$httpPost({
         url: "/api/pulicCustomersInfo/add",
         data: {
@@ -542,6 +544,9 @@ export default {
           // console.log(err);
         });
     },
+    analysIsAddress(address) {
+
+    }
   },
 };
 </script>
