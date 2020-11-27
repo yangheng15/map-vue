@@ -1,7 +1,7 @@
 <template>
     <div class="grid">
         <my-nav title="网格"></my-nav>
-        <van-search v-model="searchVal" placeholder="网格名称、客户名称" />
+        <van-search class="positionFixed" v-model="searchVal" placeholder="网格名称、客户名称" />
         <van-popup v-model="showPopup" position="middle" round :closeable="true" :style="{ width: '80%', marginLeft: '10%', borderRadius: '5%' }">
             <resource-selection @resourceEmit="resourceEmit" />
         </van-popup>

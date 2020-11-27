@@ -33,7 +33,7 @@
                             <p class="corporateManageAddress">
                                 {{ thisItem.address }}
                             </p>
-                            <p>上次成单：{{ thisItem.lastSuccessTime | transform }}</p>
+                            <van-tag plain color="#000" size="medium">{{ thisItem.statusMsg }} </van-tag>
                         </div>
                     </router-link>
                 </ul>

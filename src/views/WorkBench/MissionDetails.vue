@@ -41,7 +41,7 @@
             <span style="color: #3cc8ab">{{
               taskQuery.taskAmount | NumFormat
             }}</span>
-            <div style="display: inline-block; width: 50%; margin-left: 10px">
+            <div style="display: inline-block; width: 48%; margin-left: 10px">
               <van-progress
                 :percentage="
                   taskQuery.taskCompletion >= 100
@@ -110,9 +110,14 @@
         </van-dropdown-menu>
         <van-search
           v-model="serchCustomer"
+          show-action
           placeholder="客户编号，客户名称"
           @search="onSearch"
-        />
+        >
+          <template #action>
+            <div @click="onSearch">搜索</div>
+          </template></van-search
+        >
         <ul class="tabList">
           <li @click="tab1(0)" :class="tabId1 == 0 ? 'cur' : ''">网格客户</li>
           <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">关注客户</li>
@@ -581,7 +586,7 @@ export default {
         }
       });
     },
-    onSearch(val) {
+    onSearch() {
       if (this.tabId1 == 0) {
         this.$httpGet({
           url: "/api/appMarket/custInfo",
@@ -589,7 +594,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 1,
-            custInfo: val,
+            custInfo: this.serchCustomer,
           },
         }).then((res) => {
           this.MarketingRecord = res.data;

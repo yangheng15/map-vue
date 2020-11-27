@@ -25,7 +25,12 @@
           @load="onLoad"
         >
           <!-- <van-button @click="checkAll">全行分享</van-button> -->
-          <van-radio-group v-model="radio" direction="horizontal" icon-size="24" style="padding:10px">
+          <van-radio-group
+            v-model="radio"
+            direction="horizontal"
+            icon-size="24"
+            style="padding: 10px"
+          >
             <van-radio name="1" @click="notCheckAll">指定客户经理</van-radio>
             <van-radio name="2" @click="checkAll">全行分享</van-radio>
           </van-radio-group>
@@ -41,9 +46,8 @@
           </van-checkbox-group>
         </van-list>
         <div class="shareBtn">
-<van-button >分享</van-button>
+          <van-button>分享</van-button>
         </div>
-        
       </div>
 
       <van-list
@@ -221,7 +225,7 @@ export default {
           page: this.pageNo,
           limit: this.pageSize,
           type: this.tabId,
-          // name: type,
+          name: this.search_txt,
           industryType: this.industry_type.text,
           demandType: this.potentialNeedType,
           distanceRange: this.distanceRange,
@@ -417,12 +421,12 @@ export default {
 * {
   font-size: 14px;
 }
-.shareBtn{
+.shareBtn {
   display: flex;
   justify-content: center;
   margin: 10px;
 }
-.shareBtn .van-button--normal{
+.shareBtn .van-button--normal {
   background: rgb(61, 66, 94);
   color: #fff;
 }
