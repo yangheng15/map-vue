@@ -7,10 +7,10 @@
           v-model="search_txt"
           show-action
           placeholder="客户名称"
-          @search="getFollow"
+          @search="getFollow2"
         >
           <template #action>
-            <div @click="getFollow">搜索</div>
+            <div @click="getFollow2">搜索</div>
           </template>
         </van-search>
         <van-button @click="popUp()" type="default">高级筛选</van-button>
@@ -37,7 +37,7 @@
             tag="li"
             :to="{
               name: 'EditPublicCustomerRecord',
-              query: { title: '对公客户建档' },
+              query: { title: '对公客户建档', id: thisItem.id },
             }"
           >
             <div class="corporateFlex">
@@ -265,16 +265,39 @@ export default {
       this.publicCustomerPool1 = [];
       this.onLoad();
     },
+    getFollow2(type) {
+      let params = {
+        page: this.pageNo,
+        limit: this.pageSize,
+        type: this.tabId,
+        name: this.search_txt,
+        industryType: this.industry_type.text,
+        demandType: this.potentialNeedType,
+        distanceRange: this.distanceRange,
+      };
+      this.$httpGet({
+        url: "/api/publicCustomerPool/query",
+        params: params,
+      }).then((res) => {
+        if (res.data.length > 0) {
+          if (this.tabId == 0) {
+            this.publicCustomerPool = res.data;
+          } else if (this.tabId == 1) {
+            this.publicCustomerPool1 = res.data;
+          }
+        }
+      });
+    },
     getFollow(type) {
       return new Promise((resolve, reject) => {
         let params = {
           page: this.pageNo,
           limit: this.pageSize,
           type: this.tabId,
-          // name: type,
-          industryType:this.industry_type.text,
-          demandType:this.potentialNeedType,
-          distanceRange:this.distanceRange
+          name: this.search_txt,
+          industryType: this.industry_type.text,
+          demandType: this.potentialNeedType,
+          distanceRange: this.distanceRange,
         };
         this.$httpGet({
           url: "/api/publicCustomerPool/query",
@@ -303,12 +326,11 @@ export default {
             reject(err);
           });
       });
-      
     },
     // 滚动加载更多
     onLoad() {
       // debugger
-      this.publicCustomerPool=[]
+      this.publicCustomerPool = [];
       this.loading = true;
       this.getFollow().then((res) => {
         if (this.tabId == 0) {
@@ -334,7 +356,7 @@ export default {
           }
         }
       });
-      this.isPopupVisibleScreen = false
+      this.isPopupVisibleScreen = false;
     },
     getdic() {
       // 潜在客户需求

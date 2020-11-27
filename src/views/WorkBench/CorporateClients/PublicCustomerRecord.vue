@@ -19,18 +19,20 @@
           name="名称："
           label="名称："
           placeholder="单行输入"
+          required
         />
         <van-field
           v-model="publicCustomerAddress"
           name="地址："
           label="地址："
           placeholder="单行输入"
+          required
         />
         <van-field
           readonly
           clickable
           name="area"
-          :value="publicCustomerGrid"
+          :value="publicCustomerGrid.text"
           label="所属网格："
           placeholder="点击选择所属网格"
           @click="regional_grid = true"
@@ -60,9 +62,9 @@
             @cancel="industryShow = false"
           />
         </van-popup>
-        <van-field name="uploader" label="客户照片">
+        <van-field name="uploader" label="客户照片" required>
           <template #input>
-            <van-uploader v-model="uploader" />
+            <van-uploader :after-read="afterRead" v-model="uploader" multiple />
           </template>
         </van-field>
         <van-field
@@ -232,6 +234,7 @@ export default {
       industry: "",
       industryShow: false,
       uploader: [],
+      pictureId: [],
       businessLicenseNo: "",
       legalPersonName: "",
       legalPersonTelephone: "",
@@ -240,7 +243,7 @@ export default {
       publicCustomerLocation: "",
       sourceClues: "",
 
-      potential_need_type:[],
+      potential_need_type: [],
       otherTxt: "",
 
       radio: "2",
@@ -383,15 +386,15 @@ export default {
             });
         });
         this.areaList = transformDara;
-        this.publicCustomerGrid = this.enumData1(
-          this.publicCustomerGrid,
-          this.areaList
-        );
+        // this.publicCustomerGrid = this.enumData1(
+        //   this.publicCustomerGrid,
+        //   this.areaList
+        // );
       });
     },
 
     onRegional_grid(value) {
-      this.publicCustomerGrid = value.text;
+      this.publicCustomerGrid = value;
       this.regional_grid = false;
     },
     handler({ BMap, map }) {
@@ -478,11 +481,54 @@ export default {
       this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
+    afterRead(file) {
+      let formData = new FormData();
+      formData.append("file", file.file);
+      this.$httpPost({
+        url: "/api/upload/attachment",
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+      }).then((res) => {
+        // console.log(res.data.pid);
+        this.pictureId.push(res.data.pid);
+      });
+    },
     modifyResult() {
-      this.$httpPut({
-        url: "/api/customersFamily/update",
+      if (this.publicCustomerName == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入名称！",
+        });
+        return;
+      }
+      if (this.publicCustomerAddress == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入地址！",
+        });
+        return;
+      }
+      if (this.pictureId == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请添加客户照片！",
+        });
+        return;
+      }
+      this.$httpPost({
+        url: "/api/pulicCustomersInfo/add",
         data: {
-          id: this.id,
+          name: this.publicCustomerName,
+          address: this.publicCustomerAddress,
+          gridding: this.publicCustomerGrid.index,
+          industryType: this.industry.index,
+          location: this.publicCustomerLocation,
+          legalName: this.legalPersonName,
+          legalPhone: this.legalPersonTelephone,
+          customerImg: this.pictureId.join(","),
+          businessLicenseNo: this.businessLicenseNo,
+          otherContactsName: this.otherContactsName,
+          otherContactsPhone: this.otherContactsTelephone,
         },
       })
         .then((res) => {

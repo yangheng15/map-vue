@@ -5,7 +5,10 @@
         <template #right>
           <router-link
             class="share"
-            :to="{ name: 'CorporateClientsShare', query: { title: '线索分享' } }"
+            :to="{
+              name: 'CorporateClientsShare',
+              query: { title: '线索分享' },
+            }"
           >
             分享
           </router-link>
@@ -30,12 +33,14 @@
           name="名称："
           label="名称："
           placeholder="单行输入"
+          required
         />
         <van-field
           v-model="publicCustomerAddress"
           name="地址："
           label="地址："
           placeholder="单行输入"
+          required
         />
         <van-field
           readonly
@@ -58,7 +63,7 @@
           readonly
           clickable
           name="picker"
-          :value="industry.text"
+          :value="industry"
           label="所属行业："
           placeholder="点击选择所属行业"
           @click="industryShow = true"
@@ -71,9 +76,9 @@
             @cancel="industryShow = false"
           />
         </van-popup>
-        <van-field name="uploader" label="客户照片">
+        <van-field name="uploader" label="客户照片" required>
           <template #input>
-            <van-uploader v-model="uploader" />
+            <van-uploader :after-read="afterRead" v-model="uploader" multiple />
           </template>
         </van-field>
         <van-field
@@ -239,6 +244,7 @@ export default {
       industry: "",
       industryShow: false,
       uploader: [],
+      pictureId: [],
       businessLicenseNo: "",
       legalPersonName: "",
       legalPersonTelephone: "",
@@ -270,11 +276,14 @@ export default {
       map: null,
 
       zoom: 20,
+      id: "",
     };
   },
 
-  created() {
+  async created() {
     this.typeCN = this.$route.query.title;
+    this.id = this.$route.query.id;
+    await this.editRecord();
     this.dic_nation();
   },
 
@@ -399,9 +408,48 @@ export default {
         );
       });
     },
-
+    deleteImage({ url }) {
+      const index = this.fileList.findIndex((it) => it.url === url);
+      this.pictureId.splice(index, 1);
+    },
+    async editRecord(val) {
+      const res = await this.$httpGet({
+        url: `/api/publicCustomerPool/get/${this.id}`,
+        data: {
+          id: this.id,
+        },
+      });
+      this.publicCustomerName = res.data.name;
+      this.publicCustomerAddress = res.data.address;
+      this.publicCustomerGrid = res.data.gridding;
+      this.industry = res.data.industryType;
+      this.publicCustomerLocation = res.data.location;
+      this.legalPersonName = res.data.legalName;
+      this.legalPersonTelephone = res.data.legalPhone;
+      this.pictureId = res.data.customerImg
+        ? res.data.customerImg.split(",")
+        : [];
+      this.businessLicenseNo = res.data.businessLicenseNo;
+      this.otherContactsName = res.data.otherContactsName;
+      this.otherContactsTelephone = res.data.otherContactsPhone;
+      if (this.pictureId) {
+        this.pictureId.forEach((el) => {
+          this.$httpGet({
+            url: "/api/show/image/base64",
+            params: {
+              id: el,
+            },
+          }).then((res) => {
+            this.fileList.push({
+              url: "data:image/jpg;base64," + res.data,
+              isImage: true,
+            });
+          });
+        });
+      }
+    },
     onRegional_grid(value) {
-      this.publicCustomerGrid = value.text;
+      this.publicCustomerGrid = value;
       this.regional_grid = false;
     },
     handler({ BMap, map }) {
@@ -488,11 +536,54 @@ export default {
       this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
+    afterRead(file) {
+      let formData = new FormData();
+      formData.append("file", file.file);
+      this.$httpPost({
+        url: "/api/upload/attachment",
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+      }).then((res) => {
+        // console.log(res.data.pid);
+        this.pictureId.push(res.data.pid);
+      });
+    },
     modifyResult() {
-      this.$httpPut({
-        url: "/api/customersFamily/update",
+      if (this.publicCustomerName == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入名称！",
+        });
+        return;
+      }
+      if (this.publicCustomerAddress == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入地址！",
+        });
+        return;
+      }
+      if (this.pictureId == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请添加客户照片！",
+        });
+        return;
+      }
+      this.$httpPost({
+        url: "/api/pulicCustomersInfo/add",
         data: {
-          id: this.id,
+          name: this.publicCustomerName,
+          address: this.publicCustomerAddress,
+          gridding: this.publicCustomerGrid.index,
+          industryType: this.industry.index,
+          location: this.publicCustomerLocation,
+          legalName: this.legalPersonName,
+          legalPhone: this.legalPersonTelephone,
+          customerImg: this.pictureId.join(","),
+          businessLicenseNo: this.businessLicenseNo,
+          otherContactsName: this.otherContactsName,
+          otherContactsPhone: this.otherContactsTelephone,
         },
       })
         .then((res) => {
