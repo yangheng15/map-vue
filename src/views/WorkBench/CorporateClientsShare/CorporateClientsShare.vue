@@ -24,7 +24,11 @@
           finished-text="已加载完毕"
           @load="onLoad"
         >
-          <van-button @click="checkAll">全行分享</van-button>
+          <!-- <van-button @click="checkAll">全行分享</van-button> -->
+          <van-radio-group v-model="radio" direction="horizontal" icon-size="24" style="padding:10px">
+            <van-radio name="1" @click="notCheckAll">指定客户经理</van-radio>
+            <van-radio name="2" @click="checkAll">全行分享</van-radio>
+          </van-radio-group>
           <van-checkbox-group v-model="shareList" ref="checkboxGroup">
             <van-checkbox
               v-for="(thisItem, index) in publicCustomerPool"
@@ -36,7 +40,10 @@
             >
           </van-checkbox-group>
         </van-list>
-        <van-button @click="checkAll">分享</van-button>
+        <div class="shareBtn">
+<van-button >分享</van-button>
+        </div>
+        
       </div>
 
       <van-list
@@ -179,6 +186,7 @@ export default {
         lastTime: 0,
       },
       shareList: [],
+      radio: "1",
     };
   },
   created() {
@@ -188,6 +196,10 @@ export default {
   methods: {
     checkAll() {
       this.$refs.checkboxGroup.toggleAll(true);
+      console.log(this.shareList);
+    },
+    notCheckAll() {
+      this.$refs.checkboxGroup.toggleAll(false);
     },
     onindustry_type(value) {
       this.industry_type = value;
@@ -405,16 +417,16 @@ export default {
 * {
   font-size: 14px;
 }
-.searchFixed {
+.shareBtn{
   display: flex;
-  align-items: center;
-  background: #fff;
-  position: fixed;
-  top: 46px;
-  left: 0px;
-  width: 100%;
-  z-index: 1;
+  justify-content: center;
+  margin: 10px;
 }
+.shareBtn .van-button--normal{
+  background: rgb(61, 66, 94);
+  color: #fff;
+}
+
 .van-search {
   width: 100%;
 }
@@ -425,26 +437,6 @@ export default {
 .corporateList {
   padding: 10px;
   border-bottom: 1px solid #f8f8f8;
-}
-.corporateFlex {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
-}
-.corporateFlex p {
-  margin: 5px;
-}
-.add_record {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 100%;
-  background-color: rgb(61, 66, 94);
-  color: #fff;
-  font-size: 16px;
 }
 .marter span {
   margin: 0px 2px;

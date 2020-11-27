@@ -72,6 +72,7 @@
           name="营业执照号："
           label="营业执照号："
           placeholder="单行输入"
+          required
         />
         <van-field
           v-model="legalPersonName"
@@ -136,7 +137,7 @@
             class="bm-view"
             :center="mapCenter1"
             :zoom="zoom"
-            ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
+            ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e"
             @longpress="longpress"
             @ready="mapReady"
           >
@@ -213,7 +214,92 @@
           >
         </div>
       </div>
-      <div v-show="tabId === 2"></div>
+      <div v-show="tabId === 2">
+        <!-- <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        > -->
+          <ul style="background: #fff">
+            <li
+              v-for="(thisItem, index) in MarketingRecord"
+              :key="index"
+              class="marked_record"
+            >
+              <div class="positionFixd">
+                <router-link
+                  tag="p"
+                  :to="{
+                    name: 'EditMarketingRecord',
+                    query: {
+                      title: '营销记录',
+                      id: thisItem.id,
+                      custName: custName,
+                      productName: productName,
+                    },
+                  }"
+                  style="width: 55%"
+                  >{{ thisItem.semTime | transform }}</router-link
+                >
+
+                <p>
+                  <van-button
+                    color="#3d425e"
+                    size="mini"
+                    @click="deleteRemark(thisItem.id)"
+                    >删除</van-button
+                  >
+                </p>
+              </div>
+
+              <div class="positionFixd">
+                <router-link
+                  tag="p"
+                  :to="{
+                    name: 'EditMarketingRecord',
+                    query: {
+                      title: '营销记录',
+                      id: thisItem.id,
+                      custName: custName,
+                      productName: productName,
+                    },
+                  }"
+                  class="dadian"
+                  >{{ thisItem.remark }}</router-link
+                >
+                <p style="width: 50%; display: flex" class="approval">
+                  <!-- <span class="approval_Passed">已营销</span> -->
+                  <span
+                    :class="
+                      thisItem.intention == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{ thisItem.intention | dic_client_will }}</span
+                  >
+                  <span
+                    :class="
+                      thisItem.isSucc == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{
+                      thisItem.isSucc == "0"
+                        ? "失败"
+                        : thisItem.isSucc == "1"
+                        ? "成功"
+                        : thisItem.isSucc == "2"
+                        ? "未成功"
+                        : ""
+                    }}
+                  </span>
+                </p>
+              </div>
+            </li>
+          </ul>
+        <!-- </van-list> -->
+      </div>
     </div>
   </div>
 </template>
@@ -266,6 +352,7 @@ export default {
       map: null,
 
       zoom: 20,
+      MarketingRecord: [],
     };
   },
 
@@ -275,6 +362,22 @@ export default {
   },
 
   methods: {
+    getMarkedRecord() {
+      // if (this.customerCode && this.gridCode) {
+      this.$httpGet({
+        url: "/api/appMarket/marketRecord",
+        params: {
+          // customerCode: this.customerCode,
+          // limit: 10,
+          // gridCode: this.gridCode,
+          // taskId: this.taskId,
+          page: 1,
+        },
+      }).then((res) => {
+        this.MarketingRecord = res.data;
+      });
+      // }
+    },
     onIndustryShow(value) {
       this.industry = value;
       this.industryShow = false;
@@ -405,6 +508,9 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
+      if (ev == 2) {
+        this.getMarkedRecord();
+      }
     },
 
     //选中一个item
@@ -515,7 +621,14 @@ export default {
         });
         return;
       }
-      // 逆向解析
+      if (this.businessLicenseNo == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入营业执照号！",
+        });
+        return;
+      }
+      //逆向解析
       this.analysIsAddress(this.publicCustomerAddress)
       this.$httpPost({
         url: "/api/pulicCustomersInfo/add",

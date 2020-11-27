@@ -198,7 +198,7 @@
           class="bm-view"
           :center="mapCenter"
           :zoom="zoom"
-          ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
+          ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e"
           @ready="mapReady"
           @longpress="longpress"
         >

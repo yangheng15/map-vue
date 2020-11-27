@@ -34,6 +34,8 @@
           label="名称："
           placeholder="单行输入"
           required
+          type="textarea"
+          autosize
         />
         <van-field
           v-model="publicCustomerAddress"
@@ -41,6 +43,8 @@
           label="地址："
           placeholder="单行输入"
           required
+          type="textarea"
+          autosize
         />
         <van-field
           readonly
@@ -150,7 +154,7 @@
             class="bm-view"
             :center="mapCenter1"
             :zoom="zoom"
-            ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6"
+            ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e"
             @longpress="longpress"
             @ready="mapReady"
           >

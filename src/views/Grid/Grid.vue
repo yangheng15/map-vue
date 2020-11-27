@@ -42,7 +42,7 @@
                 </div>
             </div>
         </van-popup>
-        <baidu-map class="bm-view" @ready="mapReady" :center="mapCenter" :zoom="zoomNum" ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6">
+        <baidu-map class="bm-view" @ready="mapReady" :center="mapCenter" :zoom="zoomNum" ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e">
             <!-- 网格经理网格名称 -->
             <template v-for="(item, index) in map_data">
                 <my-overlay

@@ -2,7 +2,7 @@
   <div class="MapAddressDisplay">
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN=='地址'">
-      <baidu-map class="map" :center="{lng:locationLng, lat: locationLat}" :zoom="14" ak="vqUYjlHbtsD2ZGmYXYMuHVvve6SvtHX6">
+      <baidu-map class="map" :center="{lng:locationLng, lat: locationLat}" :zoom="14" ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e">
        <bm-marker :position="{lng:locationLng, lat: locationLat}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
       <bm-label :content="custName" :labelStyle="{color: 'red', fontSize : '15px',padding:'1px 10px'}" :offset="{width: -25, height: 30}"/>
     </bm-marker>
