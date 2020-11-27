@@ -6,7 +6,12 @@
         v-model="search_txt"
         placeholder="客户名称"
         @search="onSearch"
-      />
+        show-action
+      >
+        <template #action>
+          <div @click="onSearch">搜索</div>
+        </template></van-search
+      >
       <div class="customer_list">
         <ul>
           <li v-for="(thisItem, index) in peasant_household" :key="index">
@@ -228,13 +233,13 @@ export default {
         this.getDic();
       });
     },
-    onSearch(val) {
+    onSearch() {
       this.$httpGet({
         url: "/api/customersFamily/app",
         params: {
           limit: 10,
           page: 1,
-          houseName: val,
+          houseName: this.search_txt,
         },
       }).then((res) => {
         this.peasant_household = res.data;
@@ -292,7 +297,6 @@ export default {
           })
             .then((res) => {
               this.getFamily();
-              
             })
             .catch(() => {});
         })

@@ -111,7 +111,7 @@
           readonly
           name="位置："
           label="位置："
-          placeholder="单行输入"
+          placeholder="点击在地图中选择"
         >
           <template #button>
             <img

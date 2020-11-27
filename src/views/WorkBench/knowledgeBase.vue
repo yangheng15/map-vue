@@ -1,16 +1,25 @@
 <template>
   <div class="knowledgeBase">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN=='知识库'">
-      <van-search v-model="search_txt" placeholder="请输入标题" />
+    <div v-if="typeCN == '知识库'">
+      <van-search
+        v-model="search_txt"
+        placeholder="请输入标题"
+        @search="onSearch"
+        show-action
+      >
+        <template #action>
+          <div @click="onSearch">搜索</div>
+        </template></van-search
+      >
       <router-link
         class="knowledgeBody"
         tag="ul"
-        :to="{ name: 'knowledgeBaseDetail', query: { title: '知识库详情' }}"
+        :to="{ name: 'knowledgeBaseDetail', query: { title: '知识库详情' } }"
       >
-        <li class="knowledge" v-for="(item,index) in knowledge" :key="index">
-          <p>{{item.name}}</p>
-          <p>{{item.date}}</p>
+        <li class="knowledge" v-for="(item, index) in knowledge" :key="index">
+          <p>{{ item.name }}</p>
+          <p>{{ item.date }}</p>
           <p class="right_cursor">
             <van-icon name="arrow" />
           </p>
@@ -45,13 +54,17 @@ export default {
         //   id: 2,
         // },
       ],
-      search_txt:"",
+      search_txt: "",
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
   },
-  methods: {},
+  methods: {
+    onSearch() {
+      console.log(1);
+    },
+  },
   mounted() {},
 };
 </script>

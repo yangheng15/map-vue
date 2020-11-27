@@ -2,24 +2,47 @@
   <div class="RecentContact">
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '最近联系'">
-      <van-search v-model="search_txt" placeholder="客户名称" @search="onSearch" />
+      <van-search
+        v-model="search_txt"
+        placeholder="客户名称"
+        @search="onSearch"
+        show-action
+      >
+        <template #action>
+          <div @click="onSearch">搜索</div>
+        </template></van-search
+      >
       <div class="customer_list">
         <ul>
           <li v-for="(thisItem, index) in data_customer_list1" :key="index">
             <router-link
-            v-if="thisItem.custBasicType==1"
+              v-if="thisItem.custBasicType == 1"
               tag="p"
-              :to="{ name: 'CustomerViewPresentation', query: { title: '客户视图',id:thisItem.custId } }"
+              :to="{
+                name: 'CustomerViewPresentation',
+                query: { title: '客户视图', id: thisItem.custId },
+              }"
               >{{ thisItem.custName }}</router-link
             >
             <router-link
-            v-if="thisItem.potentialType==2"
+              v-if="thisItem.potentialType == 2"
               tag="p"
-              :to="{ name: 'EditPotentialCustomers', query: { title: '潜在客户详情',id:thisItem.potentialId } }"
+              :to="{
+                name: 'EditPotentialCustomers',
+                query: { title: '潜在客户详情', id: thisItem.potentialId },
+              }"
               >{{ thisItem.potentialName }}</router-link
             >
-            <p v-if="thisItem.custBasicType==1"><a style="color:#000" :href="'tel:' + thisItem.telphone">电话：{{thisItem.telphone}}</a></p>
-            <p v-if="thisItem.potentialType==2"><a style="color:#000" :href="'tel:' + thisItem.telphone">电话：{{thisItem.potentialTelphone}}</a></p>
+            <p v-if="thisItem.custBasicType == 1">
+              <a style="color: #000" :href="'tel:' + thisItem.telphone"
+                >电话：{{ thisItem.telphone }}</a
+              >
+            </p>
+            <p v-if="thisItem.potentialType == 2">
+              <a style="color: #000" :href="'tel:' + thisItem.telphone"
+                >电话：{{ thisItem.potentialTelphone }}</a
+              >
+            </p>
             <p class="schedule_star">
               <van-rate
                 v-model="thisItem.star"
@@ -30,85 +53,13 @@
                 readonly
               />
             </p>
-            <p v-if="thisItem.contactDays==0">今天联系过</p>
-            <p v-if="thisItem.contactDays!==0">上次联系{{ thisItem.contactDays }}天前</p>
+            <p v-if="thisItem.contactDays == 0">今天联系过</p>
+            <p v-if="thisItem.contactDays !== 0">
+              上次联系{{ thisItem.contactDays }}天前
+            </p>
           </li>
         </ul>
       </div>
-      <!-- <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">三天内</li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">一周内</li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : ''">两周内</li>
-      </ul>
-      <div v-show="tabId === 0" class="customer_list">
-        <ul>
-          <li v-for="(thisItem, index) in data_customer_list1" :key="index">
-            <router-link
-              tag="p"
-              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
-              >{{ thisItem.name }}</router-link
-            >
-            <p>{{ thisItem.text }}</p>
-            <p class="schedule_star">
-              <van-rate
-                v-model="value"
-                :size="14"
-                color="#ffd21e"
-                void-icon="star"
-                void-color="#eee"
-                readonly
-              />
-            </p>
-            <p>{{ thisItem.date }}</p>
-          </li>
-        </ul>
-      </div>
-      <div v-show="tabId === 1" class="customer_list">
-        <ul>
-          <li v-for="(thisItem, index) in data_customer_list2" :key="index">
-            <router-link
-              tag="p"
-              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
-              >{{ thisItem.name }}</router-link
-            >
-            <p>{{ thisItem.text }}</p>
-            <p class="schedule_star">
-              <van-rate
-                v-model="value"
-                :size="14"
-                color="#ffd21e"
-                void-icon="star"
-                void-color="#eee"
-                readonly
-              />
-            </p>
-            <p>{{ thisItem.date }}</p>
-          </li>
-        </ul>
-      </div>
-      <div v-show="tabId === 2" class="customer_list">
-        <ul>
-          <li v-for="(thisItem, index) in data_customer_list3" :key="index">
-            <router-link
-              tag="p"
-              :to="{ name: 'ArticleViewBasic', query: { title: '客户视图' } }"
-              >{{ thisItem.name }}</router-link
-            >
-            <p>{{ thisItem.text }}</p>
-            <p class="schedule_star">
-              <van-rate
-                v-model="value"
-                :size="14"
-                color="#ffd21e"
-                void-icon="star"
-                void-color="#eee"
-                readonly
-              />
-            </p>
-            <p>{{ thisItem.date }}</p>
-          </li>
-        </ul>
-      </div> -->
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
     </div>
   </div>
@@ -128,13 +79,13 @@ export default {
       date: "",
       show: false,
       tabId: 1,
-      starNum:"",
+      starNum: "",
       data_customer_list1: [],
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
-    this.queryContact()
+    this.queryContact();
   },
   methods: {
     tab(ev) {
@@ -150,30 +101,31 @@ export default {
       }).then((res) => {
         console.log(res.data);
         this.data_customer_list1 = res.data;
-//         this.data_customer_list1.forEach((el)=>{
-//           console.log(el.star);
-//           if(el.star){
-// this.starNum = parseInt(el.star)
-//           }
-          
-//         })
+        // parseInt(this.data_customer_list1.star) = res.data.star;
+        //         this.data_customer_list1.forEach((el)=>{
+        //           console.log(el.star);
+        //           if(el.star){
+        // this.starNum = parseInt(el.star)
+        //           }
+
+        //         })
       });
     },
-    onSearch(val){
-       this.$httpGet({
+    onSearch(val) {
+      this.$httpGet({
         url: "/api/contactByApp/query",
         params: {
           limit: 10,
           page: 1,
-          customerName:val
+          customerName: this.search_txt,
         },
       }).then((res) => {
         this.data_customer_list1 = res.data;
-        this.data_customer_list1.forEach((el)=>{
-          this.star = parseInt(el.star)
-        })
+        this.data_customer_list1.forEach((el) => {
+          this.star = parseInt(el.star);
+        });
       });
-    }
+    },
   },
 };
 </script>

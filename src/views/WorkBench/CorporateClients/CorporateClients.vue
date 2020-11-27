@@ -434,7 +434,7 @@ export default {
     width: 80%;
 }
 .van-checkbox__icon {
-    height: inherit;
+    height: 24px;
 }
 /* 对公客户 */
 .corporateList {
