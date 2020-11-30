@@ -2,7 +2,12 @@
     <div class="grid">
         <my-nav title="网格"></my-nav>
         <van-search class="positionFixed" v-model="searchVal" placeholder="网格名称、客户名称" />
-        
+        <div class="search-box">
+            <van-list>
+                <van-cell @click="localOnclick(item)" v-for="item in localSearchList" :key="item.title" :title="item.title" />
+            </van-list>
+        </div>
+
         <van-popup v-model="showPopup" position="middle" round :closeable="true" :style="{ width: '80%', marginLeft: '10%', borderRadius: '5%' }">
             <resource-selection @resourceEmit="resourceEmit" />
         </van-popup>
@@ -44,7 +49,13 @@
             </div>
         </van-popup>
         <baidu-map class="bm-view" @ready="mapReady" :center="mapCenter" :zoom="zoomNum" ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e">
-            <bm-local-search :keyword="searchVal" :auto-viewport="true" :location="mapCenter"></bm-local-search>
+            <bm-local-search
+                @searchcomplete="searchcomplete"
+                :keyword="searchKeyword"
+                :auto-viewport="true"
+                :panel="false"
+                :location="mapCenter"
+            ></bm-local-search>
             <!-- 网格经理网格名称 -->
             <template v-for="(item, index) in map_data">
                 <my-overlay
@@ -379,7 +390,30 @@ export default {
             locationLat: '',
             zoomNum: 15,
             positionMarker: null,
+            localSearchList: [],
+            searchKeyword: '',
+            clickFlag: false
         };
+    },
+    watch: {
+        searchVal(newVal, oldVal) {
+            // 输入框为null时清除列表
+            if(newVal.length < oldVal.length) this.clickFlag = false;
+            if (!newVal) {
+                new Promise((resolve, reject) => {
+                    const timer = setTimeout(() => {
+                        this.localSearchList = [];
+                        resolve(timer)
+                    }, 100);
+                }).then((timer) => {
+                    this.clickFlag = false;
+                    clearTimeout(timer)
+                })
+            }
+            if(this.clickFlag) return;
+            this.searchKeyword = newVal;
+
+        },
     },
     created() {
         this.pathIds = this.$route.params.pathIds;
@@ -431,22 +465,22 @@ export default {
                 }
             }
             if (isiOS) {
-                if (window.prompt("getLocation") != false) {
-                let positionArr = window.prompt("getLocation").split(",");
-                // let positionArr = [124.281873, 45.514322];
-                // debugger
-                if (positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {
-                    // 如果当前的 中心点和之前的中心点一样
-                    this.mapCenter = { lng: positionArr[0], lat: positionArr[1] + 0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点]
-                    // console.log(this.map.getZoom());
+                if (window.prompt('getLocation') != false) {
+                    let positionArr = window.prompt('getLocation').split(',');
+                    // let positionArr = [124.281873, 45.514322];
+                    // debugger
+                    if (positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {
+                        // 如果当前的 中心点和之前的中心点一样
+                        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] + 0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点]
+                        // console.log(this.map.getZoom());
+                        this.zoomNum = this.map.getZoom();
+                        return;
+                    }
+                    this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+                    // this.map.setCenter({ lng: positionArr[0], lat: positionArr[1] })
+                    // this.zoomNum = 16;
                     this.zoomNum = this.map.getZoom();
-                    return;
-                }
-                this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-                // this.map.setCenter({ lng: positionArr[0], lat: positionArr[1] })
-                // this.zoomNum = 16;
-                this.zoomNum = this.map.getZoom();
-                this.createMarker(positionArr);
+                    this.createMarker(positionArr);
                 }
             }
             this.markerPostion = { ...this.mapCenter };
@@ -780,11 +814,23 @@ export default {
                 },
             }).then((res) => {
                 this.isPopupVisibleSign = false;
-                this.$set(this, 'signData', {})
+                this.$set(this, 'signData', {});
                 this.resource_type_txt = '';
                 // this.markerPostion = { lng: 114.655, lat: 33.625 };
             });
         },
+        //搜索地图地址的回调
+        searchcomplete(results) {
+            console.log(results);
+            if (results && results.Hr) {
+                this.localSearchList = results.Hr;
+            }
+        },
+        localOnclick(item) {
+            this.clickFlag = true;
+            this.searchVal = item['address']
+            this.localSearchList = []
+        }
     },
     filters: {
         dic_grid_resource_type(val) {

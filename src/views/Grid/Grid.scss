@@ -559,5 +559,11 @@
   .map_marker p img {
     width: 1.4rem;
   }
-  
+}
+
+.search-box {
+  position: fixed;
+  top: 90px;
+  z-index: 9999;
+  width: 100%;
 }
