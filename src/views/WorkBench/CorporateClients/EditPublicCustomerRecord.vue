@@ -226,7 +226,7 @@
           placeholder="多行输入"
         />
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="modifyResult()()"
+          <van-button round block type="primary" @click="modifyResult()"
             >保存</van-button
           >
         </div>
@@ -278,7 +278,6 @@ export default {
       positionMarker: null,
       longitudeLatitude: false,
       map: null,
-
       zoom: 20,
       id: "",
     };
@@ -294,10 +293,6 @@ export default {
   methods: {
     onClickLeft() {
       this.$router.go(-1);
-    },
-    onIndustryShow(value) {
-      this.industry = value;
-      this.industryShow = false;
     },
     formatDate(date) {
       return `${date.getMonth() + 1}-${date.getDate()}`;
@@ -353,6 +348,7 @@ export default {
       }
     },
     enumData1(val, data) {
+      console.log(val, data);
       let find = "";
       if (val && data.length > 0) {
         find = data.find((it) => it.index === val);
@@ -370,12 +366,15 @@ export default {
         // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
+          console.log(it);
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
+            console.log(8798709);
           }
         });
         console.log(transformDara);
         this.industry_list = transformDara;
+        this.industry = this.enumData(this.industry, this.industry_list);
       });
       // 潜在客户需求
       this.$httpGet({
@@ -413,7 +412,7 @@ export default {
       });
     },
     deleteImage({ url }) {
-      const index = this.fileList.findIndex((it) => it.url === url);
+      const index = this.uploader.findIndex((it) => it.url === url);
       this.pictureId.splice(index, 1);
     },
     async editRecord(val) {
@@ -444,7 +443,7 @@ export default {
               id: el,
             },
           }).then((res) => {
-            this.fileList.push({
+            this.uploader.push({
               url: "data:image/jpg;base64," + res.data,
               isImage: true,
             });
@@ -453,8 +452,16 @@ export default {
       }
     },
     onRegional_grid(value) {
-      this.publicCustomerGrid = value;
+      this.publicCustomerGrid = value["text"];
+      this.prospect_detailsEdit.publicCustomerGrid = value["index"];
+      console.log(this.publicCustomerGrid);
       this.regional_grid = false;
+    },
+    onIndustryShow(value) {
+      this.industry = value["text"];
+      this.prospect_detailsEdit.industry = value["index"];
+      console.log(this.industry);
+      this.industryShow = false;
     },
     handler({ BMap, map }) {
       // console.log(BMap, map);
@@ -574,13 +581,23 @@ export default {
         });
         return;
       }
-      this.$httpPost({
-        url: "/api/pulicCustomersInfo/add",
+      if (this.businessLicenseNo == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入营业执照号！",
+        });
+        return;
+      }
+      console.log(this.prospect_detailsEdit.industry);
+      console.log(this.prospect_detailsEdit.publicCustomerGrid);
+      this.$httpPut({
+        url: "/api/publicCustomersInfo/update",
         data: {
+          id:this.id,
           name: this.publicCustomerName,
           address: this.publicCustomerAddress,
-          gridding: this.publicCustomerGrid.index,
-          industryType: this.industry.index,
+          gridding: this.prospect_detailsEdit.publicCustomerGrid,
+          industryType: this.prospect_detailsEdit.industry,
           location: this.publicCustomerLocation,
           legalName: this.legalPersonName,
           legalPhone: this.legalPersonTelephone,

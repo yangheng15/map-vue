@@ -390,7 +390,7 @@
           </template>
         </van-field>
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="modifyResult()()"
+          <van-button round block type="primary" @click="modifyResult()"
             >保存</van-button
           >
         </div>

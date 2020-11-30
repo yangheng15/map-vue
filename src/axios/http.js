@@ -10,7 +10,7 @@ import router from '../router/index';
 if (process.env.NODE_ENV === 'development') {
   // axios.defaults.baseURL = '/api'
   // axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
-   // 测试
+  // 测试
   axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // axios.defaults.baseURL = 'http://192.168.1.106:8091'
   // 正式
@@ -26,43 +26,44 @@ if (process.env.NODE_ENV === 'development') {
 let flag = true;
 // 请求拦截器
 axios.interceptors.request.use(
-  async (config)  => {
-    let token = localStorage.getItem('_token')
-    if (localStorage.getItem('refresh_token')) {
-      const refresh_token = localStorage.getItem('refresh_token'),
-        expires_in = localStorage.getItem('expires_in'),
-        aData = moment(new Date()).valueOf()
-      if (flag) {
-        flag = false;
-        if (aData > expires_in) {
-          await httpPost({
-            url: "/oauth/token",
-            params: {
-              grant_type: "refresh_token",
-              refresh_token: refresh_token,
-              client_id: "test",
-              client_secret: "test",
-            },
-          }).then((res) => {
-            localStorage.setItem('_token', res.access_token)
-            token = res.access_token
-            console.log(token);
-            let expires_in = moment(new Date()).valueOf() + res.expires_in
-            localStorage.setItem("expires_in", expires_in);
-            flag = true;
-          })
+  async (config) => {
+      let token = localStorage.getItem('_token')
+      if (localStorage.getItem('refresh_token')) {
+        const refresh_token = localStorage.getItem('refresh_token'),
+          expires_in = localStorage.getItem('expires_in'),
+          aData = moment(new Date()).valueOf()
+        if (flag) {
+          flag = false;
+          if (aData > expires_in) {
+            await httpPost({
+              url: "/oauth/token",
+              params: {
+                grant_type: "refresh_token",
+                refresh_token: refresh_token,
+                client_id: "test",
+                client_secret: "test",
+              },
+            }).then((res) => {
+              localStorage.setItem('_token', res.access_token)
+              localStorage.setItem("refresh_token", res.refresh_token);
+              token = res.access_token
+              console.log(token);
+              let expires_in = moment(new Date()).valueOf() + res.expires_in
+              localStorage.setItem("expires_in", expires_in);
+              flag = true;
+            })
+          }
         }
       }
-    }
 
 
-    token && (config.headers.Authorization = `Bearer ${token}`)
-    return config
+      token && (config.headers.Authorization = `Bearer ${token}`)
+      return config
 
-  },
-  error => {
-    return Promise.error(error)
-  })
+    },
+    error => {
+      return Promise.error(error)
+    })
 
 axios.defaults.timeout = 10000
 

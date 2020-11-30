@@ -5,14 +5,21 @@
       <van-search
         v-model="search_txt"
         placeholder="客户名称"
-        @search="onSearch"
+        @search="queryContact"
         show-action
       >
         <template #action>
-          <div @click="onSearch">搜索</div>
+          <div @click="queryContact">搜索</div>
         </template></van-search
       >
-      <div class="customer_list">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        :offset="offset"
+        finished-text="已加载完毕"
+        @load="onLoad"
+        class="customer_list"
+      >
         <ul>
           <li v-for="(thisItem, index) in data_customer_list1" :key="index">
             <router-link
@@ -33,7 +40,7 @@
               }"
               >{{ thisItem.potentialName }}</router-link
             >
-            <p v-if="thisItem.custBasicType == 1">
+            <!-- <p v-if="thisItem.custBasicType == 1">
               <a style="color: #000" :href="'tel:' + thisItem.telphone"
                 >电话：{{ thisItem.telphone }}</a
               >
@@ -42,25 +49,15 @@
               <a style="color: #000" :href="'tel:' + thisItem.telphone"
                 >电话：{{ thisItem.potentialTelphone }}</a
               >
-            </p>
-            <p class="schedule_star">
-              <van-rate
-                v-model="thisItem.star"
-                :size="14"
-                color="#ffd21e"
-                void-icon="star"
-                void-color="#eee"
-                readonly
-              />
-            </p>
+            </p> -->
             <p v-if="thisItem.contactDays == 0">今天联系过</p>
             <p v-if="thisItem.contactDays !== 0">
               上次联系{{ thisItem.contactDays }}天前
             </p>
           </li>
         </ul>
-      </div>
-      <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
+      </van-list>
+      <!-- <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider> -->
     </div>
   </div>
 </template>
@@ -81,49 +78,61 @@ export default {
       tabId: 1,
       starNum: "",
       data_customer_list1: [],
+      offset: 0, //滚动条与底部距离小于 offset 时触发load事件，默认300
+      pageNo: 1, // 当前页码
+      pageSize: 10, // 分页大小
+      total: 0, // 查询总条数
+      loading: false, // 滚动加载中
+      finished: false, // 滚动加载完成
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
-    this.queryContact();
   },
   methods: {
     tab(ev) {
       this.tabId = ev;
     },
     queryContact() {
-      this.$httpGet({
-        url: "/api/contactByApp/query",
-        params: {
-          limit: 10,
-          page: 1,
-        },
-      }).then((res) => {
-        console.log(res.data);
-        this.data_customer_list1 = res.data;
-        // parseInt(this.data_customer_list1.star) = res.data.star;
-        //         this.data_customer_list1.forEach((el)=>{
-        //           console.log(el.star);
-        //           if(el.star){
-        // this.starNum = parseInt(el.star)
-        //           }
-
-        //         })
+      return new Promise((resolve, reject) => {
+        let params = {
+          page: this.pageNo,
+          limit: this.pageSize,
+          customerName: this.search_txt,
+        };
+        this.$httpGet({
+          url: "/api/contactByApp/query",
+          params: params,
+        })
+          .then((res) => {
+            if (res.data.length > 0) {
+              let result = {
+                total: res.count,
+                pageIndex: 1,
+                data_customer_list1: res.data,
+              };
+              resolve(result);
+            }
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
-    onSearch(val) {
-      this.$httpGet({
-        url: "/api/contactByApp/query",
-        params: {
-          limit: 10,
-          page: 1,
-          customerName: this.search_txt,
-        },
-      }).then((res) => {
-        this.data_customer_list1 = res.data;
-        this.data_customer_list1.forEach((el) => {
-          this.star = parseInt(el.star);
-        });
+    onLoad() {
+      // debugger
+      this.loading = true;
+      this.queryContact().then((res) => {
+        this.data_customer_list1 = this.data_customer_list1.concat(
+          res.data_customer_list1
+        );
+        if (this.data_customer_list1.length >= res.total) {
+          this.finished = true;
+        } else {
+          this.finished = false;
+          this.pageNo = this.pageNo + 1;
+        }
+        this.loading = false;
       });
     },
   },
@@ -157,10 +166,6 @@ export default {
 .customer_list ul li p:nth-child(even) {
   text-align: right;
   width: 40%;
-}
-.customer_list .schedule_star img {
-  width: 1.2rem;
-  vertical-align: middle;
 }
 .time_frame {
   height: 3rem;

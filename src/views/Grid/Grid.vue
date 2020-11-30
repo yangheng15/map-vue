@@ -2,6 +2,7 @@
     <div class="grid">
         <my-nav title="网格"></my-nav>
         <van-search class="positionFixed" v-model="searchVal" placeholder="网格名称、客户名称" />
+        
         <van-popup v-model="showPopup" position="middle" round :closeable="true" :style="{ width: '80%', marginLeft: '10%', borderRadius: '5%' }">
             <resource-selection @resourceEmit="resourceEmit" />
         </van-popup>
@@ -43,6 +44,7 @@
             </div>
         </van-popup>
         <baidu-map class="bm-view" @ready="mapReady" :center="mapCenter" :zoom="zoomNum" ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e">
+            <bm-local-search :keyword="searchVal" :auto-viewport="true" :location="mapCenter"></bm-local-search>
             <!-- 网格经理网格名称 -->
             <template v-for="(item, index) in map_data">
                 <my-overlay
