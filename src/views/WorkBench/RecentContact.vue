@@ -40,7 +40,7 @@
               }"
               >{{ thisItem.potentialName }}</router-link
             >
-            <!-- <p v-if="thisItem.custBasicType == 1">
+            <p v-if="thisItem.custBasicType == 1">
               <a style="color: #000" :href="'tel:' + thisItem.telphone"
                 >电话：{{ thisItem.telphone }}</a
               >
@@ -49,7 +49,7 @@
               <a style="color: #000" :href="'tel:' + thisItem.telphone"
                 >电话：{{ thisItem.potentialTelphone }}</a
               >
-            </p> -->
+            </p>
             <p v-if="thisItem.contactDays == 0">今天联系过</p>
             <p v-if="thisItem.contactDays !== 0">
               上次联系{{ thisItem.contactDays }}天前

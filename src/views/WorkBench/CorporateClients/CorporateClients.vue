@@ -63,7 +63,7 @@
             tag="li"
             :to="{
               name: 'EditPublicCustomerRecord',
-              query: { title: '对公客户建档', id: thisItem.id },
+              query: { title: '对公客户详情', id: thisItem.id },
             }"
           >
             <div class="corporateFlex">
@@ -227,6 +227,7 @@ export default {
         nowTime: 0,
         lastTime: 0,
       },
+      positionArr: "",
     };
   },
   // beforeRouteEnter(to, from, next) {
@@ -267,14 +268,35 @@ export default {
     },
     selectHandle() {
       this.pageNo = 1;
+      console.log(this.distanceRange);
+      if (this.distanceRange) {
+        var u = navigator.userAgent;
+        //Android终端
+        var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+        //iOS终端
+        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+        if (isAndroid) {
+          if (window.android.getLocation() != false) {
+            this.positionArr = window.android.getLocation();
+            return;
+          }
+        }
+        if (isiOS) {
+          if (window.prompt("getLocation") != false) {
+            this.positionArr = window.prompt("getLocation");
+            return;
+          }
+        }
+      }
       let params = {
         page: this.pageNo,
         limit: this.pageSize,
         type: this.tabId,
         name: this.search_txt,
-        industryType: this.industry_type.text,
-        demandType: this.potentialNeedType,
+        industryType: this.industry_type.index,
+        demandType: this.potentialNeedType.toString(),
         distanceRange: this.distanceRange,
+        location: this.positionArr,
       };
       this.$httpGet({
         url: "/api/publicCustomerPool/query",
@@ -287,6 +309,7 @@ export default {
             this.publicCustomerPool1 = res.data;
           }
         }
+        this.isPopupVisibleScreen = false;
       });
     },
     getFollow() {
@@ -440,7 +463,7 @@ export default {
             },
           })
             .then((res) => {
-              this.publicCustomerPool1 = [];
+              this.publicCustomerPool = [];
               this.onLoad();
             })
             .catch(() => {});
@@ -501,7 +524,7 @@ export default {
   width: 80%;
 }
 .van-checkbox__icon {
-  height: 24px;
+  height: 24px!important;
 }
 /* 对公客户 */
 .corporateList {
