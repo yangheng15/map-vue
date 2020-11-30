@@ -12,8 +12,8 @@
             </div>
 
             <ul class="time_frame" style="border-bottom: 0.001rem solid #e8e8e8">
-                <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">我的客户</li>
-                <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">客户池</li>
+                <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">我的客户</li>
+                <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">客户池</li>
             </ul>
             <van-list v-model="loading" :finished="finished" :offset="offset" finished-text="已加载完毕" @load="onLoad" v-show="tabId == 0">
                 <ul class="corporateList" v-for="(thisItem, index) in publicCustomerPool" :key="index">
@@ -75,7 +75,7 @@
                 </ul>
             </van-list>
             <van-overlay :show="isPopupVisibleScreen">
-                <van-form @submit="getFollow" class="screenPopUp">
+                <van-form @submit="selectHandle" class="screenPopUp">
                     <van-icon class="closeBtn" size="20" name="cross" @click="isPopupVisibleScreen = false" />
                     <h1 class="popUpTitle">客户查询</h1>
                     <!-- <van-field
@@ -150,7 +150,7 @@ export default {
             isPopupVisibleFamily: false,
             checkAllFlag: false,
             text: '本季度',
-            tabId: 0,
+            tabId: 1,
             level: '',
             levelName: '',
             newCustomerList: [],
@@ -204,9 +204,12 @@ export default {
             this.tabId = ev;
             this.publicCustomerPool = [];
             this.publicCustomerPool1 = [];
+            this.finished = false;
+            this.pageNo = 1;
             this.onLoad();
         },
         selectHandle() {
+            this.pageNo = 1;
             let params = {
                 page: this.pageNo,
                 limit: this.pageSize,
@@ -220,7 +223,7 @@ export default {
                 url: '/api/publicCustomerPool/query',
                 params: params,
             }).then((res) => {
-                if (res.data.length > 0) {
+                if (res.data) {
                     if (this.tabId == 0) {
                         this.publicCustomerPool = res.data;
                     } else if (this.tabId == 1) {
@@ -287,6 +290,7 @@ export default {
                         this.pageNo = this.pageNo + 1;
                     }
                 }
+                this.loading = false;
             });
             this.isPopupVisibleScreen = false;
         },

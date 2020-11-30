@@ -6,7 +6,7 @@ const store = new Vuex.Store({
   state: {
     screenCustomerPoolData: [],
     screenMyCustomerData: [],
-    tabId: 0,
+    tabId: 1,
     screeningCriteria: {},
   },
   mutations: {
