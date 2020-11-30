@@ -15,7 +15,7 @@
         </template>
       </van-nav-bar>
     </div>
-    <div v-if="typeCN == '对公客户建档'">
+    <div v-if="typeCN == '对公客户详情'">
       <ul class="tabList">
         <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
           基本信息
@@ -82,7 +82,12 @@
         </van-popup>
         <van-field name="uploader" label="客户照片" required>
           <template #input>
-            <van-uploader :after-read="afterRead" v-model="uploader" multiple />
+            <van-uploader
+              :after-read="afterRead"
+              v-model="uploader"
+              @delete="deleteImage"
+              multiple
+            />
           </template>
         </van-field>
         <van-field
@@ -124,15 +129,15 @@
           </template> -->
         </van-field>
         <van-field
+          @click="getLongitudeLatitude"
           v-model="publicCustomerLocation"
           readonly
           name="位置："
           label="位置："
-          placeholder="单行输入"
+          placeholder="点击选择位置信息"
         >
           <template #button>
             <img
-              @click="getLongitudeLatitude"
               style="opacity: 0.9; margin-right: 15px"
               class=""
               src="../../../assets/grid/sign.svg"
@@ -593,7 +598,7 @@ export default {
       this.$httpPut({
         url: "/api/publicCustomersInfo/update",
         data: {
-          id:this.id,
+          code: this.id,
           name: this.publicCustomerName,
           address: this.publicCustomerAddress,
           gridding: this.prospect_detailsEdit.publicCustomerGrid,

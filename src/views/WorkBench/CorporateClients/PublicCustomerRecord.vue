@@ -20,6 +20,8 @@
           label="名称："
           placeholder="单行输入"
           required
+          type="textarea"
+          autosize
         />
         <van-field
           v-model="publicCustomerAddress"
@@ -27,6 +29,8 @@
           label="地址："
           placeholder="单行输入"
           required
+          type="textarea"
+          autosize
         />
         <van-field
           readonly
@@ -64,7 +68,12 @@
         </van-popup>
         <van-field name="uploader" label="客户照片" required>
           <template #input>
-            <van-uploader :after-read="afterRead" v-model="uploader" multiple />
+            <van-uploader
+              :after-read="afterRead"
+              v-model="uploader"
+              @delete="deleteImage"
+              multiple
+            />
           </template>
         </van-field>
         <van-field
@@ -107,6 +116,7 @@
           </template> -->
         </van-field>
         <van-field
+          @click="getLongitudeLatitude"
           v-model="publicCustomerLocation"
           readonly
           name="位置："
@@ -115,7 +125,6 @@
         >
           <template #button>
             <img
-              @click="getLongitudeLatitude"
               style="opacity: 0.9; margin-right: 15px"
               class=""
               src="../../../assets/grid/sign.svg"
@@ -221,83 +230,83 @@
           finished-text="没有更多了"
           @load="onLoad"
         > -->
-          <ul style="background: #fff">
-            <li
-              v-for="(thisItem, index) in MarketingRecord"
-              :key="index"
-              class="marked_record"
-            >
-              <div class="positionFixd">
-                <router-link
-                  tag="p"
-                  :to="{
-                    name: 'EditMarketingRecord',
-                    query: {
-                      title: '营销记录',
-                      id: thisItem.id,
-                      custName: custName,
-                      productName: productName,
-                    },
-                  }"
-                  style="width: 55%"
-                  >{{ thisItem.semTime | transform }}</router-link
-                >
+        <ul style="background: #fff">
+          <li
+            v-for="(thisItem, index) in MarketingRecord"
+            :key="index"
+            class="marked_record"
+          >
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: custName,
+                    productName: productName,
+                  },
+                }"
+                style="width: 55%"
+                >{{ thisItem.semTime | transform }}</router-link
+              >
 
-                <p>
-                  <van-button
-                    color="#3d425e"
-                    size="mini"
-                    @click="deleteRemark(thisItem.id)"
-                    >删除</van-button
-                  >
-                </p>
-              </div>
-
-              <div class="positionFixd">
-                <router-link
-                  tag="p"
-                  :to="{
-                    name: 'EditMarketingRecord',
-                    query: {
-                      title: '营销记录',
-                      id: thisItem.id,
-                      custName: custName,
-                      productName: productName,
-                    },
-                  }"
-                  class="dadian"
-                  >{{ thisItem.remark }}</router-link
+              <p>
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
+                  >删除</van-button
                 >
-                <p style="width: 50%; display: flex" class="approval">
-                  <!-- <span class="approval_Passed">已营销</span> -->
-                  <span
-                    :class="
-                      thisItem.intention == '1'
-                        ? 'approval_Passed'
-                        : 'approval_Passed1'
-                    "
-                    >{{ thisItem.intention | dic_client_will }}</span
-                  >
-                  <span
-                    :class="
-                      thisItem.isSucc == '1'
-                        ? 'approval_Passed'
-                        : 'approval_Passed1'
-                    "
-                    >{{
-                      thisItem.isSucc == "0"
-                        ? "失败"
-                        : thisItem.isSucc == "1"
-                        ? "成功"
-                        : thisItem.isSucc == "2"
-                        ? "未成功"
-                        : ""
-                    }}
-                  </span>
-                </p>
-              </div>
-            </li>
-          </ul>
+              </p>
+            </div>
+
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: custName,
+                    productName: productName,
+                  },
+                }"
+                class="dadian"
+                >{{ thisItem.remark }}</router-link
+              >
+              <p style="width: 50%; display: flex" class="approval">
+                <!-- <span class="approval_Passed">已营销</span> -->
+                <span
+                  :class="
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{ thisItem.intention | dic_client_will }}</span
+                >
+                <span
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{
+                    thisItem.isSucc == "0"
+                      ? "失败"
+                      : thisItem.isSucc == "1"
+                      ? "成功"
+                      : thisItem.isSucc == "2"
+                      ? "未成功"
+                      : ""
+                  }}
+                </span>
+              </p>
+            </div>
+          </li>
+        </ul>
         <!-- </van-list> -->
       </div>
     </div>
@@ -307,7 +316,7 @@
 import ChildNav from "../../../components/Public/ChildNav";
 import { Toast, Dialog } from "vant";
 import moment from "moment";
-import BaiduMap from 'vue-baidu-map'
+import BaiduMap from "vue-baidu-map";
 
 export default {
   components: {
@@ -364,6 +373,10 @@ export default {
   },
 
   methods: {
+    deleteImage({ url }) {
+      const index = this.uploader.findIndex((it) => it.url === url);
+      this.pictureId.splice(index, 1);
+    },
     getMarkedRecord() {
       // if (this.customerCode && this.gridCode) {
       this.$httpGet({
@@ -662,10 +675,13 @@ export default {
     },
     initMap() {
       const AK = "WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e";
-      const BMap_URL = "https://api.map.baidu.com/api?v=2.0&ak="+ AK +"&s=1&callback=onBMapCallback";
+      const BMap_URL =
+        "https://api.map.baidu.com/api?v=2.0&ak=" +
+        AK +
+        "&s=1&callback=onBMapCallback";
       return new Promise((resolve, reject) => {
         // 如果已加载直接返回
-        if(typeof BMap !== "undefined") {
+        if (typeof BMap !== "undefined") {
           resolve(BMap);
           return true;
         }
@@ -684,13 +700,13 @@ export default {
     },
     async analysIsAddress(address) {
       let BMap = await this.initMap();
-      let Geo = new BMap.Geocoder()
+      let Geo = new BMap.Geocoder();
       let point;
       Geo.getPoint(address, (res) => {
         console.log(res);
         point = res;
-      })
-    }
+      });
+    },
   },
 };
 </script>
