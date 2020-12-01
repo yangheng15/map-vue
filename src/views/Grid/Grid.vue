@@ -392,27 +392,26 @@ export default {
             positionMarker: null,
             localSearchList: [],
             searchKeyword: '',
-            clickFlag: false
+            clickFlag: false,
         };
     },
     watch: {
         searchVal(newVal, oldVal) {
             // 输入框为null时清除列表
-            if(newVal.length < oldVal.length) this.clickFlag = false;
+            if (newVal.length < oldVal.length) this.clickFlag = false;
             if (!newVal) {
                 new Promise((resolve, reject) => {
                     const timer = setTimeout(() => {
                         this.localSearchList = [];
-                        resolve(timer)
+                        resolve(timer);
                     }, 100);
                 }).then((timer) => {
                     this.clickFlag = false;
-                    clearTimeout(timer)
-                })
+                    clearTimeout(timer);
+                });
             }
-            if(this.clickFlag) return;
+            if (this.clickFlag) return;
             this.searchKeyword = newVal;
-
         },
     },
     created() {
@@ -485,8 +484,11 @@ export default {
             }
             this.markerPostion = { ...this.mapCenter };
         },
-        resourceEmit(data) {
-            this.typeIds = data.typeIds;
+        resourceEmit({ typeIds, localArr }) {
+            if (localArr.length > 0) {
+                this.searchKeyword = localArr[0];
+            }
+            this.typeIds = typeIds;
             if (this.typeIds) {
                 this.map.clearOverlays();
                 this.typeIdsData = [];
@@ -822,15 +824,15 @@ export default {
         //搜索地图地址的回调
         searchcomplete(results) {
             console.log(results);
-            if (results && results.Hr) {
+            if (results && results.Hr && this.searchVal) {
                 this.localSearchList = results.Hr;
             }
         },
         localOnclick(item) {
             this.clickFlag = true;
-            this.searchVal = item['address']
-            this.localSearchList = []
-        }
+            this.searchVal = item['address'];
+            this.localSearchList = [];
+        },
     },
     filters: {
         dic_grid_resource_type(val) {

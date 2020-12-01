@@ -100,7 +100,11 @@ export default {
   },
   methods: {
     back() {
-      this.$emit("resourceEmit", { typeIds: this.resultArr.join(",") });
+      const localArr = []
+      this.resultArr.forEach((item) => {
+        localArr.push(this.resource_selection3.find(it => it.code === item).codeText)
+      })
+      this.$emit("resourceEmit", { typeIds: this.resultArr.join(","), localArr });
       // console.log(this.resultArr.join(","));
       // this.$router.push({
       //   name: "Grid",
