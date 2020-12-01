@@ -432,6 +432,8 @@ export default {
       this.publicCustomerGrid = res.data.gridding;
       this.industry = res.data.industryType;
       this.publicCustomerLocation = res.data.location;
+      this.mapCenter = {lng: res.data.location.split(',')[0], lat: res.data.location.split(',')[1]}
+      this.mapCenter1 = {...this.mapCenter}
       this.legalPersonName = res.data.legalName;
       this.legalPersonTelephone = res.data.legalPhone;
       this.pictureId = res.data.customerImg
