@@ -218,7 +218,7 @@
           placeholder="多行输入"
         />
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="modifyResult()"
+          <van-button round block type="primary" @click="modifyDemand()"
             >保存</van-button
           >
         </div>
@@ -364,6 +364,8 @@ export default {
 
       zoom: 20,
       MarketingRecord: [],
+
+      judgeReturnValue: "",
     };
   },
 
@@ -377,22 +379,22 @@ export default {
       const index = this.uploader.findIndex((it) => it.url === url);
       this.pictureId.splice(index, 1);
     },
-    getMarkedRecord() {
-      // if (this.customerCode && this.gridCode) {
-      this.$httpGet({
-        url: "/api/appMarket/marketRecord",
-        params: {
-          // customerCode: this.customerCode,
-          // limit: 10,
-          // gridCode: this.gridCode,
-          // taskId: this.taskId,
-          page: 1,
-        },
-      }).then((res) => {
-        this.MarketingRecord = res.data;
-      });
-      // }
-    },
+    // getMarkedRecord() {
+    //   // if (this.customerCode && this.gridCode) {
+    //   this.$httpGet({
+    //     url: "/api/appMarket/marketRecord",
+    //     params: {
+    //       // customerCode: this.customerCode,
+    //       // limit: 10,
+    //       // gridCode: this.gridCode,
+    //       // taskId: this.taskId,
+    //       page: 1,
+    //     },
+    //   }).then((res) => {
+    //     this.MarketingRecord = res.data;
+    //   });
+    //   // }
+    // },
     onIndustryShow(value) {
       this.industry = value;
       this.industryShow = false;
@@ -540,10 +542,20 @@ export default {
       this.zoom = 15;
     },
     tab(ev) {
-      this.tabId = ev;
-      if (ev == 2) {
-        this.getMarkedRecord();
+      if (ev != 0) {
+        console.log(this);
+        if (this.judgeReturnValue == "") {
+          Toast({
+            message: "请先添加详细信息",
+            position: "middle",
+          });
+          return;
+        }
       }
+      this.tabId = ev;
+      // if (ev == 2) {
+      //   this.getMarkedRecord();
+      // }
     },
 
     //选中一个item
@@ -681,6 +693,8 @@ export default {
         },
       })
         .then((res) => {
+          console.log(res.data);
+          this.judgeReturnValue = res.data;
           Toast({
             message: "保存成功",
             position: "middle",
@@ -689,6 +703,20 @@ export default {
         })
         .catch((err) => {
           // console.log(err);
+        });
+    },
+    modifyDemand() {
+      this.$httpPost({
+        url: "/api/customersDemand/save",
+        data: {
+          customerCode: this.judgeReturnValue,
+          demandList: this.publicCustomerAddress,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
         });
     },
     initMap() {
