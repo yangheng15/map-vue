@@ -278,13 +278,13 @@ export default {
         if (isAndroid) {
           if (window.android.getLocation() != false) {
             this.positionArr = window.android.getLocation();
-            return;
+            // return;
           }
         }
         if (isiOS) {
           if (window.prompt("getLocation") != false) {
             this.positionArr = window.prompt("getLocation");
-            return;
+            // return;
           }
         }
       }
@@ -523,7 +523,7 @@ export default {
 .van-search {
   width: 80%;
 }
-.van-checkbox__icon {
+.van-checkbox--horizontal >>> .van-checkbox__icon {
   height: 24px!important;
 }
 /* 对公客户 */

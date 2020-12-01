@@ -4,6 +4,7 @@
       <van-nav-bar left-arrow @click-left="onClickLeft" :title="typeCN">
         <template #right>
           <router-link
+            v-if="sourceClues == 1"
             class="share"
             :to="{
               name: 'CorporateClientsShare',
@@ -146,7 +147,8 @@
           </template>
         </van-field>
         <van-field
-          v-model="sourceClues"
+          v-if="sourceClues == 2"
+          v-model="sourceCluesName"
           name="线索来源："
           label="线索来源："
           placeholder="单行输入"
@@ -211,13 +213,13 @@
         >
           <template #input>
             <van-radio-group v-model="item.index" direction="horizontal">
-              <van-radio name="0" checked-color="rgb(61, 66, 94)"
+              <van-radio name="1" checked-color="rgb(61, 66, 94)"
                 >已办</van-radio
               >
-              <van-radio name="1" checked-color="rgb(61, 66, 94)"
+              <van-radio name="2" checked-color="rgb(61, 66, 94)"
                 >未办</van-radio
               >
-              <van-radio name="2" checked-color="rgb(61, 66, 94)"
+              <van-radio name="3" checked-color="rgb(61, 66, 94)"
                 >需办</van-radio
               >
             </van-radio-group>
@@ -369,11 +371,12 @@ export default {
       otherContactsTelephone: "",
       publicCustomerLocation: "",
       sourceClues: "",
+      sourceCluesName: "",
 
       potential_need_type: [],
       otherTxt: "",
 
-      radio: "2",
+      // radio: "2",
       areaList: [],
       regional_grid: false,
       tabId: 0,
@@ -396,6 +399,13 @@ export default {
       detailAddress: "",
       demandLoan: "",
       MarketingRecord: [],
+      customersDemandList1: [
+        {
+          demandStatus: null,
+          demandType: "",
+          description: "",
+        },
+      ],
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -537,19 +547,19 @@ export default {
       //Android终端
       var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
       //iOS终端
-      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-      if (isAndroid) {
-        if (window.android.getDetailAddress() != false) {
-          this.detailAddress = window.android.getDetailAddress();
-          return;
-        }
-      }
-      if (isiOS) {
-        if (window.prompt("getDetailAddress") != false) {
-          this.detailAddress = window.prompt("getDetailAddress");
-          return;
-        }
-      }
+      // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      // if (isAndroid) {
+      //   if (window.android.getDetailAddress() != false) {
+      //     this.detailAddress = window.android.getDetailAddress();
+      //     return;
+      //   }
+      // }
+      // if (isiOS) {
+      //   if (window.prompt("getDetailAddress") != false) {
+      //     this.detailAddress = window.prompt("getDetailAddress");
+      //     return;
+      //   }
+      // }
     },
     deleteImage({ url }) {
       const index = this.uploader.findIndex((it) => it.url === url);
@@ -563,16 +573,19 @@ export default {
         },
       });
       this.publicCustomerName = res.data.name;
-      if (res.data.address != false) {
-      }
       res.data.address != false
         ? (this.publicCustomerAddress = res.data.address)
         : (this.publicCustomerAddress = this.detailAddress);
       this.publicCustomerGrid = res.data.gridding;
       this.industry = res.data.industryType;
       this.publicCustomerLocation = res.data.location;
-      this.mapCenter = {lng: res.data.location.split(',')[0], lat: res.data.location.split(',')[1]}
-      this.mapCenter1 = {...this.mapCenter}
+      this.sourceClues = res.data.source;
+      this.sourceCluesName = res.data.shareName;
+      this.mapCenter = {
+        lng: res.data.location.split(",")[0],
+        lat: res.data.location.split(",")[1],
+      };
+      this.mapCenter1 = { ...this.mapCenter };
       this.legalPersonName = res.data.legalName;
       this.legalPersonTelephone = res.data.legalPhone;
       this.pictureId = res.data.customerImg
@@ -596,6 +609,7 @@ export default {
           });
         });
       }
+      this.customersDemandList = res.data.customersDemandList;
     },
     onRegional_grid(value) {
       this.publicCustomerGrid = value["text"];
@@ -724,12 +738,13 @@ export default {
       });
     },
     selectDelegation(item, index) {
-      // index += 1;
-      // this.potential_need_type.forEach((it) => {
-      //   console.log(it);
-      // });
-      this.demandLoan = item.index;
-      console.log(this.demandLoan, index);
+      this.customersDemandList1.demandStatus = item.index;
+      this.customersDemandList1.demandType = index;
+      if (this.otherTxt) {
+        this.customersDemandList1.description = this.otherTxt;
+        this.customersDemandList1.demandType = -1;
+      }
+      console.log(this.customersDemandList1);
     },
     modifyResult() {
       if (this.publicCustomerName == "") {
@@ -777,6 +792,7 @@ export default {
           businessLicenseNo: this.businessLicenseNo,
           otherContactsName: this.otherContactsName,
           otherContactsPhone: this.otherContactsTelephone,
+          customersDemandList: this.customersDemandList1,
         },
       })
         .then((res) => {
