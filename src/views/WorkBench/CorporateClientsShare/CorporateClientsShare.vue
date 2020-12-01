@@ -430,7 +430,9 @@ export default {
   background: rgb(61, 66, 94);
   color: #fff;
 }
-
+.van-radio--horizontal >>> .van-radio__icon{
+  height: 24px!important;
+}
 .van-search {
   width: 100%;
 }

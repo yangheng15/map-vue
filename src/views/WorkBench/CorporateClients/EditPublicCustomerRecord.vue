@@ -207,6 +207,7 @@
           :label="item.text"
           v-for="(item, index) in potential_need_type"
           :key="index"
+          @click="selectDelegation(item, index)"
         >
           <template #input>
             <van-radio-group v-model="item.index" direction="horizontal">
@@ -236,7 +237,114 @@
           >
         </div>
       </div>
-      <div v-show="tabId === 2"></div>
+      <div v-show="tabId === 2">
+        <ul style="background: #fff">
+          <li
+            v-for="(thisItem, index) in MarketingRecord"
+            :key="index"
+            class="marked_record"
+          >
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: custName,
+                    productName: productName,
+                  },
+                }"
+                style="width: 55%"
+                >{{ thisItem.semTime | transform }}</router-link
+              >
+
+              <p>
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
+                  >删除</van-button
+                >
+              </p>
+            </div>
+
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: custName,
+                    productName: productName,
+                  },
+                }"
+                class="dadian"
+                >{{ thisItem.remark }}</router-link
+              >
+              <p style="width: 50%; display: flex" class="approval">
+                <!-- <span class="approval_Passed">已营销</span> -->
+                <span
+                  :class="
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{ thisItem.intention | dic_client_will }}</span
+                >
+                <span
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{
+                    thisItem.isSucc == "0"
+                      ? "失败"
+                      : thisItem.isSucc == "1"
+                      ? "成功"
+                      : thisItem.isSucc == "2"
+                      ? "未成功"
+                      : ""
+                  }}
+                </span>
+              </p>
+            </div>
+          </li>
+        </ul>
+        <div
+          style="
+            margin-left: 85%;
+            position: fixed !important;
+            float: right;
+            z-index: 9999;
+            align-items: right;
+            bottom: 5%;
+            right: 5%;
+          "
+        >
+          <router-link
+            tag="span"
+            class="add_record"
+            :to="{
+              name: 'AddMarketingRecord',
+              query: {
+                title: '添加营销记录',
+                customerCode: this.customerCode,
+                gridCode: this.gridCode,
+                productCode: this.productCode,
+                productName: this.productName,
+                custName: this.custName,
+                id: this.id,
+              },
+            }"
+            >添加记录</router-link
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -285,9 +393,18 @@ export default {
       map: null,
       zoom: 20,
       id: "",
+      detailAddress: "",
+      demandLoan: "",
+      MarketingRecord: [],
     };
   },
-
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (from.path === "/EditMarketingRecord") {
+        vm.tab(2);
+      }
+    });
+  },
   async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
@@ -371,13 +488,13 @@ export default {
         // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
-          console.log(it);
+          // console.log(it);
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
             console.log(8798709);
           }
         });
-        console.log(transformDara);
+        // console.log(transformDara);
         this.industry_list = transformDara;
         this.industry = this.enumData(this.industry, this.industry_list);
       });
@@ -385,15 +502,15 @@ export default {
       this.$httpGet({
         url: "/dic/type/potential_need_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
+          console.log(it, index);
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
+            console.log(transformDara);
+            this.potential_need_type = transformDara;
           }
         });
-        console.log(transformDara);
-        this.potential_need_type = transformDara;
       });
       this.$httpGet({
         url: "/api/semGridding/query",
@@ -415,6 +532,24 @@ export default {
           this.areaList
         );
       });
+      // 获取详细地址
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        if (window.android.getDetailAddress() != false) {
+          this.detailAddress = window.android.getDetailAddress();
+          return;
+        }
+      }
+      if (isiOS) {
+        if (window.prompt("getDetailAddress") != false) {
+          this.detailAddress = window.prompt("getDetailAddress");
+          return;
+        }
+      }
     },
     deleteImage({ url }) {
       const index = this.uploader.findIndex((it) => it.url === url);
@@ -428,7 +563,11 @@ export default {
         },
       });
       this.publicCustomerName = res.data.name;
-      this.publicCustomerAddress = res.data.address;
+      if (res.data.address != false) {
+      }
+      res.data.address != false
+        ? (this.publicCustomerAddress = res.data.address)
+        : (this.publicCustomerAddress = this.detailAddress);
       this.publicCustomerGrid = res.data.gridding;
       this.industry = res.data.industryType;
       this.publicCustomerLocation = res.data.location;
@@ -476,8 +615,26 @@ export default {
     },
     tab(ev) {
       this.tabId = ev;
+      if (ev == 2) {
+        this.getMarkedRecord();
+      }
     },
-
+    getMarkedRecord() {
+      // if (this.customerCode && this.gridCode) {
+      this.$httpGet({
+        url: "/api/appMarket/marketRecord",
+        params: {
+          customerCode: "yangyang",
+          limit: 10,
+          gridCode: "00520",
+          taskId: 3,
+          page: 1,
+        },
+      }).then((res) => {
+        this.MarketingRecord = res.data;
+      });
+      // }
+    },
     //选中一个item
     selectItem(thisItem) {
       if (typeof thisItem.checked == "undefined") {
@@ -564,6 +721,14 @@ export default {
         this.pictureId.push(res.data.pid);
       });
     },
+    selectDelegation(item, index) {
+      // index += 1;
+      // this.potential_need_type.forEach((it) => {
+      //   console.log(it);
+      // });
+      this.demandLoan = item.index;
+      console.log(this.demandLoan, index);
+    },
     modifyResult() {
       if (this.publicCustomerName == "") {
         Dialog.alert({
@@ -623,6 +788,33 @@ export default {
           // console.log(err);
         });
     },
+    deleteRemark(val) {
+      Dialog.confirm({
+        title: "你确定删除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/semCustRecords/delete",
+            params: {
+              ids: val,
+            },
+          })
+            .then((res) => {
+              this.getMarkedRecord();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    },
+  },
+  filters: {
+    dic_client_will(val) {
+      const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
+        (it) => +it.key == val
+      );
+      console.log(findWill);
+      return findWill ? findWill.value : "";
+    },
   },
 };
 </script>
@@ -677,7 +869,7 @@ export default {
   padding: 0rem 1rem;
 }
 .van-radio--horizontal >>> .van-radio__icon {
-  height: 1.4rem;
+  height: 24px !important;
 }
 input {
   border-radius: 0.3rem;
@@ -776,6 +968,55 @@ textarea {
   width: 1rem;
   height: 1rem;
 }
+/* 下面都是营销记录 */
+.marked_record {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8;
+}
+.marked_record p {
+  margin: 3px 0px;
+}
+.positionFixd {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.approval .approval_Passed {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #3cc8ab;
+  color: #3cc8ab;
+  margin-left: 0.5rem;
+}
+.approval .approval_Passed1 {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #c1b9b9;
+  color: #c1b9b9;
+  margin-left: 0.5rem;
+}
+.add_record {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+  font-size: 0.8rem;
+  border-radius: 100%;
+  background-color: #3d425e;
+  color: #fff;
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,
   select,
@@ -812,6 +1053,18 @@ textarea {
     line-height: 1.8rem;
     height: 1.8rem;
     width: 5rem;
+  }
+  .approval .approval_Passed {
+    height: 1.5rem;
+    line-height: 1.5rem;
+  }
+  .approval .approval_Passed1 {
+    height: 1.5rem;
+    line-height: 1.5rem;
+  }
+  .add_record {
+    width: 3.5rem;
+    height: 3.5rem;
   }
 }
 </style>
