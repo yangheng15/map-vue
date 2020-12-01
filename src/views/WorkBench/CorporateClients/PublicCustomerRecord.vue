@@ -509,6 +509,24 @@ export default {
         //   this.areaList
         // );
       });
+      // 获取详细地址
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        if (window.android.getDetailAddress() != false) {
+          this.publicCustomerAddress = window.android.getDetailAddress();
+          return;
+        }
+      }
+      if (isiOS) {
+        if (window.prompt("getDetailAddress") != false) {
+          this.publicCustomerAddress = window.prompt("getDetailAddress");
+          return;
+        }
+      }
     },
 
     onRegional_grid(value) {
