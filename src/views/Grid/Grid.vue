@@ -242,9 +242,9 @@
             <p @click="showPopup = true">
                 <img src="../../assets/grid/resource.svg" alt />
             </p>
-            <p @click="showMarkerToast">
+            <!-- <p @click="showMarkerToast">
                 <img src="../../assets/grid/sign.svg" alt />
-            </p>
+            </p> -->
             <!-- <router-link
         tag="p"
         :to="{ name: 'PathPlanning', query: { title: '路径规划' } }"
