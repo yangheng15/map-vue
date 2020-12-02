@@ -11,10 +11,10 @@
           v-model="search_txt"
           show-action
           placeholder="客户经理名称或编号"
-          @search="getFollow"
+          @search="selectHandle"
         >
           <template #action>
-            <div @click="getFollow">搜索</div>
+            <div @click="selectHandle">搜索</div>
           </template>
         </van-search>
         <van-list
@@ -31,18 +31,21 @@
             icon-size="24"
             style="padding: 10px"
           >
-            <van-radio name="1" @click="notCheckAll">指定客户经理</van-radio>
-            <van-radio name="2" @click="checkAll">全行分享</van-radio>
+            <van-radio name="0" @click="notCheckAll(0)">指定客户经理</van-radio>
+            <van-radio name="1" @click="checkAll(1)">全行分享</van-radio>
           </van-radio-group>
           <van-checkbox-group v-model="shareList" ref="checkboxGroup">
             <van-checkbox
               v-for="(thisItem, index) in publicCustomerPool"
               :key="index"
               class="corporateList"
-              :name="thisItem.id"
+              :name="thisItem.pid"
+              @click="selectManager(thisItem.pid)"
             >
-              <p class="corporateManage">{{ thisItem.name }}</p></van-checkbox
-            >
+              <p>
+                {{ thisItem.realName }}
+              </p>
+            </van-checkbox>
           </van-checkbox-group>
         </van-list>
         <div class="shareBtn">
@@ -71,71 +74,6 @@
           </li>
         </ul>
       </van-list>
-      <van-overlay :show="isPopupVisibleScreen">
-        <van-form @submit="getFollow" class="screenPopUp">
-          <van-icon
-            class="closeBtn"
-            size="20"
-            name="cross"
-            @click="isPopupVisibleScreen = false"
-          />
-          <h1 class="popUpTitle">客户查询</h1>
-          <!-- <van-field
-            v-model="customerGroup"
-            name="所属客户群体"
-            label="所属客户群体"
-            placeholder="所属客户群体"
-          /> -->
-          <van-field
-            readonly
-            clickable
-            name="picker"
-            :value="industry_type.text"
-            label="行业类型"
-            placeholder="点击选择行业类型"
-            @click="showindustry_type = true"
-          />
-          <van-popup v-model="showindustry_type" position="bottom">
-            <van-picker
-              show-toolbar
-              :columns="industry_typelist"
-              @confirm="onindustry_type"
-              @cancel="showindustry_type = false"
-            />
-          </van-popup>
-          <van-field name="checkboxGroup" label="需求类型">
-            <template #input>
-              <van-checkbox-group
-                v-model="potentialNeedType"
-                direction="horizontal"
-              >
-                <van-checkbox
-                  v-for="(item, index) in potential_need_type"
-                  :key="index"
-                  :name="item.index"
-                  checked-color="rgb(61, 66, 94)"
-                  >{{ item.text }}</van-checkbox
-                >
-              </van-checkbox-group>
-            </template>
-          </van-field>
-          <van-field
-            v-model="distanceRange"
-            name="距离范围(公里)"
-            label="距离范围（公里）"
-            placeholder="距离范围（公里）"
-          />
-          <div style="padding: 16px; display: flex; justify-content: center">
-            <van-button
-              color=" rgb(61, 66, 94)"
-              type="info"
-              native-type="submit"
-            >
-              查询
-            </van-button>
-          </div>
-        </van-form>
-      </van-overlay>
     </div>
   </div>
 </template>
@@ -190,51 +128,67 @@ export default {
         lastTime: 0,
       },
       shareList: [],
-      radio: "1",
+      radio: "0",
+      checkAllList: "",
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
-    this.tabId = this.$store.state.tabId || 0;
+    // this.tabId = this.$store.state.tabId || 0;
   },
   methods: {
-    checkAll() {
+    selectManager(el) {
+      console.log(el);
+    },
+    checkAll(name) {
+      console.log(name);
+      this.checkAllList = name;
       this.$refs.checkboxGroup.toggleAll(true);
-      console.log(this.shareList);
     },
-    notCheckAll() {
+    notCheckAll(name) {
+      console.log(name);
+      this.checkAllList = name;
       this.$refs.checkboxGroup.toggleAll(false);
-    },
-    onindustry_type(value) {
-      this.industry_type = value;
-      this.showindustry_type = false;
-    },
-    popUp() {
-      this.isPopupVisibleScreen = true;
-      this.getdic();
     },
     tab(ev) {
       this.tabId = ev;
       this.publicCustomerPool = [];
       this.publicCustomerPool1 = [];
       this.onLoad();
+      this.pageNo = 1;
+    },
+    selectHandle() {
+      this.pageNo = 1;
+      let params = {
+        page: this.pageNo,
+        limit: this.pageSize,
+        realName: this.search_txt,
+      };
+      this.$httpGet({
+        url: "/api/shareDepartmentUser/list",
+        params: params,
+      }).then((res) => {
+        if (res.data) {
+          if (this.tabId == 0) {
+            this.publicCustomerPool = res.data;
+          } else if (this.tabId == 1) {
+            this.publicCustomerPool1 = res.data;
+          }
+        }
+      });
     },
     getFollow(type) {
       return new Promise((resolve, reject) => {
         let params = {
           page: this.pageNo,
           limit: this.pageSize,
-          type: this.tabId,
-          name: this.search_txt,
-          industryType: this.industry_type.text,
-          demandType: this.potentialNeedType,
-          distanceRange: this.distanceRange,
         };
         this.$httpGet({
-          url: "/api/publicCustomerPool/query",
+          url: "/api/shareDepartmentUser/list",
           params: params,
         })
           .then((res) => {
+            console.log(res.data);
             if (res.data.length > 0) {
               if (this.tabId == 0) {
                 let result = {
@@ -430,8 +384,8 @@ export default {
   background: rgb(61, 66, 94);
   color: #fff;
 }
-.van-radio--horizontal >>> .van-radio__icon{
-  height: 24px!important;
+.van-radio--horizontal >>> .van-radio__icon {
+  height: 24px !important;
 }
 .van-search {
   width: 100%;
@@ -443,6 +397,9 @@ export default {
 .corporateList {
   padding: 10px;
   border-bottom: 1px solid #f8f8f8;
+}
+.corporateList p {
+  margin: 0;
 }
 .marter span {
   margin: 0px 2px;

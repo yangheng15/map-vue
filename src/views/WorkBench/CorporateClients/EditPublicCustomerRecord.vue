@@ -151,7 +151,8 @@
           v-model="sourceCluesName"
           name="线索来源："
           label="线索来源："
-          placeholder="单行输入"
+          placeholder=""
+          readonly
         />
         <div
           style="width: 99%; margin: 0.5rem auto; position: relative"
@@ -254,7 +255,7 @@
                   query: {
                     title: '营销记录',
                     id: thisItem.id,
-                    custName: custName,
+                    custName: publicCustomerName,
                     productName: productName,
                   },
                 }"
@@ -280,7 +281,7 @@
                   query: {
                     title: '营销记录',
                     id: thisItem.id,
-                    custName: custName,
+                    custName: publicCustomerName,
                     productName: productName,
                   },
                 }"
@@ -339,8 +340,7 @@
                 gridCode: this.gridCode,
                 productCode: this.productCode,
                 productName: this.productName,
-                custName: this.custName,
-                id: this.id,
+                custName: this.publicCustomerName,
               },
             }"
             >添加记录</router-link
@@ -409,7 +409,10 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (from.path === "/EditMarketingRecord") {
+      if (
+        from.path === "/EditMarketingRecord" ||
+        from.path === "/AddMarketingRecord"
+      ) {
         vm.tab(2);
       }
     });
@@ -470,6 +473,7 @@ export default {
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
         // debugger
+        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -490,6 +494,7 @@ export default {
         url: "/dic/type/industry_type",
       }).then((res) => {
         let transformDara = [];
+        console.log(res);
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
@@ -507,10 +512,11 @@ export default {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
             this.potential_need_type = transformDara;
-            console.log(this.potential_need_type);
+            // console.log(this.potential_need_type);
           }
         });
       });
+      // 所属网格
       this.$httpGet({
         url: "/api/semGridding/query",
         params: {
@@ -562,6 +568,7 @@ export default {
         },
       });
       this.customerCode = res.data.code;
+      localStorage.setItem("customerCode", this.customerCode);
       this.publicCustomerName = res.data.name;
       res.data.address != false
         ? (this.publicCustomerAddress = res.data.address)
@@ -584,27 +591,33 @@ export default {
       this.businessLicenseNo = res.data.businessLicenseNo;
       this.otherContactsName = res.data.otherContactsName;
       this.otherContactsTelephone = res.data.otherContactsPhone;
-      if(res.data.customersDemandList.length > 0) {
-          res.data.customersDemandList.forEach((item) => {
-              for (let index = 0; index < this.potential_need_type.length; index++) {
-                const i = this.potential_need_type.findIndex(it => it.index == item.demandStatus)
-                i > 0 && (this.potential_need_type[i].radio = item.demandType);
-                i < 0 && (this.otherTxt = item.description)
-              }
-          })
+      if (res.data.customersDemandList.length > 0) {
+        res.data.customersDemandList.forEach((item) => {
+          for (
+            let index = 0;
+            index < this.potential_need_type.length;
+            index++
+          ) {
+            const i = this.potential_need_type.findIndex(
+              (it) => it.index == item.demandStatus
+            );
+            i > 0 && (this.potential_need_type[i].radio = item.demandType);
+            i < 0 && (this.otherTxt = item.description);
+          }
+        });
       }
-    //   this.customersDemandList1 = res.data.customersDemandList;
-    //   console.log(this.customersDemandList1);
-    //   if (this.customersDemandList1) {
-    //     this.customersDemandList1.forEach((it) => {
-    //       this.potential_need_type.index = it.demandStatus;
-    //       this.potential_need_type.radio = it.demandType;
-    //       if (it.demandType == -1) {
-    //         this.otherTxt = it.description;
-    //       }
-    //       console.log(this.potential_need_type);
-    //     });
-    //   }
+      //   this.customersDemandList1 = res.data.customersDemandList;
+      //   console.log(this.customersDemandList1);
+      //   if (this.customersDemandList1) {
+      //     this.customersDemandList1.forEach((it) => {
+      //       this.potential_need_type.index = it.demandStatus;
+      //       this.potential_need_type.radio = it.demandType;
+      //       if (it.demandType == -1) {
+      //         this.otherTxt = it.description;
+      //       }
+      //       console.log(this.potential_need_type);
+      //     });
+      //   }
       if (this.pictureId) {
         this.pictureId.forEach((el) => {
           this.$httpGet({
@@ -644,14 +657,12 @@ export default {
       }
     },
     getMarkedRecord() {
-      // if (this.customerCode && this.gridCode) {
+      const customerCodeBack = localStorage.getItem("customerCode");
       this.$httpGet({
-        url: "/api/appMarket/marketRecord",
+        url: "/api/publicCustomersInfo/marketRecord",
         params: {
-          customerCode: "yangyang",
+          customerCode: this.customerCode || customerCodeBack,
           limit: 10,
-          gridCode: "00520",
-          taskId: 3,
           page: 1,
         },
       }).then((res) => {
@@ -764,7 +775,8 @@ export default {
           code: this.customerCode,
           customersDemandList: this.customersDemandList1,
         },
-      }).then((res) => {
+      })
+        .then((res) => {
           Toast({
             message: "保存成功",
             position: "middle",
@@ -844,6 +856,10 @@ export default {
             },
           })
             .then((res) => {
+              Toast({
+                message: "删除成功",
+                position: "middle",
+              });
               this.getMarkedRecord();
             })
             .catch(() => {});
@@ -856,7 +872,7 @@ export default {
       const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
         (it) => +it.key == val
       );
-      console.log(findWill);
+      // console.log(findWill);
       return findWill ? findWill.value : "";
     },
   },

@@ -19,18 +19,24 @@
           name="名称："
           label="名称："
           placeholder="单行输入"
+          required
+          type="textarea"
+          autosize
         />
         <van-field
           v-model="publicCustomerAddress"
           name="地址："
           label="地址："
           placeholder="单行输入"
+          required
+          type="textarea"
+          autosize
         />
         <van-field
           readonly
           clickable
           name="area"
-          :value="publicCustomerGrid"
+          :value="publicCustomerGrid.text"
           label="所属网格："
           placeholder="点击选择所属网格"
           @click="regional_grid = true"
@@ -60,9 +66,14 @@
             @cancel="industryShow = false"
           />
         </van-popup>
-        <van-field name="uploader" label="客户照片">
+        <van-field name="uploader" label="客户照片" required>
           <template #input>
-            <van-uploader v-model="uploader" />
+            <van-uploader
+              :after-read="afterRead"
+              v-model="uploader"
+              @delete="deleteImage"
+              multiple
+            />
           </template>
         </van-field>
         <van-field
@@ -70,6 +81,7 @@
           name="营业执照号："
           label="营业执照号："
           placeholder="单行输入"
+          required
         />
         <van-field
           v-model="legalPersonName"
@@ -104,15 +116,15 @@
           </template> -->
         </van-field>
         <van-field
+          @click="getLongitudeLatitude"
           v-model="publicCustomerLocation"
           readonly
           name="位置："
           label="位置："
-          placeholder="单行输入"
+          placeholder="点击在地图中选择"
         >
           <template #button>
             <img
-              @click="getLongitudeLatitude"
               style="opacity: 0.9; margin-right: 15px"
               class=""
               src="../../../assets/grid/sign.svg"
@@ -182,16 +194,17 @@
           :label="item.text"
           v-for="(item, index) in potential_need_type"
           :key="index"
+          @click="selectDelegation(item)"
         >
           <template #input>
-            <van-radio-group v-model="item.index" direction="horizontal">
-              <van-radio name="0" checked-color="rgb(61, 66, 94)"
+            <van-radio-group v-model="item.radio" direction="horizontal">
+              <van-radio name="1" checked-color="rgb(61, 66, 94)"
                 >已办</van-radio
               >
-              <van-radio name="1" checked-color="rgb(61, 66, 94)"
+              <van-radio name="2" checked-color="rgb(61, 66, 94)"
                 >未办</van-radio
               >
-              <van-radio name="2" checked-color="rgb(61, 66, 94)"
+              <van-radio name="3" checked-color="rgb(61, 66, 94)"
                 >需办</van-radio
               >
             </van-radio-group>
@@ -206,12 +219,126 @@
           placeholder="多行输入"
         />
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="modifyResult()()"
+          <van-button round block type="primary" @click="saveCustomersDemand()"
             >保存</van-button
           >
         </div>
       </div>
-      <div v-show="tabId === 2"></div>
+      <div v-show="tabId === 2">
+        <!-- <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        > -->
+        <ul style="background: #fff">
+          <li
+            v-for="(thisItem, index) in MarketingRecord"
+            :key="index"
+            class="marked_record"
+          >
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: custName,
+                    productName: productName,
+                  },
+                }"
+                style="width: 55%"
+                >{{ thisItem.semTime | transform }}</router-link
+              >
+
+              <p>
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
+                  >删除</van-button
+                >
+              </p>
+            </div>
+
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: custName,
+                    productName: productName,
+                  },
+                }"
+                class="dadian"
+                >{{ thisItem.remark }}</router-link
+              >
+              <p style="width: 50%; display: flex" class="approval">
+                <!-- <span class="approval_Passed">已营销</span> -->
+                <span
+                  :class="
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{ thisItem.intention | dic_client_will }}</span
+                >
+                <span
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{
+                    thisItem.isSucc == "0"
+                      ? "失败"
+                      : thisItem.isSucc == "1"
+                      ? "成功"
+                      : thisItem.isSucc == "2"
+                      ? "未成功"
+                      : ""
+                  }}
+                </span>
+              </p>
+            </div>
+          </li>
+        </ul>
+                <div
+          style="
+            margin-left: 85%;
+            position: fixed !important;
+            float: right;
+            z-index: 9999;
+            align-items: right;
+            bottom: 5%;
+            right: 5%;
+          "
+        >
+          <router-link
+            tag="span"
+            class="add_record"
+            :to="{
+              name: 'AddMarketingRecord',
+              query: {
+                title: '添加营销记录',
+                customerCode: this.judgeReturnValue,
+                gridCode: this.gridCode,
+                productCode: this.productCode,
+                productName: this.productName,
+                custName: this.publicCustomerName,
+                id: this.id,
+              },
+            }"
+            >添加记录</router-link
+          >
+        </div>
+        <!-- </van-list> -->
+      </div>
     </div>
   </div>
 </template>
@@ -219,6 +346,8 @@
 import ChildNav from "../../../components/Public/ChildNav";
 import { Toast, Dialog } from "vant";
 import moment from "moment";
+import BaiduMap from "vue-baidu-map";
+
 export default {
   components: {
     ChildNav,
@@ -232,6 +361,7 @@ export default {
       industry: "",
       industryShow: false,
       uploader: [],
+      pictureId: [],
       businessLicenseNo: "",
       legalPersonName: "",
       legalPersonTelephone: "",
@@ -240,7 +370,7 @@ export default {
       publicCustomerLocation: "",
       sourceClues: "",
 
-      potential_need_type:[],
+      potential_need_type: [],
       otherTxt: "",
 
       radio: "2",
@@ -263,15 +393,52 @@ export default {
       map: null,
 
       zoom: 20,
+      MarketingRecord: [],
+
+      judgeReturnValue: "",
+      customersDemandList1: [],
+      customerCode: "",
+      gridCode: "",
+      productCode: "",
+      productName: "",
+      custName: "",
     };
   },
-
+  beforeRouteEnter(to, from, next) {
+    console.log(from.path);
+    next((vm) => {
+      if (from.path === "/AddMarketingRecord") {
+        console.log(123415234523452);
+        vm.tab(2);
+      }
+    });
+  },
   created() {
     this.typeCN = this.$route.query.title;
     this.dic_nation();
   },
 
   methods: {
+    deleteImage({ url }) {
+      const index = this.uploader.findIndex((it) => it.url === url);
+      this.pictureId.splice(index, 1);
+    },
+    // getMarkedRecord() {
+    //   // if (this.customerCode && this.gridCode) {
+    //   this.$httpGet({
+    //     url: "/api/appMarket/marketRecord",
+    //     params: {
+    //       // customerCode: this.customerCode,
+    //       // limit: 10,
+    //       // gridCode: this.gridCode,
+    //       // taskId: this.taskId,
+    //       page: 1,
+    //     },
+    //   }).then((res) => {
+    //     this.MarketingRecord = res.data;
+    //   });
+    //   // }
+    // },
     onIndustryShow(value) {
       this.industry = value;
       this.industryShow = false;
@@ -383,15 +550,33 @@ export default {
             });
         });
         this.areaList = transformDara;
-        this.publicCustomerGrid = this.enumData1(
-          this.publicCustomerGrid,
-          this.areaList
-        );
+        // this.publicCustomerGrid = this.enumData1(
+        //   this.publicCustomerGrid,
+        //   this.areaList
+        // );
       });
+      // 获取详细地址
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        if (window.android.getDetailAddress() != false) {
+          this.publicCustomerAddress = window.android.getDetailAddress();
+          return;
+        }
+      }
+      if (isiOS) {
+        if (window.prompt("getDetailAddress") != false) {
+          this.publicCustomerAddress = window.prompt("getDetailAddress");
+          return;
+        }
+      }
     },
 
     onRegional_grid(value) {
-      this.publicCustomerGrid = value.text;
+      this.publicCustomerGrid = value;
       this.regional_grid = false;
     },
     handler({ BMap, map }) {
@@ -401,7 +586,20 @@ export default {
       this.zoom = 15;
     },
     tab(ev) {
+      if (ev != 0) {
+        console.log(this);
+        if (this.judgeReturnValue == "") {
+          Toast({
+            message: "请先添加详细信息",
+            position: "middle",
+          });
+          return;
+        }
+      }
       this.tabId = ev;
+      // if (ev == 2) {
+      //   this.getMarkedRecord();
+      // }
     },
 
     //选中一个item
@@ -478,14 +676,101 @@ export default {
       this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
-    modifyResult() {
-      this.$httpPut({
-        url: "/api/customersFamily/update",
+    afterRead(file) {
+      let formData = new FormData();
+      formData.append("file", file.file);
+      this.$httpPost({
+        url: "/api/upload/attachment",
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+      }).then((res) => {
+        // console.log(res.data.pid);
+        this.pictureId.push(res.data.pid);
+      });
+    },
+    selectDelegation(item) {
+      this.customersDemandList1.push({
+        demandStatus: item.index,
+        demandType: item.radio,
+      });
+    },
+    async saveCustomersDemand() {
+      if (this.otherTxt) {
+        this.customersDemandList1.push({
+          description: this.otherTxt,
+          demandType: -1,
+        });
+      }
+      console.log(this.judgeReturnValue);
+      const res = await this.$httpPost({
+        url: "/api/customersDemand/save",
         data: {
-          id: this.id,
+          code: this.judgeReturnValue,
+          customersDemandList: this.customersDemandList1,
+        },
+      })
+      .then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+          // this.$router.go(-1);
+        })
+        .catch((err) => {
+          // console.log(err);
+        })
+    },
+    async modifyResult() {
+      if (this.publicCustomerName == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入名称！",
+        });
+        return;
+      }
+      if (this.publicCustomerAddress == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入地址！",
+        });
+        return;
+      }
+      if (this.pictureId == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请添加客户照片！",
+        });
+        return;
+      }
+      if (this.businessLicenseNo == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入营业执照号！",
+        });
+        return;
+      }
+      //逆向解析
+      // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
+      // console.log(this.publicCustomerAddress);
+      this.$httpPost({
+        url: "/api/pulicCustomersInfo/add",
+        data: {
+          name: this.publicCustomerName,
+          address: this.publicCustomerAddress,
+          gridding: this.publicCustomerGrid.index,
+          industryType: this.industry.index,
+          location: this.publicCustomerLocation,
+          legalName: this.legalPersonName,
+          legalPhone: this.legalPersonTelephone,
+          customerImg: this.pictureId.join(","),
+          businessLicenseNo: this.businessLicenseNo,
+          otherContactsName: this.otherContactsName,
+          otherContactsPhone: this.otherContactsTelephone,
         },
       })
         .then((res) => {
+          console.log(res.data);
+          this.judgeReturnValue = res.data.code;
           Toast({
             message: "保存成功",
             position: "middle",
@@ -495,6 +780,53 @@ export default {
         .catch((err) => {
           // console.log(err);
         });
+    },
+    modifyDemand() {
+      this.$httpPost({
+        url: "/api/customersDemand/save",
+        data: {
+          customerCode: this.judgeReturnValue,
+          demandList: this.publicCustomerAddress,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {});
+    },
+    initMap() {
+      const AK = "WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e";
+      const BMap_URL =
+        "https://api.map.baidu.com/api?v=2.0&ak=" +
+        AK +
+        "&s=1&callback=onBMapCallback";
+      return new Promise((resolve, reject) => {
+        // 如果已加载直接返回
+        if (typeof BMap !== "undefined") {
+          resolve(BMap);
+          return true;
+        }
+        // 百度地图异步加载回调处理
+        window.onBMapCallback = function () {
+          console.log("百度地图脚本初始化成功...");
+          resolve(BMap);
+        };
+
+        // 插入script脚本
+        let scriptNode = document.createElement("script");
+        scriptNode.setAttribute("type", "text/javascript");
+        scriptNode.setAttribute("src", BMap_URL);
+        document.body.appendChild(scriptNode);
+      });
+    },
+    async analysIsAddress(address) {
+      let BMap = await this.initMap();
+      let Geo = new BMap.Geocoder();
+      let point;
+      Geo.getPoint(address, (res) => {
+        console.log(res);
+        point = res;
+      });
     },
   },
 };
@@ -522,7 +854,7 @@ export default {
   padding: 0rem 1rem;
 }
 .van-radio--horizontal >>> .van-radio__icon {
-  height: 1.4rem;
+  height: 24px!important;
 }
 input {
   border-radius: 0.3rem;
@@ -620,6 +952,55 @@ textarea {
   background-size: cover;
   width: 1rem;
   height: 1rem;
+}
+/* 下面都是营销记录 */
+.marked_record {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8;
+}
+.marked_record p {
+  margin: 3px 0px;
+}
+.positionFixd {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.approval .approval_Passed {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #3cc8ab;
+  color: #3cc8ab;
+  margin-left: 0.5rem;
+}
+.approval .approval_Passed1 {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #c1b9b9;
+  color: #c1b9b9;
+  margin-left: 0.5rem;
+}
+.add_record {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+  font-size: 0.8rem;
+  border-radius: 100%;
+  background-color: #3d425e;
+  color: #fff;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,

@@ -5,11 +5,10 @@
       <ul class="mission_details">
         <li>
           客户：{{ custName }}
-          <img src="../../assets/WorkBench/location.svg" alt />
+          <!-- <img src="../../assets/WorkBench/location.svg" alt /> -->
         </li>
-        <!-- <li>方式：{{ editRecords.semType }}</li> -->
-        <li>营销产品：{{ productName }}</li>
-        <li>执行时间：{{ editRecords.semTime | transform }}</li>
+        <li v-if="productName">营销产品：{{ productName }}</li>
+        <li v-if="productName">执行时间：{{ editRecords.semTime | transform }}</li>
       </ul>
       <div>
         <ul class="tabList">
@@ -284,6 +283,7 @@ export default {
       // }-${time.getDate()}`;
       this.currentDate = time
       this.currentDate1 = time
+      console.log(time);
       this.showPicker = false;
     },
     deleteImage({ url }) {
@@ -391,7 +391,7 @@ export default {
           marketAmount: this.editRecords.marketAmount,
           remark: this.editRecords.remark,
           feedback: this.editRecords.feedback,
-          checkTime:this.currentDate1
+          dueTime:this.currentDate1
         },
       }).then((res) => {
         Toast({
@@ -543,9 +543,6 @@ export default {
   width: 20px;
   vertical-align: bottom;
   margin: 0px 0px 0px 20px;
-}
-.mission_details li:last-child {
-  padding-bottom: 10px;
 }
 .tabList {
   display: flex;

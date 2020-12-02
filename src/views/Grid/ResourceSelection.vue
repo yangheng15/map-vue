@@ -28,14 +28,11 @@
           :key="index"
           class="cartItem"
         >
-          <van-checkbox-group v-model="resultArr">
-            <van-checkbox
-              :name="thisItem.code"
-              checked-color="rgb(61, 66, 94)"
-              shape="square"
-              >{{ thisItem.codeText }}</van-checkbox
-            >
-          </van-checkbox-group>
+          <van-radio-group v-model="resultArr">
+            <van-radio :name="thisItem.code" checked-color="rgb(61, 66, 94)">{{
+              thisItem.codeText
+            }}</van-radio>
+          </van-radio-group>
           <!-- <van-checkbox
             @change="bianhua"
             v-model="thisItem.code"
@@ -90,7 +87,8 @@ export default {
       ],
       resource_selection3: [],
       path_planning: [],
-      resultArr: [],
+      resultArr: "",
+      localArr: "",
     };
   },
   created() {
@@ -100,16 +98,16 @@ export default {
   },
   methods: {
     back() {
-      const localArr = []
-      this.resultArr.forEach((item) => {
-        localArr.push(this.resource_selection3.find(it => it.code === item).codeText)
-      })
-      this.$emit("resourceEmit", { typeIds: this.resultArr.join(","), localArr });
-      // console.log(this.resultArr.join(","));
-      // this.$router.push({
-      //   name: "Grid",
-      //   params: { typeIds: this.resultArr.join(",") },
-      // });
+      const findName = JSON.parse(localStorage.getItem("dicGridResource")).find(
+        (it) => this.resultArr == it.key
+      );
+      if(findName){
+        let localArr = findName.value
+        this.$emit("resourceEmit", { localArr });
+      }else{
+        let localArr = ""
+        this.$emit("resourceEmit", { localArr });
+      }
     },
     async obtainDic() {
       this.$httpGet({
@@ -119,6 +117,7 @@ export default {
           return item.parentId != null;
         });
         this.resource_selection3 = res.data;
+        console.log(this.resource_selection3);
 
         for (var item = 0; item < res.data.length; item++) {
           // console.log(res.data[item].code);
@@ -128,6 +127,16 @@ export default {
       });
     },
   },
+  //   filters: {
+  //   dic_grid_resource_type(val) {
+  //     console.log(val);
+  //     const findWill = JSON.parse(localStorage.getItem("dicGridResource")).find(
+  //       (it) => +it.key == val
+  //     );
+  //     console.log(findWill);
+  //     return findWill ? findWill.value : "";
+  //   },
+  // },
   mounted() {},
 };
 </script>
@@ -153,7 +162,7 @@ export default {
   display: flex;
   flex-flow: row;
   position: relative;
-  margin-top: 0.2rem;
+  margin-top: 0.5rem;
   font-size: 0.9rem;
 }
 .selctBtn {
@@ -203,7 +212,7 @@ export default {
 }
 .new_selection_two,
 .new_selection_three {
-  margin-top: 0.5rem;
+  /* margin-top: 0.5rem; */
   display: flex;
   flex-wrap: wrap;
 }

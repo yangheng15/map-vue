@@ -4,15 +4,19 @@
       <van-nav-bar left-arrow @click-left="onClickLeft" :title="typeCN">
         <template #right>
           <router-link
+            v-if="sourceClues == 1"
             class="share"
-            :to="{ name: 'Remind', query: { title: '提醒' } }"
+            :to="{
+              name: 'CorporateClientsShare',
+              query: { title: '线索分享' },
+            }"
           >
             分享
           </router-link>
         </template>
       </van-nav-bar>
     </div>
-    <div v-if="typeCN == '个人客户建档'">
+    <div v-if="typeCN == '个人客户详情'">
       <ul class="tabList">
         <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
           基本信息
@@ -30,12 +34,18 @@
           name="名称："
           label="名称："
           placeholder="单行输入"
+          required
+          type="textarea"
+          autosize
         />
         <van-field
           v-model="publicCustomerAddress"
           name="地址："
           label="地址："
           placeholder="单行输入"
+          required
+          type="textarea"
+          autosize
         />
         <van-field
           readonly
@@ -58,7 +68,7 @@
           readonly
           clickable
           name="picker"
-          :value="industry.text"
+          :value="industry"
           label="所属行业："
           placeholder="点击选择所属行业"
           @click="industryShow = true"
@@ -71,9 +81,14 @@
             @cancel="industryShow = false"
           />
         </van-popup>
-        <van-field name="uploader" label="客户照片">
+        <van-field name="uploader" label="客户照片" required>
           <template #input>
-            <van-uploader v-model="uploader" />
+            <van-uploader
+              :after-read="afterRead"
+              v-model="uploader"
+              @delete="deleteImage"
+              multiple
+            />
           </template>
         </van-field>
         <van-field
@@ -115,15 +130,15 @@
           </template> -->
         </van-field>
         <van-field
+          @click="getLongitudeLatitude"
           v-model="publicCustomerLocation"
           readonly
           name="位置："
           label="位置："
-          placeholder="单行输入"
+          placeholder="点击选择位置信息"
         >
           <template #button>
             <img
-              @click="getLongitudeLatitude"
               style="opacity: 0.9; margin-right: 15px"
               class=""
               src="../../../assets/grid/sign.svg"
@@ -132,10 +147,12 @@
           </template>
         </van-field>
         <van-field
-          v-model="sourceClues"
+          v-if="sourceClues == 2"
+          v-model="sourceCluesName"
           name="线索来源："
           label="线索来源："
-          placeholder="单行输入"
+          placeholder=""
+          readonly
         />
         <div
           style="width: 99%; margin: 0.5rem auto; position: relative"
@@ -193,16 +210,17 @@
           :label="item.text"
           v-for="(item, index) in potential_need_type"
           :key="index"
+          @click="selectDelegation(item)"
         >
           <template #input>
-            <van-radio-group v-model="item.index" direction="horizontal">
-              <van-radio name="0" checked-color="rgb(61, 66, 94)"
+            <van-radio-group v-model="item.radio" direction="horizontal">
+              <van-radio name="1" checked-color="rgb(61, 66, 94)"
                 >已办</van-radio
               >
-              <van-radio name="1" checked-color="rgb(61, 66, 94)"
+              <van-radio name="2" checked-color="rgb(61, 66, 94)"
                 >未办</van-radio
               >
-              <van-radio name="2" checked-color="rgb(61, 66, 94)"
+              <van-radio name="3" checked-color="rgb(61, 66, 94)"
                 >需办</van-radio
               >
             </van-radio-group>
@@ -217,12 +235,118 @@
           placeholder="多行输入"
         />
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="modifyResult()()"
+          <van-button round block type="primary" @click="saveCustomersDemand()"
             >保存</van-button
           >
         </div>
       </div>
-      <div v-show="tabId === 2"></div>
+      <div v-show="tabId === 2">
+        <ul style="background: #fff">
+          <li
+            v-for="(thisItem, index) in MarketingRecord"
+            :key="index"
+            class="marked_record"
+          >
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: publicCustomerName,
+                    productName: productName,
+                  },
+                }"
+                style="width: 55%"
+                >{{ thisItem.semTime | transform }}</router-link
+              >
+
+              <p>
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
+                  >删除</van-button
+                >
+              </p>
+            </div>
+
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarketingRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: publicCustomerName,
+                    productName: productName,
+                  },
+                }"
+                class="dadian"
+                >{{ thisItem.remark }}</router-link
+              >
+              <p style="width: 50%; display: flex" class="approval">
+                <!-- <span class="approval_Passed">已营销</span> -->
+                <span
+                  :class="
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{ thisItem.intention | dic_client_will }}</span
+                >
+                <span
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{
+                    thisItem.isSucc == "0"
+                      ? "失败"
+                      : thisItem.isSucc == "1"
+                      ? "成功"
+                      : thisItem.isSucc == "2"
+                      ? "未成功"
+                      : ""
+                  }}
+                </span>
+              </p>
+            </div>
+          </li>
+        </ul>
+        <div
+          style="
+            margin-left: 85%;
+            position: fixed !important;
+            float: right;
+            z-index: 9999;
+            align-items: right;
+            bottom: 5%;
+            right: 5%;
+          "
+        >
+          <router-link
+            tag="span"
+            class="add_record"
+            :to="{
+              name: 'AddMarketingRecord',
+              query: {
+                title: '添加营销记录',
+                customerCode: this.customerCode,
+                gridCode: this.gridCode,
+                productCode: this.productCode,
+                productName: this.productName,
+                custName: this.publicCustomerName,
+              },
+            }"
+            >添加记录</router-link
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -239,6 +363,7 @@ export default {
       industry: "",
       industryShow: false,
       uploader: [],
+      pictureId: [],
       businessLicenseNo: "",
       legalPersonName: "",
       legalPersonTelephone: "",
@@ -246,11 +371,12 @@ export default {
       otherContactsTelephone: "",
       publicCustomerLocation: "",
       sourceClues: "",
+      sourceCluesName: "",
 
       potential_need_type: [],
       otherTxt: "",
 
-      radio: "2",
+      // radio: "2",
       areaList: [],
       regional_grid: false,
       tabId: 0,
@@ -268,23 +394,39 @@ export default {
       positionMarker: null,
       longitudeLatitude: false,
       map: null,
-
       zoom: 20,
+      id: "",
+      detailAddress: "",
+      demandLoan: "",
+      MarketingRecord: [],
+      customersDemandList1: [],
+      customerCode: "",
+      gridCode: "",
+      productCode: "",
+      productName: "",
+      custName: "",
     };
   },
-
-  created() {
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (
+        from.path === "/EditMarketingRecord" ||
+        from.path === "/AddMarketingRecord"
+      ) {
+        vm.tab(2);
+      }
+    });
+  },
+  async created() {
     this.typeCN = this.$route.query.title;
-    this.dic_nation();
+    this.id = this.$route.query.id;
+    await this.dic_nation();
+    await this.editRecord();
   },
 
   methods: {
     onClickLeft() {
       this.$router.go(-1);
-    },
-    onIndustryShow(value) {
-      this.industry = value;
-      this.industryShow = false;
     },
     formatDate(date) {
       return `${date.getMonth() + 1}-${date.getDate()}`;
@@ -312,7 +454,6 @@ export default {
         });
     },
     longpress({ point }) {
-      console.log(123);
       const zoom = this.map.getZoom();
       if (Math.abs(zoom - this.zoom) > 0) {
         this.zoom = zoom;
@@ -330,8 +471,6 @@ export default {
     enumData(val, data) {
       // debugger
       if (val && data.length > 0) {
-        // console.log(this.prospect_details);
-        // console.log(data, val);
         const find = data.find((it) => it.index == val);
         // debugger
         return find ? find.text : "";
@@ -343,7 +482,6 @@ export default {
       let find = "";
       if (val && data.length > 0) {
         find = data.find((it) => it.index === val);
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -354,29 +492,27 @@ export default {
       this.$httpGet({
         url: "/dic/type/industry_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.industry_list = transformDara;
+        this.industry = this.enumData(this.industry, this.industry_list);
       });
       // 潜在客户需求
       this.$httpGet({
         url: "/dic/type/potential_need_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
+            this.potential_need_type = transformDara;
+            // console.log(this.potential_need_type);
           }
         });
-        console.log(transformDara);
-        this.potential_need_type = transformDara;
       });
       this.$httpGet({
         url: "/api/semGridding/query",
@@ -398,22 +534,139 @@ export default {
           this.areaList
         );
       });
+      // 获取详细地址
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      // if (isAndroid) {
+      //   if (window.android.getDetailAddress() != false) {
+      //     this.detailAddress = window.android.getDetailAddress();
+      //     return;
+      //   }
+      // }
+      // if (isiOS) {
+      //   if (window.prompt("getDetailAddress") != false) {
+      //     this.detailAddress = window.prompt("getDetailAddress");
+      //     return;
+      //   }
+      // }
     },
-
+    deleteImage({ url }) {
+      const index = this.uploader.findIndex((it) => it.url === url);
+      this.pictureId.splice(index, 1);
+    },
+    async editRecord(val) {
+      const res = await this.$httpGet({
+        url: `/api/publicCustomerPool/get/${this.id}`,
+        data: {
+          id: this.id,
+        },
+      });
+      this.customerCode = res.data.code;
+      localStorage.setItem("customerCode", this.customerCode);
+      this.publicCustomerName = res.data.name;
+      res.data.address != false
+        ? (this.publicCustomerAddress = res.data.address)
+        : (this.publicCustomerAddress = this.detailAddress);
+      this.publicCustomerGrid = res.data.gridding;
+      this.industry = res.data.industryType;
+      this.publicCustomerLocation = res.data.location;
+      this.sourceClues = res.data.source;
+      this.sourceCluesName = res.data.shareName;
+      this.mapCenter = {
+        lng: res.data.location.split(",")[0],
+        lat: res.data.location.split(",")[1],
+      };
+      this.mapCenter1 = { ...this.mapCenter };
+      this.legalPersonName = res.data.legalName;
+      this.legalPersonTelephone = res.data.legalPhone;
+      this.pictureId = res.data.customerImg
+        ? res.data.customerImg.split(",")
+        : [];
+      this.businessLicenseNo = res.data.businessLicenseNo;
+      this.otherContactsName = res.data.otherContactsName;
+      this.otherContactsTelephone = res.data.otherContactsPhone;
+      if (res.data.customersDemandList.length > 0) {
+        res.data.customersDemandList.forEach((item) => {
+          for (
+            let index = 0;
+            index < this.potential_need_type.length;
+            index++
+          ) {
+            const i = this.potential_need_type.findIndex(
+              (it) => it.index == item.demandStatus
+            );
+            i > 0 && (this.potential_need_type[i].radio = item.demandType);
+            i < 0 && (this.otherTxt = item.description);
+          }
+        });
+      }
+      //   this.customersDemandList1 = res.data.customersDemandList;
+      //   console.log(this.customersDemandList1);
+      //   if (this.customersDemandList1) {
+      //     this.customersDemandList1.forEach((it) => {
+      //       this.potential_need_type.index = it.demandStatus;
+      //       this.potential_need_type.radio = it.demandType;
+      //       if (it.demandType == -1) {
+      //         this.otherTxt = it.description;
+      //       }
+      //       console.log(this.potential_need_type);
+      //     });
+      //   }
+      if (this.pictureId) {
+        this.pictureId.forEach((el) => {
+          this.$httpGet({
+            url: "/api/show/image/base64",
+            params: {
+              id: el,
+            },
+          }).then((res) => {
+            this.uploader.push({
+              url: "data:image/jpg;base64," + res.data,
+              isImage: true,
+            });
+          });
+        });
+      }
+      this.customersDemandList = res.data.customersDemandList;
+    },
     onRegional_grid(value) {
-      this.publicCustomerGrid = value.text;
+      this.publicCustomerGrid = value["text"];
+      this.prospect_detailsEdit.publicCustomerGrid = value["index"];
       this.regional_grid = false;
     },
+    onIndustryShow(value) {
+      this.industry = value["text"];
+      this.prospect_detailsEdit.industry = value["index"];
+      this.industryShow = false;
+    },
     handler({ BMap, map }) {
-      // console.log(BMap, map);
       this.center.lng = 116.404;
       this.center.lat = 39.915;
       this.zoom = 15;
     },
     tab(ev) {
       this.tabId = ev;
+      if (ev == 2) {
+        this.getMarkedRecord();
+      }
     },
-
+    getMarkedRecord() {
+      const customerCodeBack = localStorage.getItem("customerCode");
+      this.$httpGet({
+        url: "/api/publicCustomersInfo/marketRecord",
+        params: {
+          customerCode: this.customerCode || customerCodeBack,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.MarketingRecord = res.data;
+      });
+      // }
+    },
     //选中一个item
     selectItem(thisItem) {
       if (typeof thisItem.checked == "undefined") {
@@ -488,11 +741,36 @@ export default {
       this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
-    modifyResult() {
-      this.$httpPut({
-        url: "/api/customersFamily/update",
+    afterRead(file) {
+      let formData = new FormData();
+      formData.append("file", file.file);
+      this.$httpPost({
+        url: "/api/upload/attachment",
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+      }).then((res) => {
+        // console.log(res.data.pid);
+        this.pictureId.push(res.data.pid);
+      });
+    },
+    selectDelegation(item) {
+      this.customersDemandList1.push({
+        demandStatus: item.index,
+        demandType: item.radio,
+      });
+    },
+    async saveCustomersDemand() {
+      if (this.otherTxt) {
+        this.customersDemandList1.push({
+          description: this.otherTxt,
+          demandType: -1,
+        });
+      }
+      const res = await this.$httpPost({
+        url: "/api/customersDemand/save",
         data: {
-          id: this.id,
+          code: this.customerCode,
+          customersDemandList: this.customersDemandList1,
         },
       })
         .then((res) => {
@@ -505,6 +783,94 @@ export default {
         .catch((err) => {
           // console.log(err);
         });
+    },
+    modifyResult() {
+      if (this.publicCustomerName == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入名称！",
+        });
+        return;
+      }
+      if (this.publicCustomerAddress == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入地址！",
+        });
+        return;
+      }
+      if (this.pictureId == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请添加客户照片！",
+        });
+        return;
+      }
+      if (this.businessLicenseNo == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入营业执照号！",
+        });
+        return;
+      }
+      this.$httpPut({
+        url: "/api/publicCustomersInfo/update",
+        data: {
+          code: this.id,
+          name: this.publicCustomerName,
+          address: this.publicCustomerAddress,
+          gridding: this.prospect_detailsEdit.publicCustomerGrid,
+          industryType: this.prospect_detailsEdit.industry,
+          location: this.publicCustomerLocation,
+          legalName: this.legalPersonName,
+          legalPhone: this.legalPersonTelephone,
+          customerImg: this.pictureId.join(","),
+          businessLicenseNo: this.businessLicenseNo,
+          otherContactsName: this.otherContactsName,
+          otherContactsPhone: this.otherContactsTelephone,
+        },
+      })
+        .then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+          // this.$router.go(-1);
+        })
+        .catch((err) => {
+          // console.log(err);
+        });
+    },
+    deleteRemark(val) {
+      Dialog.confirm({
+        title: "你确定删除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/semCustRecords/delete",
+            params: {
+              ids: val,
+            },
+          })
+            .then((res) => {
+              Toast({
+                message: "删除成功",
+                position: "middle",
+              });
+              this.getMarkedRecord();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    },
+  },
+  filters: {
+    dic_client_will(val) {
+      const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
+        (it) => +it.key == val
+      );
+      // console.log(findWill);
+      return findWill ? findWill.value : "";
     },
   },
 };
@@ -560,7 +926,7 @@ export default {
   padding: 0rem 1rem;
 }
 .van-radio--horizontal >>> .van-radio__icon {
-  height: 1.4rem;
+  height: 24px !important;
 }
 input {
   border-radius: 0.3rem;
@@ -659,6 +1025,55 @@ textarea {
   width: 1rem;
   height: 1rem;
 }
+/* 下面都是营销记录 */
+.marked_record {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8;
+}
+.marked_record p {
+  margin: 3px 0px;
+}
+.positionFixd {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.approval .approval_Passed {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #3cc8ab;
+  color: #3cc8ab;
+  margin-left: 0.5rem;
+}
+.approval .approval_Passed1 {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #c1b9b9;
+  color: #c1b9b9;
+  margin-left: 0.5rem;
+}
+.add_record {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+  font-size: 0.8rem;
+  border-radius: 100%;
+  background-color: #3d425e;
+  color: #fff;
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,
   select,
@@ -695,6 +1110,18 @@ textarea {
     line-height: 1.8rem;
     height: 1.8rem;
     width: 5rem;
+  }
+  .approval .approval_Passed {
+    height: 1.5rem;
+    line-height: 1.5rem;
+  }
+  .approval .approval_Passed1 {
+    height: 1.5rem;
+    line-height: 1.5rem;
+  }
+  .add_record {
+    width: 3.5rem;
+    height: 3.5rem;
   }
 }
 </style>

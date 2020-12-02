@@ -8,8 +8,8 @@
           <img src="../../assets/WorkBench/location.svg" alt />
         </li>
         <!-- <li>方式：上门</li> -->
-        <li>营销产品：{{ productName }}</li>
-        <li>执行时间：2020-08-30 9:00</li>
+        <li v-if="productName">营销产品：{{ productName }}</li>
+        <li v-if="productName">执行时间：2020-08-30 9:00</li>
       </ul>
       <div>
         <ul class="tabList">
@@ -293,6 +293,7 @@ export default {
           marketAmount: this.market_amount,
           remark: this.remarks,
           feedback: this.customer_feedback,
+          dueTime:this.currentDate1
         },
       }).then((res) => {
         this.resultCode = res.data.code;
@@ -379,9 +380,9 @@ export default {
   vertical-align: bottom;
   margin: 0px 0px 0px 20px;
 }
-.mission_details li:last-child {
+/* .mission_details li:last-child {
   padding-bottom: 10px;
-}
+} */
 .tabList {
   display: flex;
   justify-content: space-around;

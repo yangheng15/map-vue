@@ -308,6 +308,35 @@
             </div>
           </li>
         </ul>
+                <div
+          style="
+            margin-left: 85%;
+            position: fixed !important;
+            float: right;
+            z-index: 9999;
+            align-items: right;
+            bottom: 5%;
+            right: 5%;
+          "
+        >
+          <router-link
+            tag="span"
+            class="add_record"
+            :to="{
+              name: 'AddMarketingRecord',
+              query: {
+                title: '添加营销记录',
+                customerCode: this.judgeReturnValue,
+                gridCode: this.gridCode,
+                productCode: this.productCode,
+                productName: this.productName,
+                custName: this.publicCustomerName,
+                id: this.id,
+              },
+            }"
+            >添加记录</router-link
+          >
+        </div>
         <!-- </van-list> -->
       </div>
     </div>
@@ -368,9 +397,22 @@ export default {
 
       judgeReturnValue: "",
       customersDemandList1: [],
+      customerCode: "",
+      gridCode: "",
+      productCode: "",
+      productName: "",
+      custName: "",
     };
   },
-
+  beforeRouteEnter(to, from, next) {
+    console.log(from.path);
+    next((vm) => {
+      if (from.path === "/AddMarketingRecord") {
+        console.log(123415234523452);
+        vm.tab(2);
+      }
+    });
+  },
   created() {
     this.typeCN = this.$route.query.title;
     this.dic_nation();
@@ -910,6 +952,55 @@ textarea {
   background-size: cover;
   width: 1rem;
   height: 1rem;
+}
+/* 下面都是营销记录 */
+.marked_record {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8;
+}
+.marked_record p {
+  margin: 3px 0px;
+}
+.positionFixd {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.approval .approval_Passed {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #3cc8ab;
+  color: #3cc8ab;
+  margin-left: 0.5rem;
+}
+.approval .approval_Passed1 {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #c1b9b9;
+  color: #c1b9b9;
+  margin-left: 0.5rem;
+}
+.add_record {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+  font-size: 0.8rem;
+  border-radius: 100%;
+  background-color: #3d425e;
+  color: #fff;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,
