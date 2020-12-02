@@ -417,8 +417,8 @@ export default {
   async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
+    await this.dic_nation();
     await this.editRecord();
-    this.dic_nation();
   },
 
   methods: {
@@ -584,18 +584,27 @@ export default {
       this.businessLicenseNo = res.data.businessLicenseNo;
       this.otherContactsName = res.data.otherContactsName;
       this.otherContactsTelephone = res.data.otherContactsPhone;
-      this.customersDemandList1 = res.data.customersDemandList;
-      console.log(this.customersDemandList1);
-      if (this.customersDemandList1) {
-        this.customersDemandList1.forEach((it) => {
-          this.potential_need_type.index = it.demandStatus;
-          this.potential_need_type.radio = it.demandType;
-          if (it.demandType == -1) {
-            this.otherTxt = it.description;
-          }
-          console.log(this.potential_need_type);
-        });
+      if(res.data.customersDemandList.length > 0) {
+          res.data.customersDemandList.forEach((item) => {
+              for (let index = 0; index < this.potential_need_type.length; index++) {
+                const i = this.potential_need_type.findIndex(it => it.index == item.demandStatus)
+                i > 0 && (this.potential_need_type[i].radio = item.demandType);
+                i < 0 && (this.otherTxt = item.description)
+              }
+          })
       }
+    //   this.customersDemandList1 = res.data.customersDemandList;
+    //   console.log(this.customersDemandList1);
+    //   if (this.customersDemandList1) {
+    //     this.customersDemandList1.forEach((it) => {
+    //       this.potential_need_type.index = it.demandStatus;
+    //       this.potential_need_type.radio = it.demandType;
+    //       if (it.demandType == -1) {
+    //         this.otherTxt = it.description;
+    //       }
+    //       console.log(this.potential_need_type);
+    //     });
+    //   }
       if (this.pictureId) {
         this.pictureId.forEach((el) => {
           this.$httpGet({
