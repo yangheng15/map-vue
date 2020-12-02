@@ -404,15 +404,15 @@ export default {
       custName: "",
     };
   },
-  beforeRouteEnter(to, from, next) {
-    console.log(from.path);
-    next((vm) => {
-      if (from.path === "/AddMarketingRecord") {
-        console.log(123415234523452);
-        vm.tab(2);
-      }
-    });
-  },
+  // beforeRouteEnter(to, from, next) {
+  //   console.log(from.path);
+  //   next((vm) => {
+  //     if (from.path === "/AddMarketingRecord") {
+  //       console.log(123415234523452);
+  //       vm.tab(2);
+  //     }
+  //   });
+  // },
   created() {
     this.typeCN = this.$route.query.title;
     this.dic_nation();
@@ -590,7 +590,7 @@ export default {
         console.log(this);
         if (this.judgeReturnValue == "") {
           Toast({
-            message: "请先添加详细信息",
+            message: "请先添加基本信息",
             position: "middle",
           });
           return;

@@ -129,7 +129,7 @@
             readonly
             clickable
             name="datetimePicker"
-            :value="currentDate | transform"
+            :value="currentDate1 | transform"
             label="到期日期"
             placeholder="点击选择时间"
             @click="showPicker = true"
@@ -358,7 +358,7 @@ export default {
       this.customerCode = res.data.customerCode;
       this.griddingCode = res.data.griddingCode;
       this.products = res.data.products;
-      // this.currentDate = this.data.checkTime
+      this.currentDate1 = res.data.dueTime
     },
     onResult(value) {
       this.editRecords.isSucc = value.index;

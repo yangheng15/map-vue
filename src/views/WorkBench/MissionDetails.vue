@@ -606,7 +606,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 2,
-            custInfo: val,
+            custInfo: this.serchCustomer,
           },
         }).then((res) => {
           this.MarketingRecordClaim = res.data;
@@ -618,7 +618,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 3,
-            custInfo: val,
+            custInfo: this.serchCustomer,
           },
         }).then((res) => {
           this.MarketingRecordPotential = res.data;
