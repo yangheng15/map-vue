@@ -728,7 +728,7 @@ export default {
       })
         .then((res) => {
           console.log(res.data);
-          this.judgeReturnValue = res.data;
+          this.judgeReturnValue = res.data.code;
           Toast({
             message: "保存成功",
             position: "middle",
