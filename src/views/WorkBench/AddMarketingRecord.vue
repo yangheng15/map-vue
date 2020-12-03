@@ -134,11 +134,7 @@
         </div>
         <div v-show="tabId === 1" style="background: #fff">
           <div style="padding: 10px; background: #fff">
-            <van-uploader
-              :after-read="afterRead"
-              v-model="fileList"
-              multiple
-            />
+            <van-uploader :after-read="afterRead" v-model="fileList" multiple />
           </div>
           <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="addPicture()"
@@ -219,13 +215,23 @@ export default {
       resultCode: "",
       fileList: [],
       pictureId: [],
-      currentDate: '',
+      currentDate: "",
       showPicker: false,
-      currentDate1:''
+      currentDate1: "",
     };
   },
   components: {
     ChildNav,
+  },
+  beforeRouteLeave(to, from, next) {
+    // console.log(to);
+    // console.log(from);
+    // console.log(next);
+    // console.log(this);
+    // if (this.productCode == "" && this.gridCode == "") {
+    //   console.log(111111111111111111111111111111111111);
+    //     this.$router.push("/EditPublicCustomerRecord");
+    //   }
   },
   created() {
     this.typeCN = this.$route.query.title;
@@ -243,8 +249,8 @@ export default {
       // this.currentDate = `${time.getFullYear()}-${
       //   time.getMonth() + 1
       // }-${time.getDate()}`;
-      this.currentDate = time
-      this.currentDate1 = time
+      this.currentDate = time;
+      this.currentDate1 = time;
       this.showPicker = false;
     },
     dic_nation() {
@@ -293,7 +299,7 @@ export default {
           marketAmount: this.market_amount,
           remark: this.remarks,
           feedback: this.customer_feedback,
-          dueTime:this.currentDate1
+          dueTime: this.currentDate1,
         },
       }).then((res) => {
         this.resultCode = res.data.code;

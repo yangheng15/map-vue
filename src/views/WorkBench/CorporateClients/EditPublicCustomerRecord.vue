@@ -512,7 +512,6 @@ export default {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
             this.potential_need_type = transformDara;
-            // console.log(this.potential_need_type);
           }
         });
       });
@@ -567,6 +566,7 @@ export default {
           id: this.id,
         },
       });
+      console.log(res.data.code);
       this.customerCode = res.data.code;
       localStorage.setItem("customerCode", this.customerCode);
       this.publicCustomerName = res.data.name;
@@ -601,7 +601,8 @@ export default {
             const i = this.potential_need_type.findIndex(
               (it) => it.index == item.demandStatus
             );
-            i > 0 && (this.potential_need_type[i].radio = item.demandType);
+            console.log(i);
+            i >= 0 && (this.potential_need_type[i].radio = item.demandType);
             i < 0 && (this.otherTxt = item.description);
           }
         });
