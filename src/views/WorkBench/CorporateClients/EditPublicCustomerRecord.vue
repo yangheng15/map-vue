@@ -421,6 +421,7 @@ export default {
     this.id = this.$route.query.id;
     await this.dic_nation();
     await this.editRecord();
+    await this.getIndusty()
   },
 
   methods: {
@@ -468,7 +469,6 @@ export default {
       // }, 600);
     },
     enumData(val, data) {
-      // debugger
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
         // debugger
@@ -478,16 +478,7 @@ export default {
         return "";
       }
     },
-    enumData1(val, data) {
-      let find = "";
-      if (val && data.length > 0) {
-        find = data.find((it) => it.index === val);
-        return find ? find.text : "";
-      } else {
-        return "";
-      }
-    },
-    dic_nation() {
+    getIndusty() {
       // 所属行业
       this.$httpGet({
         url: "/dic/type/industry_type",
@@ -502,6 +493,17 @@ export default {
         this.industry_list = transformDara;
         this.industry = this.enumData(this.industry, this.industry_list);
       });
+    },
+    enumData1(val, data) {
+      let find = "";
+      if (val && data.length > 0) {
+        find = data.find((it) => it.index === val);
+        return find ? find.text : "";
+      } else {
+        return "";
+      }
+    },
+    dic_nation() {
       // 潜在客户需求
       this.$httpGet({
         url: "/dic/type/potential_need_type",
@@ -604,7 +606,6 @@ export default {
             const i = this.potential_need_type.findIndex(
               (it) => it.index == item.demandType
             );
-            console.log(i);
             i >= 0 &&
               (this.potential_need_type[
                 i

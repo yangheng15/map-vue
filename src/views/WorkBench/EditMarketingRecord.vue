@@ -365,7 +365,7 @@ export default {
       this.showResult = false;
     },
     onCustomer_intention(value) {
-      this.prospect_detailsEdit.intention = value.index;
+      // this.prospect_detailsEdit.intention = value.index;
       this.editRecords.intention = value.text;
       this.showCustomer_intention = false;
     },
@@ -386,7 +386,7 @@ export default {
           id: this.id,
           isSucc: this.editRecords.isSucc,
           semType: this.editRecords.semType,
-          intention: this.prospect_detailsEdit.intention,
+          intention:this.columnsCustomer_intention.find(it => it.text ===  this.editRecords.intention).index,
           actualDemand: this.editRecords.actualDemand,
           marketAmount: this.editRecords.marketAmount,
           remark: this.editRecords.remark,

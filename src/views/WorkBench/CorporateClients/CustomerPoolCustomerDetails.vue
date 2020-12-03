@@ -54,15 +54,8 @@
         />
       </van-popup>
       <van-field readonly name="uploader" label="客户照片" required>
-        <!-- <van-image :src="uploader" /> -->
         <template #input>
-          <van-uploader
-            :after-read="afterRead"
-            v-model="uploader"
-            :deletable="false"
-            multiple
-            disabled
-          />
+          <van-image v-for="(item,index) in uploader" :key="index" width="80" height="80" :src="item.url" />
         </template>
       </van-field>
       <van-field
@@ -165,6 +158,7 @@
 </template>
 <script>
 import { Toast, Dialog } from "vant";
+import { Image as VanImage } from 'vant';
 import moment from "moment";
 export default {
   data() {
@@ -233,8 +227,8 @@ export default {
   async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
-    await this.dic_nation();
     await this.editRecord();
+    await this.dic_nation();
   },
 
   methods: {
@@ -425,6 +419,7 @@ export default {
       this.regional_grid = false;
     },
     onIndustryShow(value) {
+      console.log(value);
       this.industry = value["text"];
       this.prospect_detailsEdit.industry = value["index"];
       this.industryShow = false;
@@ -530,7 +525,7 @@ export default {
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        // console.log(res.data.pid);
+        console.log(res.data.pid);
         this.pictureId.push(res.data.pid);
       });
     },
