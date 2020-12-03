@@ -35,7 +35,15 @@
         >
           <li>
             <div class="corporateFlex">
-              <p class="corporateManage1">{{ thisItem.name }}</p>
+              <router-link
+                tag="li"
+                :to="{
+                  name: 'CustomerPoolCustomerDetails',
+                  query: { title: '客户池客户详情', id: thisItem.id },
+                }"
+                class="corporateManage1"
+                >{{ thisItem.name }}</router-link
+              >
               <p style="color: #1432e3" @click="showBack(thisItem.id)">认领</p>
             </div>
             <div class="corporateFlex">
@@ -524,7 +532,7 @@ export default {
   width: 80%;
 }
 .van-checkbox--horizontal >>> .van-checkbox__icon {
-  height: 24px!important;
+  height: 24px !important;
 }
 /* 对公客户 */
 .corporateList {
@@ -539,7 +547,7 @@ export default {
   justify-content: space-between;
 }
 .corporateFlex p {
-  margin: 5px;
+  margin: 5px 0px;
 }
 .add_record {
   display: flex;

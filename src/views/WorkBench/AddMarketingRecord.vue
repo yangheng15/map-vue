@@ -223,16 +223,16 @@ export default {
   components: {
     ChildNav,
   },
-  beforeRouteLeave(to, from, next) {
-    // console.log(to);
-    // console.log(from);
-    // console.log(next);
-    // console.log(this);
-    // if (this.productCode == "" && this.gridCode == "") {
-    //   console.log(111111111111111111111111111111111111);
-    //     this.$router.push("/EditPublicCustomerRecord");
-    //   }
-  },
+  // beforeRouteLeave(to, from, next) {
+  //   // console.log(to);
+  //   // console.log(from);
+  //   // console.log(next);
+  //   // console.log(this);
+  //   // if (this.productCode == "" && this.gridCode == "") {
+  //   //   console.log(111111111111111111111111111111111111);
+  //   //     this.$router.push("/EditPublicCustomerRecord");
+  //   //   }
+  // },
   created() {
     this.typeCN = this.$route.query.title;
     this.customerCode = this.$route.query.customerCode;

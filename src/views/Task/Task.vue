@@ -8,46 +8,37 @@
         <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">待评价</li>
       </ul>
       <div v-show="tabId === 0">
-        <van-list
-          v-model="loadEnd"
-          :finished="finishEnd"
-          :offset="offset"
-          finished-text="已加载完毕"
-          @load="onLoadList"
-          v-show="tabId == 1"
+        <router-link
+          v-for="(thisItem, index) in new_task"
+          :key="index"
+          class="right_content"
+          tag="div"
+          :to="{
+            name: 'MissionDetails',
+            query: {
+              title: '任务详情',
+              id: thisItem.id,
+              productName: thisItem.productName,
+              productCode: thisItem.productCode,
+            },
+          }"
         >
-          <router-link
-            v-for="(thisItem, index) in new_task"
-            :key="index"
-            class="right_content"
-            tag="div"
-            :to="{
-              name: 'MissionDetails',
-              query: {
-                title: '任务详情',
-                id: thisItem.id,
-                productName: thisItem.productName,
-                productCode: thisItem.productCode,
-              },
-            }"
-          >
-            <div class="new_task">
-              <p style="font-weight: 550">{{ thisItem.name }}</p>
-              <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
-                {{ thisItem.targetNum | NumFormat }}
-              </p>
-              <p>创建日期：{{ thisItem.beginTime | transform }}</p>
-            </div>
-            <div class="new_task">
-              <p>{{ thisItem.productName }}</p>
-              <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
-                剩余{{ thisItem.remainingDays }}天
-              </p>
-              <p>截止日期：{{ thisItem.endTime | transform }}</p>
-            </div>
-          </router-link>
-        </van-list>
-        <!-- <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider> -->
+          <div class="new_task">
+            <p style="font-weight: 550">{{ thisItem.name }}</p>
+            <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
+              {{ thisItem.targetNum | NumFormat }}
+            </p>
+            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
+          </div>
+          <div class="new_task">
+            <p>{{ thisItem.productName }}</p>
+            <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
+              剩余{{ thisItem.remainingDays }}天
+            </p>
+            <p>截止日期：{{ thisItem.endTime | transform }}</p>
+          </div>
+        </router-link>
+        <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
       </div>
       <div v-show="tabId === 1">
         <router-link

@@ -78,6 +78,8 @@ const CorporateClients = () => import('@/views/WorkBench/CorporateClients/Corpor
 const PublicCustomerRecord = () => import('@/views/WorkBench/CorporateClients/PublicCustomerRecord.vue');
 //对公客户修改
 const EditPublicCustomerRecord = () => import('@/views/WorkBench/CorporateClients/EditPublicCustomerRecord.vue');
+//对公客户客户池详情
+const CustomerPoolCustomerDetails = () => import('@/views/WorkBench/CorporateClients/CustomerPoolCustomerDetails.vue');
 // 我的客户筛选
 const ScreenMyCustomers = () => import('@/views/WorkBench/MyClients/ScreenMyCustomers.vue');
 // 添加潜在客户
@@ -294,6 +296,11 @@ const routes = [{
     path: '/EditPublicCustomerRecord',
     name: 'EditPublicCustomerRecord',
     component: EditPublicCustomerRecord,
+  },
+  {
+    path: '/CustomerPoolCustomerDetails',
+    name: 'CustomerPoolCustomerDetails',
+    component: CustomerPoolCustomerDetails,
   },
   {
     path: '/CorporateClientsShare',

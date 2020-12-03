@@ -2,180 +2,142 @@
   <div class="FarmersInformation">
     <div class="public_nav">
       <van-nav-bar left-arrow @click-left="onClickLeft" :title="typeCN">
-        <template #right>
-          <router-link
-            v-if="sourceClues == 1"
-            class="share"
-            :to="{
-              name: 'CorporateClientsShare',
-              query: { title: '线索分享', code: customerCode },
-            }"
-          >
-            分享
-          </router-link>
-        </template>
       </van-nav-bar>
     </div>
-    <div v-if="typeCN == '对公客户详情'">
-      <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
-          基本信息
-        </li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
-          客户需求
-        </li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
-          营销记录
-        </li>
-      </ul>
-      <div v-show="tabId === 0" class="household_base">
-        <van-field
-          v-model="publicCustomerName"
-          name="名称："
-          label="名称："
-          placeholder="单行输入"
-          required
-          type="textarea"
-          autosize
+    <div v-if="typeCN == '客户池客户详情'">
+      <van-field
+        v-model="publicCustomerName"
+        name="名称："
+        label="名称："
+        placeholder="客户名称"
+        type="textarea"
+        autosize
+        readonly
+      />
+      <van-field
+        v-model="publicCustomerAddress"
+        name="地址："
+        label="地址："
+        placeholder="客户地址"
+        type="textarea"
+        autosize
+        readonly
+      />
+      <van-field
+        readonly
+        name="area"
+        :value="publicCustomerGrid"
+        label="所属网格："
+        placeholder="客户所属网格"
+      />
+      <van-popup v-model="regional_grid" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="areaList"
+          @cancel="regional_grid = false"
+          @confirm="onRegional_grid"
         />
-        <van-field
-          v-model="publicCustomerAddress"
-          name="地址："
-          label="地址："
-          placeholder="单行输入"
-          required
-          type="textarea"
-          autosize
+      </van-popup>
+      <van-field
+        readonly
+        name="picker"
+        :value="industry"
+        label="所属行业："
+        placeholder="客户所属行业"
+      />
+      <van-popup v-model="industryShow" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="industry_list"
+          @confirm="onIndustryShow"
+          @cancel="industryShow = false"
         />
-        <van-field
-          readonly
-          clickable
-          name="area"
-          :value="publicCustomerGrid"
-          label="所属网格："
-          placeholder="点击选择所属网格"
-          @click="regional_grid = true"
-        />
-        <van-popup v-model="regional_grid" position="bottom">
-          <van-picker
-            show-toolbar
-            :columns="areaList"
-            @cancel="regional_grid = false"
-            @confirm="onRegional_grid"
+      </van-popup>
+      <van-field readonly name="uploader" label="客户照片" required>
+        <!-- <van-image :src="uploader" /> -->
+        <template #input>
+          <van-uploader
+            :after-read="afterRead"
+            v-model="uploader"
+            :deletable="false"
+            multiple
+            disabled
           />
-        </van-popup>
-        <van-field
-          readonly
-          clickable
-          name="picker"
-          :value="industry"
-          label="所属行业："
-          placeholder="点击选择所属行业"
-          @click="industryShow = true"
-        />
-        <van-popup v-model="industryShow" position="bottom">
-          <van-picker
-            show-toolbar
-            :columns="industry_list"
-            @confirm="onIndustryShow"
-            @cancel="industryShow = false"
-          />
-        </van-popup>
-        <van-field name="uploader" label="客户照片" required>
-          <template #input>
-            <van-uploader
-              :after-read="afterRead"
-              v-model="uploader"
-              @delete="deleteImage"
-              multiple
-            />
-          </template>
-        </van-field>
-        <van-field
-          v-model="businessLicenseNo"
-          name="营业执照号："
-          label="营业执照号："
-          placeholder="单行输入"
-        />
-        <van-field
-          v-model="legalPersonName"
-          name="法人姓名："
-          label="法人姓名："
-          placeholder="单行输入"
-        />
-        <van-field
-          v-model="legalPersonTelephone"
-          name="法人联系方式："
-          label="法人联系方式："
-          placeholder="单行输入"
+        </template>
+      </van-field>
+      <van-field
+        v-model="businessLicenseNo"
+        readonly
+        name="营业执照号："
+        label="营业执照号："
+        placeholder="营业执照号"
+      />
+      <van-field
+        v-model="legalPersonName"
+        readonly
+        name="法人姓名："
+        label="法人姓名："
+        placeholder="法人姓名"
+      />
+      <van-field
+        v-model="legalPersonTelephone"
+        readonly
+        name="法人联系方式："
+        label="法人联系方式："
+        placeholder="法人联系方式"
+      >
+      </van-field>
+      <van-field
+        readonly
+        v-model="otherContactsName"
+        name="其他联系人姓名："
+        label="其他联系人姓名："
+        placeholder="其他联系人姓名"
+      />
+      <van-field
+        readonly
+        v-model="otherContactsTelephone"
+        name="其他联系方式："
+        label="其他联系方式："
+        placeholder="其他联系方式"
+      >
+      </van-field>
+      <van-field
+        @click="getLongitudeLatitude"
+        v-model="publicCustomerLocation"
+        readonly
+        name="位置："
+        label="位置："
+        placeholder="点击选择位置信息"
+      >
+      </van-field>
+      <van-field
+        v-if="sourceClues == 2"
+        v-model="sourceCluesName"
+        name="线索来源："
+        label="线索来源："
+        placeholder=""
+        readonly
+      />
+      <div style="width: 99%; margin: 0.5rem auto; position: relative">
+        <baidu-map
+          class="bm-view"
+          :center="mapCenter1"
+          :zoom="zoom"
+          ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e"
+          @longpress="longpress"
+          @ready="mapReady"
         >
-          <!-- <template #button>
-            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
-          </template> -->
-        </van-field>
-        <van-field
-          v-model="otherContactsName"
-          name="其他联系人姓名："
-          label="其他联系人姓名："
-          placeholder="单行输入"
-        />
-        <van-field
-          v-model="otherContactsTelephone"
-          name="其他联系方式："
-          label="其他联系方式："
-          placeholder="单行输入"
-        >
-          <!-- <template #button>
-            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
-          </template> -->
-        </van-field>
-        <van-field
-          @click="getLongitudeLatitude"
-          v-model="publicCustomerLocation"
-          readonly
-          name="位置："
-          label="位置："
-          placeholder="点击选择位置信息"
-        >
-          <template #button>
-            <img
-              style="opacity: 0.9; margin-right: 15px"
-              class=""
-              src="../../../assets/grid/sign.svg"
-              alt=""
-            />
-          </template>
-        </van-field>
-        <van-field
-          v-if="sourceClues == 2"
-          v-model="sourceCluesName"
-          name="线索来源："
-          label="线索来源："
-          placeholder=""
-          readonly
-        />
-        <div
-          style="width: 99%; margin: 0.5rem auto; position: relative"
-          v-if="longitudeLatitude"
-        >
-          <baidu-map
-            class="bm-view"
-            :center="mapCenter1"
-            :zoom="zoom"
-            ak="WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e"
-            @longpress="longpress"
-            @ready="mapReady"
-          >
-            <bm-marker
-              :dragging="true"
-              :position="mapCenter"
-              @dragend="markerDragend"
-              :icon="{
-                url: require('../../../assets/grid/sign.svg'),
-                size: { width: 30, height: 30 },
-              }"
-            ></bm-marker>
-            <template>
+          <bm-marker
+            :dragging="false"
+            :position="mapCenter"
+            @dragend="markerDragend"
+            :icon="{
+              url: require('../../../assets/grid/sign.svg'),
+              size: { width: 30, height: 30 },
+            }"
+          ></bm-marker>
+          <!-- <template>
               <p
                 style="
                   width: 35px;
@@ -195,156 +157,8 @@
               >
                 <img src="../../../assets/grid/current_location.svg" alt />
               </p>
-            </template>
-          </baidu-map>
-        </div>
-        <div class="save">
-          <van-button round block type="primary" @click="modifyResult()"
-            >保存</van-button
-          >
-        </div>
-      </div>
-      <div v-show="tabId === 1" class="household_have">
-        <van-field
-          name="radio"
-          :label="item.text"
-          v-for="(item, index) in potential_need_type"
-          :key="index"
-        >
-          <template #input>
-            <van-radio-group v-model="item.radio" direction="horizontal">
-              <van-radio name="1" checked-color="rgb(61, 66, 94)"
-                >已办</van-radio
-              >
-              <van-radio name="2" checked-color="rgb(61, 66, 94)"
-                >未办</van-radio
-              >
-              <van-radio name="3" checked-color="rgb(61, 66, 94)"
-                >需办</van-radio
-              >
-            </van-radio-group>
-          </template>
-        </van-field>
-        <van-field
-          v-model="otherTxt"
-          rows="1"
-          autosize
-          label="其他"
-          type="textarea"
-          placeholder="多行输入"
-        />
-        <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="saveCustomersDemand()"
-            >保存</van-button
-          >
-        </div>
-      </div>
-      <div v-show="tabId === 2">
-        <ul style="background: #fff">
-          <li
-            v-for="(thisItem, index) in MarketingRecord"
-            :key="index"
-            class="marked_record"
-          >
-            <div class="positionFixd">
-              <router-link
-                tag="p"
-                :to="{
-                  name: 'EditMarketingRecord',
-                  query: {
-                    title: '营销记录',
-                    id: thisItem.id,
-                    custName: publicCustomerName,
-                    productName: productName,
-                  },
-                }"
-                style="width: 55%"
-                >{{ thisItem.semTime | transform }}</router-link
-              >
-
-              <p>
-                <van-button
-                  color="#3d425e"
-                  size="mini"
-                  @click="deleteRemark(thisItem.id)"
-                  >删除</van-button
-                >
-              </p>
-            </div>
-
-            <div class="positionFixd">
-              <router-link
-                tag="p"
-                :to="{
-                  name: 'EditMarketingRecord',
-                  query: {
-                    title: '营销记录',
-                    id: thisItem.id,
-                    custName: publicCustomerName,
-                    productName: productName,
-                  },
-                }"
-                class="dadian"
-                >{{ thisItem.remark }}</router-link
-              >
-              <p style="width: 50%; display: flex" class="approval">
-                <!-- <span class="approval_Passed">已营销</span> -->
-                <span
-                  :class="
-                    thisItem.intention == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
-                  >{{ thisItem.intention | dic_client_will }}</span
-                >
-                <span
-                  :class="
-                    thisItem.isSucc == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
-                  >{{
-                    thisItem.isSucc == "0"
-                      ? "失败"
-                      : thisItem.isSucc == "1"
-                      ? "成功"
-                      : thisItem.isSucc == "2"
-                      ? "未成功"
-                      : ""
-                  }}
-                </span>
-              </p>
-            </div>
-          </li>
-        </ul>
-        <div
-          style="
-            margin-left: 85%;
-            position: fixed !important;
-            float: right;
-            z-index: 9999;
-            align-items: right;
-            bottom: 5%;
-            right: 5%;
-          "
-        >
-          <router-link
-            tag="span"
-            class="add_record"
-            :to="{
-              name: 'AddMarketingRecord',
-              query: {
-                title: '添加营销记录',
-                customerCode: this.customerCode,
-                gridCode: this.gridCode,
-                productCode: this.productCode,
-                productName: this.productName,
-                custName: this.publicCustomerName,
-              },
-            }"
-            >添加记录</router-link
-          >
-        </div>
+            </template> -->
+        </baidu-map>
       </div>
     </div>
   </div>
@@ -502,22 +316,6 @@ export default {
         this.industry_list = transformDara;
         this.industry = this.enumData(this.industry, this.industry_list);
       });
-      // 潜在客户需求
-      this.$httpGet({
-        url: "/dic/type/potential_need_type",
-      }).then((res) => {
-        let transformDara = [];
-        res.data.forEach((it, index) => {
-          if (it.parentId !== null) {
-            transformDara.push({
-              index: it.code,
-              text: it.codeText,
-              radio: "1",
-            });
-            this.potential_need_type = transformDara;
-          }
-        });
-      });
       // 所属网格
       this.$httpGet({
         url: "/api/semGridding/query",
@@ -539,28 +337,6 @@ export default {
           this.areaList
         );
       });
-      // 获取详细地址
-      var u = navigator.userAgent;
-      //Android终端
-      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
-      //iOS终端
-      // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-      // if (isAndroid) {
-      //   if (window.android.getDetailAddress() != false) {
-      //     this.detailAddress = window.android.getDetailAddress();
-      //     return;
-      //   }
-      // }
-      // if (isiOS) {
-      //   if (window.prompt("getDetailAddress") != false) {
-      //     this.detailAddress = window.prompt("getDetailAddress");
-      //     return;
-      //   }
-      // }
-    },
-    deleteImage({ url }) {
-      const index = this.uploader.findIndex((it) => it.url === url);
-      this.pictureId.splice(index, 1);
     },
     async editRecord(val) {
       const res = await this.$httpGet({
@@ -657,12 +433,6 @@ export default {
       this.center.lng = 116.404;
       this.center.lat = 39.915;
       this.zoom = 15;
-    },
-    tab(ev) {
-      this.tabId = ev;
-      if (ev == 2) {
-        this.getMarkedRecord();
-      }
     },
     getMarkedRecord() {
       const customerCodeBack = localStorage.getItem("customerCode");
