@@ -569,3 +569,9 @@
   z-index: 9999;
   width: 100%;
 }
+
+.local-list {
+  max-height: 50vh;
+  margin-bottom: 70px;
+  overflow-y: scroll;
+}
