@@ -17,6 +17,26 @@
             <div @click="selectHandle">搜索</div>
           </template>
         </van-search>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <van-radio-group
+            v-model="radio"
+            direction="horizontal"
+            icon-size="20"
+            style="padding: 10px"
+          >
+            <van-radio name="0" @click="notCheckAll(0)">指定客户经理</van-radio>
+            <van-radio name="1" @click="checkAll(1)">全行分享</van-radio>
+          </van-radio-group>
+          <div class="shareBtn">
+            <van-button @click="shareClick">分享</van-button>
+          </div>
+        </div>
         <van-list
           v-model="loading"
           :finished="finished"
@@ -24,62 +44,47 @@
           finished-text="已加载完毕"
           @load="onLoad"
         >
-          <!-- <van-button @click="checkAll">全行分享</van-button> -->
-          <van-radio-group
-            v-model="radio"
-            direction="horizontal"
-            icon-size="24"
-            style="padding: 10px"
-          >
-            <van-radio name="0" @click="notCheckAll(0)">指定客户经理</van-radio>
-            <van-radio name="1" @click="checkAll(1)">全行分享</van-radio>
-          </van-radio-group>
           <van-checkbox-group v-model="shareList" ref="checkboxGroup">
             <van-checkbox
               v-for="(thisItem, index) in publicCustomerPool"
               :key="index"
               class="corporateList"
-              :name="thisItem.pid"
-              @click="selectManager(thisItem.pid)"
+              :name="thisItem.id"
+              @click="selectManager(thisItem.id)"
             >
               <p>
-                {{ thisItem.realName }}
+                {{ thisItem.name }}
               </p>
             </van-checkbox>
           </van-checkbox-group>
         </van-list>
-        <div class="shareBtn">
-          <van-button>分享</van-button>
-        </div>
       </div>
 
       <van-list
-        v-model="loading"
-        :finished="finished"
+        v-model="loadEnd"
+        :finished="finishEnd"
         :offset="offset"
         finished-text="已加载完毕"
-        @load="onLoad"
+        @load="onLoadList"
         v-show="tabId == 1"
       >
-        <ul
+        <van-row
           class="corporateList"
-          v-for="(thisItem, index) in publicCustomerPool1"
+          v-for="(thisItem, index) in shareRecords"
           :key="index"
         >
-          <li>
-            <p class="corporateManage">{{ thisItem.name }}</p>
-            <p class="corporateManage">
-              {{ thisItem.address }}
-            </p>
-          </li>
-        </ul>
+          <p class="corporateManage">{{ thisItem.name }}</p>
+          <p class="corporateManage">
+            {{ thisItem.time | transform }}
+          </p>
+        </van-row>
       </van-list>
     </div>
   </div>
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-import { Dialog } from "vant";
+import { Toast, Dialog } from "vant";
 export default {
   name: "CorporateClientsShare",
   components: {
@@ -113,15 +118,17 @@ export default {
       newCustomerList: [],
       newCustomerList1: [],
       publicCustomerPool: [],
-      publicCustomerPool1: [],
+      shareRecords: [],
       star: "",
       star1: "",
-      offset: 0, //滚动条与底部距离小于 offset 时触发load事件，默认300
+      offset: 5, //滚动条与底部距离小于 offset 时触发load事件，默认300
       pageNo: 1, // 当前页码
       pageSize: 10, // 分页大小
       total: 0, // 查询总条数
       loading: false, // 滚动加载中
+      loadEnd: false, // 滚动加载中
       finished: false, // 滚动加载完成
+      finishEnd: false, // 滚动加载完成
       charityData: [],
       throttleTime: {
         nowTime: 0,
@@ -129,39 +136,65 @@ export default {
       },
       shareList: [],
       radio: "0",
-      checkAllList: "",
+      checkType: "0",
+      checkList: [],
+      code: "",
+      currentPage: 1,
+      pageSize1: 10,
+      dataTotal: "",
+      dataTotal1: "",
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
-    // this.tabId = this.$store.state.tabId || 0;
+    this.code = this.$route.query.code;
   },
   methods: {
+    shareClick() {
+      this.$httpPost({
+        url: "/api/CustomersShare/save",
+        data: {
+          customerCode: this.code,
+          shareType: this.checkType,
+          userList: this.checkList,
+        },
+      }).then((res) => {
+        Toast({
+          message: "分享成功",
+          position: "middle",
+        });
+      });
+    },
     selectManager(el) {
       console.log(el);
+      this.checkList.push({
+        pid: el,
+      });
+      console.log(this.checkList);
     },
     checkAll(name) {
       console.log(name);
-      this.checkAllList = name;
+      this.checkType = name;
+      this.checkList = [];
       this.$refs.checkboxGroup.toggleAll(true);
     },
     notCheckAll(name) {
       console.log(name);
-      this.checkAllList = name;
+      this.checkType = name;
       this.$refs.checkboxGroup.toggleAll(false);
     },
     tab(ev) {
       this.tabId = ev;
-      this.publicCustomerPool = [];
-      this.publicCustomerPool1 = [];
-      this.onLoad();
-      this.pageNo = 1;
+      // this.publicCustomerPool = [];
+      // this.pageNo = 1;
+      if (ev == 1) {
+        this.onLoadList()
+      };
     },
     selectHandle() {
-      this.pageNo = 1;
       let params = {
-        page: this.pageNo,
-        limit: this.pageSize,
+        page: 1,
+        limit: 10,
         realName: this.search_txt,
       };
       this.$httpGet({
@@ -169,204 +202,68 @@ export default {
         params: params,
       }).then((res) => {
         if (res.data) {
-          if (this.tabId == 0) {
-            this.publicCustomerPool = res.data;
-          } else if (this.tabId == 1) {
-            this.publicCustomerPool1 = res.data;
-          }
+          this.publicCustomerPool = res.data;
         }
-      });
-    },
-    getFollow(type) {
-      return new Promise((resolve, reject) => {
-        let params = {
-          page: this.pageNo,
-          limit: this.pageSize,
-        };
-        this.$httpGet({
-          url: "/api/shareDepartmentUser/list",
-          params: params,
-        })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.length > 0) {
-              if (this.tabId == 0) {
-                let result = {
-                  total: res.count,
-                  pageIndex: 1,
-                  publicCustomerPool: res.data,
-                };
-                resolve(result);
-              } else if (this.tabId == 1) {
-                let result = {
-                  total: res.count,
-                  pageIndex: 1,
-                  publicCustomerPool1: res.data,
-                };
-                resolve(result);
-              }
-            }
-          })
-          .catch((err) => {
-            reject(err);
-          });
       });
     },
     // 滚动加载更多
     onLoad() {
-      // debugger
-      this.publicCustomerPool = [];
-      this.loading = true;
-      this.getFollow().then((res) => {
-        if (this.tabId == 0) {
-          this.publicCustomerPool = this.publicCustomerPool.concat(
-            res.publicCustomerPool
-          );
-          if (this.publicCustomerPool.length >= res.total) {
-            this.finished = true;
-          } else {
-            this.finished = false;
-            this.pageNo = this.pageNo + 1;
-          }
-          // this.loading = false;
-        } else if (this.tabId == 1) {
-          this.publicCustomerPool1 = this.publicCustomerPool1.concat(
-            res.publicCustomerPool1
-          );
-          if (this.publicCustomerPool1.length >= res.total) {
-            this.finished = true;
-          } else {
-            this.finished = false;
-            this.pageNo = this.pageNo + 1;
-          }
+      this.getFollow();
+    },
+    getFollow() {
+      this.$httpGet({
+        url: "/api/shareDepartmentUser/list",
+        params: {
+          page: this.pageNo, //页数
+          limit: this.pageSize, //每页个数
+        },
+      }).then((res) => {
+        this.dataTotal1 = res.count;
+        if (this.dataTotal1 <= this.pageSize) {
+          this.publicCustomerPool = res.data;
+        } else {
+          this.pageNo++;
+          let arr = res.data;
+          this.publicCustomerPool = this.publicCustomerPool.concat(arr);
+        }
+        this.loading = false;
+        if (this.publicCustomerPool.length >= this.dataTotal1) {
+          this.finished = true; //结束，显示我也是有底线的
         }
       });
-      this.isPopupVisibleScreen = false;
     },
-    getdic() {
-      // 潜在客户需求
-      this.$httpGet({
-        url: "/dic/type/potential_need_type",
-      }).then((res) => {
-        // console.log(res.data);
-        let transformDara = [];
-        res.data.forEach((it, index) => {
-          if (it.parentId !== null) {
-            transformDara.push({ index: it.code, text: it.codeText });
-          }
-        });
-        console.log(transformDara);
-        this.potential_need_type = transformDara;
-      });
-      // 所属行业
-      this.$httpGet({
-        url: "/dic/type/industry_type",
-      }).then((res) => {
-        // console.log(res.data);
-        let transformDara = [];
-        res.data.forEach((it, index) => {
-          if (it.parentId !== null) {
-            transformDara.push({ index: it.code, text: it.codeText });
-          }
-        });
-        console.log(transformDara);
-        this.industry_typelist = transformDara;
-      });
-    },
-    onSearch(val) {
-      return new Promise((resolve, reject) => {
-        console.log(val);
-        let params = {
-          page: this.pageNo,
-          limit: this.pageSize,
-          type: this.tabId,
-          name: val,
-        };
-        this.$httpGet({
-          url: "/api/publicCustomerPool/query",
-          params: params,
-        })
-          .then((res) => {
-            if (res.data.length > 0) {
-              if (this.tabId == 0) {
-                let result = {
-                  total: res.count,
-                  pageIndex: 1,
-                  publicCustomerPool: res.data,
-                };
-                resolve(result);
-              } else if (this.tabId == 1) {
-                let result = {
-                  total: res.count,
-                  pageIndex: 1,
-                  publicCustomerPool1: res.data,
-                };
-                resolve(result);
-              }
-            }
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      });
-    },
-    showPopupScreen() {
-      this.isPopupVisibleScreen = true;
-    },
-    closePopupScreen() {
-      this.isPopupVisibleScreen = false;
-    },
-    showBack(code) {
-      Dialog.confirm({
-        title: "你确定认领吗",
-      })
-        .then(() => {
-          this.$httpPost({
-            url: "/api/publicCustomers/joinCust",
-            params: {
-              customerId: code,
-            },
-          })
-            .then((res) => {
-              this.publicCustomerPool1 = [];
-              this.onLoad();
-            })
-            .catch(() => {});
-        })
-        .catch(() => {});
+
+    onLoadList() {
+      this.getMyClients();
     },
     getMyClients() {
       this.$httpGet({
-        url: "/api/customer/appOwner",
+        url: "/api/customersShareRecord/queryShareRecord",
         params: {
-          limit: 10,
-          page: 1,
+          customerCode: this.code,
+          page: this.currentPage, //页数
+          limit: this.pageSize1, //每页个数
         },
       }).then((res) => {
-        // console.log(res.data);
-        this.newCustomerList = res.data;
-        this.newCustomerList.forEach((it) => {
-          this.star = it.star;
-        });
-        // // console.log(this.level);
-        // if (this.level) {
-        //   this.getdic();
-        // }
+        console.log(res);
+        this.dataTotal = res.count;
+        //进行判断
+        if (this.dataTotal <= this.pageSize1) {
+          this.shareRecords = res.data;
+          console.log(this.shareRecords);
+        } else {
+          this.currentPage++;
+          let arr = res.data;
+          console.log(arr);
+          this.shareRecords = this.shareRecords.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd = false;
+        // 数据全部加载完成
+        if (this.shareRecords.length >= this.dataTotal) {
+          this.finishEnd = true; //结束，显示我也是有底线的
+        }
       });
-    },
-  },
-  computed: {
-    customer_poolshi() {
-      return this.$store.state.customer_poolshi;
-    },
-  },
-  filters: {
-    dic_client_grade(val) {
-      const findWill = JSON.parse(localStorage.getItem("dic")).find(
-        (it) => it.key === val
-      );
-      console.log(findWill);
-      return findWill ? findWill.value : "";
     },
   },
 };
@@ -375,10 +272,16 @@ export default {
 * {
   font-size: 14px;
 }
+.corporateList .corporateManage {
+  margin: 5px 0px;
+}
 .shareBtn {
   display: flex;
   justify-content: center;
   margin: 10px;
+  /* position: absolute;
+  right: 0;
+  top: 21%; */
 }
 .shareBtn .van-button--normal {
   background: rgb(61, 66, 94);
@@ -430,32 +333,14 @@ export default {
 }
 .van-button--normal {
   height: 30px;
-  width: 30%;
+  /* width: 30%; */
   border: none;
   border-radius: 8px;
 }
 .van-checkbox--horizontal {
   margin-bottom: 6px;
 }
-.corporateManage {
-  margin: 5px 0px;
-  width: 85%;
-  overflow: hidden; /*超出部分隐藏*/
-  white-space: nowrap; /*不换行*/
-  text-overflow: ellipsis; /*超出部分文字以...显示*/
-}
-.corporateManage1 {
-  width: 90%;
-  overflow: hidden; /*超出部分隐藏*/
-  white-space: nowrap; /*不换行*/
-  text-overflow: ellipsis; /*超出部分文字以...显示*/
-}
-.corporateManageAddress {
-  width: 45%;
-  overflow: hidden; /*超出部分隐藏*/
-  white-space: nowrap; /*不换行*/
-  text-overflow: ellipsis; /*超出部分文字以...显示*/
-}
+
 /* 对公客户 */
 .time_frame {
   height: 2rem;

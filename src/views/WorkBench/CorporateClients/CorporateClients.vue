@@ -216,7 +216,7 @@ export default {
       publicCustomerPool1: [],
       star: "",
       star1: "",
-      offset: 0, //滚动条与底部距离小于 offset 时触发load事件，默认300
+      offset: 5, //滚动条与底部距离小于 offset 时触发load事件，默认300
       pageNo: 1, // 当前页码
       pageSize: 10, // 分页大小
       total: 0, // 查询总条数

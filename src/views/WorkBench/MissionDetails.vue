@@ -120,8 +120,8 @@
         >
         <ul class="tabList">
           <li @click="tab1(0)" :class="tabId1 == 0 ? 'cur' : ''">网格客户</li>
-          <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">关注客户</li>
-          <li @click="tab1(2)" :class="tabId1 == 2 ? 'cur' : ''">潜在客户</li>
+          <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">我的客户</li>
+          <!-- <li @click="tab1(2)" :class="tabId1 == 2 ? 'cur' : ''">潜在客户</li> -->
         </ul>
         <div v-show="tabId1 === 0">
           <div class="customer_list">

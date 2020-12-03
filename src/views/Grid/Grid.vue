@@ -1,8 +1,18 @@
 <template>
   <div class="grid">
     <my-nav title="网格"></my-nav>
-    <van-search class="positionFixed" v-model="searchVal" placeholder="" @clear='onSearchCancel'/>
-    <div class="search-box" v-show='searchShow'>
+    <van-search
+      class="positionFixed"
+      v-model="searchVal"
+      placeholder=""
+      @clear="onSearchCancel"
+      >
+        <!-- <template #action>
+          <div @click="searchcomplete">搜索</div>
+        </template> -->
+      </van-search
+    >
+    <div class="search-box" v-show="searchShow">
       <van-list class="local-list">
         <van-cell
           @click="localOnclick(item)"
@@ -496,8 +506,8 @@ export default {
     ceshi() {
       console.log(111);
     },
-    onSearchCancel(){
-        this.searchShow = false;
+    onSearchCancel() {
+      this.searchShow = false;
     },
     resourceList() {
       //   debugger;
@@ -934,8 +944,8 @@ export default {
       var opts = {
         width: 200, // 信息窗口宽度
         height: 100, // 信息窗口高度
-        title: "故宫博物院", // 信息窗口标题
-        message: "这里是故宫",
+        title: "", // 信息窗口标题
+        message: "",
       };
       var infoWindow = new BMap.InfoWindow(item.address, opts); // 创建信息窗口对象
       this.map.openInfoWindow(infoWindow, item.point);
