@@ -132,7 +132,7 @@
                 </div>
             </div>
             <div v-show="tabId === 1" class="household_have">
-                <van-field name="radio" :label="item.text" v-for="(item, index) in potential_need_type" :key="index" @click="selectDelegation(item, index)">
+                <van-field name="radio" :label="item.text" v-for="(item, index) in potential_need_type" :key="index">
                     <template #input>
                         <van-radio-group v-model="item.radio" direction="horizontal">
                             <van-radio name="1" checked-color="rgb(61, 66, 94)">已办</van-radio>
@@ -386,7 +386,7 @@ export default {
                 let transformDara = [];
                 res.data.forEach((it, index) => {
                     if (it.parentId !== null) {
-                        transformDara.push({ index: it.code, text: it.codeText });
+                        transformDara.push({ index: it.code, text: it.codeText, radio: "1" });
                         this.potential_need_type = transformDara;
                     }
                 });
@@ -463,9 +463,9 @@ export default {
             if (res.data.customersDemandList.length > 0) {
                 res.data.customersDemandList.forEach((item) => {
                     for (let index = 0; index < this.potential_need_type.length; index++) {
-                        const i = this.potential_need_type.findIndex((it) => it.index == item.demandStatus);
+                        const i = this.potential_need_type.findIndex((it) => it.index == item.demandType);
                         console.log(i);
-                        i >= 0 && (this.potential_need_type[i].radio = item.demandType);
+                        i >= 0 && (this.potential_need_type[i].radio = item.demandStatus.toString());
                         i < 0 && (this.otherTxt = item.description);
                     }
                 });
@@ -616,15 +616,23 @@ export default {
             });
         },
         selectDelegation(item, index) {
-            this.$set(this.potential_need_type, index, {...this.potential_need_type[index]})
-            this.customersDemandList1.push({
-                demandStatus: item.index,
-                demandType: item.radio,
-            });
+            // this.$set(this.potential_need_type, index, {...this.potential_need_type[index]})
+            // this.customersDemandList1.push({
+            //     demandStatus: item.index,
+            //     demandType: item.radio,
+            // });
         },
         async saveCustomersDemand() {
+            console.log(this.potential_need_type);
+            let arr = [];
+            this.potential_need_type.forEach((item) => {
+              arr.push({
+                demandStatus: item.radio,
+                demandType: item.index,
+              });
+            })
             if (this.otherTxt) {
-                this.customersDemandList1.push({
+                arr.push({
                     description: this.otherTxt,
                     demandType: -1,
                 });
@@ -633,7 +641,7 @@ export default {
                 url: '/api/customersDemand/save',
                 data: {
                     code: this.customerCode,
-                    customersDemandList: this.customersDemandList1,
+                    customersDemandList: arr,
                 },
             })
                 .then((res) => {
