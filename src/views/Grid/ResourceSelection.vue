@@ -21,6 +21,7 @@
           <van-checkbox v-model="thisItem.id" shape="square">{{thisItem.name}}</van-checkbox>
         </ul>
       </div> -->
+      <!-- <van-icon name="cross" /> -->
       <div class="new_selection_three">
         <!-- <p>资源</p> -->
         <ul
@@ -101,11 +102,11 @@ export default {
       const findName = JSON.parse(localStorage.getItem("dicGridResource")).find(
         (it) => this.resultArr == it.key
       );
-      if(findName){
-        let localArr = findName.value
+      if (findName) {
+        let localArr = findName.value;
         this.$emit("resourceEmit", { localArr });
-      }else{
-        let localArr = ""
+      } else {
+        let localArr = "";
         this.$emit("resourceEmit", { localArr });
       }
     },
@@ -279,6 +280,9 @@ export default {
 .van-checkbox {
   height: 2rem;
 }
+.van-radio >>> .van-radio__icon {
+  height: 24px !important;
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,
   select,
@@ -322,8 +326,8 @@ export default {
     /* Internet Explorer 10-11 */
     font-size: 0.8rem !important;
   }
-  .van-radio__icon {
-    height: 1.2rem !important;
+  .van-radio >>> .van-radio__icon {
+    height: 24px !important;
   }
   .save button {
     height: 1.7rem;

@@ -544,10 +544,6 @@
     font-size: 0.8rem !important;
   }
 
-  .van-radio-group >>> .van-radio__icon {
-    height: 24px!important;
-  }
-
   .save button {
     height: 1.7rem;
     width: 5rem;
@@ -560,6 +556,9 @@
 
   .map_marker p img {
     width: 1.4rem;
+  }
+  .van-radio >>> .van-radio__icon {
+    height: 24px!important;
   }
 }
 
