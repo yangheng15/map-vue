@@ -547,6 +547,7 @@ export default {
           }
           // let positionArr = [124.281873, 45.514322]
           this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+          this.nearby.center = this.mapCenter;
           this.zoomNum = this.map.getZoom();
           this.createMarker(positionArr);
         }
