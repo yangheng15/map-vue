@@ -22,6 +22,7 @@
           <van-field
             readonly
             clickable
+            required
             name="picker"
             :value="
               editRecords.isSucc == 0
@@ -47,6 +48,7 @@
           <van-field
             readonly
             clickable
+            required
             name="picker"
             :value="editRecords.intention"
             label="客户意向"
@@ -64,6 +66,7 @@
           <van-field
             readonly
             clickable
+            required
             name="picker"
             :value="
               editRecords.semType == 0
@@ -88,6 +91,7 @@
           </van-popup>
           <van-field
             v-model="editRecords.marketAmount"
+            required
             rows="2"
             autosize
             label="金额（万元）"
@@ -195,22 +199,22 @@
             v-model="editRecords.rivalName"
             name="对手名称："
             label="对手名称："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写对手名称' }]"
+            required
+            placeholder="请填写对手名称"
           />
           <van-field
             v-model="editRecords.rivalProduct"
+            required
             name="对手产品："
             label="对手产品："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写对手产品' }]"
+            placeholder="请填写对手产品"
           />
           <van-field
             v-model="editRecords.interestRate"
+            required
             name="产品利率："
             label="产品利率："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写产品利率' }]"
+            placeholder="请填写产品利率（数字）"
           />
           <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="modifyCompetitor()"
@@ -401,6 +405,14 @@ export default {
       });
     },
     async modifyCompetitor() {
+      var reg=/^\d*\.{0,1}\d*$/
+      if (!reg.test(this.editRecords.interestRate)) {
+        Dialog.alert({
+          title: "提示",
+          message: "产品利率必须为数字",
+        });
+        return;
+      }
       if (this.editRecords.competitorId) {
         this.$httpPut({
           url: "/api/semCustomersRecords/updateCompetitor",

@@ -334,7 +334,7 @@
                 id: this.id,
               },
             }"
-            >添加记录</router-link
+            >+</router-link
           >
         </div>
         <!-- </van-list> -->

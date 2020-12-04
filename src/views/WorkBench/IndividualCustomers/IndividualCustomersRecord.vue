@@ -18,21 +18,29 @@
           v-model="publicCustomerName"
           name="名称："
           label="名称："
-          placeholder="单行输入"
+          placeholder="请输入名称"
           required
           type="textarea"
           autosize
         />
         <van-field
-          v-model="publicCustomerAddress"
-          name="地址："
-          label="地址："
-          placeholder="单行输入"
+          v-model="publicCustomerTelephone"
+          name="手机号："
+          label="手机号："
+          placeholder="请输入手机号"
           required
-          type="textarea"
-          autosize
-        />
+        >
+        <!-- <template #button>
+            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
+          </template> -->
+          </van-field>
         <van-field
+          v-model="publicCustomerId"
+          name="身份证："
+          label="身份证："
+          placeholder="请输入身份证"
+        />
+         <van-field
           readonly
           clickable
           name="area"
@@ -50,6 +58,22 @@
           />
         </van-popup>
         <van-field
+          v-model="publicCustomerWorkUnit"
+          name="工作单位："
+          label="工作单位："
+          placeholder="请输入工作单位"
+          type="textarea"
+          autosize
+        />
+        <van-field
+          v-model="publicCustomerAddress"
+          name="联系地址："
+          label="联系地址："
+          placeholder="请输入联系地址"
+          type="textarea"
+          autosize
+        />
+        <van-field
           readonly
           clickable
           name="picker"
@@ -66,7 +90,7 @@
             @cancel="industryShow = false"
           />
         </van-popup>
-        <van-field name="uploader" label="客户照片" required>
+        <!-- <van-field name="uploader" label="客户照片" required>
           <template #input>
             <van-uploader
               :after-read="afterRead"
@@ -75,15 +99,15 @@
               multiple
             />
           </template>
-        </van-field>
-        <van-field
+        </van-field> -->
+        <!-- <van-field
           v-model="businessLicenseNo"
           name="营业执照号："
           label="营业执照号："
           placeholder="单行输入"
           required
-        />
-        <van-field
+        /> -->
+        <!-- <van-field
           v-model="legalPersonName"
           name="法人姓名："
           label="法人姓名："
@@ -95,9 +119,7 @@
           label="法人联系方式："
           placeholder="单行输入"
         >
-          <!-- <template #button>
-            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
-          </template> -->
+          
         </van-field>
         <van-field
           v-model="otherContactsName"
@@ -111,10 +133,7 @@
           label="其他联系方式："
           placeholder="单行输入"
         >
-          <!-- <template #button>
-            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
-          </template> -->
-        </van-field>
+        </van-field> -->
         <van-field
           @click="getLongitudeLatitude"
           v-model="publicCustomerLocation"
@@ -132,12 +151,6 @@
             />
           </template>
         </van-field>
-        <!-- <van-field
-          v-model="sourceClues"
-          name="线索来源："
-          label="线索来源："
-          placeholder="单行输入"
-        /> -->
         <div
           style="width: 99%; margin: 0.5rem auto; position: relative"
           v-if="longitudeLatitude"
@@ -334,7 +347,7 @@
                 id: this.id,
               },
             }"
-            >添加记录</router-link
+            >+</router-link
           >
         </div>
         <!-- </van-list> -->
@@ -355,6 +368,9 @@ export default {
   data() {
     return {
       publicCustomerName: "",
+      publicCustomerTelephone:"",
+      publicCustomerId:"",
+      publicCustomerWorkUnit:"",
       publicCustomerAddress: "",
       publicCustomerGrid: "",
       industry_list: [],
@@ -404,15 +420,15 @@ export default {
       custName: "",
     };
   },
-  beforeRouteEnter(to, from, next) {
-    console.log(from.path);
-    next((vm) => {
-      if (from.path === "/AddMarketingRecord") {
-        console.log(123415234523452);
-        vm.tab(2);
-      }
-    });
-  },
+  // beforeRouteEnter(to, from, next) {
+  //   console.log(from.path);
+  //   next((vm) => {
+  //     if (from.path === "/AddMarketingRecord") {
+  //       console.log(123415234523452);
+  //       vm.tab(2);
+  //     }
+  //   });
+  // },
   created() {
     this.typeCN = this.$route.query.title;
     this.dic_nation();
@@ -590,7 +606,7 @@ export default {
         console.log(this);
         if (this.judgeReturnValue == "") {
           Toast({
-            message: "请先添加详细信息",
+            message: "请先添加基本信息",
             position: "middle",
           });
           return;
@@ -728,32 +744,19 @@ export default {
         });
         return;
       }
-      if (this.publicCustomerAddress == "") {
+      if (this.publicCustomerTelephone == "") {
         Dialog.alert({
           title: "提示",
-          message: "请输入地址！",
+          message: "请输入手机号！",
         });
         return;
       }
-      if (this.pictureId == "") {
-        Dialog.alert({
-          title: "提示",
-          message: "请添加客户照片！",
-        });
-        return;
-      }
-      if (this.businessLicenseNo == "") {
-        Dialog.alert({
-          title: "提示",
-          message: "请输入营业执照号！",
-        });
-        return;
-      }
+      
       //逆向解析
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
       // console.log(this.publicCustomerAddress);
       this.$httpPost({
-        url: "/api/pulicCustomersInfo/add",
+        url: "/api/privateCustomers/add",
         data: {
           name: this.publicCustomerName,
           address: this.publicCustomerAddress,
@@ -763,9 +766,9 @@ export default {
           legalName: this.legalPersonName,
           legalPhone: this.legalPersonTelephone,
           customerImg: this.pictureId.join(","),
-          businessLicenseNo: this.businessLicenseNo,
-          otherContactsName: this.otherContactsName,
-          otherContactsPhone: this.otherContactsTelephone,
+          publicCustomerTelephone: this.publicCustomerTelephone,
+          publicCustomerId: this.publicCustomerId,
+          publicCustomerWorkUnit: this.publicCustomerWorkUnit,
         },
       })
         .then((res) => {

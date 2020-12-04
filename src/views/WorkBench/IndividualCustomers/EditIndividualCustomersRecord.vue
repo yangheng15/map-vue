@@ -8,7 +8,7 @@
             class="share"
             :to="{
               name: 'CorporateClientsShare',
-              query: { title: '线索分享' },
+              query: { title: '线索分享', code: customerCode },
             }"
           >
             分享
@@ -39,14 +39,23 @@
           autosize
         />
         <van-field
-          v-model="publicCustomerAddress"
-          name="地址："
-          label="地址："
-          placeholder="单行输入"
+          v-model="publicCustomerTelephone"
+          name="手机号："
+          label="手机号："
+          placeholder="请输入手机号"
           required
-          type="textarea"
-          autosize
+        >
+        <!-- <template #button>
+            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
+          </template> -->
+          </van-field>
+          <van-field
+          v-model="publicCustomerId"
+          name="身份证："
+          label="身份证："
+          placeholder="请输入身份证"
         />
+        
         <van-field
           readonly
           clickable
@@ -65,6 +74,22 @@
           />
         </van-popup>
         <van-field
+          v-model="publicCustomerWorkUnit"
+          name="工作单位："
+          label="工作单位："
+          placeholder="请输入工作单位"
+          type="textarea"
+          autosize
+        />
+        <van-field
+          v-model="publicCustomerAddress"
+          name="联系地址："
+          label="联系地址："
+          placeholder="请输入联系地址"
+          type="textarea"
+          autosize
+        />
+        <van-field
           readonly
           clickable
           name="picker"
@@ -81,7 +106,7 @@
             @cancel="industryShow = false"
           />
         </van-popup>
-        <van-field name="uploader" label="客户照片" required>
+        <!-- <van-field name="uploader" label="客户照片" required>
           <template #input>
             <van-uploader
               :after-read="afterRead"
@@ -109,9 +134,6 @@
           label="法人联系方式："
           placeholder="单行输入"
         >
-          <!-- <template #button>
-            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
-          </template> -->
         </van-field>
         <van-field
           v-model="otherContactsName"
@@ -125,10 +147,7 @@
           label="其他联系方式："
           placeholder="单行输入"
         >
-          <!-- <template #button>
-            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
-          </template> -->
-        </van-field>
+        </van-field> -->
         <van-field
           @click="getLongitudeLatitude"
           v-model="publicCustomerLocation"
@@ -210,7 +229,6 @@
           :label="item.text"
           v-for="(item, index) in potential_need_type"
           :key="index"
-          @click="selectDelegation(item)"
         >
           <template #input>
             <van-radio-group v-model="item.radio" direction="horizontal">
@@ -343,7 +361,7 @@
                 custName: this.publicCustomerName,
               },
             }"
-            >添加记录</router-link
+            >+</router-link
           >
         </div>
       </div>
@@ -357,6 +375,9 @@ export default {
   data() {
     return {
       publicCustomerName: "",
+      publicCustomerTelephone:"",
+      publicCustomerId:"",
+      publicCustomerWorkUnit:"",
       publicCustomerAddress: "",
       publicCustomerGrid: "",
       industry_list: [],
@@ -422,6 +443,7 @@ export default {
     this.id = this.$route.query.id;
     await this.dic_nation();
     await this.editRecord();
+    await this.getIndusty()
   },
 
   methods: {
@@ -469,14 +491,30 @@ export default {
       // }, 600);
     },
     enumData(val, data) {
-      // debugger
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
         // debugger
+        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
       }
+    },
+    getIndusty() {
+      // 所属行业
+      this.$httpGet({
+        url: "/dic/type/industry_type",
+      }).then((res) => {
+        let transformDara = [];
+        console.log(res);
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.industry_list = transformDara;
+        this.industry = this.enumData(this.industry, this.industry_list);
+      });
     },
     enumData1(val, data) {
       let find = "";
@@ -488,19 +526,6 @@ export default {
       }
     },
     dic_nation() {
-      // 所属行业
-      this.$httpGet({
-        url: "/dic/type/industry_type",
-      }).then((res) => {
-        let transformDara = [];
-        res.data.forEach((it, index) => {
-          if (it.parentId !== null) {
-            transformDara.push({ index: it.code, text: it.codeText });
-          }
-        });
-        this.industry_list = transformDara;
-        this.industry = this.enumData(this.industry, this.industry_list);
-      });
       // 潜在客户需求
       this.$httpGet({
         url: "/dic/type/potential_need_type",
@@ -508,12 +533,16 @@ export default {
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
-            transformDara.push({ index: it.code, text: it.codeText });
+            transformDara.push({
+              index: it.code,
+              text: it.codeText,
+              radio: "1",
+            });
             this.potential_need_type = transformDara;
-            // console.log(this.potential_need_type);
           }
         });
       });
+      // 所属网格
       this.$httpGet({
         url: "/api/semGridding/query",
         params: {
@@ -559,11 +588,12 @@ export default {
     },
     async editRecord(val) {
       const res = await this.$httpGet({
-        url: `/api/publicCustomerPool/get/${this.id}`,
+        url: `/api/privateCustomers/get/${this.id}`,
         data: {
           id: this.id,
         },
       });
+      console.log(res.data.code);
       this.customerCode = res.data.code;
       localStorage.setItem("customerCode", this.customerCode);
       this.publicCustomerName = res.data.name;
@@ -596,13 +626,17 @@ export default {
             index++
           ) {
             const i = this.potential_need_type.findIndex(
-              (it) => it.index == item.demandStatus
+              (it) => it.index == item.demandType
             );
-            i > 0 && (this.potential_need_type[i].radio = item.demandType);
+            i >= 0 &&
+              (this.potential_need_type[
+                i
+              ].radio = item.demandStatus.toString());
             i < 0 && (this.otherTxt = item.description);
           }
         });
       }
+      console.log(this.potential_need_type);
       //   this.customersDemandList1 = res.data.customersDemandList;
       //   console.log(this.customersDemandList1);
       //   if (this.customersDemandList1) {
@@ -753,15 +787,24 @@ export default {
         this.pictureId.push(res.data.pid);
       });
     },
-    selectDelegation(item) {
-      this.customersDemandList1.push({
-        demandStatus: item.index,
-        demandType: item.radio,
-      });
+    selectDelegation(item, index) {
+      // this.$set(this.potential_need_type, index, {...this.potential_need_type[index]})
+      // this.customersDemandList1.push({
+      //     demandStatus: item.index,
+      //     demandType: item.radio,
+      // });
     },
     async saveCustomersDemand() {
+      console.log(this.potential_need_type);
+      let arr = [];
+      this.potential_need_type.forEach((item) => {
+        arr.push({
+          demandStatus: item.radio,
+          demandType: item.index,
+        });
+      });
       if (this.otherTxt) {
-        this.customersDemandList1.push({
+        arr.push({
           description: this.otherTxt,
           demandType: -1,
         });
@@ -770,7 +813,7 @@ export default {
         url: "/api/customersDemand/save",
         data: {
           code: this.customerCode,
-          customersDemandList: this.customersDemandList1,
+          customersDemandList: arr,
         },
       })
         .then((res) => {
@@ -814,7 +857,7 @@ export default {
         return;
       }
       this.$httpPut({
-        url: "/api/publicCustomersInfo/update",
+        url: "/api/privateCustomers/update",
         data: {
           code: this.id,
           name: this.publicCustomerName,
@@ -825,9 +868,9 @@ export default {
           legalName: this.legalPersonName,
           legalPhone: this.legalPersonTelephone,
           customerImg: this.pictureId.join(","),
-          businessLicenseNo: this.businessLicenseNo,
-          otherContactsName: this.otherContactsName,
-          otherContactsPhone: this.otherContactsTelephone,
+          publicCustomerTelephone: this.publicCustomerTelephone,
+          publicCustomerId: this.publicCustomerId,
+          publicCustomerWorkUnit: this.publicCustomerWorkUnit,
         },
       })
         .then((res) => {

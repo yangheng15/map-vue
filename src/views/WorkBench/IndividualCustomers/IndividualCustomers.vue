@@ -35,7 +35,15 @@
         >
           <li>
             <div class="corporateFlex">
-              <p class="corporateManage1">{{ thisItem.name }}</p>
+              <router-link
+                tag="li"
+                :to="{
+                  name: 'IndividualCustomersDetails',
+                  query: { title: '客户池客户详情', id: thisItem.id },
+                }"
+                class="corporateManage1"
+                >{{ thisItem.name }}</router-link
+              >
               <p style="color: #1432e3" @click="showBack(thisItem.id)">认领</p>
             </div>
             <div class="corporateFlex">
@@ -75,7 +83,7 @@
                 size="medium"
                 >{{ thisItem.sourceTxt }}
               </van-tag>
-              <p>{{ thisItem.marketingIntervalDay }}天内营销</p>
+              <p>{{ thisItem.marketingIntervalDay }}天未营销</p>
             </div>
             <div class="corporateFlex">
               <p class="corporateManageAddress">
@@ -299,7 +307,7 @@ export default {
         location: this.positionArr,
       };
       this.$httpGet({
-        url: "/api/publicCustomerPool/query",
+        url: "/api/privateCustomerPool/query",
         params: params,
       }).then((res) => {
         if (res.data) {
@@ -321,7 +329,7 @@ export default {
           name: this.search_txt,
         };
         this.$httpGet({
-          url: "/api/publicCustomerPool/query",
+          url: "/api/privateCustomerPool/query",
           params: params,
         })
           .then((res) => {
@@ -408,43 +416,6 @@ export default {
         this.industry_typelist = transformDara;
       });
     },
-    onSearch(val) {
-      return new Promise((resolve, reject) => {
-        console.log(val);
-        let params = {
-          page: this.pageNo,
-          limit: this.pageSize,
-          type: this.tabId,
-          name: val,
-        };
-        this.$httpGet({
-          url: "/api/publicCustomerPool/query",
-          params: params,
-        })
-          .then((res) => {
-            if (res.data.length > 0) {
-              if (this.tabId == 0) {
-                let result = {
-                  total: res.count,
-                  pageIndex: 1,
-                  publicCustomerPool: res.data,
-                };
-                resolve(result);
-              } else if (this.tabId == 1) {
-                let result = {
-                  total: res.count,
-                  pageIndex: 1,
-                  publicCustomerPool1: res.data,
-                };
-                resolve(result);
-              }
-            }
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      });
-    },
     showPopupScreen() {
       this.isPopupVisibleScreen = true;
     },
@@ -457,7 +428,7 @@ export default {
       })
         .then(() => {
           this.$httpPost({
-            url: "/api/publicCustomers/joinCust",
+            url: "/api/privateCustomers/joinCust",
             params: {
               customerId: code,
             },
@@ -524,7 +495,7 @@ export default {
   width: 80%;
 }
 .van-checkbox--horizontal >>> .van-checkbox__icon {
-  height: 24px!important;
+  height: 24px !important;
 }
 /* 对公客户 */
 .corporateList {
@@ -539,7 +510,7 @@ export default {
   justify-content: space-between;
 }
 .corporateFlex p {
-  margin: 5px;
+  margin: 5px 0px;
 }
 .add_record {
   display: flex;

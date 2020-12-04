@@ -53,7 +53,7 @@
           @cancel="industryShow = false"
         />
       </van-popup>
-      <van-field readonly name="uploader" label="客户照片" required>
+      <van-field readonly name="uploader" label="客户照片">
         <template #input>
           <van-image v-for="(item,index) in uploader" :key="index" width="80" height="80" :src="item.url" />
         </template>

@@ -5,7 +5,7 @@
       <ul class="mission_details">
         <li>
           客户：{{ custName }}
-          <img src="../../assets/WorkBench/location.svg" alt />
+          <!-- <img src="../../assets/WorkBench/location.svg" alt /> -->
         </li>
         <!-- <li>方式：上门</li> -->
         <li v-if="productName">营销产品：{{ productName }}</li>
@@ -23,6 +23,7 @@
           <van-field
             readonly
             clickable
+            required
             name="picker"
             :value="result_txt.text"
             label="结果"
@@ -40,6 +41,7 @@
           <van-field
             readonly
             clickable
+            required
             name="picker"
             :value="Customer_intention_txt.text"
             label="客户意向"
@@ -57,6 +59,7 @@
           <van-field
             readonly
             clickable
+            required
             name="picker"
             :value="Marketing_methods_txt.text"
             label="方式"
@@ -75,6 +78,7 @@
             v-model="market_amount"
             rows="2"
             autosize
+            required
             label="金额（万元）"
             type="number"
             placeholder="请填写营销金额"
@@ -145,24 +149,24 @@
         <div v-show="tabId === 2" style="background: #fff; height: 70vh">
           <van-field
             v-model="competitor"
+            required
             name="对手名称："
             label="对手名称："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写对手名称' }]"
+            placeholder="请填写对手名称"
           />
           <van-field
             v-model="competitive_products"
+            required
             name="对手产品："
             label="对手产品："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写对手产品' }]"
+            placeholder="请填写对手产品"
           />
           <van-field
             v-model="product_rate"
+            required
             name="产品利率："
             label="产品利率："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写产品利率' }]"
+            placeholder="请填写产品利率（数字）"
           />
           <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="addCompetitor()"
@@ -176,7 +180,7 @@
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import { Toast } from "vant";
+import { Toast, Dialog } from "vant";
 import qs from "qs";
 export default {
   data() {
@@ -310,6 +314,14 @@ export default {
       });
     },
     async addCompetitor() {
+      var reg=/^\d*\.{0,1}\d*$/
+      if (!reg.test(this.product_rate)) {
+        Dialog.alert({
+          title: "提示",
+          message: "产品利率必须为数字",
+        });
+        return;
+      }
       this.$httpPost({
         url: "/api/customersRecords/appAddCompetitor",
         data: {

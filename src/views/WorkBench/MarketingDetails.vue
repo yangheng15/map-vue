@@ -32,6 +32,7 @@
         <li>
           <span style="font-weight: 600">客户地址：</span>{{ address }}
           <router-link
+          v-if="location"
             tag="a"
             class="img3"
             :to="{
@@ -42,7 +43,7 @@
         </li>
         <li>
           <span style="font-weight: 600">联系方式：</span>{{ telphone }}
-          <a class="img4" :href="'tel:' + telphone"></a>
+          <a v-if="telphone" class="img4" :href="'tel:' + telphone"></a>
         </li>
         <li>
           <span style="font-weight: 600"
@@ -169,7 +170,7 @@
               id: this.id,
             },
           }"
-          >添加记录</router-link
+          >+</router-link
         >
       </div>
     </div>
@@ -235,7 +236,7 @@ export default {
     this.productCode = this.$route.query.productCode;
     this.productName = this.$route.query.productName;
     this.address = this.$route.query.address;
-    this.telphone = this.$route.query.telphone;
+    this.telphone = this.$route.query.telphone?this.$route.query.telphone:'';
     this.location = this.$route.query.location;
     this.id = this.$route.query.id;
     this.custId = this.$route.query.custId;
@@ -367,6 +368,7 @@ export default {
   position: relative;
 }
 .mission_details li {
+  padding-right:40px;
   margin-bottom: 0.7rem;
   padding-left: 0.5rem;
 }

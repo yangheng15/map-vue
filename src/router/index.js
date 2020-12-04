@@ -72,6 +72,8 @@ const IndividualCustomers = () => import('@/views/WorkBench/IndividualCustomers/
 const IndividualCustomersRecord = () => import('@/views/WorkBench/IndividualCustomers/IndividualCustomersRecord.vue');
 // 个人客户建档修改
 const EditIndividualCustomersRecord = () => import('@/views/WorkBench/IndividualCustomers/EditIndividualCustomersRecord.vue');
+// 个人客户池详情
+const IndividualCustomersDetails = () => import('@/views/WorkBench/IndividualCustomers/IndividualCustomersDetails.vue');
 // 对公客户
 const CorporateClients = () => import('@/views/WorkBench/CorporateClients/CorporateClients.vue');
 //对公客户建档
@@ -321,6 +323,11 @@ const routes = [{
     path: '/EditIndividualCustomersRecord',
     name: 'EditIndividualCustomersRecord',
     component: EditIndividualCustomersRecord,
+  },
+  {
+    path: '/IndividualCustomersDetails',
+    name: 'IndividualCustomersDetails',
+    component: IndividualCustomersDetails,
   },
   {
     path: '/ScreenMyCustomers',

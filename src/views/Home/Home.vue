@@ -4,7 +4,7 @@
       <van-nav-bar :title="title">
         <template #right>
           <router-link :to="{ name: 'Remind', query: { title: '提醒' } }">
-            <van-icon name="bell" badge="9" color="#fff" />
+            <van-icon name="bell" color="#fff" />
           </router-link>
         </template>
       </van-nav-bar>
