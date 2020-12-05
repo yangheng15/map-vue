@@ -187,11 +187,20 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-import { Dialog } from "vant";
+import { Dialog, Toast } from "vant";
 export default {
   name: "CorporateClients",
   components: {
     ChildNav,
+  },
+  watch: {
+    isPopupVisibleScreen(newVal) {
+      if(!newVal) {
+        this.distanceRange = '';
+        this.industry_type = '';
+        this.potentialNeedType = []
+      }
+    }
   },
   data() {
     return {
@@ -279,6 +288,7 @@ export default {
       this.pageNo = 1;
       this.onLoad();
       if (ev == 1) {
+        this.currentPage = 1;
         this.onLoadList()
       };
     },

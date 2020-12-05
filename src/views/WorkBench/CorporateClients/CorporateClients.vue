@@ -197,7 +197,7 @@ export default {
     isPopupVisibleScreen(newVal) {
       if(!newVal) {
         this.distanceRange = '';
-        this.industry_type.text = '';
+        this.industry_type = '';
         this.potentialNeedType = []
       }
     }
@@ -273,6 +273,7 @@ export default {
       this.pageNo = 1;
       this.onLoad();
       if (ev == 1) {
+        this.currentPage = 1;
         this.onLoadList();
       }
     },
