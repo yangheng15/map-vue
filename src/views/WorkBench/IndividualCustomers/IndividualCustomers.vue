@@ -307,7 +307,7 @@ export default {
         location: this.positionArr,
       };
       this.$httpGet({
-        url: "/api/privateCustomerPool/query",
+        url: "/api/publicCustomerPool/query",
         params: params,
       }).then((res) => {
         if (res.data) {
@@ -329,7 +329,7 @@ export default {
           name: this.search_txt,
         };
         this.$httpGet({
-          url: "/api/privateCustomerPool/query",
+          url: "/api/publicCustomerPool/query",
           params: params,
         })
           .then((res) => {
@@ -428,7 +428,7 @@ export default {
       })
         .then(() => {
           this.$httpPost({
-            url: "/api/privateCustomers/joinCust",
+            url: "/api/publicCustomers/joinCust",
             params: {
               customerId: code,
             },

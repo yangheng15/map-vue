@@ -334,7 +334,7 @@ export default {
     },
     async editRecord(val) {
       const res = await this.$httpGet({
-        url: `/api/privateCustomers/get/${this.id}`,
+        url: `/api/publicCustomerPool/get/${this.id}`,
         data: {
           id: this.id,
         },
@@ -599,7 +599,7 @@ export default {
         return;
       }
       this.$httpPut({
-        url: "/api/privateCustomers/update",
+        url: "/api/publicCustomersInfo/update",
         data: {
           code: this.id,
           name: this.publicCustomerName,

@@ -86,6 +86,7 @@
           name="联系地址："
           label="联系地址："
           placeholder="请输入联系地址"
+          required
           type="textarea"
           autosize
         />
@@ -588,7 +589,7 @@ export default {
     },
     async editRecord(val) {
       const res = await this.$httpGet({
-        url: `/api/privateCustomers/get/${this.id}`,
+        url: `/api/publicCustomerPool/get/${this.id}`,
         data: {
           id: this.id,
         },
@@ -835,29 +836,15 @@ export default {
         });
         return;
       }
-      if (this.publicCustomerAddress == "") {
+      if (this.publicCustomerTelephone == "") {
         Dialog.alert({
           title: "提示",
-          message: "请输入地址！",
-        });
-        return;
-      }
-      if (this.pictureId == "") {
-        Dialog.alert({
-          title: "提示",
-          message: "请添加客户照片！",
-        });
-        return;
-      }
-      if (this.businessLicenseNo == "") {
-        Dialog.alert({
-          title: "提示",
-          message: "请输入营业执照号！",
+          message: "请输入电话！",
         });
         return;
       }
       this.$httpPut({
-        url: "/api/privateCustomers/update",
+        url: "/api/publicCustomersInfo/update",
         data: {
           code: this.id,
           name: this.publicCustomerName,
