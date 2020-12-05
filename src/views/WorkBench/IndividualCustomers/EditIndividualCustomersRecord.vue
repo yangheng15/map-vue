@@ -536,7 +536,7 @@ export default {
             transformDara.push({
               index: it.code,
               text: it.codeText,
-              radio: "1",
+              radio: "",
             });
             this.potential_need_type = transformDara;
           }

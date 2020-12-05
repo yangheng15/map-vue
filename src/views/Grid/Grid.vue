@@ -948,7 +948,11 @@ export default {
         title: "", // 信息窗口标题
         message: "",
       };
-      var infoWindow = new BMap.InfoWindow(item.address, opts); // 创建信息窗口对象
+      var infoWindow = new BMap.InfoWindow(
+        `<div>
+          <p style='width:210px;font:bold 14px/16px arial,sans-serif;margin:0;color:#cc5522;white-space:nowrap;overflow:hidden'>${item.title}</p>
+          <p style="font-size:12px">地址：${item.address}</p>
+        <div>`, opts); // 创建信息窗口对象
       this.map.openInfoWindow(infoWindow, item.point);
     },
   },

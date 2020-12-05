@@ -193,6 +193,15 @@ export default {
   components: {
     ChildNav,
   },
+  watch: {
+    isPopupVisibleScreen(newVal) {
+      if(!newVal) {
+        this.distanceRange = '';
+        this.industry_type.text = '';
+        this.potentialNeedType = []
+      }
+    }
+  },
   data() {
     return {
       title: "",
