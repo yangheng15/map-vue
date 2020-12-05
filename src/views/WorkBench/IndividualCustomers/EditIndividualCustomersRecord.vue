@@ -86,7 +86,6 @@
           name="联系地址："
           label="联系地址："
           placeholder="请输入联系地址"
-          required
           type="textarea"
           autosize
         />
@@ -606,19 +605,19 @@ export default {
       this.publicCustomerLocation = res.data.location;
       this.sourceClues = res.data.source;
       this.sourceCluesName = res.data.shareName;
-      this.mapCenter = {
+      res.data.location?this.mapCenter = {
         lng: res.data.location.split(",")[0],
         lat: res.data.location.split(",")[1],
-      };
-      this.mapCenter1 = { ...this.mapCenter };
+      }:this.mapCenter={lng: "114.654102", lat: "33.623741"}
+      res.data.location?this.mapCenter1 = { ...this.mapCenter }:this.mapCenter1 = { lng: "114.654102", lat: "33.623741" }
       this.legalPersonName = res.data.legalName;
       this.legalPersonTelephone = res.data.legalPhone;
       this.pictureId = res.data.customerImg
         ? res.data.customerImg.split(",")
         : [];
-      this.businessLicenseNo = res.data.businessLicenseNo;
-      this.otherContactsName = res.data.otherContactsName;
-      this.otherContactsTelephone = res.data.otherContactsPhone;
+      this.publicCustomerTelephone = res.data.telphone;
+      this.publicCustomerId = res.data.identifyNo;
+      this.publicCustomerWorkUnit = res.data.workUnit;
       if (res.data.customersDemandList.length > 0) {
         res.data.customersDemandList.forEach((item) => {
           for (
@@ -638,18 +637,6 @@ export default {
         });
       }
       console.log(this.potential_need_type);
-      //   this.customersDemandList1 = res.data.customersDemandList;
-      //   console.log(this.customersDemandList1);
-      //   if (this.customersDemandList1) {
-      //     this.customersDemandList1.forEach((it) => {
-      //       this.potential_need_type.index = it.demandStatus;
-      //       this.potential_need_type.radio = it.demandType;
-      //       if (it.demandType == -1) {
-      //         this.otherTxt = it.description;
-      //       }
-      //       console.log(this.potential_need_type);
-      //     });
-      //   }
       if (this.pictureId) {
         this.pictureId.forEach((el) => {
           this.$httpGet({
@@ -788,13 +775,6 @@ export default {
         this.pictureId.push(res.data.pid);
       });
     },
-    selectDelegation(item, index) {
-      // this.$set(this.potential_need_type, index, {...this.potential_need_type[index]})
-      // this.customersDemandList1.push({
-      //     demandStatus: item.index,
-      //     demandType: item.radio,
-      // });
-    },
     async saveCustomersDemand() {
       console.log(this.potential_need_type);
       let arr = [];
@@ -855,9 +835,9 @@ export default {
           legalName: this.legalPersonName,
           legalPhone: this.legalPersonTelephone,
           customerImg: this.pictureId.join(","),
-          publicCustomerTelephone: this.publicCustomerTelephone,
-          publicCustomerId: this.publicCustomerId,
-          publicCustomerWorkUnit: this.publicCustomerWorkUnit,
+          telphone: this.publicCustomerTelephone,
+          identifyNo: this.publicCustomerId,
+          workUnit: this.publicCustomerWorkUnit,
         },
       })
         .then((res) => {

@@ -145,6 +145,7 @@
                     taskId: id,
                     id: taskQuery.id,
                     location: thisItem.location,
+                    customersType:thisItem.customersType
                   },
                 }"
                 v-for="(thisItem, index) in MarketingRecord"
@@ -228,6 +229,7 @@
                     taskId: id,
                     id: taskQuery.id,
                     location: thisItem.location,
+                    customersType:thisItem.customersType
                   },
                 }"
                 v-for="(thisItem, index) in MarketingRecordClaim"
@@ -498,6 +500,7 @@ export default {
           customerType: 1,
         },
       }).then((res) => {
+        console.log(res);
         this.MarketingRecord = res.data;
         if (
           this.MarketingRecord.customerCode &&

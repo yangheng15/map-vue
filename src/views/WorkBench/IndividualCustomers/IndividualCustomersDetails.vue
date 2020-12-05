@@ -15,13 +15,18 @@
         readonly
       />
       <van-field
-        v-model="publicCustomerAddress"
-        name="地址："
-        label="地址："
-        placeholder="客户地址"
-        type="textarea"
-        autosize
+        v-model="publicCustomerTelephone"
+        name="手机号："
+        label="手机号："
+        placeholder="请输入手机号"
         readonly
+      />
+      <van-field
+        v-model="publicCustomerId"
+        readonly
+        name="身份证："
+        label="身份证："
+        placeholder="请输入身份证"
       />
       <van-field
         readonly
@@ -39,6 +44,25 @@
         />
       </van-popup>
       <van-field
+        v-model="publicCustomerWorkUnit"
+        name="工作单位："
+        label="工作单位："
+        placeholder="请输入工作单位"
+        type="textarea"
+        autosize
+        readonly
+      />
+
+      <van-field
+        v-model="publicCustomerAddress"
+        name="联系地址："
+        label="联系地址："
+        placeholder="请输入联系地址"
+        type="textarea"
+        autosize
+        readonly
+      />
+      <van-field
         readonly
         name="picker"
         :value="industry"
@@ -53,48 +77,7 @@
           @cancel="industryShow = false"
         />
       </van-popup>
-      <van-field readonly name="uploader" label="客户照片">
-        <template #input>
-          <van-image v-for="(item,index) in uploader" :key="index" width="80" height="80" :src="item.url" />
-        </template>
-      </van-field>
-      <van-field
-        v-model="businessLicenseNo"
-        readonly
-        name="营业执照号："
-        label="营业执照号："
-        placeholder="营业执照号"
-      />
-      <van-field
-        v-model="legalPersonName"
-        readonly
-        name="法人姓名："
-        label="法人姓名："
-        placeholder="法人姓名"
-      />
-      <van-field
-        v-model="legalPersonTelephone"
-        readonly
-        name="法人联系方式："
-        label="法人联系方式："
-        placeholder="法人联系方式"
-      >
-      </van-field>
-      <van-field
-        readonly
-        v-model="otherContactsName"
-        name="其他联系人姓名："
-        label="其他联系人姓名："
-        placeholder="其他联系人姓名"
-      />
-      <van-field
-        readonly
-        v-model="otherContactsTelephone"
-        name="其他联系方式："
-        label="其他联系方式："
-        placeholder="其他联系方式"
-      >
-      </van-field>
+
       <van-field
         @click="getLongitudeLatitude"
         v-model="publicCustomerLocation"
@@ -158,7 +141,7 @@
 </template>
 <script>
 import { Toast, Dialog } from "vant";
-import { Image as VanImage } from 'vant';
+import { Image as VanImage } from "vant";
 import moment from "moment";
 export default {
   data() {

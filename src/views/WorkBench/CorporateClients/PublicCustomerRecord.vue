@@ -690,8 +690,8 @@ export default {
     },
     selectDelegation(item) {
       this.customersDemandList1.push({
-        demandStatus: item.index,
-        demandType: item.radio,
+        demandType: item.index,
+        demandStatus: item.radio,
       });
     },
     async saveCustomersDemand() {
@@ -755,6 +755,7 @@ export default {
       this.$httpPost({
         url: "/api/pulicCustomersInfo/add",
         data: {
+          type:1,
           name: this.publicCustomerName,
           address: this.publicCustomerAddress,
           gridding: this.publicCustomerGrid.index,

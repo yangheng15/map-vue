@@ -706,8 +706,8 @@ export default {
     },
     selectDelegation(item) {
       this.customersDemandList1.push({
-        demandStatus: item.index,
-        demandType: item.radio,
+        demandType: item.index,
+        demandStatus: item.radio,
       });
     },
     async saveCustomersDemand() {
@@ -756,8 +756,9 @@ export default {
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
       // console.log(this.publicCustomerAddress);
       this.$httpPost({
-        url: "/api/privateCustomers/add",
+        url: "/api/pulicCustomersInfo/add",
         data: {
+          type:2,
           name: this.publicCustomerName,
           address: this.publicCustomerAddress,
           gridding: this.publicCustomerGrid.index,
@@ -766,9 +767,9 @@ export default {
           legalName: this.legalPersonName,
           legalPhone: this.legalPersonTelephone,
           customerImg: this.pictureId.join(","),
-          publicCustomerTelephone: this.publicCustomerTelephone,
-          publicCustomerId: this.publicCustomerId,
-          publicCustomerWorkUnit: this.publicCustomerWorkUnit,
+          telphone: this.publicCustomerTelephone,
+          identifyNo: this.publicCustomerId,
+          workUnit: this.publicCustomerWorkUnit,
         },
       })
         .then((res) => {

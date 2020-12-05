@@ -10,11 +10,21 @@
           >
           {{ custName }}
           <router-link
+            v-if="this.customersType == 1"
             tag="a"
             class="img1"
             :to="{
-              name: 'CustomerViewPresentation',
-              query: { title: '客户视图', id: this.custId },
+              name: 'EditPublicCustomerRecord',
+              query: { title: '对公客户详情', id: this.custId },
+            }"
+          ></router-link>
+          <router-link
+            v-if="this.customersType == 2"
+            tag="a"
+            class="img1"
+            :to="{
+              name: 'EditIndividualCustomersRecord',
+              query: { title: '个人客户详情', id: this.custId },
             }"
           ></router-link>
         </li>
@@ -32,7 +42,7 @@
         <li>
           <span style="font-weight: 600">客户地址：</span>{{ address }}
           <router-link
-          v-if="location"
+            v-if="location"
             tag="a"
             class="img3"
             :to="{
@@ -221,6 +231,7 @@ export default {
       telphone: "",
       address: "",
       location: "",
+      MarketingDetails: "",
     };
   },
   components: {
@@ -236,11 +247,15 @@ export default {
     this.productCode = this.$route.query.productCode;
     this.productName = this.$route.query.productName;
     this.address = this.$route.query.address;
-    this.telphone = this.$route.query.telphone?this.$route.query.telphone:'';
+    this.telphone = this.$route.query.telphone
+      ? this.$route.query.telphone
+      : "";
     this.location = this.$route.query.location;
     this.id = this.$route.query.id;
     this.custId = this.$route.query.custId;
     this.taskId = this.$route.query.taskId;
+    this.customersType = this.$route.query.customersType;
+    console.log(this.customersType);
     this.getMarkedRecord();
   },
   updated() {},
@@ -368,7 +383,7 @@ export default {
   position: relative;
 }
 .mission_details li {
-  padding-right:40px;
+  padding-right: 40px;
   margin-bottom: 0.7rem;
   padding-left: 0.5rem;
 }

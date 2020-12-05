@@ -55,11 +55,11 @@
         </ul>
       </van-list>
       <van-list
-        v-model="loading"
-        :finished="finished"
+        v-model="loadEnd"
+        :finished="finishEnd"
         :offset="offset"
         finished-text="已加载完毕"
-        @load="onLoad"
+        @load="onLoadList"
         v-show="tabId == 1"
       >
         <ul
@@ -236,6 +236,11 @@ export default {
         lastTime: 0,
       },
       positionArr: "",
+       currentPage: 1,
+      pageSize1: 10,
+      dataTotal: "",
+      finishEnd: false, // 滚动加载完成
+      loadEnd: false, // 滚动加载中
     };
   },
   // beforeRouteEnter(to, from, next) {
@@ -273,6 +278,9 @@ export default {
       this.finished = false;
       this.pageNo = 1;
       this.onLoad();
+      if (ev == 1) {
+        this.onLoadList()
+      };
     },
     selectHandle() {
       this.pageNo = 1;
@@ -299,37 +307,44 @@ export default {
       let params = {
         page: this.pageNo,
         limit: this.pageSize,
-        type: this.tabId,
+        type: 2,
         name: this.search_txt,
         industryType: this.industry_type.index,
         demandType: this.potentialNeedType.toString(),
         distanceRange: this.distanceRange,
         location: this.positionArr,
       };
-      this.$httpGet({
-        url: "/api/publicCustomerPool/query",
-        params: params,
-      }).then((res) => {
-        if (res.data) {
-          if (this.tabId == 0) {
+      if (this.tabId == 0) {
+        this.$httpGet({
+          url: "/api/customer/queryCustmoerPool",
+          params: params,
+        }).then((res) => {
+          if (res.data) {
             this.publicCustomerPool = res.data;
-          } else if (this.tabId == 1) {
+          }
+          this.isPopupVisibleScreen = false;
+        });
+      } else if (this.tabId == 1) {
+        this.$httpGet({
+          url: "/api/customer/queryMyCustmoer",
+          params: params,
+        }).then((res) => {
+          if (res.data) {
             this.publicCustomerPool1 = res.data;
           }
-        }
-        this.isPopupVisibleScreen = false;
-      });
+          this.isPopupVisibleScreen = false;
+        });
+      }
     },
     getFollow() {
       return new Promise((resolve, reject) => {
         let params = {
           page: this.pageNo,
           limit: this.pageSize,
-          type: this.tabId,
-          name: this.search_txt,
+          type: 2,
         };
         this.$httpGet({
-          url: "/api/publicCustomerPool/query",
+          url: "/api/customer/queryCustmoerPool",
           params: params,
         })
           .then((res) => {
@@ -341,14 +356,15 @@ export default {
                   publicCustomerPool: res.data,
                 };
                 resolve(result);
-              } else if (this.tabId == 1) {
-                let result = {
-                  total: res.count,
-                  pageIndex: 1,
-                  publicCustomerPool1: res.data,
-                };
-                resolve(result);
-              }
+              } 
+              // else if (this.tabId == 1) {
+              //   let result = {
+              //     total: res.count,
+              //     pageIndex: 1,
+              //     publicCustomerPool1: res.data,
+              //   };
+              //   resolve(result);
+              // }
             }
           })
           .catch((err) => {
@@ -385,6 +401,39 @@ export default {
         this.loading = false;
       });
       this.isPopupVisibleScreen = false;
+    },
+    onLoadList() {
+      this.getCustomerList();
+    },
+    getCustomerList() {
+      this.$httpGet({
+        url: "/api/customer/queryMyCustmoer",
+        params: {
+          // customerCode: this.code,
+          page: this.currentPage, //页数
+          limit: this.pageSize1, //每页个数
+          type: 2,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.dataTotal = res.count;
+        //进行判断
+        if (this.dataTotal <= this.pageSize1) {
+          this.publicCustomerPool1 = res.data;
+          console.log(this.publicCustomerPool1);
+        } else {
+          this.currentPage++;
+          let arr = res.data;
+          console.log(arr);
+          this.publicCustomerPool1 = this.publicCustomerPool1.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd = false;
+        // 数据全部加载完成
+        if (this.publicCustomerPool1.length >= this.dataTotal) {
+          this.finishEnd = true; //结束，显示我也是有底线的
+        }
+      });
     },
     getdic() {
       // 潜在客户需求
