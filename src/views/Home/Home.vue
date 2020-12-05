@@ -158,7 +158,14 @@
           <li @click="tab(0)" :class="tabId == 0 ? 'cur' : ''">最新任务</li>
           <li @click="tab(1)" :class="tabId == 1 ? 'cur' : ''">最近联系客户</li>
         </ul>
-        <div v-show="tabId === 0">
+        <van-list
+          v-model="loadEnd1"
+          :finished="finishEnd1"
+          :offset="offset"
+          finished-text="已加载完毕"
+          @load="onLoading"
+          v-show="tabId == 0"
+        >
           <router-link
             v-for="(item, index) in latest_tasks"
             :key="index"
@@ -183,8 +190,15 @@
               <li>{{ item.endTime | transform }}前</li>
             </ul>
           </router-link>
-        </div>
-        <div v-show="tabId === 1">
+        </van-list>
+        <van-list
+          v-model="loadEnd"
+          :finished="finishEnd"
+          :offset="offset"
+          finished-text="已加载完毕"
+          @load="onLoadList"
+          v-show="tabId == 1"
+        >
           <div
             v-for="(item, index) in recent_contact"
             :key="index"
@@ -192,25 +206,25 @@
           >
             <ul>
               <router-link
-                v-if="item.custBasicType == 1"
+                v-if="item.customersType == 1"
                 tag="li"
                 :to="{
-                  name: 'CustomerViewPresentation',
-                  query: { title: '客户视图', id: item.custId },
+                  name: 'EditPublicCustomerRecord',
+                  query: { title: '对公客户详情', id: item.customerCode },
                 }"
                 >{{ item.custName }}</router-link
               >
               <router-link
-                v-if="item.potentialType == 2"
+                v-if="item.customersType == 2"
                 tag="li"
                 :to="{
-                  name: 'EditPotentialCustomers',
-                  query: { title: '潜在客户详情', id: item.potentialId },
+                  name: 'EditIndividualCustomersRecord',
+                  query: { title: '个人客户详情', id: item.customerCode },
                 }"
-                >{{ item.potentialName }}</router-link
+                >{{ item.custName }}</router-link
               >
               <a
-                v-if="item.custBasicType == 1"
+                v-if="item.telphone"
                 style="color: #000"
                 :href="'tel:' + item.telphone"
               >
@@ -223,7 +237,7 @@
                   />
                 </li>
               </a>
-              <a
+              <!-- <a
                 v-if="item.potentialType == 2"
                 style="color: #000"
                 :href="'tel:' + item.potentialTelphone"
@@ -236,17 +250,17 @@
                     alt
                   />
                 </li>
-              </a>
+              </a> -->
             </ul>
             <ul>
-              <li>{{ item.productType }}</li>
+              <li v-if="item.productType">{{ item.productType }}</li>
               <li v-if="item.contactDays == 0">今天联系过</li>
               <li v-if="item.contactDays !== 0">
                 上次联系{{ item.contactDays }}天前
               </li>
             </ul>
           </div>
-        </div>
+        </van-list>
       </div>
     </div>
     <my-tabbar></my-tabbar>
@@ -283,6 +297,17 @@ export default {
       positionArr: "",
       IntervalTime: "",
       timer: "",
+      loadEnd: false, // 滚动加载中
+      finishEnd: false, // 滚动加载完成
+      currentPage: 1,
+      pageSize1: 10,
+      dataTotal: "",
+      loadEnd1: false, // 滚动加载中
+      finishEnd1: false, // 滚动加载完成
+      currentPage1: 1,
+      pageSize2: 10,
+      dataTotal1: "",
+      offset: 5, //滚动条与底部距离小于 offset 时触发load事件，默认300
     };
   },
   components: {
@@ -291,13 +316,16 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (from.path === "/EditPotentialCustomers") {
+      if (
+        from.path === "/EditIndividualCustomersRecord" ||
+        from.path === "/EditPublicCustomerRecord"
+      ) {
         vm.tab(1);
       }
     });
   },
   created() {
-    this.queryNewTask();
+    this.onLoading();
     this.getNum();
   },
   mounted() {},
@@ -312,19 +340,16 @@ export default {
         url: "/api/homePage/countNum",
       }).then((res) => {
         this.countNum = res.data;
-        // this.IntervalTime = res.data.IntervalTime * 1000;
-        // console.log(this.IntervalTime);
-        // 初始化
-        // if (this.IntervalTime) {
-        //   this.initWebSocket();
-        // }
       });
     },
     tab(ev) {
       this.tabId = ev;
       if (ev == 1) {
-        this.queryContact();
+        this.onLoadList();
       }
+    },
+    onLoading() {
+      this.queryNewTask();
     },
     queryNewTask() {
       let _username = localStorage.getItem("username");
@@ -332,22 +357,59 @@ export default {
         url: "/api/semTasks/appNewTask",
         params: {
           userName: _username,
-          limit: 10,
-          page: 1,
+          page: this.currentPage1, //页数
+          limit: this.pageSize2, //每页个数
         },
       }).then((res) => {
-        this.latest_tasks = res.data;
+        console.log(res);
+        this.dataTotal1 = res.count;
+        //进行判断
+        if (this.dataTotal1 <= this.pageSize2) {
+          this.latest_tasks = res.data;
+          console.log(this.latest_tasks);
+        } else {
+          this.currentPage1++;
+          let arr = res.data;
+          console.log(arr);
+          this.latest_tasks = this.latest_tasks.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd1 = false;
+        // 数据全部加载完成
+        if (this.latest_tasks.length >= this.dataTotal1) {
+          this.finishEnd1 = true; //结束，显示我也是有底线的
+        }
       });
     },
-    queryContact() {
+    onLoadList() {
+      this.getMyClients();
+    },
+    getMyClients() {
       this.$httpGet({
         url: "/api/contactByApp/query",
         params: {
-          limit: 10,
-          page: 1,
+          page: this.currentPage, //页数
+          limit: this.pageSize1, //每页个数
         },
       }).then((res) => {
-        this.recent_contact = res.data;
+        console.log(res);
+        this.dataTotal = res.count;
+        //进行判断
+        if (this.dataTotal <= this.pageSize1) {
+          this.recent_contact = res.data;
+          console.log(this.recent_contact);
+        } else {
+          this.currentPage++;
+          let arr = res.data;
+          console.log(arr);
+          this.recent_contact = this.recent_contact.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd = false;
+        // 数据全部加载完成
+        if (this.recent_contact.length >= this.dataTotal) {
+          this.finishEnd = true; //结束，显示我也是有底线的
+        }
       });
     },
     // initWebSocket() {

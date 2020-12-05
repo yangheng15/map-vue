@@ -5,51 +5,51 @@
       <van-search
         v-model="search_txt"
         placeholder="客户名称"
-        @search="queryContact"
+        @search="onSearch"
         show-action
       >
         <template #action>
-          <div @click="queryContact">搜索</div>
+          <div @click="onSearch">搜索</div>
         </template></van-search
       >
       <van-list
-        v-model="loading"
-        :finished="finished"
+        v-model="loadEnd"
+        :finished="finishEnd"
         :offset="offset"
         finished-text="已加载完毕"
-        @load="onLoad"
+        @load="onLoadList"
         class="customer_list"
       >
         <ul>
           <li v-for="(thisItem, index) in data_customer_list1" :key="index">
             <router-link
-              v-if="thisItem.custBasicType == 1"
+              v-if="thisItem.customersType == 1"
               tag="p"
               :to="{
-                name: 'CustomerViewPresentation',
-                query: { title: '客户视图', id: thisItem.custId },
+                name: 'EditPublicCustomerRecord',
+                query: { title: '对公客户详情', id: thisItem.customerCode },
               }"
               >{{ thisItem.custName }}</router-link
             >
             <router-link
-              v-if="thisItem.potentialType == 2"
+              v-if="thisItem.customersType == 2"
               tag="p"
               :to="{
-                name: 'EditPotentialCustomers',
-                query: { title: '潜在客户详情', id: thisItem.potentialId },
+                name: 'EditIndividualCustomersRecord',
+                query: { title: '个人客户详情', id: thisItem.customerCode },
               }"
-              >{{ thisItem.potentialName }}</router-link
+              >{{ thisItem.custName }}</router-link
             >
-            <p v-if="thisItem.custBasicType == 1">
+            <p v-if="thisItem.telphone">
               <a style="color: #000" :href="'tel:' + thisItem.telphone"
                 >电话：{{ thisItem.telphone }}</a
               >
             </p>
-            <p v-if="thisItem.potentialType == 2">
+            <!-- <p v-if="thisItem.potentialType == 2">
               <a style="color: #000" :href="'tel:' + thisItem.telphone"
                 >电话：{{ thisItem.potentialTelphone }}</a
               >
-            </p>
+            </p> -->
             <p v-if="thisItem.contactDays == 0">今天联系过</p>
             <p v-if="thisItem.contactDays !== 0">
               上次联系{{ thisItem.contactDays }}天前
@@ -79,11 +79,11 @@ export default {
       starNum: "",
       data_customer_list1: [],
       offset: 5, //滚动条与底部距离小于 offset 时触发load事件，默认300
-      pageNo: 1, // 当前页码
-      pageSize: 10, // 分页大小
-      total: 0, // 查询总条数
-      loading: false, // 滚动加载中
-      finished: false, // 滚动加载完成
+      currentPage: 1,
+      pageSize1: 10,
+      dataTotal: "",
+      loadEnd: false, // 滚动加载中
+      finishEnd: false, // 滚动加载完成
     };
   },
   created() {
@@ -93,46 +93,48 @@ export default {
     tab(ev) {
       this.tabId = ev;
     },
-    queryContact() {
-      return new Promise((resolve, reject) => {
-        let params = {
-          page: this.pageNo,
-          limit: this.pageSize,
+    onSearch() {
+      this.$httpGet({
+        url: "/api/contactByApp/query",
+        params: {
+          page: 1, //页数
+          limit: 10, //每页个数
           customerName: this.search_txt,
-        };
-        this.$httpGet({
-          url: "/api/contactByApp/query",
-          params: params,
-        })
-          .then((res) => {
-            if (res.data.length > 0) {
-              let result = {
-                total: res.count,
-                pageIndex: 1,
-                data_customer_list1: res.data,
-              };
-              resolve(result);
-            }
-          })
-          .catch((err) => {
-            reject(err);
-          });
+        },
+      }).then((res) => {
+        this.data_customer_list1 = res.data;
       });
     },
-    onLoad() {
-      // debugger
-      this.loading = true;
-      this.queryContact().then((res) => {
-        this.data_customer_list1 = this.data_customer_list1.concat(
-          res.data_customer_list1
-        );
-        if (this.data_customer_list1.length >= res.total) {
-          this.finished = true;
+    onLoadList() {
+      this.getMyClients();
+    },
+    getMyClients() {
+      this.$httpGet({
+        url: "/api/contactByApp/query",
+        params: {
+          page: this.currentPage, //页数
+          limit: this.pageSize1, //每页个数
+          customerName: this.search_txt,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.dataTotal = res.count;
+        //进行判断
+        if (this.dataTotal <= this.pageSize1) {
+          this.data_customer_list1 = res.data;
+          console.log(this.data_customer_list1);
         } else {
-          this.finished = false;
-          this.pageNo = this.pageNo + 1;
+          this.currentPage++;
+          let arr = res.data;
+          console.log(arr);
+          this.data_customer_list1 = this.data_customer_list1.concat(arr);
         }
-        this.loading = false;
+        // 加载状态结束
+        this.loadEnd = false;
+        // 数据全部加载完成
+        if (this.data_customer_list1.length >= this.dataTotal) {
+          this.finishEnd = true; //结束，显示我也是有底线的
+        }
       });
     },
   },

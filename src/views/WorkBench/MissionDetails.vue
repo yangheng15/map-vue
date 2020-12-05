@@ -143,7 +143,7 @@
                     productCode: productCode,
                     custId: thisItem.id,
                     taskId: id,
-                    id: taskQuery.id,
+                    id: thisItem.customerCode,
                     location: thisItem.location,
                     customersType:thisItem.customersType
                   },
@@ -227,7 +227,7 @@
                     productCode: productCode,
                     custId: thisItem.id,
                     taskId: id,
-                    id: taskQuery.id,
+                    id: thisItem.customerCode,
                     location: thisItem.location,
                     customersType:thisItem.customersType
                   },

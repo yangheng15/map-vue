@@ -593,7 +593,7 @@ export default {
           id: this.id,
         },
       });
-      console.log(res.data.code);
+      console.log(res.data);
       this.customerCode = res.data.code;
       localStorage.setItem("customerCode", this.customerCode);
       this.publicCustomerName = res.data.name;

@@ -15,7 +15,7 @@
             class="img1"
             :to="{
               name: 'EditPublicCustomerRecord',
-              query: { title: '对公客户详情', id: this.custId },
+              query: { title: '对公客户详情', id: this.id },
             }"
           ></router-link>
           <router-link
@@ -24,7 +24,7 @@
             class="img1"
             :to="{
               name: 'EditIndividualCustomersRecord',
-              query: { title: '个人客户详情', id: this.custId },
+              query: { title: '个人客户详情', id: this.id },
             }"
           ></router-link>
         </li>

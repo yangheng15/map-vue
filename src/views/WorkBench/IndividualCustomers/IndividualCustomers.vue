@@ -483,6 +483,10 @@ export default {
             },
           })
             .then((res) => {
+              Toast({
+                message: "认领成功",
+                position: "middle",
+              });
               this.publicCustomerPool = [];
               this.onLoad();
             })

@@ -195,6 +195,10 @@ export default {
       productCode: "",
       productName: "",
       custName: "",
+
+      publicCustomerTelephone:"",
+      publicCustomerId:"",
+      publicCustomerWorkUnit:""
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -334,19 +338,23 @@ export default {
       this.publicCustomerLocation = res.data.location;
       this.sourceClues = res.data.source;
       this.sourceCluesName = res.data.shareName;
-      this.mapCenter = {
-        lng: res.data.location.split(",")[0],
-        lat: res.data.location.split(",")[1],
-      };
-      this.mapCenter1 = { ...this.mapCenter };
+      res.data.location
+        ? (this.mapCenter = {
+            lng: res.data.location.split(",")[0],
+            lat: res.data.location.split(",")[1],
+          })
+        : (this.mapCenter = { lng: "114.654102", lat: "33.623741" });
+      res.data.location
+        ? (this.mapCenter1 = { ...this.mapCenter })
+        : (this.mapCenter1 = { lng: "114.654102", lat: "33.623741" });
       this.legalPersonName = res.data.legalName;
       this.legalPersonTelephone = res.data.legalPhone;
       this.pictureId = res.data.customerImg
         ? res.data.customerImg.split(",")
         : [];
-      this.businessLicenseNo = res.data.businessLicenseNo;
-      this.otherContactsName = res.data.otherContactsName;
-      this.otherContactsTelephone = res.data.otherContactsPhone;
+      this.publicCustomerTelephone = res.data.telphone;
+      this.publicCustomerId = res.data.identifyNo;
+      this.publicCustomerWorkUnit = res.data.workUnit;
       if (res.data.customersDemandList.length > 0) {
         res.data.customersDemandList.forEach((item) => {
           for (

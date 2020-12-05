@@ -1,5 +1,5 @@
 <template>
-  <div class="User" style="background-color: rgb(245, 245, 245)">
+  <div class="User" style="background-color: rgb(245, 245, 245);height:100vh">
     <div>
       <div class="head_portrait">
         <img
