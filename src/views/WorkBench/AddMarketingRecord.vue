@@ -245,6 +245,7 @@ export default {
     this.productName = this.$route.query.productName;
     this.custName = this.$route.query.custName;
     this.id = this.$route.query.id;
+    this.taskId = this.$route.query.taskId;
     this.dic_nation();
   },
   updated() {},
@@ -295,7 +296,7 @@ export default {
           customerCode: this.customerCode,
           griddingCode: this.gridCode,
           products: this.productCode,
-          taskId: this.id,
+          taskId: this.taskId,
           isSucc: this.result_txt.index,
           intention: this.Customer_intention_txt.index,
           semType: this.Marketing_methods_txt.index,
