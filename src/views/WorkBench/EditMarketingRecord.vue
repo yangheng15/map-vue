@@ -8,7 +8,9 @@
           <!-- <img src="../../assets/WorkBench/location.svg" alt /> -->
         </li>
         <li v-if="productName">营销产品：{{ productName }}</li>
-        <li v-if="productName">执行时间：{{ editRecords.semTime | transform }}</li>
+        <li v-if="productName">
+          执行时间：{{ editRecords.semTime | transform }}
+        </li>
       </ul>
       <div>
         <ul class="tabList">
@@ -89,6 +91,16 @@
               @cancel="showMarketing_methods = false"
             />
           </van-popup>
+          <!-- <van-field
+            v-model="editRecords.marketAmount"
+            required
+            rows="2"
+            autosize
+            label="金额（万元）"
+            type="number"
+            placeholder="请填写金额"
+            show-word-limit
+          /> -->
           <van-field
             v-model="editRecords.marketAmount"
             required
@@ -130,6 +142,7 @@
             show-word-limit
           />
           <van-field
+            v-if="timeOut"
             readonly
             clickable
             name="datetimePicker"
@@ -263,9 +276,10 @@ export default {
       isconfirm: false,
       capture: ["camera"],
       actions: [{ name: "相机" }, { name: "相册" }],
-      currentDate: '',
+      currentDate: "",
       showPicker: false,
-      currentDate1:''
+      currentDate1: "",
+      timeOut: false,
     };
   },
   components: {
@@ -285,8 +299,8 @@ export default {
       // this.currentDate = `${time.getFullYear()}-${
       //   time.getMonth() + 1
       // }-${time.getDate()}`;
-      this.currentDate = time
-      this.currentDate1 = time
+      this.currentDate = time;
+      this.currentDate1 = time;
       console.log(time);
       this.showPicker = false;
     },
@@ -362,11 +376,22 @@ export default {
       this.customerCode = res.data.customerCode;
       this.griddingCode = res.data.griddingCode;
       this.products = res.data.products;
-      this.currentDate1 = res.data.dueTime
+      this.currentDate1 = res.data.dueTime;
+      if (this.editRecords.isSucc == 1) {
+        this.timeOut = true;
+      } else {
+        this.timeOut = false;
+      }
     },
     onResult(value) {
+      console.log(value);
       this.editRecords.isSucc = value.index;
       this.showResult = false;
+      if (value.index == 1) {
+        this.timeOut = true;
+      } else {
+        this.timeOut = false;
+      }
     },
     onCustomer_intention(value) {
       // this.prospect_detailsEdit.intention = value.index;
@@ -390,12 +415,14 @@ export default {
           id: this.id,
           isSucc: this.editRecords.isSucc,
           semType: this.editRecords.semType,
-          intention:this.columnsCustomer_intention.find(it => it.text ===  this.editRecords.intention).index,
+          intention: this.columnsCustomer_intention.find(
+            (it) => it.text === this.editRecords.intention
+          ).index,
           actualDemand: this.editRecords.actualDemand,
           marketAmount: this.editRecords.marketAmount,
           remark: this.editRecords.remark,
           feedback: this.editRecords.feedback,
-          dueTime:this.currentDate1
+          dueTime: this.currentDate1,
         },
       }).then((res) => {
         Toast({
@@ -405,7 +432,7 @@ export default {
       });
     },
     async modifyCompetitor() {
-      var reg=/^\d*\.{0,1}\d*$/
+      var reg = /^\d*\.{0,1}\d*$/;
       if (!reg.test(this.editRecords.interestRate)) {
         Dialog.alert({
           title: "提示",

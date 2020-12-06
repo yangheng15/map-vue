@@ -115,6 +115,7 @@
             show-word-limit
           />
           <van-field
+            v-if="timeOut"
             readonly
             clickable
             name="datetimePicker"
@@ -186,7 +187,10 @@ export default {
   data() {
     return {
       tabId: 0,
-      result_txt: "",
+      result_txt: {
+        index:2,
+        text:'未成功'
+      },
       columnsResult: [
         { index: 0, text: "失败" },
         { index: 1, text: "成功" },
@@ -222,6 +226,7 @@ export default {
       currentDate: "",
       showPicker: false,
       currentDate1: "",
+      timeOut: false,
     };
   },
   components: {
@@ -315,7 +320,7 @@ export default {
       });
     },
     async addCompetitor() {
-      var reg=/^\d*\.{0,1}\d*$/
+      var reg = /^\d*\.{0,1}\d*$/;
       if (!reg.test(this.product_rate)) {
         Dialog.alert({
           title: "提示",
@@ -340,8 +345,14 @@ export default {
       });
     },
     onResult(value) {
+      console.log(value);
       this.result_txt = value;
       this.showResult = false;
+      if (value.index == 1) {
+        this.timeOut = true;
+      }else{
+        this.timeOut = false
+      }
     },
     onCustomer_intention(value) {
       this.Customer_intention_txt = value;

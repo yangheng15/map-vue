@@ -195,12 +195,12 @@ export default {
   },
   watch: {
     isPopupVisibleScreen(newVal) {
-      if(!newVal) {
-        this.distanceRange = '';
-        this.industry_type = '';
-        this.potentialNeedType = []
+      if (!newVal) {
+        this.distanceRange = "";
+        this.industry_type = "";
+        this.potentialNeedType = [];
       }
-    }
+    },
   },
   data() {
     return {
@@ -245,7 +245,7 @@ export default {
         lastTime: 0,
       },
       positionArr: "",
-       currentPage: 1,
+      currentPage: 1,
       pageSize1: 10,
       dataTotal: "",
       finishEnd: false, // 滚动加载完成
@@ -289,8 +289,8 @@ export default {
       this.onLoad();
       if (ev == 1) {
         this.currentPage = 1;
-        this.onLoadList()
-      };
+        this.onLoadList();
+      }
     },
     selectHandle() {
       this.pageNo = 1;
@@ -366,7 +366,7 @@ export default {
                   publicCustomerPool: res.data,
                 };
                 resolve(result);
-              } 
+              }
               // else if (this.tabId == 1) {
               //   let result = {
               //     total: res.count,
@@ -774,6 +774,9 @@ export default {
   border-radius: 0.4rem;
   height: 2rem;
 }
+.van-cell >>> .van-field__label {
+  width: 8rem;
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   * {
     font-size: 13px;
@@ -798,6 +801,9 @@ export default {
   }
   .save {
     padding-bottom: 2rem;
+  }
+  .van-cell >>> .van-field__label {
+    width: 7rem;
   }
 }
 </style>

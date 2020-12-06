@@ -195,12 +195,12 @@ export default {
   },
   watch: {
     isPopupVisibleScreen(newVal) {
-      if(!newVal) {
-        this.distanceRange = '';
-        this.industry_type = '';
-        this.potentialNeedType = []
+      if (!newVal) {
+        this.distanceRange = "";
+        this.industry_type = "";
+        this.potentialNeedType = [];
       }
-    }
+    },
   },
   data() {
     return {
@@ -759,6 +759,9 @@ export default {
   border-radius: 0.4rem;
   height: 2rem;
 }
+.van-cell >>> .van-field__label {
+  width: 8rem;
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   * {
     font-size: 13px;
@@ -783,6 +786,9 @@ export default {
   }
   .save {
     padding-bottom: 2rem;
+  }
+  .van-cell >>> .van-field__label {
+    width: 7rem;
   }
 }
 </style>
