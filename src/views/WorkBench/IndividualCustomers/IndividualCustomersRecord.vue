@@ -30,17 +30,17 @@
           placeholder="请输入手机号"
           required
         >
-        <!-- <template #button>
+          <!-- <template #button>
             <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
           </template> -->
-          </van-field>
+        </van-field>
         <van-field
           v-model="publicCustomerId"
           name="身份证："
           label="身份证："
           placeholder="请输入身份证"
         />
-         <van-field
+        <van-field
           readonly
           clickable
           name="area"
@@ -321,7 +321,7 @@
             </div>
           </li>
         </ul>
-                <div
+        <div
           style="
             margin-left: 85%;
             position: fixed !important;
@@ -368,9 +368,9 @@ export default {
   data() {
     return {
       publicCustomerName: "",
-      publicCustomerTelephone:"",
-      publicCustomerId:"",
-      publicCustomerWorkUnit:"",
+      publicCustomerTelephone: "",
+      publicCustomerId: "",
+      publicCustomerWorkUnit: "",
       publicCustomerAddress: "",
       publicCustomerGrid: "",
       industry_list: [],
@@ -545,7 +545,11 @@ export default {
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
-            transformDara.push({ index: it.code, text: it.codeText });
+            transformDara.push({
+              index: it.code,
+              text: it.codeText,
+              radio: "1",
+            });
           }
         });
         console.log(transformDara);
@@ -705,12 +709,18 @@ export default {
       });
     },
     selectDelegation(item) {
-      this.customersDemandList1.push({
-        demandType: item.index,
-        demandStatus: item.radio,
-      });
+      // this.customersDemandList1.push({
+      //   demandType: item.index,
+      //   demandStatus: item.radio,
+      // });
     },
     async saveCustomersDemand() {
+      this.potential_need_type.forEach((item) => {
+        this.customersDemandList1.push({
+          demandStatus: item.radio,
+          demandType: item.index,
+        });
+      });
       if (this.otherTxt) {
         this.customersDemandList1.push({
           description: this.otherTxt,
@@ -725,7 +735,7 @@ export default {
           customersDemandList: this.customersDemandList1,
         },
       })
-      .then((res) => {
+        .then((res) => {
           Toast({
             message: "保存成功",
             position: "middle",
@@ -734,7 +744,7 @@ export default {
         })
         .catch((err) => {
           // console.log(err);
-        })
+        });
     },
     async modifyResult() {
       if (this.publicCustomerName == "") {
@@ -751,14 +761,14 @@ export default {
         });
         return;
       }
-      
+
       //逆向解析
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
       // console.log(this.publicCustomerAddress);
       this.$httpPost({
         url: "/api/pulicCustomersInfo/add",
         data: {
-          type:2,
+          type: 2,
           name: this.publicCustomerName,
           address: this.publicCustomerAddress,
           gridding: this.publicCustomerGrid.index,
@@ -858,7 +868,7 @@ export default {
   padding: 0rem 1rem;
 }
 .van-radio--horizontal >>> .van-radio__icon {
-  height: 24px!important;
+  height: 24px !important;
 }
 input {
   border-radius: 0.3rem;
