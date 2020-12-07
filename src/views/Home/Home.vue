@@ -182,7 +182,10 @@
             }"
           >
             <ul>
-              <li style="font-weight: 600">{{ item.name }}</li>
+              <li style="font-weight: 600;width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;">{{ item.name }}</li>
               
             </ul>
             <ul>

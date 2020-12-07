@@ -92,7 +92,7 @@
             />
           </van-popup>
           <van-field
-            v-if="!productName"
+            v-if="!taskId"
             readonly
             clickable
             v-model="productTypeArr"
@@ -130,7 +130,8 @@
               >
             </div>
           </van-popup>
-          <!-- <van-field
+          <van-field
+          v-if="taskId"
             v-model="editRecords.marketAmount"
             required
             rows="2"
@@ -139,7 +140,7 @@
             type="number"
             placeholder="请填写金额"
             show-word-limit
-          /> -->
+          />
           <van-field
             v-model="editRecords.actualDemand"
             rows="2"
@@ -313,7 +314,8 @@ export default {
       showPopup: false,
       resultArr: [],
       productTypeArr: "",
-      taskUpdateFlag:true
+      taskUpdateFlag:true,
+      taskId:""
     };
   },
   components: {
@@ -323,6 +325,7 @@ export default {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
     this.productName = this.$route.query.productName;
+    this.taskId = this.$route.query.taskId;
     this.custName = this.$route.query.custName;
     this.taskUpdateFlag = this.$route.query.taskUpdateFlag;
     await this.editRecord();

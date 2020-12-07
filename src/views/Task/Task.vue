@@ -7,7 +7,14 @@
         <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">已结束</li>
         <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">待评价</li>
       </ul>
-      <div v-show="tabId === 0">
+      <van-list
+        v-model="loadEnd"
+        :finished="finishEnd"
+        :offset="offset"
+        finished-text="已加载完毕"
+        @load="onLoadList"
+        v-show="tabId === 0"
+      >
         <router-link
           v-for="(thisItem, index) in new_task"
           :key="index"
@@ -50,9 +57,15 @@
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
         </router-link>
-        <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
-      </div>
-      <div v-show="tabId === 1">
+      </van-list>
+      <van-list
+        v-model="loadEnd1"
+        :finished="finishEnd1"
+        :offset="offset"
+        finished-text="已加载完毕"
+        @load="onLoadList1"
+        v-show="tabId === 1"
+      >
         <router-link
           v-for="(thisItem, index) in new_task1"
           :key="index"
@@ -69,17 +82,29 @@
           }"
         >
           <div class="new_task">
-            <p style="font-weight: 550">{{ thisItem.name }}</p>
+            <p
+              style="
+                font-weight: 550;
+                width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              "
+            >
+              {{ thisItem.name }}
+            </p>
+          </div>
+          <div class="new_task">
             <p style="text-align: center !important">
               目标：{{ thisItem.targetNum | NumFormat }}
             </p>
-            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
-          </div>
-          <div class="new_task">
-            <p>{{ thisItem.productName }}</p>
             <p style="text-align: center !important">
               完成：{{ thisItem.taskAmount | NumFormat }}
             </p>
+          </div>
+          <div class="new_task">
+            <!-- <p>{{ thisItem.productName }}</p> -->
+            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
           <van-tag
@@ -107,9 +132,15 @@
             >已过期</van-tag
           >
         </router-link>
-        <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
-      </div>
-      <div v-show="tabId === 2">
+      </van-list>
+      <van-list
+        v-model="loadEnd2"
+        :finished="finishEnd2"
+        :offset="offset"
+        finished-text="已加载完毕"
+        @load="onLoadList2"
+        v-show="tabId === 2"
+      >
         <router-link
           v-for="(thisItem, index) in new_task2"
           :key="index"
@@ -126,22 +157,33 @@
           class="right_content"
         >
           <div class="new_task">
-            <p style="font-weight: 550">{{ thisItem.name }}</p>
+            <p
+              style="
+                font-weight: 550;
+                width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              "
+            >
+              {{ thisItem.name }}
+            </p>
+          </div>
+          <div class="new_task">
             <p style="text-align: center !important">
               目标：{{ thisItem.targetNum | NumFormat }}
             </p>
-            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
-          </div>
-          <div class="new_task">
-            <p>{{ thisItem.productName }}</p>
             <p style="text-align: center !important">
               完成：{{ thisItem.taskAmount | NumFormat }}
             </p>
+          </div>
+          <div class="new_task">
+            <!-- <p>{{ thisItem.productName }}</p> -->
+            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
         </router-link>
-        <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
-      </div>
+      </van-list>
     </div>
     <my-tabbar></my-tabbar>
   </div>
@@ -168,40 +210,28 @@ export default {
       new_task: [],
       new_task1: [],
       new_task2: [],
+      offset: 5, //滚动条与底部距离小于 offset 时触发load事件，默认300
+      loadEnd: false, // 滚动加载中
+      finishEnd: false, // 滚动加载完成
+      currentPage: 1,
+      pageSize: 10,
+      dataTotal: "",
+      loadEnd1: false, // 滚动加载中
+      finishEnd1: false, // 滚动加载完成
+      currentPage1: 1,
+      pageSize1: 10,
+      dataTotal1: "",
+      loadEnd2: false, // 滚动加载中
+      finishEnd2: false, // 滚动加载完成
+      currentPage2: 1,
+      pageSize2: 10,
+      dataTotal2: "",
     };
   },
-  created() {
-    this.queryNewTask();
-  },
+  created() {},
   methods: {
-    tab(ev) {
-      this.tabId = ev;
-      if (ev == 1) {
-        let _username = localStorage.getItem("username");
-        this.$httpGet({
-          url: "/api/semTasks/appEndTask",
-          params: {
-            userName: _username,
-            limit: 10,
-            page: 1,
-          },
-        }).then((res) => {
-          this.new_task1 = res.data;
-        });
-      }
-      if (ev == 2) {
-        let _username = localStorage.getItem("username");
-        this.$httpGet({
-          url: "/api/semTasks/appValuateTasks",
-          params: {
-            userName: _username,
-            limit: 10,
-            page: 1,
-          },
-        }).then((res) => {
-          this.new_task2 = res.data;
-        });
-      }
+    onLoadList() {
+      this.queryNewTask();
     },
     queryNewTask() {
       let _username = localStorage.getItem("username");
@@ -209,12 +239,104 @@ export default {
         url: "/api/semTasks/appNewTask",
         params: {
           userName: _username,
-          limit: 10,
-          page: 1,
+          page: this.currentPage, //页数
+          limit: this.pageSize, //每页个数
         },
       }).then((res) => {
-        this.new_task = res.data;
+        console.log(res);
+        this.dataTotal = res.count;
+        //进行判断
+        if (this.dataTotal <= this.pageSize) {
+          this.new_task = res.data;
+          console.log(this.new_task);
+        } else {
+          this.currentPage++;
+          let arr = res.data;
+          console.log(arr);
+          this.new_task = this.new_task.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd = false;
+        // 数据全部加载完成
+        if (this.new_task.length >= this.dataTotal) {
+          this.finishEnd = true; //结束，显示我也是有底线的
+        }
       });
+    },
+    onLoadList1() {
+      this.queryEndTask();
+    },
+    queryEndTask() {
+      let _username = localStorage.getItem("username");
+      this.$httpGet({
+        url: "/api/semTasks/appEndTask",
+        params: {
+          userName: _username,
+          page: this.currentPage1, //页数
+          limit: this.pageSize1, //每页个数
+        },
+      }).then((res) => {
+        console.log(res);
+        this.dataTotal1 = res.count;
+        //进行判断
+        if (this.dataTotal1 <= this.pageSize1) {
+          this.new_task1 = res.data;
+          console.log(this.new_task1);
+        } else {
+          this.currentPage1++;
+          let arr = res.data;
+          console.log(arr);
+          this.new_task1 = this.new_task1.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd1 = false;
+        // 数据全部加载完成
+        if (this.new_task1.length >= this.dataTotal1) {
+          this.finishEnd1 = true; //结束，显示我也是有底线的
+        }
+      });
+    },
+    onLoadList2() {
+      this.queryEvaluateTask();
+    },
+    queryEvaluateTask() {
+      let _username = localStorage.getItem("username");
+      this.$httpGet({
+        url: "/api/semTasks/appValuateTasks",
+        params: {
+          userName: _username,
+          page: this.currentPage2, //页数
+          limit: this.pageSize2, //每页个数
+        },
+      }).then((res) => {
+        console.log(res);
+        this.dataTotal2 = res.count;
+        //进行判断
+        if (this.dataTotal2 <= this.pageSize2) {
+          this.new_task2 = res.data;
+          console.log(this.new_task2);
+        } else {
+          this.currentPage2++;
+          let arr = res.data;
+          console.log(arr);
+          this.new_task2 = this.new_task2.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd2 = false;
+        // 数据全部加载完成
+        if (this.new_task2.length >= this.dataTotal2) {
+          this.finishEnd2 = true; //结束，显示我也是有底线的
+        }
+      });
+    },
+    tab(ev) {
+      this.tabId = ev;
+      if (ev == 1) {
+        this.onLoadList1();
+      }
+      if (ev == 2) {
+        this.onLoadList2();
+      }
     },
   },
 };

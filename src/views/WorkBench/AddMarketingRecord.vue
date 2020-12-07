@@ -75,7 +75,7 @@
             />
           </van-popup>
           <van-field 
-          v-if="!productName"
+          v-if="!taskId"
             readonly
             clickable
             v-model="productTypeArr"
@@ -113,7 +113,8 @@
               >
             </div>
           </van-popup>
-          <!-- <van-field
+          <van-field
+          v-if="taskId"
             v-model="market_amount"
             rows="2"
             autosize
@@ -122,7 +123,7 @@
             type="number"
             placeholder="请填写营销金额"
             show-word-limit
-          /> -->
+          />
           <van-field
             v-model="actual_demand"
             rows="2"
@@ -270,6 +271,7 @@ export default {
       showPopup: false,
       resultArr: [],
       productTypeArr: "",
+      taskId:""
     };
   },
   components: {
