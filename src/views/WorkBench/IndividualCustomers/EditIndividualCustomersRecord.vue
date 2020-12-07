@@ -528,7 +528,7 @@ export default {
     dic_nation() {
       // 潜在客户需求
       this.$httpGet({
-        url: "/dic/type/potential_need_type",
+        url: "/dic/type/task_product_type",
       }).then((res) => {
         let transformDara = [];
         res.data.forEach((it, index) => {

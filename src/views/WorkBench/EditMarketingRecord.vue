@@ -91,6 +91,45 @@
               @cancel="showMarketing_methods = false"
             />
           </van-popup>
+          <van-field
+            v-if="!productName"
+            readonly
+            clickable
+            v-model="productTypeArr"
+            label="产品类型"
+            placeholder="点击选择营销产品类型"
+            @click="showPopup = true"
+          />
+          <van-popup
+            v-model="showPopup"
+            position="middle"
+            round
+            :closeable="true"
+            :style="{
+              width: '55%',
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              padding: '30px 20px',
+              borderRadius: '10px',
+            }"
+          >
+            <van-checkbox-group v-model="resultArr" direction="horizontal">
+              <van-checkbox
+                v-for="(item, index) in potential_need_type"
+                :key="index"
+                :name="item.index"
+                checked-color="rgb(61, 66, 94)"
+                >{{ item.text }}</van-checkbox
+              >
+            </van-checkbox-group>
+            <div class="resultArrClick">
+              <van-button @click="resultListClick" color="rgb(61, 66, 94)"
+                >确认</van-button
+              >
+            </div>
+          </van-popup>
           <!-- <van-field
             v-model="editRecords.marketAmount"
             required
@@ -101,16 +140,6 @@
             placeholder="请填写金额"
             show-word-limit
           /> -->
-          <van-field
-            v-model="editRecords.marketAmount"
-            required
-            rows="2"
-            autosize
-            label="金额（万元）"
-            type="number"
-            placeholder="请填写金额"
-            show-word-limit
-          />
           <van-field
             v-model="editRecords.actualDemand"
             rows="2"
@@ -280,6 +309,10 @@ export default {
       showPicker: false,
       currentDate1: "",
       timeOut: false,
+      potential_need_type: [],
+      showPopup: false,
+      resultArr: [],
+      productTypeArr: [],
     };
   },
   components: {
@@ -295,6 +328,27 @@ export default {
   },
   updated() {},
   methods: {
+    task_product_type(val) {
+      const findWill = JSON.parse(
+        localStorage.getItem("dicTaskProductType")
+      ).find((it) => +it.key == val);
+      return findWill ? findWill.value : "";
+    },
+    resultListClick() {
+      this.productTypeArr = [];
+      this.resultArr.forEach((it) => {
+        console.log(this.task_product_type(it));
+        this.productTypeArr += this.task_product_type(it) + ",";
+      });
+      if (this.productTypeArr.length > 0) {
+        this.productTypeArr = this.productTypeArr.substr(
+          0,
+          this.productTypeArr.length - 1
+        );
+      }
+      this.showPopup = false;
+      console.log(this.resultArr.toString());
+    },
     onConfirm(time) {
       // this.currentDate = `${time.getFullYear()}-${
       //   time.getMonth() + 1
@@ -350,6 +404,20 @@ export default {
           this.columnsCustomer_intention
         );
       });
+      // 客户需求
+      this.$httpGet({
+        url: "/dic/type/task_product_type",
+      }).then((res) => {
+        // console.log(res.data);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        console.log(transformDara);
+        this.potential_need_type = transformDara;
+      });
     },
     prev() {
       this.$router.go(-1);
@@ -382,6 +450,9 @@ export default {
       } else {
         this.timeOut = false;
       }
+      this.productTypeArr = res.data.productTypeName;
+      this.resultArr = res.data.productType.split(",");
+      console.log(this.resultArr);
     },
     onResult(value) {
       console.log(value);
@@ -423,6 +494,7 @@ export default {
           remark: this.editRecords.remark,
           feedback: this.editRecords.feedback,
           dueTime: this.currentDate1,
+          productType: this.resultArr.toString(),
         },
       }).then((res) => {
         Toast({
@@ -621,6 +693,28 @@ export default {
   text-align: center;
   color: #fff;
   border-radius: 6px;
+}
+.van-checkbox--horizontal {
+  margin: 8px 10px;
+}
+.van-checkbox--horizontal >>> .van-checkbox__icon {
+  height: 24px;
+}
+.resultArrClick {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-top: 20px;
+}
+.resultArrClick >>> .van-button {
+  height: 30px;
+}
+.van-field__value >>> .van-field__control {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,

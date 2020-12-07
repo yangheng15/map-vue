@@ -539,7 +539,7 @@ export default {
       });
       // 潜在客户需求
       this.$httpGet({
-        url: "/dic/type/potential_need_type",
+        url: "/dic/type/task_product_type",
       }).then((res) => {
         // console.log(res.data);
         let transformDara = [];
@@ -548,7 +548,7 @@ export default {
             transformDara.push({
               index: it.code,
               text: it.codeText,
-              radio: "1",
+              // radio: "1",
             });
           }
         });

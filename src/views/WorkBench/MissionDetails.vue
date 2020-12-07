@@ -10,7 +10,7 @@
         <ul class="mission_details">
           <div class="task_management">{{ taskQuery.type }}</div>
           <li>
-            <span style="font-weight: 600">任务名称：</span>
+            <span style="font-weight: 600; width: 68%">任务名称：</span>
             {{ taskQuery.name }}
           </li>
           <li>
@@ -145,7 +145,7 @@
                     taskId: id,
                     id: thisItem.customerCode,
                     location: thisItem.location,
-                    customersType:thisItem.customersType
+                    customersType: thisItem.customersType,
                   },
                 }"
                 v-for="(thisItem, index) in MarketingRecord"
@@ -229,7 +229,7 @@
                     taskId: id,
                     id: thisItem.customerCode,
                     location: thisItem.location,
-                    customersType:thisItem.customersType
+                    customersType: thisItem.customersType,
                   },
                 }"
                 v-for="(thisItem, index) in MarketingRecordClaim"

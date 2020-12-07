@@ -117,6 +117,10 @@ export default {
         const familyType = res.data.find((it) => it.type === "dic_family_type")
           .childs;
         localStorage.setItem("dicFamilyType", JSON.stringify(familyType));
+        // 任务产品类型
+        const taskProductType = res.data.find((it) => it.type === "task_product_type")
+          .childs;
+        localStorage.setItem("dicTaskProductType", JSON.stringify(taskProductType));
         // 潜在客户需求
         const potentialNeedType = res.data.find(
           (it) => it.type === "potential_need_type"
