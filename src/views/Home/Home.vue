@@ -183,10 +183,11 @@
           >
             <ul>
               <li style="font-weight: 600">{{ item.name }}</li>
-              <li>{{ item.targetNum | NumFormat }}</li>
+              
             </ul>
             <ul>
-              <li>{{ item.productName }}</li>
+              <!-- <li>{{ item.productName }}</li> -->
+              <li>目标：{{ item.targetNum | NumFormat }}</li>
               <li>{{ item.endTime | transform }}前</li>
             </ul>
           </router-link>

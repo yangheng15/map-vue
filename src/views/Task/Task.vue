@@ -24,17 +24,29 @@
           }"
         >
           <div class="new_task">
-            <p style="font-weight: 550">{{ thisItem.name }}</p>
-            <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
-              {{ thisItem.targetNum | NumFormat }}
+            <p
+              style="
+                font-weight: 550;
+                width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              "
+            >
+              {{ thisItem.name }}
             </p>
-            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
           </div>
           <div class="new_task">
-            <p>{{ thisItem.productName }}</p>
+            <p :class="thisItem.status == 1 ? 'teshu' : 'teshu2'">
+              目标：{{ thisItem.targetNum | NumFormat }}
+            </p>
             <p :class="thisItem.sf_state == 1 ? 'teshu' : 'teshu2'">
               剩余{{ thisItem.remainingDays }}天
             </p>
+          </div>
+          <div class="new_task">
+            <!-- <p>{{ thisItem.productName }}</p> -->
+            <p>创建日期：{{ thisItem.beginTime | transform }}</p>
             <p>截止日期：{{ thisItem.endTime | transform }}</p>
           </div>
         </router-link>

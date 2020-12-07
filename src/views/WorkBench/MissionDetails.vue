@@ -9,8 +9,9 @@
       <div v-show="tabId === 0">
         <ul class="mission_details">
           <div class="task_management">{{ taskQuery.type }}</div>
-          <li>
-            <span style="font-weight: 600; width: 68%">任务名称：</span>
+          <li style=" width: 74%">
+            <span style="font-weight: 600;display: inline-block;
+    line-height: 26px;">任务名称：</span>
             {{ taskQuery.name }}
           </li>
           <li>
@@ -22,7 +23,7 @@
             城关镇世纪广场
           </li> -->
           <li>
-            <span style="font-weight: 600">营销产品：</span>{{ productName }}
+            <span style="font-weight: 600">产品类型：</span>{{ productName }}
           </li>
           <li>
             <span style="font-weight: 600">截止日期：</span
@@ -146,6 +147,7 @@
                     id: thisItem.customerCode,
                     location: thisItem.location,
                     customersType: thisItem.customersType,
+                    taskUpdateFlag: taskUpdateFlag,
                   },
                 }"
                 v-for="(thisItem, index) in MarketingRecord"
@@ -230,6 +232,7 @@
                     id: thisItem.customerCode,
                     location: thisItem.location,
                     customersType: thisItem.customersType,
+                    taskUpdateFlag: taskUpdateFlag,
                   },
                 }"
                 v-for="(thisItem, index) in MarketingRecordClaim"
@@ -429,6 +432,7 @@ export default {
         { lng: "114.69002898631655", lat: "33.621688347700044" },
       ],
       id: "",
+      taskUpdateFlag:""
     };
   },
   components: {
@@ -481,6 +485,7 @@ export default {
         },
       }).then((res) => {
         this.taskQuery = res.data;
+        this.taskUpdateFlag=res.data.taskUpdateFlag
         // console.log(res.data.custList);
         if (res.data.custList.length > 0) {
           this.polymerizationLocation = res.data.custList.map((it) => ({
@@ -500,7 +505,6 @@ export default {
           customerType: 1,
         },
       }).then((res) => {
-        console.log(res);
         this.MarketingRecord = res.data;
         if (
           this.MarketingRecord.customerCode &&
@@ -542,6 +546,7 @@ export default {
           customerType: 2,
         },
       }).then((res) => {
+        console.log(res.data);
         this.MarketingRecordClaim = res.data;
         if (
           this.MarketingRecordClaim.customerCode &&

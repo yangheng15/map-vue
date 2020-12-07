@@ -71,7 +71,7 @@
             tag="li"
             :to="{
               name: 'EditIndividualCustomersRecord',
-              query: { title: '个人客户详情', id: thisItem.id },
+              query: { title: '个人客户详情', id: thisItem.id,taskUpdateFlag: true, },
             }"
           >
             <div class="corporateFlex">

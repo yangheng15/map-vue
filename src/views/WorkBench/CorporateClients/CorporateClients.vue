@@ -39,7 +39,10 @@
                 tag="li"
                 :to="{
                   name: 'CustomerPoolCustomerDetails',
-                  query: { title: '客户池客户详情', id: thisItem.id },
+                  query: {
+                    title: '客户池客户详情',
+                    id: thisItem.id
+                  },
                 }"
                 class="corporateManage1"
                 >{{ thisItem.name }}</router-link
@@ -71,7 +74,11 @@
             tag="li"
             :to="{
               name: 'EditPublicCustomerRecord',
-              query: { title: '对公客户详情', id: thisItem.id },
+              query: {
+                title: '对公客户详情',
+                id: thisItem.id,
+                taskUpdateFlag: true,
+              },
             }"
           >
             <div class="corporateFlex">

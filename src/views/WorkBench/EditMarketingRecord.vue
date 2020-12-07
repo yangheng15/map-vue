@@ -187,7 +187,7 @@
               @cancel="showPicker = false"
             />
           </van-popup>
-          <div class="save">
+          <div v-if="taskUpdateFlag" class="save">
             <van-button type="primary" block @click="modifyResult()"
               >保存</van-button
             >
@@ -230,7 +230,7 @@
             />
             <!-- <input type="file" accept="image/*" capture="camera"> -->
           </div>
-          <div class="save" style="margin-top: 20px">
+          <div v-if="taskUpdateFlag" class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="modifyPicture()"
               >保存</van-button
             >
@@ -258,7 +258,7 @@
             label="产品利率："
             placeholder="请填写产品利率（数字）"
           />
-          <div class="save" style="margin-top: 20px">
+          <div v-if="taskUpdateFlag" class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="modifyCompetitor()"
               >保存</van-button
             >
@@ -312,7 +312,8 @@ export default {
       potential_need_type: [],
       showPopup: false,
       resultArr: [],
-      productTypeArr: [],
+      productTypeArr: "",
+      taskUpdateFlag:true
     };
   },
   components: {
@@ -323,6 +324,7 @@ export default {
     this.id = this.$route.query.id;
     this.productName = this.$route.query.productName;
     this.custName = this.$route.query.custName;
+    this.taskUpdateFlag = this.$route.query.taskUpdateFlag;
     await this.editRecord();
     this.dic_nation();
   },
@@ -450,8 +452,8 @@ export default {
       } else {
         this.timeOut = false;
       }
-      this.productTypeArr = res.data.productTypeName;
-      this.resultArr = res.data.productType.split(",");
+      res.data.productTypeName?this.productTypeArr = res.data.productTypeName:this.productTypeArr=""
+      res.data.productType?this.resultArr = res.data.productType.split(","):this.resultArr=""
       console.log(this.resultArr);
     },
     onResult(value) {
@@ -474,6 +476,11 @@ export default {
       this.showMarketing_methods = false;
     },
     modifyResult() {
+      if(this.resultArr){
+        this.resultArr=this.resultArr.toString()
+      }else{
+        this.resultArr=""
+      }
       // console.log(this.id);
       // console.log(this.editRecords.code);
       this.$httpPut({
@@ -494,7 +501,7 @@ export default {
           remark: this.editRecords.remark,
           feedback: this.editRecords.feedback,
           dueTime: this.currentDate1,
-          productType: this.resultArr.toString(),
+          productType: this.resultArr,
         },
       }).then((res) => {
         Toast({

@@ -275,6 +275,7 @@
                     id: thisItem.id,
                     custName: publicCustomerName,
                     productName: productName,
+                    taskUpdateFlag: taskUpdateFlag,
                   },
                 }"
                 style="width: 55%"
@@ -301,6 +302,7 @@
                     id: thisItem.id,
                     custName: publicCustomerName,
                     productName: productName,
+                    taskUpdateFlag: taskUpdateFlag,
                   },
                 }"
                 class="dadian"
@@ -359,6 +361,7 @@
                 productCode: this.productCode,
                 productName: this.productName,
                 custName: this.publicCustomerName,
+                taskUpdateFlag: this.taskUpdateFlag,
               },
             }"
             >+</router-link
@@ -426,6 +429,7 @@ export default {
       productCode: "",
       productName: "",
       custName: "",
+      taskUpdateFlag:"",
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -441,6 +445,7 @@ export default {
   async created() {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
+    this.taskUpdateFlag = this.$route.query.taskUpdateFlag;
     await this.dic_nation();
     await this.editRecord();
     await this.getIndusty()

@@ -269,7 +269,7 @@ export default {
       potential_need_type: [],
       showPopup: false,
       resultArr: [],
-      productTypeArr: [],
+      productTypeArr: "",
     };
   },
   components: {
