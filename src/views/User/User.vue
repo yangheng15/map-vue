@@ -308,7 +308,7 @@ export default {
     width: 48px;
   }
   .new_item_body {
-    margin-top: 80px;
+    margin-top: 85px;
   }
   .van-button {
     height: 36px;

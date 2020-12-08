@@ -181,17 +181,16 @@
           </span>
           <p class="function_name">计算器</p>
         </router-link> -->
-        <router-link
+        <!-- <router-link
           tag="div"
           class="function_men"
           :to="{ name: 'TelePhone', query: { title: '通讯录' } }"
         >
           <span class="c-link-card" style="background: #a4b59d">
             <img src="../../assets/WorkBench/tongxunlu.svg" alt />
-            <!-- <span v-if="countsMap.grief>0">{{countsMap.grief}}</span> -->
           </span>
           <p class="function_name">通讯录</p>
-        </router-link>
+        </router-link> -->
       </div>
     </div>
     <my-tabbar></my-tabbar>
