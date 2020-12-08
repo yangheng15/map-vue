@@ -182,11 +182,15 @@
             }"
           >
             <ul>
-              <li style="font-weight: 600">{{ item.name }}</li>
-              <li>{{ item.targetNum | NumFormat }}</li>
+              <li style="font-weight: 600;width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;">{{ item.name }}</li>
+              
             </ul>
             <ul>
-              <li>{{ item.productName }}</li>
+              <!-- <li>{{ item.productName }}</li> -->
+              <li>目标：{{ item.targetNum | NumFormat }}</li>
               <li>{{ item.endTime | transform }}前</li>
             </ul>
           </router-link>

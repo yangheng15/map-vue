@@ -308,7 +308,7 @@
             </div>
           </li>
         </ul>
-                <div
+        <div
           style="
             margin-left: 85%;
             position: fixed !important;
@@ -521,15 +521,19 @@ export default {
         console.log(transformDara);
         this.industry_list = transformDara;
       });
-      // 潜在客户需求
+      // 客户需求
       this.$httpGet({
-        url: "/dic/type/potential_need_type",
+        url: "/dic/type/task_product_type",
       }).then((res) => {
         // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
-            transformDara.push({ index: it.code, text: it.codeText });
+            transformDara.push({
+              index: it.code,
+              text: it.codeText,
+              // radio: "1",
+            });
           }
         });
         console.log(transformDara);
@@ -689,12 +693,19 @@ export default {
       });
     },
     selectDelegation(item) {
-      this.customersDemandList1.push({
-        demandType: item.index,
-        demandStatus: item.radio,
-      });
+      // console.log(item);
+      // this.customersDemandList1.push({
+      //   demandType: item.index,
+      //   demandStatus: item.radio,
+      // });
     },
     async saveCustomersDemand() {
+      this.potential_need_type.forEach((item) => {
+        this.customersDemandList1.push({
+          demandStatus: item.radio,
+          demandType: item.index,
+        });
+      });
       if (this.otherTxt) {
         this.customersDemandList1.push({
           description: this.otherTxt,
@@ -709,7 +720,7 @@ export default {
           customersDemandList: this.customersDemandList1,
         },
       })
-      .then((res) => {
+        .then((res) => {
           Toast({
             message: "保存成功",
             position: "middle",
@@ -718,7 +729,7 @@ export default {
         })
         .catch((err) => {
           // console.log(err);
-        })
+        });
     },
     async modifyResult() {
       if (this.publicCustomerName == "") {
@@ -755,7 +766,7 @@ export default {
       this.$httpPost({
         url: "/api/pulicCustomersInfo/add",
         data: {
-          type:1,
+          type: 1,
           name: this.publicCustomerName,
           address: this.publicCustomerAddress,
           gridding: this.publicCustomerGrid.index,
@@ -855,7 +866,7 @@ export default {
   padding: 0rem 1rem;
 }
 .van-radio--horizontal >>> .van-radio__icon {
-  height: 24px!important;
+  height: 24px !important;
 }
 input {
   border-radius: 0.3rem;

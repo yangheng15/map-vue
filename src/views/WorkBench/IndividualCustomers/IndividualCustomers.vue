@@ -71,7 +71,7 @@
             tag="li"
             :to="{
               name: 'EditIndividualCustomersRecord',
-              query: { title: '个人客户详情', id: thisItem.id },
+              query: { title: '个人客户详情', id: thisItem.id,taskUpdateFlag: true, },
             }"
           >
             <div class="corporateFlex">
@@ -187,11 +187,20 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-import { Dialog } from "vant";
+import { Dialog, Toast } from "vant";
 export default {
   name: "CorporateClients",
   components: {
     ChildNav,
+  },
+  watch: {
+    isPopupVisibleScreen(newVal) {
+      if (!newVal) {
+        this.distanceRange = "";
+        this.industry_type = "";
+        this.potentialNeedType = [];
+      }
+    },
   },
   data() {
     return {
@@ -236,7 +245,7 @@ export default {
         lastTime: 0,
       },
       positionArr: "",
-       currentPage: 1,
+      currentPage: 1,
       pageSize1: 10,
       dataTotal: "",
       finishEnd: false, // 滚动加载完成
@@ -279,8 +288,9 @@ export default {
       this.pageNo = 1;
       this.onLoad();
       if (ev == 1) {
-        this.onLoadList()
-      };
+        this.currentPage = 1;
+        this.onLoadList();
+      }
     },
     selectHandle() {
       this.pageNo = 1;
@@ -356,7 +366,7 @@ export default {
                   publicCustomerPool: res.data,
                 };
                 resolve(result);
-              } 
+              }
               // else if (this.tabId == 1) {
               //   let result = {
               //     total: res.count,
@@ -438,7 +448,7 @@ export default {
     getdic() {
       // 潜在客户需求
       this.$httpGet({
-        url: "/dic/type/potential_need_type",
+        url: "/dic/type/task_product_type",
       }).then((res) => {
         // console.log(res.data);
         let transformDara = [];
@@ -764,6 +774,9 @@ export default {
   border-radius: 0.4rem;
   height: 2rem;
 }
+.van-cell >>> .van-field__label {
+  width: 8rem;
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   * {
     font-size: 13px;
@@ -788,6 +801,9 @@ export default {
   }
   .save {
     padding-bottom: 2rem;
+  }
+  .van-cell >>> .van-field__label {
+    width: 7rem;
   }
 }
 </style>

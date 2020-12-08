@@ -91,6 +91,8 @@
                     id: thisItem.id,
                     custName: custName,
                     productName: productName,
+                    taskId: taskId,
+                    taskUpdateFlag:taskUpdateFlag
                   },
                 }"
                 style="width: 55%"
@@ -99,6 +101,7 @@
 
               <p>
                 <van-button
+                v-if="taskUpdateFlag"
                   color="#3d425e"
                   size="mini"
                   @click="deleteRemark(thisItem.id)"
@@ -117,6 +120,7 @@
                     id: thisItem.id,
                     custName: custName,
                     productName: productName,
+                    taskId: taskId,
                   },
                 }"
                 class="dadian"
@@ -166,6 +170,7 @@
         "
       >
         <router-link
+          v-if="taskUpdateFlag"
           tag="span"
           class="add_record"
           :to="{
@@ -178,6 +183,7 @@
               productName: this.productName,
               custName: this.custName,
               id: this.id,
+              taskId: this.taskId,
             },
           }"
           >+</router-link
@@ -232,6 +238,7 @@ export default {
       address: "",
       location: "",
       MarketingDetails: "",
+      taskUpdateFlag:true
     };
   },
   components: {
@@ -255,7 +262,8 @@ export default {
     this.custId = this.$route.query.custId;
     this.taskId = this.$route.query.taskId;
     this.customersType = this.$route.query.customersType;
-    console.log(this.customersType);
+    this.taskUpdateFlag = this.$route.query.taskUpdateFlag;
+    console.log(this.taskUpdateFlag);
     this.getMarkedRecord();
   },
   updated() {},

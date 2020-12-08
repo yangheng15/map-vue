@@ -12,14 +12,14 @@ if (process.env.NODE_ENV === 'development') {
   // axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
   // 测试
   axios.defaults.baseURL = 'http://123.56.238.192:8199'
-  // axios.defaults.baseURL = 'http://192.168.1.106:8091'
+  // axios.defaults.baseURL = 'http://192.168.0.177:8091/'
   // 正式
   // axios.defaults.baseURL = 'http://39.106.51.28:8091/'
 } else if (process.env.NODE_ENV === 'production') {
   // axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
   // 测试
   axios.defaults.baseURL = 'http://123.56.238.192:8199'
-  // axios.defaults.baseURL = 'http://192.168.1.106:8091'
+  // axios.defaults.baseURL = 'http://192.168.0.177:8091/'
   // 正式
   // axios.defaults.baseURL = 'http://39.106.51.28:8091/'
 }

@@ -74,7 +74,47 @@
               @cancel="showMarketing_methods = false"
             />
           </van-popup>
+          <van-field 
+          v-if="!taskId"
+            readonly
+            clickable
+            v-model="productTypeArr"
+            label="产品类型"
+            placeholder="点击选择营销产品类型"
+            @click="showPopup = true"
+          />
+          <van-popup
+            v-model="showPopup"
+            position="middle"
+            round
+            :closeable="true"
+            :style="{
+              width: '50%',
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              padding: '30px 20px',
+              borderRadius: '10px',
+            }"
+          >
+            <van-checkbox-group v-model="resultArr" direction="horizontal">
+              <van-checkbox
+                v-for="(item, index) in potential_need_type"
+                :key="index"
+                :name="item.index"
+                checked-color="rgb(61, 66, 94)"
+                >{{ item.text }}</van-checkbox
+              >
+            </van-checkbox-group>
+            <div class="resultArrClick">
+              <van-button @click="resultListClick" color="rgb(61, 66, 94)"
+                >确认</van-button
+              >
+            </div>
+          </van-popup>
           <van-field
+          v-if="taskId"
             v-model="market_amount"
             rows="2"
             autosize
@@ -115,6 +155,7 @@
             show-word-limit
           />
           <van-field
+            v-if="timeOut"
             readonly
             clickable
             name="datetimePicker"
@@ -186,7 +227,10 @@ export default {
   data() {
     return {
       tabId: 0,
-      result_txt: "",
+      result_txt: {
+        index: 2,
+        text: "未成功",
+      },
       columnsResult: [
         { index: 0, text: "失败" },
         { index: 1, text: "成功" },
@@ -222,21 +266,17 @@ export default {
       currentDate: "",
       showPicker: false,
       currentDate1: "",
+      timeOut: false,
+      potential_need_type: [],
+      showPopup: false,
+      resultArr: [],
+      productTypeArr: "",
+      taskId:""
     };
   },
   components: {
     ChildNav,
   },
-  // beforeRouteLeave(to, from, next) {
-  //   // console.log(to);
-  //   // console.log(from);
-  //   // console.log(next);
-  //   // console.log(this);
-  //   // if (this.productCode == "" && this.gridCode == "") {
-  //   //   console.log(111111111111111111111111111111111111);
-  //   //     this.$router.push("/EditPublicCustomerRecord");
-  //   //   }
-  // },
   created() {
     this.typeCN = this.$route.query.title;
     this.customerCode = this.$route.query.customerCode;
@@ -245,14 +285,32 @@ export default {
     this.productName = this.$route.query.productName;
     this.custName = this.$route.query.custName;
     this.id = this.$route.query.id;
+    this.taskId = this.$route.query.taskId;
     this.dic_nation();
   },
   updated() {},
   methods: {
+    task_product_type(val) {
+      const findWill = JSON.parse(
+        localStorage.getItem("dicTaskProductType")
+      ).find((it) => +it.key == val);
+      return findWill ? findWill.value : "";
+    },
+    resultListClick() {
+      this.resultArr.forEach((it) => {
+        console.log(this.task_product_type(it));
+        this.productTypeArr += this.task_product_type(it) + ",";
+      });
+      if (this.productTypeArr.length > 0) {
+        this.productTypeArr = this.productTypeArr.substr(
+          0,
+          this.productTypeArr.length - 1
+        );
+      }
+      this.showPopup = false;
+      console.log(this.resultArr.toString());
+    },
     onConfirm(time) {
-      // this.currentDate = `${time.getFullYear()}-${
-      //   time.getMonth() + 1
-      // }-${time.getDate()}`;
       this.currentDate = time;
       this.currentDate1 = time;
       this.showPicker = false;
@@ -271,6 +329,20 @@ export default {
         });
         console.log(transformDara);
         this.columnsCustomer_intention = transformDara;
+      });
+      // 客户需求
+      this.$httpGet({
+        url: "/dic/type/task_product_type",
+      }).then((res) => {
+        // console.log(res.data);
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        console.log(transformDara);
+        this.potential_need_type = transformDara;
       });
     },
     prev() {
@@ -295,7 +367,7 @@ export default {
           customerCode: this.customerCode,
           griddingCode: this.gridCode,
           products: this.productCode,
-          taskId: this.id,
+          taskId: this.taskId,
           isSucc: this.result_txt.index,
           intention: this.Customer_intention_txt.index,
           semType: this.Marketing_methods_txt.index,
@@ -304,6 +376,7 @@ export default {
           remark: this.remarks,
           feedback: this.customer_feedback,
           dueTime: this.currentDate1,
+          productType: this.resultArr.toString(),
         },
       }).then((res) => {
         this.resultCode = res.data.code;
@@ -314,7 +387,7 @@ export default {
       });
     },
     async addCompetitor() {
-      var reg=/^\d*\.{0,1}\d*$/
+      var reg = /^\d*\.{0,1}\d*$/;
       if (!reg.test(this.product_rate)) {
         Dialog.alert({
           title: "提示",
@@ -339,8 +412,14 @@ export default {
       });
     },
     onResult(value) {
+      console.log(value);
       this.result_txt = value;
       this.showResult = false;
+      if (value.index == 1) {
+        this.timeOut = true;
+      } else {
+        this.timeOut = false;
+      }
     },
     onCustomer_intention(value) {
       this.Customer_intention_txt = value;
@@ -439,6 +518,28 @@ export default {
   text-align: center;
   color: #fff;
   border-radius: 6px;
+}
+.van-checkbox--horizontal {
+  margin: 8px 10px;
+}
+.van-checkbox--horizontal >>> .van-checkbox__icon {
+  height: 24px;
+}
+.resultArrClick {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-top: 20px;
+}
+.resultArrClick >>> .van-button {
+  height: 30px;
+}
+.van-field__value >>> .van-field__control {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,

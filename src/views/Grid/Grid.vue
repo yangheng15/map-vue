@@ -4,7 +4,7 @@
     <van-search
       class="positionFixed"
       v-model="searchVal"
-      placeholder=""
+      placeholder="查找地点"
       @clear="onSearchCancel"
       >
         <!-- <template #action>
