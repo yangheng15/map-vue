@@ -9,9 +9,11 @@
       <div v-show="tabId === 0">
         <ul class="mission_details">
           <div class="task_management">{{ taskQuery.type }}</div>
-          <li style=" width: 74%">
-            <span style="font-weight: 600;display: inline-block;
-    line-height: 26px;">任务名称：</span>
+          <li style="width: 74%">
+            <span
+              style="font-weight: 600; display: inline-block; line-height: 26px"
+              >任务名称：</span
+            >
             {{ taskQuery.name }}
           </li>
           <li>
@@ -404,14 +406,15 @@ export default {
       MarketingRecord1: [],
       MarketingRecordClaim: [],
       MarketingRecordPotential: [],
-      marketed: 1,
+      marketed: "",
 
       marketing: "",
       marketed_option: [
-        { text: "已营销", value: 1 },
-        { text: "未营销", value: 0 },
+        { text: "全部", value: "" },
+        { text: "已营销", value: "1" },
+        { text: "未营销", value: "0" },
       ],
-      product_intention: "1",
+      product_intention: "",
       intention_option: [],
       marketing_option: [
         { text: "营销结果", value: "" },
@@ -432,7 +435,7 @@ export default {
         { lng: "114.69002898631655", lat: "33.621688347700044" },
       ],
       id: "",
-      taskUpdateFlag:""
+      taskUpdateFlag: "",
     };
   },
   components: {
@@ -485,7 +488,7 @@ export default {
         },
       }).then((res) => {
         this.taskQuery = res.data;
-        this.taskUpdateFlag=res.data.taskUpdateFlag
+        this.taskUpdateFlag = res.data.taskUpdateFlag;
         // console.log(res.data.custList);
         if (res.data.custList.length > 0) {
           this.polymerizationLocation = res.data.custList.map((it) => ({
@@ -529,11 +532,13 @@ export default {
         url: "/dic/type/dic_client_will",
       }).then((res) => {
         let transformDara = [];
+        transformDara.push({ value: "", text: "全部" });
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ value: it.code, text: it.codeText });
           }
         });
+        console.log(transformDara);
         this.intention_option = transformDara;
       });
     },

@@ -490,6 +490,7 @@ export default {
                 position: "middle",
               });
               this.publicCustomerPool = [];
+              this.pageNo = 1;
               this.onLoad();
             })
             .catch(() => {});
