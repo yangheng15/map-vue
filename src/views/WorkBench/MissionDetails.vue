@@ -506,6 +506,7 @@ export default {
           limit: 10,
           page: 1,
           customerType: 1,
+          taskId: this.id,
         },
       }).then((res) => {
         this.MarketingRecord = res.data;
@@ -549,6 +550,7 @@ export default {
           limit: 10,
           page: 1,
           customerType: 2,
+          taskId: this.id,
         },
       }).then((res) => {
         console.log(res.data);
@@ -608,6 +610,7 @@ export default {
             page: 1,
             customerType: 1,
             custInfo: this.serchCustomer,
+            taskId: this.id,
           },
         }).then((res) => {
           this.MarketingRecord = res.data;
@@ -620,6 +623,7 @@ export default {
             page: 1,
             customerType: 2,
             custInfo: this.serchCustomer,
+            taskId: this.id,
           },
         }).then((res) => {
           this.MarketingRecordClaim = res.data;
@@ -647,6 +651,7 @@ export default {
             page: 1,
             customerType: 1,
             isSem: val,
+            taskId: this.id,
           },
         }).then((res) => {
           this.MarketingRecord = res.data;
@@ -659,6 +664,7 @@ export default {
             page: 1,
             customerType: 2,
             isSem: val,
+            taskId: this.id,
           },
         }).then((res) => {
           this.MarketingRecordClaim = res.data;
@@ -686,6 +692,7 @@ export default {
             page: 1,
             customerType: 1,
             intention: val,
+            taskId: this.id,
           },
         }).then((res) => {
           this.MarketingRecord = res.data;
@@ -698,6 +705,7 @@ export default {
             page: 1,
             customerType: 2,
             intention: val,
+            taskId: this.id,
           },
         }).then((res) => {
           this.MarketingRecordClaim = res.data;
@@ -725,6 +733,7 @@ export default {
             page: 1,
             customerType: 1,
             isSucceed: val,
+            taskId: this.id,
           },
         }).then((res) => {
           this.MarketingRecord = res.data;
@@ -737,6 +746,7 @@ export default {
             page: 1,
             customerType: 2,
             isSucceed: val,
+            taskId: this.id,
           },
         }).then((res) => {
           this.MarketingRecordClaim = res.data;
