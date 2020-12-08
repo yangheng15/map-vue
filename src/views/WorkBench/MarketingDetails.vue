@@ -59,18 +59,7 @@
           <span style="font-weight: 600"
             >意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向：</span
           >{{
-            intention == 0
-              ? "强"
-              : intention == 1
-              ? "一般"
-              : intention == 2
-              ? "无"
-              : intention == 3
-              ? "已有他行产品"
-              : intention == 4
-              ? "直接拒绝"
-              : "同意采集"
-          }}
+            intention | dic_client_will}}
         </li>
       </ul>
       <div>
