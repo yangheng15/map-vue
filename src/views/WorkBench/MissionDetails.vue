@@ -9,7 +9,7 @@
       <div v-show="tabId === 0">
         <ul class="mission_details">
           <div class="task_management">{{ taskQuery.type }}</div>
-          <li style="width: 74%">
+          <li style="width: 73%">
             <span
               style="font-weight: 600; display: inline-block; line-height: 26px"
               >任务名称：</span

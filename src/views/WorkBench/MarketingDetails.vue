@@ -29,15 +29,15 @@
           ></router-link>
         </li>
         <li>
-          <span style="font-weight: 600">营销产品：</span>{{ productName }}
-          <router-link
+          <span style="font-weight: 600">产品类型：</span>{{ productName }}
+          <!-- <router-link
             tag="a"
             class="img2"
             :to="{
               name: 'ProductIntroduction',
               query: { title: '产品介绍', productCode: productCode },
             }"
-          ></router-link>
+          ></router-link> -->
         </li>
         <li>
           <span style="font-weight: 600">客户地址：</span>{{ address }}
