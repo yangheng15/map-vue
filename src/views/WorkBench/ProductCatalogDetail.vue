@@ -65,21 +65,32 @@ export default {
     afterRead(file) {
       let formData = new FormData();
       console.log(file, "filefile");
-      // if(file.size/1024 &gt; 1025) { //文件大于1M（根据需求更改），进行压缩上传
-      this.compressImg(file.file, (base64Codes) => {
-        console.log(base64Codes, "base64Codes");
-        let bl = this.base64UrlToBlob(base64Codes, file.file.name);
-        console.log(bl, "blblbl");
-        formData.append("file", bl); // 文件对象
-        this.$httpPost({
-          url: "/api/upload/attachment",
-          headers: { "Content-Type": "multipart/form-data" },
-          data: formData,
-        }).then((res) => {
-          // console.log(res.data.pid);
-          this.pictureId = res.data.pid;
+      // if (file.size / 1024 > 1025) {
+        //文件大于1M（根据需求更改），进行压缩上传
+        this.compressImg(file.file, (base64Codes) => {
+          // console.log(base64Codes, "base64Codes");
+          let bl = this.base64UrlToBlob(base64Codes, file.file.name);
+          console.log(bl, "blblbl");
+          formData.append("file", bl); // 文件对象
+          this.$httpPost({
+            url: "/api/upload/attachment",
+            headers: { "Content-Type": "multipart/form-data" },
+            data: formData,
+          }).then((res) => {
+            // console.log(res.data.pid);
+            this.pictureId = res.data.pid;
+          });
         });
-      });
+      // } else {
+      //   formData.append("file", file.file);
+      //   this.$httpPost({
+      //     url: "/api/upload/attachment",
+      //     headers: { "Content-Type": "multipart/form-data" },
+      //     data: formData,
+      //   }).then((res) => {
+      //     // console.log(res.data.pid);
+      //     this.pictureId.push(res.data.pid);
+      //   });
       // }
     },
     //压缩图片方法
