@@ -566,6 +566,7 @@ export default {
               lng: positionArr[0],
               lat: positionArr[1] + 0.0001,
             }; //直接将中心点回传不生效，需要稍微改动一下中心点]
+            this.nearby.center = this.mapCenter;
             // console.log(this.map.getZoom());
             this.zoomNum = this.map.getZoom();
             return;
