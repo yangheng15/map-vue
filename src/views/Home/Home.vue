@@ -190,8 +190,8 @@
             </ul>
             <ul>
               <!-- <li>{{ item.productName }}</li> -->
-              <li>目标：{{ item.targetNum | NumFormat }}</li>
-              <li>{{ item.endTime | transform }}前</li>
+              <li style="color:#0fb38f">目标：{{ item.targetNum | NumFormat }}</li>
+              <li style="color:#0fb38f">{{ item.endTime | transform }}前</li>
             </ul>
           </router-link>
         </van-list>
@@ -210,6 +210,7 @@
           >
             <ul>
               <router-link
+              style="font-weight:700"
                 v-if="item.customersType == 1"
                 tag="li"
                 :to="{
@@ -219,6 +220,7 @@
                 >{{ item.custName }}</router-link
               >
               <router-link
+              style="font-weight:700"
                 v-if="item.customersType == 2"
                 tag="li"
                 :to="{
@@ -258,8 +260,8 @@
             </ul>
             <ul>
               <li v-if="item.productType">{{ item.productType }}</li>
-              <li v-if="item.contactDays == 0">今天联系过</li>
-              <li v-if="item.contactDays !== 0">
+              <li style="color:#0fb38f" v-if="item.contactDays == 0">今天联系过</li>
+              <li style="color:#0fb38f" v-if="item.contactDays !== 0">
                 上次联系{{ item.contactDays }}天前
               </li>
             </ul>

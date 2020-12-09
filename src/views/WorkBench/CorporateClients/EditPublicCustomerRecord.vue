@@ -96,6 +96,7 @@
           name="营业执照号："
           label="营业执照号："
           placeholder="单行输入"
+          required
         />
         <van-field
           v-model="legalPersonName"

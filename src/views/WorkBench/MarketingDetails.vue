@@ -55,97 +55,104 @@
           <span style="font-weight: 600">联系方式：</span>{{ telphone }}
           <a v-if="telphone" class="img4" :href="'tel:' + telphone"></a>
         </li>
-        <li>
+        <!-- <li>
           <span style="font-weight: 600"
             >意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向：</span
           >{{
             intention | dic_client_will}}
-        </li>
+        </li> -->
       </ul>
       <div>
         <p class="detail_title">营销记录</p>
-        <ul style="background: #fff">
-          <li
-            v-for="(thisItem, index) in MarketingRecord"
-            :key="index"
-            class="marked_record"
-          >
-            <div class="positionFixd">
-              <router-link
-                tag="p"
-                :to="{
-                  name: 'EditMarketingRecord',
-                  query: {
-                    title: '营销记录',
-                    id: thisItem.id,
-                    custName: custName,
-                    productName: productName,
-                    taskId: taskId,
-                    taskUpdateFlag:taskUpdateFlag
-                  },
-                }"
-                style="width: 55%"
-                >{{ thisItem.semTime | transform }}</router-link
-              >
-
-              <p>
-                <van-button
-                v-if="taskUpdateFlag"
-                  color="#3d425e"
-                  size="mini"
-                  @click="deleteRemark(thisItem.id)"
-                  >删除</van-button
+        <van-list
+          v-model="loadEnd"
+          :finished="finishEnd"
+          :offset="offset"
+          finished-text="没有更多了"
+          @load="onLoadList"
+        >
+          <ul style="background: #fff">
+            <li
+              v-for="(thisItem, index) in MarketingRecord"
+              :key="index"
+              class="marked_record"
+            >
+              <div class="positionFixd">
+                <router-link
+                  tag="p"
+                  :to="{
+                    name: 'EditMarketingRecord',
+                    query: {
+                      title: '营销记录',
+                      id: thisItem.id,
+                      custName: custName,
+                      productName: productName,
+                      taskId: taskId,
+                      taskUpdateFlag: taskUpdateFlag,
+                    },
+                  }"
+                  style="width: 55%"
+                  >{{ thisItem.semTime | transform }}</router-link
                 >
-              </p>
-            </div>
 
-            <div class="positionFixd">
-              <router-link
-                tag="p"
-                :to="{
-                  name: 'EditMarketingRecord',
-                  query: {
-                    title: '营销记录',
-                    id: thisItem.id,
-                    custName: custName,
-                    productName: productName,
-                    taskId: taskId,
-                  },
-                }"
-                class="dadian"
-                >{{ thisItem.remark }}</router-link
-              >
-              <p style="width: 50%; display: flex" class="approval">
-                <!-- <span class="approval_Passed">已营销</span> -->
-                <span
-                  :class="
-                    thisItem.intention == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
-                  >{{ thisItem.intention | dic_client_will }}</span
+                <p>
+                  <van-button
+                    v-if="taskUpdateFlag"
+                    color="#3d425e"
+                    size="mini"
+                    @click="deleteRemark(thisItem.id)"
+                    >删除</van-button
+                  >
+                </p>
+              </div>
+
+              <div class="positionFixd">
+                <router-link
+                  tag="p"
+                  :to="{
+                    name: 'EditMarketingRecord',
+                    query: {
+                      title: '营销记录',
+                      id: thisItem.id,
+                      custName: custName,
+                      productName: productName,
+                      taskId: taskId,
+                    },
+                  }"
+                  class="dadian"
+                  >{{ thisItem.remark }}</router-link
                 >
-                <span
-                  :class="
-                    thisItem.isSucc == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
-                  >{{
-                    thisItem.isSucc == "0"
-                      ? "失败"
-                      : thisItem.isSucc == "1"
-                      ? "成功"
-                      : thisItem.isSucc == "2"
-                      ? "未成功"
-                      : ""
-                  }}
-                </span>
-              </p>
-            </div>
-          </li>
-        </ul>
-        <div class="end_line">已加载完毕</div>
+                <p style="width: 50%; display: flex" class="approval">
+                  <!-- <span class="approval_Passed">已营销</span> -->
+                  <span
+                    :class="
+                      thisItem.intention == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{ thisItem.intention | dic_client_will }}</span
+                  >
+                  <span
+                    :class="
+                      thisItem.isSucc == '1'
+                        ? 'approval_Passed'
+                        : 'approval_Passed1'
+                    "
+                    >{{
+                      thisItem.isSucc == "0"
+                        ? "失败"
+                        : thisItem.isSucc == "1"
+                        ? "成功"
+                        : thisItem.isSucc == "2"
+                        ? "未成功"
+                        : ""
+                    }}
+                  </span>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </van-list>
       </div>
       <div
         style="
@@ -188,31 +195,8 @@ export default {
   data() {
     return {
       MarketingRecord: [],
-      tabId: 0,
-      token: "",
       title: "详情",
-      textTitle: "--",
       content: "",
-      deliverTime: "",
-      deliverDepartment: "",
-      deliverPerson: "",
-      articleId: "",
-      isPlaying: false,
-      dataURL: "",
-      pictureId: undefined,
-      isLGB: true,
-      tpxw: {},
-      isEdit: false,
-      show1: false,
-      show2: false,
-      show3: false,
-      show4: false,
-      show5: false,
-      value1: "",
-      value2: "",
-      value3: "",
-      value4: "",
-      value5: "",
       custName: "",
       telephone: "",
       intention: "",
@@ -227,7 +211,13 @@ export default {
       address: "",
       location: "",
       MarketingDetails: "",
-      taskUpdateFlag:true
+      taskUpdateFlag: true,
+      currentPage:1,
+      pageSize1:10,
+      dataTotal:"",
+      loadEnd: false, // 滚动加载中
+      finishEnd: false, // 滚动加载完成
+      offset: 5, //滚动条与底部距离小于 offset 时触发load事件，默认300
     };
   },
   components: {
@@ -252,29 +242,43 @@ export default {
     this.taskId = this.$route.query.taskId;
     this.customersType = this.$route.query.customersType;
     this.taskUpdateFlag = this.$route.query.taskUpdateFlag;
-    console.log(this.taskUpdateFlag);
-    this.getMarkedRecord();
   },
   updated() {},
   methods: {
-    tab(ev) {
-      this.tabId = ev;
+    // 滚动加载更多
+    onLoadList() {
+      this.getMarkedRecord();
     },
     getMarkedRecord() {
-      // if (this.customerCode && this.gridCode) {
       this.$httpGet({
         url: "/api/appMarket/marketRecord",
         params: {
+          page: this.currentPage, //页数
+          limit: this.pageSize1, //每页个数
           customerCode: this.customerCode,
-          limit: 10,
           gridCode: this.gridCode,
           taskId: this.taskId,
-          page: 1,
         },
       }).then((res) => {
-        this.MarketingRecord = res.data;
+        console.log(res);
+        this.dataTotal = res.count;
+        //进行判断
+        if (this.dataTotal <= this.pageSize1) {
+          this.MarketingRecord = res.data;
+          console.log(this.MarketingRecord);
+        } else {
+          this.currentPage++;
+          let arr = res.data;
+          console.log(arr);
+          this.MarketingRecord = this.MarketingRecord.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd = false;
+        // 数据全部加载完成
+        if (this.MarketingRecord.length >= this.dataTotal) {
+          this.finishEnd = true; //结束，显示我也是有底线的
+        }
       });
-      // }
     },
     deleteRemark(val) {
       Dialog.confirm({
@@ -383,6 +387,7 @@ export default {
   padding-right: 40px;
   margin-bottom: 0.7rem;
   padding-left: 0.5rem;
+  position: relative;
 }
 .mission_details li img {
   width: 1.4rem;
@@ -394,7 +399,7 @@ export default {
   /* float: right; */
   position: absolute;
   right: 0rem;
-  top: 0.5rem;
+  top: 0rem;
   background: url("../../assets/WorkBench/img1.svg") no-repeat;
   background-size: cover;
   width: 1.5rem;
@@ -411,14 +416,14 @@ export default {
 .mission_details li .img3 {
   position: absolute;
   right: 0rem;
-  top: 4.1rem;
+  top: 0rem;
   background: url("../../assets/WorkBench/img3.svg") no-repeat;
   background-size: cover;
 }
 .mission_details li .img4 {
   position: absolute;
   right: 0rem;
-  top: 5.9rem;
+  top: 0rem;
   background: url("../../assets/WorkBench/img4.svg") no-repeat;
   background-size: cover;
 }

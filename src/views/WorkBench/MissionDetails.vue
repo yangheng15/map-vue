@@ -126,177 +126,215 @@
           <li @click="tab1(1)" :class="tabId1 == 1 ? 'cur' : ''">我的客户</li>
           <!-- <li @click="tab1(2)" :class="tabId1 == 2 ? 'cur' : ''">潜在客户</li> -->
         </ul>
-        <div v-show="tabId1 === 0">
-          <div class="customer_list">
-            <ul>
-              <router-link
-                tag="li"
-                :to="{
-                  name: 'MarketingDetails',
-                  query: {
-                    title: '营销客户详情',
-                    custName: thisItem.custName,
-                    telephone: thisItem.telephone,
-                    intention: thisItem.intention,
-                    customerCode: thisItem.customerCode,
-                    gridCode: thisItem.gridCode,
-                    telphone: thisItem.telphone,
-                    address: thisItem.address,
-                    productName: productName,
-                    productCode: productCode,
-                    custId: thisItem.id,
-                    taskId: id,
-                    id: thisItem.customerCode,
-                    location: thisItem.location,
-                    customersType: thisItem.customersType,
-                    taskUpdateFlag: taskUpdateFlag,
-                  },
-                }"
-                v-for="(thisItem, index) in MarketingRecord"
-                :key="index"
+        <van-list
+          class="customer_list"
+          v-model="loadEnd1"
+          :finished="finishEnd1"
+          :offset="offset"
+          finished-text="没有更多了"
+          @load="onLoadList1"
+          v-show="tabId1 === 0"
+        >
+          <ul>
+            <router-link
+              tag="li"
+              :to="{
+                name: 'MarketingDetails',
+                query: {
+                  title: '营销客户详情',
+                  custName: thisItem.custName,
+                  telephone: thisItem.telephone,
+                  intention: thisItem.intention,
+                  customerCode: thisItem.customerCode,
+                  gridCode: thisItem.gridCode,
+                  telphone: thisItem.telphone,
+                  address: thisItem.address,
+                  productName: productName,
+                  productCode: productCode,
+                  custId: thisItem.id,
+                  taskId: id,
+                  id: thisItem.customerCode,
+                  location: thisItem.location,
+                  customersType: thisItem.customersType,
+                  taskUpdateFlag: taskUpdateFlag,
+                },
+              }"
+              v-for="(thisItem, index) in MarketingRecord"
+              :key="index"
+            >
+              <p
+                style="
+                  font-weight: 600;
+                  width: 25%;
+                  font-size: 0.9rem;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                "
               >
-                <p style="font-weight: 600; width: 25%; font-size: 0.9rem">
-                  {{ thisItem.custName }}
-                </p>
-                <p
-                  style="width: 75%; display: flex; justify-content: flex-end"
-                  class="approval"
-                >
-                  <span
-                    :class="
-                      thisItem.isSem == '1'
-                        ? 'approval_Passed'
-                        : 'approval_Passed1'
-                    "
-                    >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
-                  >
-                  <span
-                    v-show="thisItem.intention"
-                    :class="
-                      thisItem.intention == '1'
-                        ? 'approval_Passed'
-                        : 'approval_Passed1'
-                    "
-                    >{{ thisItem.intention | dic_client_will }}</span
-                  >
-                  <span
-                    v-show="thisItem.isSucceed"
-                    :class="
-                      thisItem.isSucceed == '1'
-                        ? 'approval_Passed'
-                        : 'approval_Passed1'
-                    "
-                    >{{
-                      thisItem.isSucceed == "0"
-                        ? "失败"
-                        : thisItem.isSucceed == "1"
-                        ? "成功"
-                        : thisItem.isSucceed == "2"
-                        ? "未成功"
-                        : ""
-                    }}
-                  </span>
-                </p>
-                <p
-                  v-if="thisItem.remark"
-                  class="schedule_star"
-                  style="width: 80%"
-                >
-                  {{ thisItem.remark }}
-                </p>
-                <p class="schedule_star" style="width: 20%">
-                  {{ thisItem.lastTime }}
-                </p>
-              </router-link>
-            </ul>
-          </div>
-        </div>
-        <div v-show="tabId1 === 1">
-          <div class="customer_list">
-            <ul>
-              <router-link
-                tag="li"
-                :to="{
-                  name: 'MarketingDetails',
-                  query: {
-                    title: '营销客户详情',
-                    custName: thisItem.custName,
-                    telephone: thisItem.telephone,
-                    intention: thisItem.intention,
-                    customerCode: thisItem.customerCode,
-                    gridCode: thisItem.gridCode,
-                    telphone: thisItem.telphone,
-                    address: thisItem.address,
-                    productName: productName,
-                    productCode: productCode,
-                    custId: thisItem.id,
-                    taskId: id,
-                    id: thisItem.customerCode,
-                    location: thisItem.location,
-                    customersType: thisItem.customersType,
-                    taskUpdateFlag: taskUpdateFlag,
-                  },
-                }"
-                v-for="(thisItem, index) in MarketingRecordClaim"
-                :key="index"
+                {{ thisItem.custName }}
+              </p>
+              <p
+                style="width: 75%; display: flex; justify-content: flex-end"
+                class="approval"
               >
-                <p style="font-weight: 600; width: 25%; font-size: 0.9rem">
-                  {{ thisItem.custName }}
-                </p>
-                <p
-                  style="width: 75%; display: flex; justify-content: flex-end"
-                  class="approval"
+                <span
+                  :class="
+                    thisItem.isSem == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
                 >
-                  <span
-                    :class="
-                      thisItem.isSem == '1'
-                        ? 'approval_Passed'
-                        : 'approval_Passed1'
-                    "
-                    >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
-                  >
-                  <span
-                    v-show="thisItem.intention"
-                    :class="
-                      thisItem.intention == '1'
-                        ? 'approval_Passed'
-                        : 'approval_Passed1'
-                    "
-                    >{{ thisItem.intention | dic_client_will }}</span
-                  >
-                  <span
-                    v-show="thisItem.isSucceed"
-                    :class="
-                      thisItem.isSucceed == '1'
-                        ? 'approval_Passed'
-                        : 'approval_Passed1'
-                    "
-                    >{{
-                      thisItem.isSucceed == "0"
-                        ? "失败"
-                        : thisItem.isSucceed == "1"
-                        ? "成功"
-                        : thisItem.isSucceed == "2"
-                        ? "未成功"
-                        : ""
-                    }}
-                  </span>
-                </p>
-                <p
-                  v-if="thisItem.remark"
-                  class="schedule_star"
-                  style="width: 80%"
+                <span
+                  v-show="thisItem.intention"
+                  :class="
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{ thisItem.intention | dic_client_will }}</span
                 >
-                  {{ thisItem.remark }}
-                </p>
-                <p class="schedule_star" style="width: 20%">
-                  {{ thisItem.lastTime }}
-                </p>
-              </router-link>
-            </ul>
-          </div>
-        </div>
-        <div v-show="tabId1 === 2">
+                <span
+                  v-show="thisItem.isSucceed"
+                  :class="
+                    thisItem.isSucceed == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{
+                    thisItem.isSucceed == "0"
+                      ? "失败"
+                      : thisItem.isSucceed == "1"
+                      ? "成功"
+                      : thisItem.isSucceed == "2"
+                      ? "未成功"
+                      : ""
+                  }}
+                </span>
+              </p>
+              <p
+                v-if="thisItem.remark"
+                class="schedule_star"
+                style="width: 80%"
+              >
+                {{ thisItem.remark }}
+              </p>
+              <p
+                v-if="thisItem.lastTime"
+                class="schedule_star"
+                style="width: 20%"
+              >
+                {{ thisItem.lastTime }}
+              </p>
+            </router-link>
+          </ul>
+        </van-list>
+        <van-list
+          class="customer_list"
+          v-model="loadEnd"
+          :finished="finishEnd"
+          :offset="offset"
+          finished-text="没有更多了"
+          @load="onLoadList"
+          v-show="tabId1 === 1"
+        >
+          <ul>
+            <router-link
+              tag="li"
+              :to="{
+                name: 'MarketingDetails',
+                query: {
+                  title: '营销客户详情',
+                  custName: thisItem.custName,
+                  telephone: thisItem.telephone,
+                  intention: thisItem.intention,
+                  customerCode: thisItem.customerCode,
+                  gridCode: thisItem.gridCode,
+                  telphone: thisItem.telphone,
+                  address: thisItem.address,
+                  productName: productName,
+                  productCode: productCode,
+                  custId: thisItem.id,
+                  taskId: id,
+                  id: thisItem.customerCode,
+                  location: thisItem.location,
+                  customersType: thisItem.customersType,
+                  taskUpdateFlag: taskUpdateFlag,
+                },
+              }"
+              v-for="(thisItem, index) in MarketingRecordClaim"
+              :key="index"
+            >
+              <p
+                style="
+                  font-weight: 600;
+                  width: 25%;
+                  font-size: 0.9rem;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                "
+              >
+                {{ thisItem.custName }}
+              </p>
+              <p
+                style="width: 75%; display: flex; justify-content: flex-end"
+                class="approval"
+              >
+                <span
+                  :class="
+                    thisItem.isSem == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{ thisItem.isSem == "1" ? "已营销" : "未营销" }}</span
+                >
+                <span
+                  v-show="thisItem.intention"
+                  :class="
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{ thisItem.intention | dic_client_will }}</span
+                >
+                <span
+                  v-show="thisItem.isSucceed"
+                  :class="
+                    thisItem.isSucceed == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
+                  >{{
+                    thisItem.isSucceed == "0"
+                      ? "失败"
+                      : thisItem.isSucceed == "1"
+                      ? "成功"
+                      : thisItem.isSucceed == "2"
+                      ? "未成功"
+                      : ""
+                  }}
+                </span>
+              </p>
+              <p
+                v-if="thisItem.remark"
+                class="schedule_star"
+                style="width: 80%"
+              >
+                {{ thisItem.remark }}
+              </p>
+              <p
+                v-if="thisItem.lastTime"
+                class="schedule_star"
+                style="width: 20%"
+              >
+                {{ thisItem.lastTime }}
+              </p>
+            </router-link>
+          </ul>
+        </van-list>
+        <!-- <div v-show="tabId1 === 2">
           <div class="customer_list">
             <ul>
               <router-link
@@ -378,7 +416,7 @@
               </router-link>
             </ul>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -394,14 +432,6 @@ export default {
       tabId: 0,
       tabId1: 0,
       content: "",
-      polylinePath: [
-        { lng: 114.75, lat: 33.41 },
-        { lng: 114.72, lat: 33.38 },
-        { lng: 114.69, lat: 33.32 },
-        { lng: 114.5, lat: 33.365 },
-        { lng: 114.65, lat: 33.47 },
-        { lng: 114.75, lat: 33.5 },
-      ],
       MarketingRecord: [],
       MarketingRecord1: [],
       MarketingRecordClaim: [],
@@ -429,13 +459,19 @@ export default {
       productName: "",
       productCode: "",
       polymerizationLocation: [],
-      mockData: [
-        { lng: "114.67002898631655", lat: "33.621688347700044" },
-        { lng: "114.68002898631655", lat: "33.621688347700044" },
-        { lng: "114.69002898631655", lat: "33.621688347700044" },
-      ],
       id: "",
       taskUpdateFlag: "",
+      currentPage1: 1,
+      pageSize1: 10,
+      dataTotal1: "",
+      loadEnd1: false, // 滚动加载中
+      finishEnd1: false, // 滚动加载完成
+      currentPage: 1,
+      pageSize: 10,
+      dataTotal: "",
+      loadEnd: false, // 滚动加载中
+      finishEnd: false, // 滚动加载完成
+      offset: 5, //滚动条与底部距离小于 offset 时触发load事件，默认300
     };
   },
   components: {
@@ -444,7 +480,6 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      // console.log(from);
       if (from.path === "/MarketingDetails") {
         vm.tab(1);
       }
@@ -460,16 +495,11 @@ export default {
   },
   updated() {},
   methods: {
-    updatePolylinePath(e) {
-      this.polylinePath = e.target.getPath();
-    },
-    addPolylinePoint() {
-      this.polylinePath.push({ lng: 116.404, lat: 39.915 });
-    },
     tab(ev) {
       this.tabId = ev;
       if (ev == 1) {
-        this.getMarketingCustomers();
+        this.onLoadList1();
+        // this.onLoadList();
       }
       if (ev == 0) {
         this.getTaskQuery();
@@ -499,35 +529,6 @@ export default {
         }
       });
     },
-    getMarketingCustomers() {
-      this.$httpGet({
-        url: "/api/appMarket/custInfo",
-        params: {
-          limit: 10,
-          page: 1,
-          customerType: 1,
-          taskId: this.id,
-        },
-      }).then((res) => {
-        this.MarketingRecord = res.data;
-        if (
-          this.MarketingRecord.customerCode &&
-          this.MarketingRecord.gridCode
-        ) {
-          this.$httpGet({
-            url: "/api/appMarket/marketRecord",
-            params: {
-              customerCode: this.MarketingRecord.customerCode,
-              limit: 10,
-              gridCode: this.MarketingRecord.gridCode,
-              page: 1,
-            },
-          }).then((res) => {
-            this.MarketingRecord1 = res.data;
-          });
-        }
-      });
-    },
     getDic() {
       this.$httpGet({
         url: "/dic/type/dic_client_will",
@@ -543,64 +544,113 @@ export default {
         this.intention_option = transformDara;
       });
     },
+    tab1(ev) {
+      this.tabId1 = ev;
+      if (ev == 1) {
+        this.currentPage = 1;
+        this.MarketingRecordClaim = [];
+        this.onLoadList();
+      } else if (ev == 0) {
+        this.currentPage1 = 1;
+        this.MarketingRecord = [];
+        this.onLoadList1();
+      }
+    },
+    // 滚动加载更多
+    onLoadList1() {
+      this.getMarketingCustomers();
+    },
+    getMarketingCustomers() {
+      this.$httpGet({
+        url: "/api/appMarket/custInfo",
+        params: {
+          page: this.currentPage1, //页数
+          limit: this.pageSize1, //每页个数
+          customerType: 1,
+          taskId: this.id,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.dataTotal1 = res.count;
+        //进行判断
+        if (this.dataTotal1 <= this.pageSize1) {
+          this.MarketingRecord = res.data;
+          console.log(this.MarketingRecord);
+        } else {
+          this.currentPage1++;
+          let arr = res.data;
+          console.log(arr);
+          this.MarketingRecord = this.MarketingRecord.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd1 = false;
+        // 数据全部加载完成
+        if (this.MarketingRecord.length >= this.dataTotal1) {
+          this.finishEnd1 = true; //结束，显示我也是有底线的
+        }
+      });
+    },
+    onLoadList() {
+      this.getMarketingCustomers1();
+    },
     getMarketingCustomers1() {
       this.$httpGet({
         url: "/api/appMarketClaim/custInfo",
         params: {
-          limit: 10,
-          page: 1,
+          page: this.currentPage, //页数
+          limit: this.pageSize, //每页个数
           customerType: 2,
           taskId: this.id,
         },
       }).then((res) => {
-        console.log(res.data);
-        this.MarketingRecordClaim = res.data;
-        if (
-          this.MarketingRecordClaim.customerCode &&
-          this.MarketingRecordClaim.gridCode
-        ) {
-          this.$httpGet({
-            url: "/api/appMarket/marketRecord",
-            params: {
-              customerCode: this.MarketingRecordClaim.customerCode,
-              limit: 10,
-              gridCode: this.MarketingRecordClaim.gridCode,
-              page: 1,
-            },
-          }).then((res) => {
-            this.MarketingRecord1 = res.data;
-          });
+        console.log(res);
+        this.dataTotal = res.count;
+        //进行判断
+        if (this.dataTotal <= this.pageSize) {
+          this.MarketingRecordClaim = res.data;
+          console.log(this.MarketingRecordClaim);
+        } else {
+          this.currentPage++;
+          let arr = res.data;
+          console.log(arr);
+          this.MarketingRecordClaim = this.MarketingRecordClaim.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd = false;
+        // 数据全部加载完成
+        if (this.MarketingRecordClaim.length >= this.dataTotal) {
+          this.finishEnd = true; //结束，显示我也是有底线的
         }
       });
     },
-    getMarketingCustomers2() {
-      this.$httpGet({
-        url: "/api/appPotentialCust/custInfo",
-        params: {
-          limit: 10,
-          page: 1,
-          customerType: 3,
-        },
-      }).then((res) => {
-        this.MarketingRecordPotential = res.data;
-        if (
-          this.MarketingRecordPotential.customerCode &&
-          this.MarketingRecordPotential.gridCode
-        ) {
-          this.$httpGet({
-            url: "/api/appMarket/marketRecord",
-            params: {
-              customerCode: this.MarketingRecordPotential.customerCode,
-              limit: 10,
-              gridCode: this.MarketingRecordPotential.gridCode,
-              page: 1,
-            },
-          }).then((res) => {
-            this.MarketingRecord1 = res.data;
-          });
-        }
-      });
-    },
+    // getMarketingCustomers2() {
+    //   this.$httpGet({
+    //     url: "/api/appPotentialCust/custInfo",
+    //     params: {
+    //       limit: 10,
+    //       page: 1,
+    //       customerType: 3,
+    //     },
+    //   }).then((res) => {
+    //     this.MarketingRecordPotential = res.data;
+    //     if (
+    //       this.MarketingRecordPotential.customerCode &&
+    //       this.MarketingRecordPotential.gridCode
+    //     ) {
+    //       this.$httpGet({
+    //         url: "/api/appMarket/marketRecord",
+    //         params: {
+    //           customerCode: this.MarketingRecordPotential.customerCode,
+    //           limit: 10,
+    //           gridCode: this.MarketingRecordPotential.gridCode,
+    //           page: 1,
+    //         },
+    //       }).then((res) => {
+    //         this.MarketingRecord1 = res.data;
+    //       });
+    //     }
+    //   });
+    // },
     onSearch() {
       if (this.tabId1 == 0) {
         this.$httpGet({
@@ -763,18 +813,6 @@ export default {
         }).then((res) => {
           this.MarketingRecordPotential = res.data;
         });
-      }
-    },
-    tab1(ev) {
-      this.tabId1 = ev;
-      if (ev == 1) {
-        this.getMarketingCustomers1();
-      }
-      if (ev == 0) {
-        this.getMarketingCustomers();
-      }
-      if (ev == 2) {
-        this.getMarketingCustomers2();
       }
     },
   },
