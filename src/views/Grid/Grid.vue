@@ -78,7 +78,6 @@
                 :keyword="searchKeyword"
                 :auto-viewport="true"
                 :panel="false"
-                :location="mapCenter"
                 :nearby="nearby"
             ></bm-local-search>
             <!-- 网格经理网格名称 -->
@@ -478,10 +477,8 @@ export default {
                     let positionArr = window.android.getLocation().split(',');
                     if (positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {
                         // 如果当前的 中心点和之前的中心点一样
-                        this.mapCenter = {
-                            lng: positionArr[0],
-                            lat: positionArr[1] + 0.0001,
-                        }; //直接将中心点回传不生效，需要稍微改动一下中心点
+                        //直接将中心点回传不生效，需要稍微改动一下中心点
+                        this.$set(this, 'mapCenter', { lng: positionArr[0], lat: positionArr[1] + 0.0001 })
                         this.nearby.center = this.mapCenter;
                         this.zoomNum = this.map.getZoom();
                         return;
@@ -494,22 +491,19 @@ export default {
                 }
             }
             if (isiOS) {
-                if (window.prompt("getLocation") != false) {
-                    let positionArr = window.prompt("getLocation").split(",");
-                    // let positionArr = [124.281873, 45.514322];
-                    // debugger
+                if (window.prompt('getLocation') != false) { //window.prompt('getLocation') != false   {lng: 116.404, lat: 39.915}
+                    let positionArr = window.prompt('getLocation').split(',');
+                    // let positionArr = [116.404, 39.915];
                     if (positionArr[0] === this.mapCenter.lng && positionArr[1] === this.mapCenter.lat) {
                         // 如果当前的 中心点和之前的中心点一样
-                        this.mapCenter = {
-                            lng: positionArr[0],
-                            lat: positionArr[1] + 0.0001,
-                        }; //直接将中心点回传不生效，需要稍微改动一下中心点]
+                        this.$set(this, 'mapCenter', { lng: positionArr[0], lat: positionArr[1] + 0.0001 })
                         this.nearby.center = this.mapCenter;
                         // console.log(this.map.getZoom());
                         this.zoomNum = this.map.getZoom();
                         return;
                     }
-                    this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+                    // this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+                    this.$set(this, 'mapCenter', { lng: positionArr[0], lat: positionArr[1] })
                     this.nearby.center = this.mapCenter;
                     // this.map.setCenter({ lng: positionArr[0], lat: positionArr[1] })
                     // this.zoomNum = 16;
