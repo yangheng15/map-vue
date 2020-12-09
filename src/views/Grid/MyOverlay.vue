@@ -75,7 +75,7 @@ export default {
   font-size: 0.8rem;
   font-weight: 600;
   width: 95px;
-  height: 1.5rem;
+  /* height: 1.5rem; */
   line-height: 1.5rem;
   background: #df0f0f;
   text-align: center;
@@ -88,7 +88,7 @@ export default {
   font-size: 0.8rem;
   font-weight: 600;
   width: 95px;
-  height: 1.5rem;
+  /* height: 1.5rem; */
   line-height: 1.5rem;
   text-align: center;
   background: #fff;
@@ -100,7 +100,7 @@ export default {
   font-size: 0.8rem;
   font-weight: 600;
   width: 95px;
-  height: 1.5rem;
+  /* height: 1.5rem; */
   line-height: 1.5rem;
   background: #fff;
   margin: 0;
@@ -113,7 +113,7 @@ export default {
   font-weight: 600;
   padding: 0rem 0.2rem;
   width: 95px;
-  height: 1.5rem;
+  /* height: 1.5rem; */
   margin: 0;
   line-height: 1.5rem;
   background: #0fb38f;
