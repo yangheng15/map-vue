@@ -3,15 +3,9 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '对公客户建档'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
-          基本信息
-        </li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
-          客户需求
-        </li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
-          营销记录
-        </li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">客户需求</li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">营销记录</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -73,7 +67,13 @@
               v-model="uploader"
               @delete="deleteImage"
               multiple
-            />
+            >
+              <template #preview-cover="uploader">
+                <div class="preview-cover van-ellipsis">
+                  {{ picCreatedTime }}
+                </div>
+              </template></van-uploader
+            >
           </template>
         </van-field>
         <van-field
@@ -183,9 +183,7 @@
           </baidu-map>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()"
-            >保存</van-button
-          >
+          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
         </div>
       </div>
       <div v-show="tabId === 1" class="household_have">
@@ -198,15 +196,9 @@
         >
           <template #input>
             <van-radio-group v-model="item.radio" direction="horizontal">
-              <van-radio name="1" checked-color="rgb(61, 66, 94)"
-                >已办</van-radio
-              >
-              <van-radio name="2" checked-color="rgb(61, 66, 94)"
-                >未办</van-radio
-              >
-              <van-radio name="3" checked-color="rgb(61, 66, 94)"
-                >需办</van-radio
-              >
+              <van-radio name="1" checked-color="rgb(61, 66, 94)">已办</van-radio>
+              <van-radio name="2" checked-color="rgb(61, 66, 94)">未办</van-radio>
+              <van-radio name="3" checked-color="rgb(61, 66, 94)">需办</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -254,10 +246,7 @@
               >
 
               <p>
-                <van-button
-                  color="#3d425e"
-                  size="mini"
-                  @click="deleteRemark(thisItem.id)"
+                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
                   >删除</van-button
                 >
               </p>
@@ -282,18 +271,12 @@
                 <!-- <span class="approval_Passed">已营销</span> -->
                 <span
                   :class="
-                    thisItem.intention == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
+                    thisItem.intention == '1' ? 'approval_Passed' : 'approval_Passed1'
                   "
                   >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
-                  :class="
-                    thisItem.isSucc == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
+                  :class="thisItem.isSucc == '1' ? 'approval_Passed' : 'approval_Passed1'"
                   >{{
                     thisItem.isSucc == "0"
                       ? "失败"
@@ -402,43 +385,17 @@ export default {
       productCode: "",
       productName: "",
       custName: "",
+      pictureTime: [],
+      picCreatedTime: "",
+      imageTime:[]
     };
   },
-  // beforeRouteEnter(to, from, next) {
-  //   console.log(from.path);
-  //   next((vm) => {
-  //     if (from.path === "/AddMarketingRecord") {
-  //       console.log(123415234523452);
-  //       vm.tab(2);
-  //     }
-  //   });
-  // },
   created() {
     this.typeCN = this.$route.query.title;
     this.dic_nation();
   },
 
   methods: {
-    deleteImage({ url }) {
-      const index = this.uploader.findIndex((it) => it.url === url);
-      this.pictureId.splice(index, 1);
-    },
-    // getMarkedRecord() {
-    //   // if (this.customerCode && this.gridCode) {
-    //   this.$httpGet({
-    //     url: "/api/appMarket/marketRecord",
-    //     params: {
-    //       // customerCode: this.customerCode,
-    //       // limit: 10,
-    //       // gridCode: this.gridCode,
-    //       // taskId: this.taskId,
-    //       page: 1,
-    //     },
-    //   }).then((res) => {
-    //     this.MarketingRecord = res.data;
-    //   });
-    //   // }
-    // },
     onIndustryShow(value) {
       this.industry = value;
       this.industryShow = false;
@@ -680,16 +637,31 @@ export default {
       this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
+    deleteImage(file, item) {
+      // console.log( a, b);
+      // const index = this.uploader.findIndex((it) =>it.url === url);
+      console.log(this.pictureTime);
+      this.pictureId.splice(item.index, 1);
+      this.pictureTime.splice(item.index, 1);
+    },
     afterRead(file) {
       let formData = new FormData();
       formData.append("file", file.file);
+      // console.log(file);
       this.$httpPost({
         url: "/api/upload/attachment",
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        // console.log(res.data.pid);
+        let time = new Date(res.data.createTime);
+        this.picCreatedTime = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
+        console.log(this.picCreatedTime);
         this.pictureId.push(res.data.pid);
+        this.pictureTime.push({
+          pid: res.data.pid,
+          createTime: this.picCreatedTime,
+        });
+        this.imageTime.push(this.picCreatedTime)
       });
     },
     selectDelegation(item) {
@@ -778,6 +750,7 @@ export default {
           businessLicenseNo: this.businessLicenseNo,
           otherContactsName: this.otherContactsName,
           otherContactsPhone: this.otherContactsTelephone,
+          customerImgInfoList: this.pictureTime,
         },
       })
         .then((res) => {
@@ -809,9 +782,7 @@ export default {
     initMap() {
       const AK = "WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e";
       const BMap_URL =
-        "https://api.map.baidu.com/api?v=2.0&ak=" +
-        AK +
-        "&s=1&callback=onBMapCallback";
+        "https://api.map.baidu.com/api?v=2.0&ak=" + AK + "&s=1&callback=onBMapCallback";
       return new Promise((resolve, reject) => {
         // 如果已加载直接返回
         if (typeof BMap !== "undefined") {
@@ -1013,6 +984,17 @@ textarea {
   border-radius: 100%;
   background-color: #3d425e;
   color: #fff;
+}
+.preview-cover {
+  position: absolute;
+  bottom: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 4px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,

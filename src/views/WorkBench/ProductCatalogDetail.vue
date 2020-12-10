@@ -27,13 +27,13 @@
       />
       <p class="productTitle">宣传资料</p>
       <div class="productImg">
-        <van-uploader
+        <!-- <van-uploader
           result-type="dataUrl"
           :after-read="afterRead"
-          :max-count="1"
           v-model="fileList"
           multiple
-        />
+        /> -->
+        <van-image v-for="(item,index) in uploader" :key="index" width="80" height="80" :src="item.url" />
       </div>
     </div>
   </div>
@@ -53,6 +53,8 @@ export default {
       id: "",
       productInformation: "",
       fileList: [{ url: "" }],
+      uploader: [],
+      pictureId:[]
     };
   },
   created() {
@@ -149,26 +151,25 @@ export default {
       this.$httpGet({
         url: `/api/productsInfo/get/${this.id}`,
       }).then((res) => {
-        // console.log(res.data);
-        this.productInformation = res.data;
-        this.editPicture();
-      });
-    },
-
-    editPicture() {
-      if (this.productInformation.url) {
-        // console.log(this.productInformation.url);
-        this.$httpGet({
-          url: "/api/show/image/base64",
-          params: {
-            id: this.productInformation.url,
-          },
-        }).then((res) => {
-          // console.log(res.data);
-          this.fileList[0].url = "data:image/jpg;base64," + res.data;
-          this.fileList[0].isImage = true;
+        console.log(res.data.url);
+        this.pictureId = res.data.url
+        ? res.data.url.split(",")
+        : [];
+        this.pictureId.forEach((el) => {
+          this.$httpGet({
+            url: "/api/show/image/base64",
+            params: {
+              id: el,
+            },
+          }).then((res) => {
+            this.uploader.push({
+              url: "data:image/jpg;base64," + res.data,
+              isImage: true,
+            });
+          });
         });
-      }
+        this.productInformation = res.data;
+      }); 
     },
   },
   beforeDestroy() {},

@@ -18,15 +18,9 @@
     </div>
     <div v-if="typeCN == '对公客户详情'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
-          基本信息
-        </li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
-          客户需求
-        </li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
-          营销记录
-        </li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">客户需求</li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">营销记录</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -88,7 +82,13 @@
               v-model="uploader"
               @delete="deleteImage"
               multiple
-            />
+            >
+              <template #preview-cover="uploader">
+                <div class="preview-cover van-ellipsis">
+                  {{ uploader.createTime }}
+                </div>
+              </template></van-uploader
+            >
           </template>
         </van-field>
         <van-field
@@ -200,9 +200,7 @@
           </baidu-map>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()"
-            >保存</van-button
-          >
+          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
         </div>
       </div>
       <div v-show="tabId === 1" class="household_have">
@@ -214,15 +212,9 @@
         >
           <template #input>
             <van-radio-group v-model="item.radio" direction="horizontal">
-              <van-radio name="1" checked-color="rgb(61, 66, 94)"
-                >已办</van-radio
-              >
-              <van-radio name="2" checked-color="rgb(61, 66, 94)"
-                >未办</van-radio
-              >
-              <van-radio name="3" checked-color="rgb(61, 66, 94)"
-                >需办</van-radio
-              >
+              <van-radio name="1" checked-color="rgb(61, 66, 94)">已办</van-radio>
+              <van-radio name="2" checked-color="rgb(61, 66, 94)">未办</van-radio>
+              <van-radio name="3" checked-color="rgb(61, 66, 94)">需办</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -265,10 +257,7 @@
               >
 
               <p>
-                <van-button
-                  color="#3d425e"
-                  size="mini"
-                  @click="deleteRemark(thisItem.id)"
+                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
                   >删除</van-button
                 >
               </p>
@@ -294,18 +283,12 @@
                 <!-- <span class="approval_Passed">已营销</span> -->
                 <span
                   :class="
-                    thisItem.intention == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
+                    thisItem.intention == '1' ? 'approval_Passed' : 'approval_Passed1'
                   "
                   >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
-                  :class="
-                    thisItem.isSucc == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
+                  :class="thisItem.isSucc == '1' ? 'approval_Passed' : 'approval_Passed1'"
                   >{{
                     thisItem.isSucc == "0"
                       ? "失败"
@@ -367,6 +350,7 @@ export default {
       industryShow: false,
       uploader: [],
       pictureId: [],
+      pictureIdTime: "",
       businessLicenseNo: "",
       legalPersonName: "",
       legalPersonTelephone: "",
@@ -408,15 +392,14 @@ export default {
       productCode: "",
       productName: "",
       custName: "",
-      taskUpdateFlag:"",
+      taskUpdateFlag: "",
+      customerImgTime: [],
+      pictureTime: [],
     };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (
-        from.path === "/EditMarketingRecord" ||
-        from.path === "/AddMarketingRecord"
-      ) {
+      if (from.path === "/EditMarketingRecord" || from.path === "/AddMarketingRecord") {
         vm.tab(2);
       }
     });
@@ -542,10 +525,7 @@ export default {
             });
         });
         this.areaList = transformDara;
-        this.publicCustomerGrid = this.enumData1(
-          this.publicCustomerGrid,
-          this.areaList
-        );
+        this.publicCustomerGrid = this.enumData1(this.publicCustomerGrid, this.areaList);
       });
       // 获取详细地址
       var u = navigator.userAgent;
@@ -566,9 +546,11 @@ export default {
       //   }
       // }
     },
-    deleteImage({ url }) {
-      const index = this.uploader.findIndex((it) => it.url === url);
-      this.pictureId.splice(index, 1);
+    deleteImage(file, item) {
+      console.log(item);
+      this.pictureId.splice(item.index, 1);
+      this.uploader.splice(item.index, 1);
+      this.customerImgTime.splice(item.index, 1);
     },
     async editRecord(val) {
       const res = await this.$httpGet({
@@ -577,8 +559,27 @@ export default {
           id: this.id,
         },
       });
-      console.log(res.data.code);
       this.customerCode = res.data.code;
+      this.customerImgTime = res.data.customerImgInfoList;
+      this.customerImgTime.forEach((it) => {
+        this.pictureId.push(it.pid);
+        // this.pictureIdTime = it.createTime;
+        if (it.pid) {
+          this.$httpGet({
+            url: "/api/show/image/base64",
+            params: {
+              id: it.pid,
+            },
+          }).then((res) => {
+            this.uploader.push({
+              url: "data:image/jpg;base64," + res.data,
+              isImage: true,
+              createTime: it.createTime,
+            });
+          });
+        }
+      });
+      console.log(res.data.customerImg.split(","));
       localStorage.setItem("customerCode", this.customerCode);
       this.publicCustomerName = res.data.name;
       res.data.address != false
@@ -600,56 +601,19 @@ export default {
         : (this.mapCenter1 = { lng: "114.654102", lat: "33.623741" });
       this.legalPersonName = res.data.legalName;
       this.legalPersonTelephone = res.data.legalPhone;
-      this.pictureId = res.data.customerImg
-        ? res.data.customerImg.split(",")
-        : [];
+      // this.pictureId = res.data.customerImg ? res.data.customerImg.split(",") : [];
       this.businessLicenseNo = res.data.businessLicenseNo;
       this.otherContactsName = res.data.otherContactsName;
       this.otherContactsTelephone = res.data.otherContactsPhone;
       if (res.data.customersDemandList.length > 0) {
         res.data.customersDemandList.forEach((item) => {
-          for (
-            let index = 0;
-            index < this.potential_need_type.length;
-            index++
-          ) {
+          for (let index = 0; index < this.potential_need_type.length; index++) {
             const i = this.potential_need_type.findIndex(
               (it) => it.index == item.demandType
             );
-            i >= 0 &&
-              (this.potential_need_type[
-                i
-              ].radio = item.demandStatus.toString());
+            i >= 0 && (this.potential_need_type[i].radio = item.demandStatus.toString());
             i < 0 && (this.otherTxt = item.description);
           }
-        });
-      }
-      console.log(this.potential_need_type);
-      //   this.customersDemandList1 = res.data.customersDemandList;
-      //   console.log(this.customersDemandList1);
-      //   if (this.customersDemandList1) {
-      //     this.customersDemandList1.forEach((it) => {
-      //       this.potential_need_type.index = it.demandStatus;
-      //       this.potential_need_type.radio = it.demandType;
-      //       if (it.demandType == -1) {
-      //         this.otherTxt = it.description;
-      //       }
-      //       console.log(this.potential_need_type);
-      //     });
-      //   }
-      if (this.pictureId) {
-        this.pictureId.forEach((el) => {
-          this.$httpGet({
-            url: "/api/show/image/base64",
-            params: {
-              id: el,
-            },
-          }).then((res) => {
-            this.uploader.push({
-              url: "data:image/jpg;base64," + res.data,
-              isImage: true,
-            });
-          });
         });
       }
       this.customersDemandList = res.data.customersDemandList;
@@ -763,25 +727,10 @@ export default {
       this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
-    // afterRead(file) {
-    //   let formData = new FormData();
-    //   formData.append("file", file.file);
-    //   this.$httpPost({
-    //     url: "/api/upload/attachment",
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //     data: formData,
-    //   }).then((res) => {
-    //     // console.log(res.data.pid);
-    //     this.pictureId.push(res.data.pid);
-    //   });
-    // },
     afterRead(file) {
+      console.log(this.uploader);
       let formData = new FormData();
-      // console.log(file, "filefile");
-      // if (file.size / 1024 > 1025) {
-      //文件大于1M（根据需求更改），进行压缩上传
       this.compressImg(file.file, (base64Codes) => {
-        // console.log(base64Codes, "base64Codes");
         let bl = this.base64UrlToBlob(base64Codes, file.file.name);
         console.log(bl, "blblbl");
         formData.append("file", bl); // 文件对象
@@ -790,27 +739,25 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
           data: formData,
         }).then((res) => {
-          this.pictureId.push(res.data.pid)
+          let el = res.data.createTime;
+          let time =
+            new Date(el).getFullYear() +
+            "-" +
+            (new Date(el).getMonth() + 1) +
+            "-" +
+            new Date(el).getDate();
+          this.pictureId.push(res.data.pid);
+          this.customerImgTime.push({
+            pid: res.data.pid,
+            createTime: time,
+          });
+          let item = this.uploader[this.uploader.length - 1];
+          item.createTime = time;
+          this.uploader.splice(this.uploader.length - 1, 1);
+          this.uploader.push(item);
+          console.log(11, this.uploader);
         });
       });
-      // } else {
-      //   formData.append("file", file.file);
-      //   this.$httpPost({
-      //     url: "/api/upload/attachment",
-      //     headers: { "Content-Type": "multipart/form-data" },
-      //     data: formData,
-      //   }).then((res) => {
-      //     // console.log(res.data.pid);
-      //     this.pictureId.push(res.data.pid);
-      //   });
-      // }
-    },
-    selectDelegation(item, index) {
-      // this.$set(this.potential_need_type, index, {...this.potential_need_type[index]})
-      // this.customersDemandList1.push({
-      //     demandStatus: item.index,
-      //     demandType: item.radio,
-      // });
     },
     async saveCustomersDemand() {
       console.log(this.potential_need_type);
@@ -890,6 +837,7 @@ export default {
           businessLicenseNo: this.businessLicenseNo,
           otherContactsName: this.otherContactsName,
           otherContactsPhone: this.otherContactsTelephone,
+          customerImgInfoList: this.customerImgTime,
         },
       })
         .then((res) => {
@@ -1135,6 +1083,17 @@ textarea {
   border-radius: 100%;
   background-color: #3d425e;
   color: #fff;
+}
+.preview-cover {
+  position: absolute;
+  bottom: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 4px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   li,

@@ -42,7 +42,7 @@ export default {
     return {
       title: "",
       typeCN: "",
-      product_catalog: "活期存款",
+      product_catalog: "",
       product_option: [],
       MarketingRecord: [],
     };
@@ -81,6 +81,7 @@ export default {
         url: "/dic/type/dic_product_type",
       }).then((res) => {
         let transformDara = [];
+        transformDara.push({value: "", text: '全部'})
         res.data.forEach((it, index) => {
           if(it.parentId !== null) {
             transformDara.push({value: it.code, text: it.codeText})
