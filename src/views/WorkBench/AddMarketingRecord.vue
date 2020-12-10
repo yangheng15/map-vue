@@ -472,6 +472,13 @@ export default {
       // }
     },
     async addPicture() {
+      if (this.pictureId == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请添加客户照片！",
+        });
+        return;
+      }
       this.$httpPost({
         url: "/api/customersRecords/appAddImage",
         data: {
