@@ -30,32 +30,28 @@
         v-model="prospect_details.name"
         name="资产类型："
         label="资产类型："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写资产类型' }]"
+        placeholder="请填写资产类型"
       />
       <van-field
         v-if="prospect_details.type !== 1"
         v-model="prospect_details.name"
         name="负债类型："
         label="负债类型："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写负债类型' }]"
+        placeholder="请填写负债类型"
       />
       <van-field
         v-if="prospect_details.type == 1"
         v-model="prospect_details.amount"
         name="评估价值（万元）："
         label="评估价值（万元）："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写评估价值' }]"
+        placeholder="请填写评估价值"
       />
       <van-field
         v-if="prospect_details.type !== 1"
         v-model="prospect_details.amount"
         name="负债金额（万元）："
         label="负债金额（万元）："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写负债金额' }]"
+        placeholder="请填写负债金额"
       />
       <van-field
         v-model="prospect_details.description"
@@ -73,7 +69,7 @@
         name="datetimePicker"
         :value="currentDate | transform"
         label="清查日期"
-        placeholder="点击选择时间"
+        placeholder="点击选择清查日期"
         @click="showPicker = true"
       />
       <van-popup v-model="showPicker" position="bottom">
@@ -139,12 +135,8 @@ export default {
       this.select_type = false;
     },
     enumData(val, data) {
-      // debugger
       if (val && data.length > 0) {
-        // console.log(this.prospect_details);
-        // console.log(data, val);
         const find = data.find((it) => it.index === +val);
-        // debugger
         return find ? find.text : "";
       } else {
         return "";
@@ -155,7 +147,6 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_nation",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
@@ -167,7 +158,6 @@ export default {
           this.prospect_details.nation,
           this.nation_list
         );
-        // console.log(this.prospect_details.nation);
       });
     },
     onNation(value) {

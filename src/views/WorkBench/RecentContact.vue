@@ -23,6 +23,11 @@
         <ul>
           <li v-for="(thisItem, index) in data_customer_list1" :key="index">
             <router-link
+              style="
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
               v-if="thisItem.customersType == 1"
               tag="p"
               :to="{
@@ -32,6 +37,11 @@
               >{{ thisItem.custName }}</router-link
             >
             <router-link
+            style="
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
               v-if="thisItem.customersType == 2"
               tag="p"
               :to="{
@@ -40,9 +50,13 @@
               }"
               >{{ thisItem.custName }}</router-link
             >
+            <p v-if="thisItem.contactDays == 0">今天联系过</p>
+            <p v-if="thisItem.contactDays !== 0">
+              上次联系 <span style="color:#E34645;">{{ thisItem.contactDays }}</span>天前
+            </p>
             <p v-if="thisItem.telphone">
               <a style="color: #000" :href="'tel:' + thisItem.telphone"
-                >电话：{{ thisItem.telphone }}</a
+                >手机号：{{ thisItem.telphone }}</a
               >
             </p>
             <!-- <p v-if="thisItem.potentialType == 2">
@@ -50,10 +64,6 @@
                 >电话：{{ thisItem.potentialTelphone }}</a
               >
             </p> -->
-            <p v-if="thisItem.contactDays == 0">今天联系过</p>
-            <p v-if="thisItem.contactDays !== 0">
-              上次联系{{ thisItem.contactDays }}天前
-            </p>
           </li>
         </ul>
       </van-list>

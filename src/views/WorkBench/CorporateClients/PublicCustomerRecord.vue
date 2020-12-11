@@ -387,7 +387,7 @@ export default {
       custName: "",
       pictureTime: [],
       picCreatedTime: "",
-      imageTime:[]
+      imageTime: [],
     };
   },
   created() {
@@ -654,14 +654,15 @@ export default {
         data: formData,
       }).then((res) => {
         let time = new Date(res.data.createTime);
-        this.picCreatedTime = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
+        this.picCreatedTime =
+          time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
         console.log(this.picCreatedTime);
         this.pictureId.push(res.data.pid);
         this.pictureTime.push({
           pid: res.data.pid,
           createTime: this.picCreatedTime,
         });
-        this.imageTime.push(this.picCreatedTime)
+        this.imageTime.push(this.picCreatedTime);
       });
     },
     selectDelegation(item) {
@@ -735,36 +736,68 @@ export default {
       //逆向解析
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
       // console.log(this.publicCustomerAddress);
-      this.$httpPost({
-        url: "/api/pulicCustomersInfo/add",
-        data: {
-          type: 1,
-          name: this.publicCustomerName,
-          address: this.publicCustomerAddress,
-          gridding: this.publicCustomerGrid.index,
-          industryType: this.industry.index,
-          location: this.publicCustomerLocation,
-          legalName: this.legalPersonName,
-          legalPhone: this.legalPersonTelephone,
-          customerImg: this.pictureId.join(","),
-          businessLicenseNo: this.businessLicenseNo,
-          otherContactsName: this.otherContactsName,
-          otherContactsPhone: this.otherContactsTelephone,
-          customerImgInfoList: this.pictureTime,
-        },
-      })
-        .then((res) => {
-          console.log(res.data);
-          this.judgeReturnValue = res.data.code;
-          Toast({
-            message: "保存成功",
-            position: "middle",
-          });
-          // this.$router.go(-1);
+      if (!this.judgeReturnValue) {
+        this.$httpPost({
+          url: "/api/pulicCustomersInfo/add",
+          data: {
+            type: 1,
+            name: this.publicCustomerName,
+            address: this.publicCustomerAddress,
+            gridding: this.publicCustomerGrid.index,
+            industryType: this.industry.index,
+            location: this.publicCustomerLocation,
+            legalName: this.legalPersonName,
+            legalPhone: this.legalPersonTelephone,
+            customerImg: this.pictureId.join(","),
+            businessLicenseNo: this.businessLicenseNo,
+            otherContactsName: this.otherContactsName,
+            otherContactsPhone: this.otherContactsTelephone,
+            customerImgInfoList: this.pictureTime,
+          },
         })
-        .catch((err) => {
-          // console.log(err);
-        });
+          .then((res) => {
+            console.log(res.data);
+            this.judgeReturnValue = res.data.code;
+            Toast({
+              message: "保存成功",
+              position: "middle",
+            });
+            // this.$router.go(-1);
+          })
+          .catch((err) => {
+            // console.log(err);
+          });
+      } else {
+        this.$httpPut({
+          url: "/api/publicCustomersInfo/update",
+          data: {
+            type: 1,
+            code: this.judgeReturnValue,
+            name: this.publicCustomerName,
+            address: this.publicCustomerAddress,
+            gridding: this.prospect_detailsEdit.publicCustomerGrid,
+            industryType: this.prospect_detailsEdit.industry,
+            location: this.publicCustomerLocation,
+            legalName: this.legalPersonName,
+            legalPhone: this.legalPersonTelephone,
+            customerImg: this.pictureId.join(","),
+            businessLicenseNo: this.businessLicenseNo,
+            otherContactsName: this.otherContactsName,
+            otherContactsPhone: this.otherContactsTelephone,
+            customerImgInfoList: this.pictureTime,
+          },
+        })
+          .then((res) => {
+            Toast({
+              message: "保存成功",
+              position: "middle",
+            });
+            // this.$router.go(-1);
+          })
+          .catch((err) => {
+            // console.log(err);
+          });
+      }
     },
     modifyDemand() {
       this.$httpPost({

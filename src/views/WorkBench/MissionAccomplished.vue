@@ -3,17 +3,21 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '任务完成'">
       <div>
-        <ul
-          class="ranking_list"
-          style="border-bottom: 1px solid #e8e8e8 !important"
-        >
+        <ul class="ranking_list" style="border-bottom: 1px solid #e8e8e8 !important">
           <li @click="tab1(1)" :class="tabId == 1 ? 'cur' : ''">本月</li>
           <li @click="tab1(2)" :class="tabId == 2 ? 'cur' : ''">本季度</li>
           <li @click="tab1(3)" :class="tabId == 3 ? 'cur' : ''">本年度</li>
           <li @click="tab1(4)" :class="tabId == 4 ? 'cur' : ''">上半年</li>
           <li @click="tab1(5)" :class="tabId == 5 ? 'cur' : ''">下半年</li>
         </ul>
-        <ul class="ranking_list1" style="border-bottom: 1px solid #e8e8e8">
+        <ul
+          class="ranking_list1"
+          style="
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: space-between;
+          "
+        >
           <li
             v-for="(item, index) in product_option"
             :key="index"
@@ -25,10 +29,7 @@
         </ul>
         <ul
           class="ranking_list"
-          style="
-            justify-content: start;
-            border-bottom: 1px solid #e8e8e8 !important;
-          "
+          style="justify-content: start; border-bottom: 1px solid #e8e8e8 !important"
         >
           <!-- <li
             @click="tab2(11)"
@@ -71,12 +72,7 @@
             <li>{{ text }}目标：{{ targetAmount ? targetAmount : 0 }}万元</li>
             <!-- <li>人均：234.00</li> -->
           </ul>
-          <div
-            style="
-              background: #fff;
-              border-bottom: 1px solid #e8e8e8 !important;
-            "
-          >
+          <div style="background: #fff; border-bottom: 1px solid #e8e8e8 !important">
             <div id="gaugeContainer" style="width: 100%; height: 160px"></div>
           </div>
         </div>
@@ -109,7 +105,7 @@ export default {
       text: "本季度",
       text1: "存款",
       tabId: 1,
-      tabId1: "支付工具",
+      tabId1: 1,
       product_option: [],
       moneyAll: "",
       targetAmount: "",
@@ -126,7 +122,7 @@ export default {
   methods: {
     getDic() {
       this.$httpGet({
-        url: "/dic/type/dic_product_type",
+        url: "/dic/type/task_product_type",
       }).then((res) => {
         let transformDara = [];
         res.data.forEach((it, index) => {
@@ -196,7 +192,10 @@ export default {
         this.text1 = res.data.FloatFinishRate;
         this.moneyAll = res.data.marketAmountByType;
         this.targetAmount = res.data.targetNum;
-        this.percentage = parseFloat(res.data.finishRate*100)<100?parseFloat(res.data.finishRate*100):100;
+        this.percentage =
+          parseFloat(res.data.finishRate * 100) < 100
+            ? parseFloat(res.data.finishRate * 100)
+            : 100;
         option["series"][0]["data"][0] = {
           value: this.percentage,
           name: "完成率",
@@ -216,7 +215,10 @@ export default {
         this.text1 = res.data.FloatFinishRate;
         this.moneyAll = res.data.marketAmountByType;
         this.targetAmount = res.data.targetNum;
-        this.percentage = parseFloat(res.data.finishRate*100)<100?parseFloat(res.data.finishRate*100):100;
+        this.percentage =
+          parseFloat(res.data.finishRate * 100) < 100
+            ? parseFloat(res.data.finishRate * 100)
+            : 100;
         option["series"][0]["data"][0] = {
           value: this.percentage,
           name: "完成率",
@@ -236,7 +238,10 @@ export default {
         this.text1 = res.data.FloatFinishRate;
         this.moneyAll = res.data.marketAmountByType;
         this.targetAmount = res.data.targetNum;
-        this.percentage = parseFloat(res.data.finishRate*100)<100?parseFloat(res.data.finishRate*100):100;
+        this.percentage =
+          parseFloat(res.data.finishRate * 100) < 100
+            ? parseFloat(res.data.finishRate * 100)
+            : 100;
         option["series"][0]["data"][0] = {
           value: this.percentage,
           name: "完成率",
@@ -257,15 +262,15 @@ export default {
               productType: this.tabId1,
             },
           }).then((res) => {
-            let mounthArr = Object.keys(res['data']).sort((a, b) =>{
-              if( a < b) {
-                return -1
+            let mounthArr = Object.keys(res["data"]).sort((a, b) => {
+              if (a < b) {
+                return -1;
               }
-            })
+            });
             let mounthData = [];
-            mounthArr.forEach(it => mounthData.push(res.data[it]))
-            option2['xAxis'].data = mounthArr;
-            option2['series'][0].data = mounthData;
+            mounthArr.forEach((it) => mounthData.push(res.data[it]));
+            option2["xAxis"].data = mounthArr;
+            option2["series"][0].data = mounthData;
             this.myChart2.setOption(option2);
           });
         } else {
@@ -279,15 +284,15 @@ export default {
               productType: this.tabId1,
             },
           }).then((res) => {
-           let mounthArr = Object.keys(res['data']).sort((a, b) =>{
-              if( a < b) {
-                return -1
+            let mounthArr = Object.keys(res["data"]).sort((a, b) => {
+              if (a < b) {
+                return -1;
               }
-            })
+            });
             let mounthData = [];
-            mounthArr.forEach(it => mounthData.push(res.data[it]))
-            option2['xAxis'].data = mounthArr;
-            option2['series'][0].data = mounthData;
+            mounthArr.forEach((it) => mounthData.push(res.data[it]));
+            option2["xAxis"].data = mounthArr;
+            option2["series"][0].data = mounthData;
             this.myChart2.setOption(option2);
           });
         }
@@ -297,14 +302,17 @@ export default {
       this.$httpGet({
         url: "/api/taskFinish/thisMonth",
         params: {
-          productType: "支付工具",
+          productType: 1,
           dateType: 1,
         },
       }).then((res) => {
         this.text1 = res.data.FloatFinishRate;
         this.moneyAll = res.data.marketAmountByType;
         this.targetAmount = res.data.targetNum;
-        this.percentage = parseFloat(res.data.finishRate*100)<100?parseFloat(res.data.finishRate*100):100;
+        this.percentage =
+          parseFloat(res.data.finishRate * 100) < 100
+            ? parseFloat(res.data.finishRate * 100)
+            : 100;
         // this.percentage = parseFloat(res.data.finishRate);
         option["series"][0]["data"][0] = {
           value: this.percentage,
@@ -315,19 +323,19 @@ export default {
       this.$httpGet({
         url: "/api/taskFinish/monthTrends",
         params: {
-          productType: "支付工具",
+          productType: 1,
         },
       }).then((res) => {
-       let mounthArr = Object.keys(res['data']).sort((a, b) =>{
-              if( a < b) {
-                return -1
-              }
-            })
-            let mounthData = [];
-            mounthArr.forEach(it => mounthData.push(res.data[it]))
-            option2['xAxis'].data = mounthArr;
-            option2['series'][0].data = mounthData;
-            this.myChart2.setOption(option2);
+        let mounthArr = Object.keys(res["data"]).sort((a, b) => {
+          if (a < b) {
+            return -1;
+          }
+        });
+        let mounthData = [];
+        mounthArr.forEach((it) => mounthData.push(res.data[it]));
+        option2["xAxis"].data = mounthArr;
+        option2["series"][0].data = mounthData;
+        this.myChart2.setOption(option2);
       });
     },
     drawLine() {

@@ -3,27 +3,23 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '农户'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
-          基本信息
-        </li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
         <!-- <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">联系</li> -->
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
-          三有三无
-        </li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">三有三无</li>
         <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">成员</li>
         <li @click="tab(4)" :class="tabId == 4 ? 'cur' : 'ordinary'">资产</li>
         <li @click="tab(5)" :class="tabId == 5 ? 'cur' : 'ordinary'">收支</li>
-        <li @click="tab(6)" :class="tabId == 6 ? 'cur' : 'ordinary'">
+        <!-- <li @click="tab(6)" :class="tabId == 6 ? 'cur' : 'ordinary'">
           走访结论
-        </li>
+        </li> -->
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
+          required
           v-model="farmers_details.familyCode"
           name="家庭户号："
           label="家庭户号："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写家庭户号' }]"
         />
         <van-field
           readonly
@@ -47,42 +43,36 @@
           name="家庭拥有房产情况："
           label="家庭拥有房产情况："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写家庭拥有房产情况' }]"
         />
         <van-field
           v-model="farmers_details.cars"
           name="家庭自用车辆情况："
           label="家庭自用车辆情况："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写家庭自用车辆情况' }]"
         />
         <van-field
           v-model="farmers_details.rufsBehalf"
           name="授信代表："
           label="授信代表："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写授信代表' }]"
         />
         <van-field
           v-model="farmers_details.rufsAmount"
           name="授信金额："
           label="授信金额："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写授信金额' }]"
         />
         <van-field
           v-model="farmers_details.creditBehalf"
           name="用信金额："
           label="用信金额："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写用信金额' }]"
         />
         <van-field
           v-model="farmers_details.num"
           name="家庭人数："
           label="家庭人数："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写家庭人数' }]"
         />
         <!-- <van-field
           v-model="business_opening"
@@ -109,21 +99,18 @@
           name="详细地址："
           label="详细地址："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写详细地址' }]"
         />
         <van-field
           v-model="farmers_details.houseName"
           name="联系人："
           label="联系人："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写联系人' }]"
         />
         <van-field
           v-model="farmers_details.telphone"
           name="手机号："
           label="手机号："
           placeholder="单行输入"
-          :rules="[{ required: true, message: '请填写手机号' }]"
         >
           <template #button>
             <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
@@ -151,7 +138,7 @@
           readonly
           name="位置："
           label="位置："
-          placeholder="单行输入"
+          placeholder="点击选择位置"
         >
           <template #button>
             <img
@@ -225,11 +212,7 @@
           "
         >
           <input
-            style="
-              border: 0.05rem solid #bbb;
-              width: 100%;
-              padding: 0rem 0.5rem;
-            "
+            style="border: 0.05rem solid #bbb; width: 100%; padding: 0rem 0.5rem"
             type="text"
             placeholder="网格名称"
           />
@@ -316,43 +299,32 @@
           </div>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()"
-            >保存</van-button
-          >
+          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
         </div>
       </div>
       <div v-show="tabId === 1"></div>
       <div v-show="tabId === 2" class="household_have">
         <van-field name="radio" label="有无固定场所：">
           <template #input>
-            <van-radio-group
-              v-model="farmers_details.hasFixPlace"
-              direction="horizontal"
-            >
-              <van-radio name="1">有</van-radio>
-              <van-radio name="0">无</van-radio>
+            <van-radio-group v-model="farmers_details.hasFixPlace" direction="horizontal">
+              <van-radio checked-color="rgb(61, 66, 94)" name="1">有</van-radio>
+              <van-radio checked-color="rgb(61, 66, 94)" name="0">无</van-radio>
             </van-radio-group>
           </template>
         </van-field>
         <van-field name="radio" label="有无不良资信：">
           <template #input>
-            <van-radio-group
-              v-model="farmers_details.hasBadAsset"
-              direction="horizontal"
-            >
-              <van-radio name="1">有</van-radio>
-              <van-radio name="0">无</van-radio>
+            <van-radio-group v-model="farmers_details.hasBadAsset" direction="horizontal">
+              <van-radio checked-color="rgb(61, 66, 94)" name="1">有</van-radio>
+              <van-radio checked-color="rgb(61, 66, 94)" name="0">无</van-radio>
             </van-radio-group>
           </template>
         </van-field>
         <van-field name="radio" label="有无稳定工作：">
           <template #input>
-            <van-radio-group
-              v-model="farmers_details.hasIncome"
-              direction="horizontal"
-            >
-              <van-radio name="1">有</van-radio>
-              <van-radio name="0">无</van-radio>
+            <van-radio-group v-model="farmers_details.hasIncome" direction="horizontal">
+              <van-radio checked-color="rgb(61, 66, 94)" name="1">有</van-radio>
+              <van-radio checked-color="rgb(61, 66, 94)" name="0">无</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -362,8 +334,8 @@
               v-model="farmers_details.hasOverFinace"
               direction="horizontal"
             >
-              <van-radio name="1">有</van-radio>
-              <van-radio name="0">无</van-radio>
+              <van-radio checked-color="rgb(61, 66, 94)" name="1">有</van-radio>
+              <van-radio checked-color="rgb(61, 66, 94)" name="0">无</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -373,8 +345,8 @@
               v-model="farmers_details.hasHarmonyFamily"
               direction="horizontal"
             >
-              <van-radio name="1">有</van-radio>
-              <van-radio name="0">无</van-radio>
+              <van-radio checked-color="rgb(61, 66, 94)" name="1">有</van-radio>
+              <van-radio checked-color="rgb(61, 66, 94)" name="0">无</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -384,15 +356,13 @@
               v-model="farmers_details.hasBadAddiction"
               direction="horizontal"
             >
-              <van-radio name="1">有</van-radio>
-              <van-radio name="0">无</van-radio>
+              <van-radio checked-color="rgb(61, 66, 94)" name="1">有</van-radio>
+              <van-radio checked-color="rgb(61, 66, 94)" name="0">无</van-radio>
             </van-radio-group>
           </template>
         </van-field>
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="modifyResult()"
-            >保存</van-button
-          >
+          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
         </div>
       </div>
       <div v-show="tabId === 3">
@@ -415,7 +385,15 @@
               style="color: #000; font-weight: 550; width: 40%"
             >
               {{ thisItem.name }}
-              <span class="approval_Passed">{{ thisItem.relationship }}</span>
+              <!-- <span v-if="thisItem.relationship" class="approval_Passed">{{ thisItem.relationship }}</span> -->
+              <van-tag
+                class="approval_Passed"
+                v-if="thisItem.relationship"
+                plain
+                color="#7232dd"
+                size="medium"
+                >{{ thisItem.relationship }}
+              </van-tag>
             </router-link>
             <p>年龄：{{ thisItem.age }}</p>
             <p>年收入：{{ thisItem.annualIncome }}</p>
@@ -423,9 +401,17 @@
           <div>
             <p style="position: relative">
               电话：{{ thisItem.telphone }}
-              <a class="img1" :href="'tel:' + thisItem.telphone"></a>
+              <a
+                v-if="thisItem.telphone"
+                class="img1"
+                :href="'tel:' + thisItem.telphone"
+              ></a>
             </p>
-            <p class="delete" @click="deleteFamilyPeople(thisItem.id)">删除</p>
+            <p class="delete" @click="deleteFamilyPeople(thisItem.id)">
+              <van-button type="primary" color="rgb(61, 66, 94)" size="mini"
+                >删除</van-button
+              >
+            </p>
           </div>
         </div>
         <span class="add_record" @click="showPopupFamily()">+</span>
@@ -458,21 +444,36 @@
               name="姓名"
               label="姓名"
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写姓名' }]"
             />
-            <van-field
+            <!-- <van-field
               v-model="household_age"
               name="年龄"
               label="年龄"
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写年龄' }]"
+            /> -->
+            <van-field
+              readonly
+              clickable
+              name="datetimePicker"
+              :value="birthDate"
+              label="出生日期"
+              placeholder="点击选择出生日期"
+              @click="showBirthDate = true"
             />
+            <van-popup v-model="showBirthDate" position="bottom">
+              <van-datetime-picker
+                :min-date="minBirthDate"
+                type="date"
+                title="出生日期"
+                @confirm="onBirthDate"
+                @cancel="showBirthDate = false"
+              />
+            </van-popup>
             <van-field
               v-model="relationship_householder_txt"
               name="与户主关系"
               label="与户主关系"
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写与户主关系' }]"
             />
             <!-- <van-field
               readonly
@@ -496,21 +497,18 @@
               name="身份证号："
               label="身份证号："
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写身份证号' }]"
             />
             <van-field
               v-model="phone_number"
               name="手机号码："
               label="手机号码："
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写手机号码' }]"
             />
             <van-field
               v-model="annual_income"
               name="年收入："
               label="年收入："
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写年收入' }]"
             />
             <div style="margin-top: 3rem" class="save_pop">
               <van-button
@@ -547,17 +545,33 @@
               style="color: #000; font-weight: 550"
             >
               {{ thisItem.name }}
-              <span v-if="thisItem.type === 1" class="approval_Passed"
-                >资产</span
-              >
-              <span v-if="thisItem.type === 2" class="approval_Passed1"
-                >负债</span
-              >
+              <!-- <span v-if="thisItem.type === 1" class="approval_Passed">资产</span>
+              <span v-if="thisItem.type === 2" class="approval_Passed1">负债</span> -->
+              <van-tag
+                class="approval_Passed"
+                v-if="thisItem.type === 1"
+                plain
+                color="#7232dd"
+                size="medium"
+                >资产
+              </van-tag>
+              <van-tag
+                class="approval_Passed1"
+                v-if="thisItem.type === 2"
+                plain
+                color="#7232dd"
+                size="medium"
+                >负债
+              </van-tag>
             </router-link>
             <p>清查日期：{{ thisItem.checkTime | transform }}</p>
           </div>
           <p>评估价值（万元）：{{ thisItem.amount | NumFormat }}</p>
-          <p class="delete" @click="deleteFamilyAssets(thisItem.id)">删除</p>
+          <p class="delete" @click="deleteFamilyAssets(thisItem.id)">
+            <van-button type="primary" color="rgb(61, 66, 94)" size="mini"
+              >删除</van-button
+            >
+          </p>
         </div>
         <span class="add_record" @click="showPopupAssets()">+</span>
         <div
@@ -607,7 +621,6 @@
               name="资产类型："
               label="资产类型："
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写资产类型' }]"
             />
             <van-field
               v-if="select_type_txt.index !== 1"
@@ -615,7 +628,6 @@
               name="负债类型："
               label="负债类型："
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写负债类型' }]"
             />
             <!-- <van-field
               readonly
@@ -657,7 +669,6 @@
               name="评估价值："
               label="评估价值："
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写评估价值' }]"
             />
             <van-field
               v-if="select_type_txt.index !== 1"
@@ -665,7 +676,6 @@
               name="负债金额："
               label="负债金额："
               placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写负债金额' }]"
             />
             <van-field
               v-model="message_income"
@@ -720,9 +730,7 @@
             name="合计（自动计算）（万元）："
             label="合计（自动计算）（万元）："
             placeholder="单行输入"
-            :rules="[
-              { required: true, message: '请填写合计（自动计算）（万元）' },
-            ]"
+            :rules="[{ required: true, message: '请填写合计（自动计算）（万元）' }]"
           />
           <p>收入信息</p>
           <van-field
@@ -731,9 +739,7 @@
             name="总收入（自动计算）（万元）："
             label="总收入（自动计算）（万元）："
             placeholder="单行输入"
-            :rules="[
-              { required: true, message: '请填写总收入（自动计算）（万元）' },
-            ]"
+            :rules="[{ required: true, message: '请填写总收入（自动计算）（万元）' }]"
           />
           <van-field
             v-model="householdIncome"
@@ -756,9 +762,7 @@
             name="总支出（自动计算）（万元）："
             label="总支出（自动计算）（万元）："
             placeholder="单行输入"
-            :rules="[
-              { required: true, message: '请填写总支出（自动计算）（万元）：' },
-            ]"
+            :rules="[{ required: true, message: '请填写总支出（自动计算）（万元）：' }]"
           />
           <van-field
             v-model="mortgage"
@@ -853,9 +857,7 @@
           </template>
         </van-field>
         <div class="save" style="margin-top: 20px">
-          <van-button round block type="primary" @click="addResult()"
-            >保存</van-button
-          >
+          <van-button round block type="primary" @click="addResult()">保存</van-button>
         </div>
       </div>
     </div>
@@ -885,8 +887,7 @@ export default {
       position: "",
       family_type_list: [],
       family_type: false,
-      business_opening:
-        "活期存款、定期存款、网上银行、手机银行、支付宝支付、信用卡",
+      business_opening: "活期存款、定期存款、网上银行、手机银行、支付宝支付、信用卡",
       household_name: "",
       household_age: "",
       annual_income: "",
@@ -976,9 +977,14 @@ export default {
       suitableProducts_txt: "",
       suitableProducts_list: [],
       zoom: 20,
-      inventoryDate:"",
-      inventoryDate1:"",
-      showInventoryDate:false,
+      inventoryDate: "",
+      inventoryDate1: "",
+      showInventoryDate: false,
+      birthDate: "",
+      birthDate1: "",
+      showBirthDate: false,
+      minBirthDate: new Date(1920, 0, 1),
+      // maxBirthDate: new Date(2010, 0, 31),
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -1021,6 +1027,11 @@ export default {
     },
     formatDate(date) {
       return `${date.getMonth() + 1}-${date.getDate()}`;
+    },
+    onBirthDate(time) {
+      this.birthDate = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`;
+      this.birthDate1 = time;
+      this.showBirthDate = false;
     },
     onConfirm1(date) {
       this.show = false;
@@ -1222,7 +1233,7 @@ export default {
       this.inventoryDate = `${time.getFullYear()}-${
         time.getMonth() + 1
       }-${time.getDate()}`;
-      this.inventoryDate1 = time
+      this.inventoryDate1 = time;
       this.showInventoryDate = false;
     },
     onRegional_grid(value) {
@@ -1289,6 +1300,7 @@ export default {
           relationship: this.relationship_householder_txt,
           servOpen: this.Customer_intention_txt,
           familyCode: this.farmers_details.familyCode,
+          birthday: this.birthDate1,
         },
       }).then((res) => {
         this.getFamilyPeople();
@@ -1308,7 +1320,7 @@ export default {
           type: this.select_type_txt.index,
           description: this.message_income,
           amount: this.evaluation_value,
-          checkTime:this.inventoryDate1,
+          checkTime: this.inventoryDate1,
         },
       }).then((res) => {
         this.getFamilyAssets();
@@ -1414,29 +1426,37 @@ export default {
       if (isAndroid) {
         let positionArr = window.android.getLocation().split(",");
         // let positionArr = [124.281873, 45.514322]
-        if(positionArr[0] === this.mapCenter1.lng && positionArr[1] === this.mapCenter1.lat) {// 如果当前的 中心点和之前的中心点一样
-          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
-          this.zoomNum = this.map.getZoom()
-          return
+        if (
+          positionArr[0] === this.mapCenter1.lng &&
+          positionArr[1] === this.mapCenter1.lat
+        ) {
+          // 如果当前的 中心点和之前的中心点一样
+          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] + 0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.zoomNum = this.map.getZoom();
+          return;
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1;
         // this.zoomNum = 20;
-        this.zoomNum = this.map.getZoom()
+        this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
       }
       if (isiOS) {
         let positionArr = window.prompt("getLocation").split(",");
         // let positionArr = [124.281873, 45.514322]
-        if(positionArr[0] === this.mapCenter1.lng && positionArr[1] === this.mapCenter1.lat) {// 如果当前的 中心点和之前的中心点一样
-          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
-          this.zoomNum = this.map.getZoom()
-          return
+        if (
+          positionArr[0] === this.mapCenter1.lng &&
+          positionArr[1] === this.mapCenter1.lat
+        ) {
+          // 如果当前的 中心点和之前的中心点一样
+          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] + 0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.zoomNum = this.map.getZoom();
+          return;
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1;
         // this.zoomNum = 20;
-        this.zoomNum = this.map.getZoom()
+        this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
       }
     },
@@ -1858,25 +1878,16 @@ textarea {
 }
 .approval_Passed {
   position: absolute;
-  text-align: center;
-  width: 4.5rem;
-  line-height: 1.5rem;
-  border: 1px solid #3cc8ab;
+  padding: 3px 10px;
+    font-size: 14px;
   top: 1rem;
-  color: #3cc8ab;
-  font-size: 0.8rem;
   left: 25%;
 }
 .approval_Passed1 {
   position: absolute;
-  text-align: center;
-  width: 4.5rem;
-  height: 1.5rem;
-  line-height: 1.5rem;
-  border: 1px solid #7e4a46;
+  padding: 3px 10px;
+    font-size: 14px;
   top: 1rem;
-  color: #7e4a46;
-  font-size: 0.8rem;
   left: 25%;
 }
 .income_expenditure {
@@ -1991,13 +2002,13 @@ textarea {
     padding: 0.3rem 0.5rem;
     font-size: 0.7rem !important;
   }
-  .approval .approval_Passed {
-    height: 1.7rem;
-    line-height: 1.5rem;
+.approval_Passed {
+    padding: 3px 10px;
+    font-size: 12px;
   }
-  .approval .approval_Passed1 {
-    height: 1.7rem;
-    line-height: 1.5rem;
+.approval_Passed1 {
+    padding: 3px 10px;
+    font-size: 12px;
   }
   .end_line {
     font-size: 0.7rem;

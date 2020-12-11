@@ -548,7 +548,7 @@ export default {
     },
     deleteImage(file, item) {
       this.pictureId.splice(item.index, 1);
-      // this.uploader.splice(item.index, 1);
+      this.uploader.splice(item.index, 1);
       this.customerImgTime.splice(item.index, 1);
     },
     async editRecord(val) {

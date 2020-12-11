@@ -23,7 +23,7 @@
             <p style="font-size: 1rem; font-weight: 600">{{ thisItem.name }}</p>
             <p class="schedule_star">支付工具</p>
             <p class="schedule_star">{{ thisItem.type }}</p>
-            <p class="schedule_star">{{ thisItem.updatedTime | transform }}</p>
+            <p class="schedule_star">{{ thisItem.createdTime | transform }}</p>
           </router-link>
         </ul>
       </div>

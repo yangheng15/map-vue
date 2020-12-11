@@ -3,10 +3,7 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '排行榜'">
       <div style="background: #fff">
-        <ul
-          class="ranking_list"
-          style="border-bottom: 1px solid #e8e8e8 !important"
-        >
+        <ul class="ranking_list" style="border-bottom: 1px solid #e8e8e8 !important">
           <li @click="tab1(1)" :class="tabId == 1 ? 'cur' : ''">本月</li>
           <li @click="tab1(2)" :class="tabId == 2 ? 'cur' : ''">本季度</li>
           <li @click="tab1(3)" :class="tabId == 3 ? 'cur' : ''">本年度</li>
@@ -15,7 +12,11 @@
         </ul>
         <ul
           class="ranking_list1"
-          style="border-bottom: 1px solid #e8e8e8 !important"
+          style="
+            border-bottom: 1px solid #e8e8e8 !important;
+            display: flex;
+            justify-content: space-between;
+          "
         >
           <li
             v-for="(item, index) in product_option"
@@ -110,7 +111,7 @@ export default {
       title: "",
       typeCN: "",
       tabId: 2,
-      tabId1: "三方存管",
+      tabId1: 1,
       achievements_list: [],
       product_option: "",
       marketAmount: "",
@@ -126,7 +127,7 @@ export default {
   methods: {
     getDic() {
       this.$httpGet({
-        url: "/dic/type/dic_product_type",
+        url: "/dic/type/task_product_type",
       }).then((res) => {
         let transformDara = [];
         res.data.forEach((it, index) => {
@@ -204,8 +205,8 @@ export default {
       this.$httpGet({
         url: "/api/rankingList/dateType",
         params: {
-          productType: "三方存管",
-          dateType: 1,
+          productType: 1,
+          dateType: 2,
         },
       }).then((res) => {
         this.achievements_list = res.data;

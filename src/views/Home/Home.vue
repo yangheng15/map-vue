@@ -15,17 +15,11 @@
         <dt>
           <ul class="text_content">
             <li>
-              <img
-                class="img_content"
-                src="../../assets/home/kehushu.svg"
-                alt
-              />
+              <img class="img_content" src="../../assets/home/kehushu.svg" alt />
               <p style="margin: 0">客户数</p>
             </li>
             <li>
-              <p class="total_money">
-                {{ countNum.custNumMap.thisMonthCustNum }}人
-              </p>
+              <p class="total_money">{{ countNum.custNumMap.thisMonthCustNum }}人</p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.custNumMap.custRatio }}
                 <img
@@ -46,17 +40,11 @@
         <dt>
           <ul class="text_content">
             <li>
-              <img
-                class="img_content"
-                src="../../assets/home/cunkuane.svg"
-                alt
-              />
+              <img class="img_content" src="../../assets/home/cunkuane.svg" alt />
               <p style="margin: 0">存款额</p>
             </li>
             <li>
-              <p class="total_money">
-                {{ countNum.depositMap.thisMonthDeposit }}万
-              </p>
+              <p class="total_money">{{ countNum.depositMap.thisMonthDeposit }}万</p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.depositMap.depositRatio }}
                 <img
@@ -77,11 +65,7 @@
         <dt>
           <ul class="text_content">
             <li>
-              <img
-                class="img_content"
-                src="../../assets/home/daikuane.svg"
-                alt
-              />
+              <img class="img_content" src="../../assets/home/daikuane.svg" alt />
               <p style="margin: 0">贷款额</p>
             </li>
             <li>
@@ -110,9 +94,7 @@
               <p style="margin: 0">理财额</p>
             </li>
             <li>
-              <p class="total_money">
-                {{ countNum.licaiMap.thisMonthLicai }}万
-              </p>
+              <p class="total_money">{{ countNum.licaiMap.thisMonthLicai }}万</p>
               <p :class="23 ? 'down_color' : 'up_color'">
                 {{ countNum.licaiMap.licaiRatio }}
                 <img
@@ -182,16 +164,22 @@
             }"
           >
             <ul>
-              <li style="font-weight: 600;width: 100%;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;">{{ item.name }}</li>
-              
+              <li
+                style="
+                  font-weight: 600;
+                  width: 100%;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                "
+              >
+                {{ item.name }}
+              </li>
             </ul>
             <ul>
               <!-- <li>{{ item.productName }}</li> -->
-              <li style="color:#0fb38f">目标：{{ item.targetNum | NumFormat }}</li>
-              <li style="color:#0fb38f">{{ item.endTime | transform }}前</li>
+              <li style="color: #0fb38f">目标：{{ item.targetNum | NumFormat }}</li>
+              <li style="color: #0fb38f">{{ item.endTime | transform }}前</li>
             </ul>
           </router-link>
         </van-list>
@@ -203,14 +191,10 @@
           @load="onLoadList"
           v-show="tabId == 1"
         >
-          <div
-            v-for="(item, index) in recent_contact"
-            :key="index"
-            class="latest_tasks"
-          >
+          <div v-for="(item, index) in recent_contact" :key="index" class="latest_tasks">
             <ul>
               <router-link
-              style="font-weight:700"
+                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
                 v-if="item.customersType == 1"
                 tag="li"
                 :to="{
@@ -220,7 +204,7 @@
                 >{{ item.custName }}</router-link
               >
               <router-link
-              style="font-weight:700"
+                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
                 v-if="item.customersType == 2"
                 tag="li"
                 :to="{
@@ -229,20 +213,10 @@
                 }"
                 >{{ item.custName }}</router-link
               >
-              <a
-                v-if="item.telphone"
-                style="color: #000"
-                :href="'tel:' + item.telphone"
-              >
-                <li>
-                  {{ item.telphone }}
-                  <img
-                    style="width: 16px"
-                    src="../../assets/home/md-phone.svg"
-                    alt
-                  />
-                </li>
-              </a>
+              <li v-if="item.contactDays == 0">今天联系过</li>
+              <li v-if="item.contactDays !== 0">
+                上次联系 <span style="color:#E34645;">{{ item.contactDays }}</span>天前
+              </li>
               <!-- <a
                 v-if="item.potentialType == 2"
                 style="color: #000"
@@ -259,11 +233,14 @@
               </a> -->
             </ul>
             <ul>
-              <li v-if="item.productType">{{ item.productType }}</li>
-              <li style="color:#0fb38f" v-if="item.contactDays == 0">今天联系过</li>
-              <li style="color:#0fb38f" v-if="item.contactDays !== 0">
-                上次联系{{ item.contactDays }}天前
-              </li>
+              <!-- <li v-if="item.productType">{{ item.productType }}</li> -->
+
+              <a v-if="item.telphone" style="color: #000" :href="'tel:' + item.telphone">
+                <li>
+                  {{ item.telphone }}
+                  <img style="width: 16px" src="../../assets/home/md-phone.svg" alt />
+                </li>
+              </a>
             </ul>
           </div>
         </van-list>
@@ -521,7 +498,7 @@ export default {
   },
 };
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .task_execution {
   margin: 5px 5px;
 }
@@ -707,4 +684,3 @@ export default {
   width: 20px;
 }
 </style>
-

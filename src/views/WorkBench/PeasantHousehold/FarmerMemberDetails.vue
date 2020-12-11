@@ -6,43 +6,54 @@
         v-model="prospect_details.name"
         name="姓名："
         label="姓名："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写姓名' }]"
+        placeholder="请填写姓名"
       />
-       <van-field
+       <!-- <van-field
         v-model="prospect_details.age"
         name="年龄："
         label="年龄："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写年龄' }]"
+        placeholder="请填写年龄"
+      /> -->
+      <van-field
+        readonly
+        clickable
+        name="datetimePicker"
+        :value="currentDate | transform"
+        label="出生日期"
+        placeholder="点击选择出生日期"
+        @click="showPicker = true"
       />
+      <van-popup v-model="showPicker" position="bottom">
+        <van-datetime-picker
+          type="date"
+          :min-date="minBirthDate" 
+          @confirm="onConfirm"
+          @cancel="showPicker = false"
+        />
+      </van-popup>
       <van-field
         v-model="prospect_details.relationship"
         name="与户主关系："
         label="与户主关系："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写与户主关系' }]"
+        placeholder="请填写与户主关系"
       />
       <van-field
         v-model="prospect_details.telphone"
         name="手机号："
         label="手机号："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写手机号' }]"
+        placeholder="请填写手机号"
       />
       <van-field
         v-model="prospect_details.identifyNo"
         name="身份证号："
         label="身份证号："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写身份证号' }]"
+        placeholder="请填写身份证号"
       />
       <van-field
         v-model="prospect_details.annualIncome"
         name="年收入："
         label="年收入："
-        placeholder="单行输入"
-        :rules="[{ required: true, message: '请填写年收入' }]"
+        placeholder="请填写年收入"
       />
       <div class="save">
         <van-button round block type="primary" @click="modifyResult()"
@@ -72,6 +83,10 @@ export default {
       familyCode: "",
       prospect_details: "",
       prospect_detailsEdit: {},
+      minBirthDate: new Date(1920, 0, 1),
+      currentDate: '',
+      showPicker: false,
+      currentDate1:''
     };
   },
   async created() {
@@ -84,12 +99,8 @@ export default {
   updated() {},
   methods: {
     enumData(val, data) {
-      // debugger
       if (val && data.length > 0) {
-        // console.log(this.prospect_details);
-        // console.log(data, val);
         const find = data.find((it) => it.index === +val);
-        // debugger
         return find ? find.text : "";
       } else {
         return "";
@@ -111,24 +122,29 @@ export default {
           this.prospect_details.nation,
           this.nation_list
         );
-        // console.log(this.prospect_details.nation);
       });
     },
     onNation(value) {
-      // debugger;
       this.prospect_detailsEdit.nation = value.index;
       this.prospect_details.nation = value.text;
       this.nation = false;
     },
+        onConfirm(time) {
+      // this.currentDate = `${time.getFullYear()}-${
+      //   time.getMonth() + 1
+      // }-${time.getDate()}`;
+      this.currentDate = time
+      this.currentDate1 = time
+      this.showPicker = false;
+    },
     async editRecord(val) {
-      // console.log(val);
       const res = await this.$httpGet({
         url: `/api/customersFamilyMembers/get/${this.id}`,
       });
       this.prospect_details = res.data;
+      this.currentDate = this.prospect_details.birthday 
     },
     modifyResult() {
-        // console.log(this.familyCode);
       this.$httpPut({
         url: "/api/customersFamilyMembers/update",
         data: {
@@ -140,6 +156,7 @@ export default {
           identifyNo: this.prospect_details.identifyNo,
           relationship: this.prospect_details.relationship,
           annualIncome: this.prospect_details.annualIncome,
+          birthday:this.currentDate1
         },
       })
         .then((res) => {

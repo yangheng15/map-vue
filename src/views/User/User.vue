@@ -6,12 +6,13 @@
           style="width: 60px; border-radius: 50%"
           :src="userNameSex == 2 ? women : men"
         />
-        <div style="font-size: 18px; color: #fff; margin-top: 4px">
+        <div style="font-size: 18px; color: #fff; margin: 4px 0px">
           {{ userNameTxt.realName }}
         </div>
         <div class="have_star">
+          <!-- v-model="userNameTxt.level" -->
           <van-rate
-            v-model="userNameTxt.level"
+            v-model="level"
             color="#fff"
             void-color="#fff"
             readonly
@@ -113,6 +114,7 @@ export default {
       women: icon1,
       men: icon2,
       versionNo: "",
+      level:5
     };
   },
   created() {

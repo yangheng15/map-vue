@@ -765,7 +765,7 @@ export default {
       //逆向解析
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
       // console.log(this.publicCustomerAddress);
-      this.$httpPost({
+      if (!this.judgeReturnValue) {this.$httpPost({
         url: "/api/pulicCustomersInfo/add",
         data: {
           type: 2,
@@ -793,7 +793,35 @@ export default {
         })
         .catch((err) => {
           // console.log(err);
+        });}else{
+           this.$httpPut({
+        url: "/api/publicCustomersInfo/update",
+        data: {
+          code: this.judgeReturnValue,
+          name: this.publicCustomerName,
+          address: this.publicCustomerAddress,
+          gridding: this.publicCustomerGrid.index,
+          industryType: this.industry.index,
+          location: this.publicCustomerLocation,
+          legalName: this.legalPersonName,
+          legalPhone: this.legalPersonTelephone,
+          customerImg: this.pictureId.join(","),
+          telphone: this.publicCustomerTelephone,
+          identifyNo: this.publicCustomerId,
+          workUnit: this.publicCustomerWorkUnit,
+        },
+      })
+        .then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+          // this.$router.go(-1);
+        })
+        .catch((err) => {
+          // console.log(err);
         });
+        }
     },
     modifyDemand() {
       this.$httpPost({

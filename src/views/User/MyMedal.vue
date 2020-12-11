@@ -23,7 +23,16 @@ productCode<template>
           <button>查询</button>
         </li>
       </ul> -->
-      <div
+      <router-link
+            tag="div"
+            :to="{
+              name: 'MapAddressDisplay',
+              query: {
+                title: '地址',
+                location: thisItem.location,
+                custName: thisItem.realName,
+              },
+            }"
         class="Footprint_list"
         style="padding-top: 10px"
         v-for="(thisItem, index) in Footprintlist"
@@ -35,21 +44,11 @@ productCode<template>
         </ul>
         <ul>
           <li>{{ thisItem.address }}</li>
-          <router-link
-            tag="li"
-            :to="{
-              name: 'MapAddressDisplay',
-              query: {
-                title: '地址',
-                location: thisItem.location,
-                custName: thisItem.realName,
-              },
-            }"
-          >
+          <li>
             <img style="width: 19px" src="../../assets/User/zuji.svg" alt />
-          </router-link>
+          </li>
         </ul>
-      </div>
+      </router-link>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
     </div>
   </div>
