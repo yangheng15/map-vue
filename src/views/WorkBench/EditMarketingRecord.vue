@@ -315,7 +315,8 @@ export default {
       resultArr: [],
       productTypeArr: "",
       taskUpdateFlag:true,
-      taskId:""
+      taskId:"",
+      modifyResultFlag: true
     };
   },
   components: {
@@ -479,6 +480,11 @@ export default {
       this.showMarketing_methods = false;
     },
     modifyResult() {
+      if(!this.modifyResultFlag) return
+      this.modifyResultFlag = false
+      setTimeout(() => {
+        this.modifyResultFlag = true;
+      }, 2000)
       if(this.resultArr){
         this.resultArr=this.resultArr.toString()
       }else{
@@ -615,6 +621,8 @@ export default {
       alert("file");
     },
     afterRead(file) {
+      file.status = 'uploading';
+      file.message = '上传中...';
       let formData = new FormData();
       formData.append("file", file.file);
       console.log(file);
@@ -624,6 +632,8 @@ export default {
         data: formData,
       }).then((res) => {
         console.log(res.data);
+        file.status = 'done';
+        file.message = '上传成功';
         this.pictureId.push(res.data.pid);
       });
     },
