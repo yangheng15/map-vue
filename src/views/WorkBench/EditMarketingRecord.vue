@@ -8,17 +8,13 @@
           <!-- <img src="../../assets/WorkBench/location.svg" alt /> -->
         </li>
         <li v-if="productName">营销产品：{{ productName }}</li>
-        <li v-if="productName">
-          执行时间：{{ editRecords.semTime | transform }}
-        </li>
+        <li v-if="productName">执行时间：{{ editRecords.semTime | transform }}</li>
       </ul>
       <div>
         <ul class="tabList">
           <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">结果</li>
           <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">影像</li>
-          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
-            竞争对手
-          </li>
+          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">竞争对手</li>
         </ul>
         <div v-show="tabId === 0" style="background: #fff">
           <van-field
@@ -131,7 +127,7 @@
             </div>
           </van-popup>
           <van-field
-          v-if="taskId"
+            v-if="taskId"
             v-model="editRecords.marketAmount"
             required
             rows="2"
@@ -189,20 +185,11 @@
             />
           </van-popup>
           <div v-if="taskUpdateFlag" class="save">
-            <van-button type="primary" block @click="modifyResult()"
-              >保存</van-button
-            >
+            <van-button type="primary" block @click="modifyResult()">保存</van-button>
           </div>
         </div>
         <div v-show="tabId === 1" style="background: #fff">
-          <div
-            style="
-              padding: 10px;
-              background: #fff;
-              display: flex;
-              flex-wrap: wrap;
-            "
-          >
+          <div style="padding: 10px; background: #fff; display: flex; flex-wrap: wrap">
             <van-uploader
               result-type="dataUrl"
               :after-read="afterRead"
@@ -232,9 +219,7 @@
             <!-- <input type="file" accept="image/*" capture="camera"> -->
           </div>
           <div v-if="taskUpdateFlag" class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="modifyPicture()"
-              >保存</van-button
-            >
+            <van-button type="primary" block @click="modifyPicture()">保存</van-button>
           </div>
         </div>
         <div v-show="tabId === 2" style="background: #fff; height: 70vh">
@@ -260,9 +245,7 @@
             placeholder="请填写产品利率（数字）"
           />
           <div v-if="taskUpdateFlag" class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="modifyCompetitor()"
-              >保存</van-button
-            >
+            <van-button type="primary" block @click="modifyCompetitor()">保存</van-button>
           </div>
         </div>
       </div>
@@ -314,9 +297,9 @@ export default {
       showPopup: false,
       resultArr: [],
       productTypeArr: "",
-      taskUpdateFlag:true,
-      taskId:"",
-      modifyResultFlag: true
+      taskUpdateFlag: true,
+      taskId: "",
+      modifyResultFlag: true,
     };
   },
   components: {
@@ -335,9 +318,9 @@ export default {
   updated() {},
   methods: {
     task_product_type(val) {
-      const findWill = JSON.parse(
-        localStorage.getItem("dicTaskProductType")
-      ).find((it) => +it.key == val);
+      const findWill = JSON.parse(localStorage.getItem("dicTaskProductType")).find(
+        (it) => +it.key == val
+      );
       return findWill ? findWill.value : "";
     },
     resultListClick() {
@@ -456,8 +439,12 @@ export default {
       } else {
         this.timeOut = false;
       }
-      res.data.productTypeName?this.productTypeArr = res.data.productTypeName:this.productTypeArr=""
-      res.data.productType?this.resultArr = res.data.productType.split(","):this.resultArr=""
+      res.data.productTypeName
+        ? (this.productTypeArr = res.data.productTypeName)
+        : (this.productTypeArr = "");
+      res.data.productType
+        ? (this.resultArr = res.data.productType.split(","))
+        : (this.resultArr = "");
       console.log(this.resultArr);
     },
     onResult(value) {
@@ -480,15 +467,15 @@ export default {
       this.showMarketing_methods = false;
     },
     modifyResult() {
-      if(!this.modifyResultFlag) return
-      this.modifyResultFlag = false
+      if (!this.modifyResultFlag) return;
+      this.modifyResultFlag = false;
       setTimeout(() => {
         this.modifyResultFlag = true;
-      }, 2000)
-      if(this.resultArr){
-        this.resultArr=this.resultArr.toString()
-      }else{
-        this.resultArr=""
+      }, 2000);
+      if (this.resultArr) {
+        this.resultArr = this.resultArr.toString();
+      } else {
+        this.resultArr = "";
       }
       // console.log(this.id);
       // console.log(this.editRecords.code);
@@ -528,6 +515,11 @@ export default {
         });
         return;
       }
+      if (!this.modifyResultFlag) return;
+      this.modifyResultFlag = false;
+      setTimeout(() => {
+        this.modifyResultFlag = true;
+      }, 2000);
       if (this.editRecords.competitorId) {
         this.$httpPut({
           url: "/api/semCustomersRecords/updateCompetitor",
@@ -565,6 +557,11 @@ export default {
       }
     },
     async modifyPicture() {
+      if (!this.modifyResultFlag) return;
+      this.modifyResultFlag = false;
+      setTimeout(() => {
+        this.modifyResultFlag = true;
+      }, 2000);
       if (this.editRecords.imageId) {
         this.$httpPut({
           url: "/api/semCustomersRecords/updateScreenage",
@@ -621,8 +618,8 @@ export default {
       alert("file");
     },
     afterRead(file) {
-      file.status = 'uploading';
-      file.message = '上传中...';
+      file.status = "uploading";
+      file.message = "上传中...";
       let formData = new FormData();
       formData.append("file", file.file);
       console.log(file);
@@ -632,8 +629,8 @@ export default {
         data: formData,
       }).then((res) => {
         console.log(res.data);
-        file.status = 'done';
-        file.message = '上传成功';
+        file.status = "done";
+        file.message = "上传成功";
         this.pictureId.push(res.data.pid);
       });
     },

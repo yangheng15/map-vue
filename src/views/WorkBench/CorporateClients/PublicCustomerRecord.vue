@@ -645,6 +645,8 @@ export default {
       this.pictureTime.splice(item.index, 1);
     },
     afterRead(file) {
+      file.status = 'uploading';
+      file.message = '上传中...';
       let formData = new FormData();
       formData.append("file", file.file);
       // console.log(file);
@@ -653,6 +655,8 @@ export default {
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
+        file.status = 'done';
+        file.message = '上传成功';
         let time = new Date(res.data.createTime);
         this.picCreatedTime =
           time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();

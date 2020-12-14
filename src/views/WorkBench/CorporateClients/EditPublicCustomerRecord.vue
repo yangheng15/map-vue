@@ -728,6 +728,8 @@ export default {
     },
     afterRead(file) {
       console.log(this.uploader);
+      file.status = 'uploading';
+      file.message = '上传中...';
       let formData = new FormData();
       this.compressImg(file.file, (base64Codes) => {
         let bl = this.base64UrlToBlob(base64Codes, file.file.name);
@@ -738,6 +740,8 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
           data: formData,
         }).then((res) => {
+          file.status = 'done';
+        file.message = '上传成功';
           let el = res.data.createTime;
           let time =
             new Date(el).getFullYear() +

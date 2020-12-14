@@ -15,9 +15,7 @@
         <ul class="tabList">
           <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">结果</li>
           <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">影像</li>
-          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
-            竞争对手
-          </li>
+          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">竞争对手</li>
         </ul>
         <div v-show="tabId === 0" style="background: #fff">
           <van-field
@@ -172,9 +170,7 @@
             />
           </van-popup>
           <div class="save">
-            <van-button type="primary" block @click="addResult()"
-              >保存</van-button
-            >
+            <van-button type="primary" block @click="addResult()">保存</van-button>
           </div>
         </div>
         <div v-show="tabId === 1" style="background: #fff">
@@ -182,9 +178,7 @@
             <van-uploader :after-read="afterRead" v-model="fileList" multiple />
           </div>
           <div class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="addPicture()"
-              >保存</van-button
-            >
+            <van-button type="primary" block @click="addPicture()">保存</van-button>
           </div>
         </div>
         <div v-show="tabId === 2" style="background: #fff; height: 70vh">
@@ -210,9 +204,7 @@
             placeholder="请填写产品利率（数字）"
           />
           <div class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="addCompetitor()"
-              >保存</van-button
-            >
+            <van-button type="primary" block @click="addCompetitor()">保存</van-button>
           </div>
         </div>
       </div>
@@ -272,6 +264,10 @@ export default {
       resultArr: [],
       productTypeArr: "",
       taskId: "",
+      modifyId: "",
+      idCompetitor: "",
+      idImage: "",
+      modifyResultFlag: true,
     };
   },
   components: {
@@ -291,9 +287,9 @@ export default {
   updated() {},
   methods: {
     task_product_type(val) {
-      const findWill = JSON.parse(
-        localStorage.getItem("dicTaskProductType")
-      ).find((it) => +it.key == val);
+      const findWill = JSON.parse(localStorage.getItem("dicTaskProductType")).find(
+        (it) => +it.key == val
+      );
       return findWill ? findWill.value : "";
     },
     resultListClick() {
@@ -361,30 +357,63 @@ export default {
       this.tabId = ev;
     },
     addResult() {
-      this.$httpPost({
-        url: "/api/customersRecords/appAddResult",
-        data: {
-          customerCode: this.customerCode,
-          griddingCode: this.gridCode,
-          products: this.productCode,
-          taskId: this.taskId,
-          isSucc: this.result_txt.index,
-          intention: this.Customer_intention_txt.index,
-          semType: this.Marketing_methods_txt.index,
-          actualDemand: this.actual_demand,
-          marketAmount: this.market_amount,
-          remark: this.remarks,
-          feedback: this.customer_feedback,
-          dueTime: this.currentDate1,
-          productType: this.resultArr.toString(),
-        },
-      }).then((res) => {
-        this.resultCode = res.data.code;
-        Toast({
-          message: "保存成功",
-          position: "middle",
+      if (!this.modifyResultFlag) return;
+      this.modifyResultFlag = false;
+      setTimeout(() => {
+        this.modifyResultFlag = true;
+      }, 2000);
+      if (!this.modifyId && !this.resultCode) {
+        this.$httpPost({
+          url: "/api/customersRecords/appAddResult",
+          data: {
+            customerCode: this.customerCode,
+            griddingCode: this.gridCode,
+            products: this.productCode,
+            taskId: this.taskId,
+            isSucc: this.result_txt.index,
+            intention: this.Customer_intention_txt.index,
+            semType: this.Marketing_methods_txt.index,
+            actualDemand: this.actual_demand,
+            marketAmount: this.market_amount,
+            remark: this.remarks,
+            feedback: this.customer_feedback,
+            dueTime: this.currentDate1,
+            productType: this.resultArr.toString(),
+          },
+        }).then((res) => {
+          this.resultCode = res.data.code;
+          this.modifyId = res.data.id;
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
         });
-      });
+      } else {
+        this.$httpPut({
+          url: "/api/semCustomersRecords/updateRecord",
+          data: {
+            customerCode: this.customerCode,
+            griddingCode: this.gridCode,
+            products: this.productCode,
+            id: this.modifyId,
+            code: this.resultCode,
+            isSucc: this.result_txt.index,
+            intention: this.Customer_intention_txt.index,
+            semType: this.Marketing_methods_txt.index,
+            actualDemand: this.actual_demand,
+            marketAmount: this.market_amount,
+            remark: this.remarks,
+            feedback: this.customer_feedback,
+            dueTime: this.currentDate1,
+            productType: this.resultArr.toString(),
+          },
+        }).then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+        });
+      }
     },
     async addCompetitor() {
       var reg = /^\d*\.{0,1}\d*$/;
@@ -395,21 +424,46 @@ export default {
         });
         return;
       }
-      this.$httpPost({
-        url: "/api/customersRecords/appAddCompetitor",
-        data: {
-          customerCode: this.customerCode,
-          semCode: this.resultCode,
-          rivalName: this.competitor,
-          rivalProduct: this.competitive_products,
-          interestRate: this.product_rate,
-        },
-      }).then((res) => {
-        Toast({
-          message: "保存成功",
-          position: "middle",
+      if (!this.modifyResultFlag) return;
+      this.modifyResultFlag = false;
+      setTimeout(() => {
+        this.modifyResultFlag = true;
+      }, 2000);
+      if (!this.idCompetitor) {
+        this.$httpPost({
+          url: "/api/customersRecords/appAddCompetitor",
+          data: {
+            customerCode: this.customerCode,
+            semCode: this.resultCode,
+            rivalName: this.competitor,
+            rivalProduct: this.competitive_products,
+            interestRate: this.product_rate,
+          },
+        }).then((res) => {
+          this.idCompetitor = res.data.id;
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
         });
-      });
+      } else {
+        this.$httpPut({
+          url: "/api/semCustomersRecords/updateCompetitor",
+          data: {
+            customerCode: this.customerCode,
+            semCode: this.resultCode,
+            rivalName: this.competitor,
+            rivalProduct: this.competitive_products,
+            interestRate: this.product_rate,
+            id: this.idCompetitor,
+          },
+        }).then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+        });
+      }
     },
     onResult(value) {
       console.log(value);
@@ -443,6 +497,8 @@ export default {
     // },
     afterRead(file) {
       let formData = new FormData();
+      file.status = "uploading";
+      file.message = "上传中...";
       // console.log(file, "filefile");
       // if (file.size / 1024 > 1025) {
       //文件大于1M（根据需求更改），进行压缩上传
@@ -456,7 +512,9 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
           data: formData,
         }).then((res) => {
-          this.pictureId.push(res.data.pid)
+          file.status = "done";
+          file.message = "上传成功";
+          this.pictureId.push(res.data.pid);
         });
       });
       // } else {
@@ -479,19 +537,42 @@ export default {
         });
         return;
       }
-      this.$httpPost({
-        url: "/api/customersRecords/appAddImage",
-        data: {
-          imageInfo: this.pictureId.join(','),
-          customerCode: this.customerCode,
-          semCode: this.resultCode,
-        },
-      }).then((res) => {
-        Toast({
-          message: "保存成功",
-          position: "middle",
+      if (!this.modifyResultFlag) return;
+      this.modifyResultFlag = false;
+      setTimeout(() => {
+        this.modifyResultFlag = true;
+      }, 2000);
+      if (!this.idImage) {
+        this.$httpPost({
+          url: "/api/customersRecords/appAddImage",
+          data: {
+            imageInfo: this.pictureId.join(","),
+            customerCode: this.customerCode,
+            semCode: this.resultCode,
+          },
+        }).then((res) => {
+          this.idImage = res.data.id;
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
         });
-      });
+      } else {
+        this.$httpPut({
+          url: "/api/semCustomersRecords/updateScreenage",
+          data: {
+            customerCode: this.customerCode,
+            semCode: this.resultCode,
+            id: this.idImage,
+            imageInfo: this.pictureId.join(","),
+          },
+        }).then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+        });
+      }
     },
   },
 };
