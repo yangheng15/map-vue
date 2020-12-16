@@ -127,16 +127,13 @@ export default {
           customerName: this.search_txt,
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal = res.count;
         //进行判断
         if (this.dataTotal <= this.pageSize1) {
           this.data_customer_list1 = res.data;
-          console.log(this.data_customer_list1);
         } else {
           this.currentPage++;
           let arr = res.data;
-          console.log(arr);
           this.data_customer_list1 = this.data_customer_list1.concat(arr);
         }
         // 加载状态结束

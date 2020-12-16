@@ -243,16 +243,13 @@ export default {
           limit: this.pageSize, //每页个数
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal = res.count;
         //进行判断
         if (this.dataTotal <= this.pageSize) {
           this.new_task = res.data;
-          console.log(this.new_task);
         } else {
           this.currentPage++;
           let arr = res.data;
-          console.log(arr);
           this.new_task = this.new_task.concat(arr);
         }
         // 加载状态结束
@@ -276,16 +273,13 @@ export default {
           limit: this.pageSize1, //每页个数
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal1 = res.count;
         //进行判断
         if (this.dataTotal1 <= this.pageSize1) {
           this.new_task1 = res.data;
-          console.log(this.new_task1);
         } else {
           this.currentPage1++;
           let arr = res.data;
-          console.log(arr);
           this.new_task1 = this.new_task1.concat(arr);
         }
         // 加载状态结束
@@ -309,16 +303,13 @@ export default {
           limit: this.pageSize2, //每页个数
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal2 = res.count;
         //进行判断
         if (this.dataTotal2 <= this.pageSize2) {
           this.new_task2 = res.data;
-          console.log(this.new_task2);
         } else {
           this.currentPage2++;
           let arr = res.data;
-          console.log(arr);
           this.new_task2 = this.new_task2.concat(arr);
         }
         // 加载状态结束

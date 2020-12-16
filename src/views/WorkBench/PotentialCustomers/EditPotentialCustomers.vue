@@ -379,7 +379,6 @@ export default {
         });
     },
     longpress({ point }) {
-      console.log(123);
       const zoom = this.map.getZoom();
       if (Math.abs(zoom - this.zoom) > 0) {
         this.zoom = zoom;
@@ -410,7 +409,6 @@ export default {
       let find = "";
       if (val && data.length > 0) {
         find = data.find((it) => it.index === val);
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -421,7 +419,6 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_nation",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
@@ -433,13 +430,11 @@ export default {
           this.prospect_details.nation,
           this.nation_list
         );
-        // console.log(this.prospect_details.nation);
       });
       // 婚姻状况
       this.$httpGet({
         url: "/dic/type/dic_marital_status",
       }).then((res) => {
-        // console.log(res.data);
         // const transformDara = res.data.map((it, index) =>
         //   it.parentId === null ? "" : { index, text: it.codeText }
         // );
@@ -455,13 +450,11 @@ export default {
           this.prospect_details.marriage,
           this.marital_status_list
         );
-        // console.log(this.prospect_details.marriage);
       });
       // 最高学历
       this.$httpGet({
         url: "/dic/type/dic_education",
       }).then((res) => {
-        // console.log(res.data);
         // const transformDara = res.data.map((it, index) =>
         //   it.parentId === null ? "" : { index, text: it.codeText }
         // );
@@ -477,7 +470,6 @@ export default {
           this.prospect_details.education,
           this.education_level_list
         );
-        // console.log(this.prospect_details.education);
       });
       // 所属网格
       this.$httpGet({
@@ -500,12 +492,9 @@ export default {
           this.areaList
         );
         // this.areaList = res.data.length > 0 &&  this.transformData(res.data);
-        // console.log(this.areaList);
         // //回显数据
         // const arrIndex = this.prospect_details.gridding.split(',');
-        // console.log(arrIndex);
         // this.prospect_details.gridding = `${this.areaList[arrIndex[0]].text}/${this.areaList[arrIndex[0]]['children'][arrIndex[1]].text}`
-        // console.log(this.prospect_details.gridding);
       });
     },
     // transformData(data, newArr = []) { //递归查询
@@ -551,7 +540,6 @@ export default {
       this.regional_grid = false;
     },
     async editRecord(val) {
-      // console.log(val);
       const res = await this.$httpGet({
         url: `/api/customersPotential/get/${this.id}`,
         data: {
@@ -563,7 +551,6 @@ export default {
       this.prospect_details_telphone = res.data.telphone;
       if (this.prospect_details.location) {
         const positionArr = this.prospect_details.location.split(",");
-        console.log(positionArr);
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
         // this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
       } else {
@@ -678,7 +665,6 @@ export default {
           this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
   },

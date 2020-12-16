@@ -294,7 +294,6 @@ export default {
     },
     resultListClick() {
       this.resultArr.forEach((it) => {
-        console.log(this.task_product_type(it));
         this.productTypeArr += this.task_product_type(it) + ",";
       });
       if (this.productTypeArr.length > 0) {
@@ -304,7 +303,6 @@ export default {
         );
       }
       this.showPopup = false;
-      console.log(this.resultArr.toString());
     },
     onConfirm(time) {
       this.currentDate = time;
@@ -316,28 +314,24 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_client_will",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.columnsCustomer_intention = transformDara;
       });
       // 客户需求
       this.$httpGet({
         url: "/dic/type/task_product_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.potential_need_type = transformDara;
       });
     },
@@ -466,7 +460,6 @@ export default {
       }
     },
     onResult(value) {
-      console.log(value);
       this.result_txt = value;
       this.showResult = false;
       if (value.index == 1) {
@@ -491,7 +484,6 @@ export default {
     //     headers: { "Content-Type": "multipart/form-data" },
     //     data: formData,
     //   }).then((res) => {
-    //     // console.log(res.data.pid);
     //     this.pictureId.push(res.data.pid);
     //   });
     // },
@@ -499,13 +491,10 @@ export default {
       let formData = new FormData();
       file.status = "uploading";
       file.message = "上传中...";
-      // console.log(file, "filefile");
       // if (file.size / 1024 > 1025) {
       //文件大于1M（根据需求更改），进行压缩上传
       this.compressImg(file.file, (base64Codes) => {
-        // console.log(base64Codes, "base64Codes");
         let bl = this.base64UrlToBlob(base64Codes, file.file.name);
-        console.log(bl, "blblbl");
         formData.append("file", bl); // 文件对象
         this.$httpPost({
           url: "/api/upload/attachment",
@@ -524,7 +513,6 @@ export default {
       //     headers: { "Content-Type": "multipart/form-data" },
       //     data: formData,
       //   }).then((res) => {
-      //     // console.log(res.data.pid);
       //     this.pictureId.push(res.data.pid);
       //   });
       // }

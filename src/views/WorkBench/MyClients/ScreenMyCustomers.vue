@@ -377,7 +377,6 @@ export default {
       this.regional_grid = false;
     },
     onSubmit(values) {
-      console.log("submit", values);
     },
     // sceenPool() {
     // this.$httpGet({
@@ -401,7 +400,6 @@ export default {
     //     regional_grid_txt: this.regional_grid_txt.index,
     //   },
     // }).then((res) => {
-    //   console.log(res);
     //   this.$router.go(-1);
     // });
 

@@ -101,16 +101,13 @@ export default {
           status: this.value2,
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal = res.count;
         //进行判断
         if (this.dataTotal <= this.pageSize1) {
           this.recent_contact = res.data;
-          console.log(this.recent_contact);
         } else {
           this.currentPage++;
           let arr = res.data;
-          console.log(arr);
           this.recent_contact = this.recent_contact.concat(arr);
         }
         // 加载状态结束

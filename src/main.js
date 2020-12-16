@@ -50,9 +50,6 @@ import moment from "moment";
 Vue.config.productionTip = false
 Vue.filter('NumFormat', function (val = 0) {
   // val = val.toLocaleString(); // 3,000
-  // // console.log(val);
-  // debugger
-  // // console.log(val);
   // if (val.indexOf(".") == -1) {
   //   val = val + ".00"; //3,000.00
   // } else if (val.charAt(val.indexOf(".") == val.length - 2)) {

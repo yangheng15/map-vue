@@ -225,7 +225,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        // console.log(res.data);
         this.peasant_household = res.data;
         this.peasant_household.forEach((it) => {
           this.familyCode = it.type;
@@ -249,13 +248,11 @@ export default {
       this.$httpGet({
         url: `/dic/dic_family_type/${this.familyCode}`,
       }).then((res) => {
-        // console.log(res.data);
         this.familyCodeName = res.data.codeText;
       });
       this.$httpGet({
         url: "/dic/type/dic_family_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.code !== null) {
@@ -274,7 +271,6 @@ export default {
           address: this.residential_address,
         },
       }).then((res) => {
-        // console.log(res);
         // this.resultCode = res.data.code;
         this.isPopupVisibleFamily = false;
         Toast({
@@ -308,7 +304,6 @@ export default {
       const findWill = JSON.parse(localStorage.getItem("dicFamilyType")).find(
         (it) => +it.key == val
       );
-      console.log(findWill);
       return findWill ? findWill.value : "";
     },
   },

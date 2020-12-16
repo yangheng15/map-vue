@@ -608,7 +608,6 @@ export default {
       this.regional_grid = false;
     },
     onSubmit(values) {
-      console.log("submit", values);
     },
     prev() {
       this.$router.go(-1);

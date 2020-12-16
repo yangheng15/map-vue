@@ -397,7 +397,7 @@ export default {
       this.regional_grid = false;
     },
     onSubmit(values) {
-      console.log("submit", values);
+      // console.log("submit", values);
     },
     sceenPool() {
       this.$store.dispatch('UPDATESCREEN', {

@@ -118,10 +118,8 @@ export default {
           return item.parentId != null;
         });
         this.resource_selection3 = res.data;
-        console.log(this.resource_selection3);
 
         for (var item = 0; item < res.data.length; item++) {
-          // console.log(res.data[item].code);
           let lalala = res.data[item].code;
           // this.resource_selection3[item] = res.data[item].code;
         }
@@ -130,11 +128,9 @@ export default {
   },
   //   filters: {
   //   dic_grid_resource_type(val) {
-  //     console.log(val);
   //     const findWill = JSON.parse(localStorage.getItem("dicGridResource")).find(
   //       (it) => +it.key == val
   //     );
-  //     console.log(findWill);
   //     return findWill ? findWill.value : "";
   //   },
   // },

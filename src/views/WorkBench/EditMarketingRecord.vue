@@ -326,7 +326,6 @@ export default {
     resultListClick() {
       this.productTypeArr = [];
       this.resultArr.forEach((it) => {
-        console.log(this.task_product_type(it));
         this.productTypeArr += this.task_product_type(it) + ",";
       });
       if (this.productTypeArr.length > 0) {
@@ -336,7 +335,6 @@ export default {
         );
       }
       this.showPopup = false;
-      console.log(this.resultArr.toString());
     },
     onConfirm(time) {
       // this.currentDate = `${time.getFullYear()}-${
@@ -344,7 +342,6 @@ export default {
       // }-${time.getDate()}`;
       this.currentDate = time;
       this.currentDate1 = time;
-      console.log(time);
       this.showPicker = false;
     },
     deleteImage({ url }) {
@@ -359,7 +356,6 @@ export default {
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
       if (isAndroid) {
         window.android.openCamera((el) => {
-          console.log(el);
         });
       } else if (isiOS) {
         window.webkit.messageHandlers.AppModel.postMessage({
@@ -370,7 +366,6 @@ export default {
     enumData(val, data) {
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -397,14 +392,12 @@ export default {
       this.$httpGet({
         url: "/dic/type/task_product_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.potential_need_type = transformDara;
       });
     },
@@ -445,10 +438,8 @@ export default {
       res.data.productType
         ? (this.resultArr = res.data.productType.split(","))
         : (this.resultArr = "");
-      console.log(this.resultArr);
     },
     onResult(value) {
-      console.log(value);
       this.editRecords.isSucc = value.index;
       this.showResult = false;
       if (value.index == 1) {
@@ -477,8 +468,6 @@ export default {
       } else {
         this.resultArr = "";
       }
-      // console.log(this.id);
-      // console.log(this.editRecords.code);
       this.$httpPut({
         url: "/api/semCustomersRecords/updateRecord",
         data: {
@@ -622,13 +611,11 @@ export default {
       file.message = "上传中...";
       let formData = new FormData();
       formData.append("file", file.file);
-      console.log(file);
       this.$httpPost({
         url: "/api/upload/attachment",
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        console.log(res.data);
         file.status = "done";
         file.message = "上传成功";
         this.pictureId.push(res.data.pid);

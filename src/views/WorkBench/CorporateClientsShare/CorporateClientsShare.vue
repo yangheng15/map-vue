@@ -166,20 +166,16 @@ export default {
       });
     },
     selectManager(el) {
-      console.log(el);
       this.checkList.push({
         pid: el,
       });
-      console.log(this.checkList);
     },
     checkAll(name) {
-      console.log(name);
       this.checkType = name;
       this.checkList = [];
       this.$refs.checkboxGroup.toggleAll(true);
     },
     notCheckAll(name) {
-      console.log(name);
       this.checkType = name;
       this.$refs.checkboxGroup.toggleAll(false);
     },
@@ -245,16 +241,13 @@ export default {
           limit: this.pageSize1, //每页个数
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal = res.count;
         //进行判断
         if (this.dataTotal <= this.pageSize1) {
           this.shareRecords = res.data;
-          console.log(this.shareRecords);
         } else {
           this.currentPage++;
           let arr = res.data;
-          console.log(arr);
           this.shareRecords = this.shareRecords.concat(arr);
         }
         // 加载状态结束

@@ -420,15 +420,6 @@ export default {
       custName: "",
     };
   },
-  // beforeRouteEnter(to, from, next) {
-  //   console.log(from.path);
-  //   next((vm) => {
-  //     if (from.path === "/AddMarketingRecord") {
-  //       console.log(123415234523452);
-  //       vm.tab(2);
-  //     }
-  //   });
-  // },
   created() {
     this.typeCN = this.$route.query.title;
     this.dic_nation();
@@ -485,7 +476,6 @@ export default {
         });
     },
     longpress({ point }) {
-      console.log(123);
       const zoom = this.map.getZoom();
       if (Math.abs(zoom - this.zoom) > 0) {
         this.zoom = zoom;
@@ -503,8 +493,6 @@ export default {
     enumData(val, data) {
       // debugger
       if (val && data.length > 0) {
-        // console.log(this.prospect_details);
-        // console.log(data, val);
         const find = data.find((it) => it.index == val);
         // debugger
         return find ? find.text : "";
@@ -516,7 +504,6 @@ export default {
       let find = "";
       if (val && data.length > 0) {
         find = data.find((it) => it.index === val);
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -527,21 +514,18 @@ export default {
       this.$httpGet({
         url: "/dic/type/industry_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.industry_list = transformDara;
       });
       // 潜在客户需求
       this.$httpGet({
         url: "/dic/type/task_product_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
@@ -552,7 +536,6 @@ export default {
             });
           }
         });
-        console.log(transformDara);
         this.potential_need_type = transformDara;
       });
       this.$httpGet({
@@ -600,14 +583,12 @@ export default {
       this.regional_grid = false;
     },
     handler({ BMap, map }) {
-      // console.log(BMap, map);
       this.center.lng = 116.404;
       this.center.lat = 39.915;
       this.zoom = 15;
     },
     tab(ev) {
       if (ev != 0) {
-        console.log(this);
         if (this.judgeReturnValue == "") {
           Toast({
             message: "请先添加基本信息",
@@ -704,7 +685,6 @@ export default {
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        // console.log(res.data.pid);
         this.pictureId.push(res.data.pid);
       });
     },
@@ -727,7 +707,6 @@ export default {
           demandType: -1,
         });
       }
-      console.log(this.judgeReturnValue);
       const res = await this.$httpPost({
         url: "/api/customersDemand/save",
         data: {
@@ -743,7 +722,6 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     async modifyResult() {
@@ -764,7 +742,6 @@ export default {
 
       //逆向解析
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
-      // console.log(this.publicCustomerAddress);
       if (!this.judgeReturnValue) {this.$httpPost({
         url: "/api/pulicCustomersInfo/add",
         data: {
@@ -783,7 +760,6 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res.data);
           this.judgeReturnValue = res.data.code;
           Toast({
             message: "保存成功",
@@ -792,7 +768,6 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });}else{
            this.$httpPut({
         url: "/api/publicCustomersInfo/update",
@@ -819,7 +794,6 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
         }
     },
@@ -832,7 +806,6 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res.data);
         })
         .catch((err) => {});
     },
@@ -850,7 +823,7 @@ export default {
         }
         // 百度地图异步加载回调处理
         window.onBMapCallback = function () {
-          console.log("百度地图脚本初始化成功...");
+          // console.log("百度地图脚本初始化成功...");
           resolve(BMap);
         };
 
@@ -866,7 +839,6 @@ export default {
       let Geo = new BMap.Geocoder();
       let point;
       Geo.getPoint(address, (res) => {
-        console.log(res);
         point = res;
       });
     },

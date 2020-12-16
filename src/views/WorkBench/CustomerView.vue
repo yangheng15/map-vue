@@ -710,7 +710,6 @@ export default {
     this.id = this.$route.query.id;
     await this.getCustomerView();
     this.dic_nation();
-    console.log(this.CustomerViewDetails.location );
     if (this.CustomerViewDetails.location == "") {
       debugger
       this.appMessage();
@@ -773,7 +772,6 @@ export default {
       this.map = map;
     },
     longpress({ point }) {
-      console.log(123);
       const zoom = this.map.getZoom();
       if( Math.abs(zoom - this.zoom) > 0) {
           this.zoom = zoom
@@ -886,7 +884,6 @@ export default {
     enumData(val, data) {
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -1038,7 +1035,6 @@ export default {
       }
       if (this.CustomerViewDetails.location) {
         const positionArr = this.CustomerViewDetails.location.split(",");
-        console.log(positionArr);
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
       } else {
@@ -1074,7 +1070,6 @@ export default {
       this.vehicle_condition = false;
     },
     onSubmit(values) {
-      console.log("submit", values);
     },
     onChoose_gender(value) {
       this.choose_gender_txt = value;
@@ -1181,7 +1176,6 @@ export default {
       this.isPopupVisible = false;
     },
     handleChange(value) {
-      // console.log(`selected ${value}`);
     },
     //选中一个item
     selectItem(thisItem) {
@@ -1226,7 +1220,6 @@ export default {
           this.isPopupVisibleEducation = false;
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     deleteCustomersAcademic(val) {
@@ -1267,7 +1260,6 @@ export default {
           this.isPopupVisibleWork = false;
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     deleteCustomersWork(val) {
@@ -1304,7 +1296,6 @@ export default {
       const findWill = JSON.parse(localStorage.getItem("dicEducation")).find(
         (it) => +it.key == val
       );
-      console.log(findWill);
       return findWill ? findWill.value : "";
     },
   },

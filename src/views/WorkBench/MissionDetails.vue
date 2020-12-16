@@ -519,13 +519,11 @@ export default {
       }).then((res) => {
         this.taskQuery = res.data;
         this.taskUpdateFlag = res.data.taskUpdateFlag;
-        // console.log(res.data.custList);
         if (res.data.custList.length > 0) {
           this.polymerizationLocation = res.data.custList.map((it) => ({
             lng: it.location?.split(",")[0],
             lat: it.location?.split(",")[1],
           }));
-          // console.log(this.polymerizationLocation);
         }
       });
     },
@@ -540,7 +538,6 @@ export default {
             transformDara.push({ value: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.intention_option = transformDara;
       });
     },
@@ -570,16 +567,13 @@ export default {
           taskId: this.id,
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal1 = res.count;
         //进行判断
         if (this.dataTotal1 <= this.pageSize1) {
           this.MarketingRecord = res.data;
-          console.log(this.MarketingRecord);
         } else {
           this.currentPage1++;
           let arr = res.data;
-          console.log(arr);
           this.MarketingRecord = this.MarketingRecord.concat(arr);
         }
         // 加载状态结束
@@ -603,16 +597,13 @@ export default {
           taskId: this.id,
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal = res.count;
         //进行判断
         if (this.dataTotal <= this.pageSize) {
           this.MarketingRecordClaim = res.data;
-          console.log(this.MarketingRecordClaim);
         } else {
           this.currentPage++;
           let arr = res.data;
-          console.log(arr);
           this.MarketingRecordClaim = this.MarketingRecordClaim.concat(arr);
         }
         // 加载状态结束

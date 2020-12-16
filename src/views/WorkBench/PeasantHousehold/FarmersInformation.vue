@@ -139,10 +139,11 @@
           name="位置："
           label="位置："
           placeholder="点击选择位置"
+          @click="getLongitudeLatitude"
         >
           <template #button>
             <img
-              @click="getLongitudeLatitude"
+              
               style="opacity: 0.9; margin-right: 15px"
               class=""
               src="../../../assets/grid/sign.svg"
@@ -1064,7 +1065,6 @@ export default {
         });
     },
     longpress({ point }) {
-      console.log(123);
       const zoom = this.map.getZoom();
       if (Math.abs(zoom - this.zoom) > 0) {
         this.zoom = zoom;
@@ -1086,8 +1086,6 @@ export default {
     enumData(val, data) {
       // debugger
       if (val && data.length > 0) {
-        // console.log(this.prospect_details);
-        // console.log(data, val);
         const find = data.find((it) => it.index == val);
         // debugger
         return find ? find.text : "";
@@ -1099,7 +1097,6 @@ export default {
       let find = "";
       if (val && data.length > 0) {
         find = data.find((it) => it.index === val);
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -1122,20 +1119,17 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_family_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.family_type_list = transformDara;
         this.farmers_details.type = this.enumData(
           this.farmers_details.type,
           this.family_type_list
         );
-        // console.log(this.farmers_details.type);
       });
       this.$httpGet({
         url: "/api/semGridding/query",
@@ -1157,12 +1151,9 @@ export default {
           this.areaList
         );
         // this.areaList = res.data.length > 0 &&  this.transformData(res.data);
-        // console.log(this.areaList);
         // //回显数据
         // const arrIndex = this.prospect_details.gridding.split(',');
-        // console.log(arrIndex);
         // this.prospect_details.gridding = `${this.areaList[arrIndex[0]].text}/${this.areaList[arrIndex[0]]['children'][arrIndex[1]].text}`
-        // console.log(this.prospect_details.gridding);
       });
     },
     onFamily_type(value) {
@@ -1252,7 +1243,6 @@ export default {
       this.showPicker = false;
     },
     handler({ BMap, map }) {
-      // console.log(BMap, map);
       this.center.lng = 116.404;
       this.center.lat = 39.915;
       this.zoom = 15;
@@ -1274,9 +1264,7 @@ export default {
     closePopup() {
       this.isPopupVisible = false;
     },
-    handleChange(value) {
-      // console.log(`selected ${value}`);
-    },
+    handleChange(value) {},
     //选中一个item
     selectItem(thisItem) {
       if (typeof thisItem.checked == "undefined") {
@@ -1401,7 +1389,6 @@ export default {
       this.prospect_detailsEdit.type = res.data.type;
       if (this.farmers_details.location) {
         const positionArr = this.farmers_details.location.split(",");
-        console.log(positionArr);
         this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
       } else {
@@ -1412,10 +1399,23 @@ export default {
       this.longitudeLatitude = !this.longitudeLatitude;
     },
     appMessage() {
-      let positionArr = window.android.getLocation().split(",");
-      this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-      this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-      this.prospect_details.location = positionArr.toString();
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let positionArr = window.android.getLocation().split(",");
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.prospect_details.location = positionArr.toString();
+      }
+      if (isiOS) {
+        let positionArr = window.prompt("getLocation").split(",");
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+        this.prospect_details.location = positionArr.toString();
+      }
     },
     appMessage1() {
       var u = navigator.userAgent;
@@ -1558,9 +1558,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-          // console.log(err);
-        });
+        .catch((err) => {});
     },
     UpdateFamilyIncome() {
       this.$httpPut({
@@ -1585,9 +1583,7 @@ export default {
             position: "middle",
           });
         })
-        .catch((err) => {
-          // console.log(err);
-        });
+        .catch((err) => {});
     },
   },
   computed: {
@@ -1879,14 +1875,14 @@ textarea {
 .approval_Passed {
   position: absolute;
   padding: 3px 10px;
-    font-size: 14px;
+  font-size: 14px;
   top: 1rem;
   left: 25%;
 }
 .approval_Passed1 {
   position: absolute;
   padding: 3px 10px;
-    font-size: 14px;
+  font-size: 14px;
   top: 1rem;
   left: 25%;
 }
@@ -2002,11 +1998,11 @@ textarea {
     padding: 0.3rem 0.5rem;
     font-size: 0.7rem !important;
   }
-.approval_Passed {
+  .approval_Passed {
     padding: 3px 10px;
     font-size: 12px;
   }
-.approval_Passed1 {
+  .approval_Passed1 {
     padding: 3px 10px;
     font-size: 12px;
   }

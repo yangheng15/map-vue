@@ -426,7 +426,6 @@ export default {
         });
     },
     longpress({ point }) {
-      console.log(123);
       const zoom = this.map.getZoom();
       if (Math.abs(zoom - this.zoom) > 0) {
         this.zoom = zoom;
@@ -444,8 +443,6 @@ export default {
     enumData(val, data) {
       // debugger
       if (val && data.length > 0) {
-        // console.log(this.prospect_details);
-        // console.log(data, val);
         const find = data.find((it) => it.index == val);
         // debugger
         return find ? find.text : "";
@@ -457,7 +454,6 @@ export default {
       let find = "";
       if (val && data.length > 0) {
         find = data.find((it) => it.index === val);
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -468,21 +464,18 @@ export default {
       this.$httpGet({
         url: "/dic/type/industry_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.industry_list = transformDara;
       });
       // 客户需求
       this.$httpGet({
         url: "/dic/type/task_product_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
@@ -493,7 +486,6 @@ export default {
             });
           }
         });
-        console.log(transformDara);
         this.potential_need_type = transformDara;
       });
       this.$httpGet({
@@ -541,14 +533,12 @@ export default {
       this.regional_grid = false;
     },
     handler({ BMap, map }) {
-      // console.log(BMap, map);
       this.center.lng = 116.404;
       this.center.lat = 39.915;
       this.zoom = 15;
     },
     tab(ev) {
       if (ev != 0) {
-        console.log(this);
         if (this.judgeReturnValue == "") {
           Toast({
             message: "请先添加基本信息",
@@ -638,9 +628,6 @@ export default {
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
     deleteImage(file, item) {
-      // console.log( a, b);
-      // const index = this.uploader.findIndex((it) =>it.url === url);
-      console.log(this.pictureTime);
       this.pictureId.splice(item.index, 1);
       this.pictureTime.splice(item.index, 1);
     },
@@ -649,7 +636,6 @@ export default {
       file.message = '上传中...';
       let formData = new FormData();
       formData.append("file", file.file);
-      // console.log(file);
       this.$httpPost({
         url: "/api/upload/attachment",
         headers: { "Content-Type": "multipart/form-data" },
@@ -660,7 +646,6 @@ export default {
         let time = new Date(res.data.createTime);
         this.picCreatedTime =
           time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
-        console.log(this.picCreatedTime);
         this.pictureId.push(res.data.pid);
         this.pictureTime.push({
           pid: res.data.pid,
@@ -670,7 +655,6 @@ export default {
       });
     },
     selectDelegation(item) {
-      // console.log(item);
       // this.customersDemandList1.push({
       //   demandType: item.index,
       //   demandStatus: item.radio,
@@ -689,7 +673,6 @@ export default {
           demandType: -1,
         });
       }
-      console.log(this.judgeReturnValue);
       const res = await this.$httpPost({
         url: "/api/customersDemand/save",
         data: {
@@ -705,7 +688,6 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     async modifyResult() {
@@ -739,7 +721,6 @@ export default {
       }
       //逆向解析
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
-      // console.log(this.publicCustomerAddress);
       if (!this.judgeReturnValue) {
         this.$httpPost({
           url: "/api/pulicCustomersInfo/add",
@@ -760,7 +741,6 @@ export default {
           },
         })
           .then((res) => {
-            console.log(res.data);
             this.judgeReturnValue = res.data.code;
             Toast({
               message: "保存成功",
@@ -769,7 +749,6 @@ export default {
             // this.$router.go(-1);
           })
           .catch((err) => {
-            // console.log(err);
           });
       } else {
         this.$httpPut({
@@ -799,7 +778,6 @@ export default {
             // this.$router.go(-1);
           })
           .catch((err) => {
-            // console.log(err);
           });
       }
     },
@@ -812,7 +790,6 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res.data);
         })
         .catch((err) => {});
     },
@@ -828,7 +805,7 @@ export default {
         }
         // 百度地图异步加载回调处理
         window.onBMapCallback = function () {
-          console.log("百度地图脚本初始化成功...");
+          // console.log("百度地图脚本初始化成功...");
           resolve(BMap);
         };
 
@@ -844,7 +821,6 @@ export default {
       let Geo = new BMap.Geocoder();
       let point;
       Geo.getPoint(address, (res) => {
-        console.log(res);
         point = res;
       });
     },

@@ -373,11 +373,9 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      console.log(from);
       if (from.name !== "ScreenMyCustomers") {
         vm.getMyClients();
       } else {
-        console.log(vm.$store.state.screenMyCustomerData);
         if(vm.$store.state.tabId == 0) {
           vm.newCustomerList = vm.$store.state.screenMyCustomerData;
         }else {
@@ -411,7 +409,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        // console.log(res.data);
         this.newCustomerList1 = res.data;
         this.newCustomerList1.forEach((it) => {
           this.star1 = it.star;
@@ -422,7 +419,6 @@ export default {
       this.$httpGet({
         url: `/dic/dic_client_grade/${this.level}`,
       }).then((res) => {
-        // console.log(res.data);
         this.levelName = res.data.codeText;
       });
     },
@@ -436,7 +432,6 @@ export default {
             name: val,
           },
         }).then((res) => {
-          // console.log(res.data);
           this.newCustomerList = res.data;
           this.newCustomerList.forEach((it) => {
           this.star = it.star;
@@ -451,7 +446,6 @@ export default {
             name: val,
           },
         }).then((res) => {
-          // console.log(res.data);
           this.newCustomerList1 = res.data;
           this.newCustomerList1.forEach((it) => {
           this.star1 = it.star;
@@ -491,12 +485,10 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        // console.log(res.data);
         this.newCustomerList = res.data;
         this.newCustomerList.forEach((it) => {
           this.star = it.star;
         });
-        // // console.log(this.level);
         // if (this.level) {
         //   this.getdic();
         // }

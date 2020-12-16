@@ -260,16 +260,13 @@ export default {
           taskId: this.taskId,
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal = res.count;
         //进行判断
         if (this.dataTotal <= this.pageSize1) {
           this.MarketingRecord = res.data;
-          console.log(this.MarketingRecord);
         } else {
           this.currentPage++;
           let arr = res.data;
-          console.log(arr);
           this.MarketingRecord = this.MarketingRecord.concat(arr);
         }
         // 加载状态结束
@@ -304,7 +301,6 @@ export default {
       const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
         (it) => +it.key == val
       );
-      console.log(findWill);
       return findWill ? findWill.value : "";
     },
   },

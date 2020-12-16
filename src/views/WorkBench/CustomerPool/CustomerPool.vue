@@ -224,7 +224,6 @@ export default {
             vm.customer_pool = vm.$store.state.screenCustomerPoolData;
             if (vm.customer_pool) {
               vm.customer_pool.forEach((el) => {
-                console.log(el.star);
                 vm.star = parseInt(el.star);
               });
             }
@@ -239,7 +238,6 @@ export default {
   },
   // computed: {
   //   customer_pool() {
-  //     console.log(this.$store.state.screenCustomerPoolData);
   //     return this.$store.state.screenCustomerPoolData
   //   }
   // },
@@ -262,11 +260,8 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        console.log(res);
         this.customer_pool = res.data;
-        console.log(this.customer_pool);
         this.customer_pool.forEach((el) => {
-          console.log(el.star);
           this.star = parseInt(el.star);
         });
       });
@@ -294,7 +289,6 @@ export default {
       });
     },
     joinCust(item) {
-      // console.log(this.customerCode);
       if (item.flag) {
         Toast({
           message: "已存在我的客户信息",
@@ -311,9 +305,7 @@ export default {
         },
       })
         .then((res) => {
-          // console.log(code);
           this.empty_heart = !this.empty_heart;
-          // console.log(this.empty_heart);
         })
         .catch(() => {});
     },
@@ -325,7 +317,6 @@ export default {
   },
   filters: {
     dic_client_grade(val) {
-      console.log(val);
       return JSON.parse(localStorage.getItem("dic")).find((it) => it.key == val)
         .value;
     },

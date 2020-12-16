@@ -65,13 +65,11 @@ export default {
     afterRead(file) {
       let formData = new FormData();
       formData.append("file", file.file);
-      // console.log(file);
       this.$httpPost({
         url: "/api/upload/attachment",
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        // console.log(res.data.pid);
         this.pictureId = res.data.pid;
       });
     },
@@ -82,23 +80,19 @@ export default {
           code: this.productCode,
         },
       }).then((res) => {
-        // console.log(res.data);
         this.productInformation = res.data;
-        // console.log(this.productInformation.url);
         this.editPicture();
       });
     },
 
     editPicture() {
       if (this.productInformation.url) {
-        // console.log(this.productInformation.url);
         this.$httpGet({
           url: "/api/show/image/base64",
           params: {
             id: this.productInformation.url,
           },
         }).then((res) => {
-          // console.log(res.data);
           this.fileList[0].url = "data:image/jpg;base64," + res.data;
           this.fileList[0].isImage = true;
         });

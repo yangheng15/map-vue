@@ -85,7 +85,6 @@ export default {
   },
   methods: {
     onFailed(errorInfo) {
-      // //console.log("failed", errorInfo);
     },
     changeType() {
       this.flag = !this.flag;
@@ -216,7 +215,6 @@ export default {
             }
           })
           .catch((err) => {
-            // //console.log(err);
           });
       // }
     },

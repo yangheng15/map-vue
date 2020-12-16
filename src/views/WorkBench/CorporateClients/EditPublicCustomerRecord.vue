@@ -460,8 +460,6 @@ export default {
     enumData(val, data) {
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
-        // debugger
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -473,7 +471,6 @@ export default {
         url: "/dic/type/industry_type",
       }).then((res) => {
         let transformDara = [];
-        console.log(res);
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
@@ -578,7 +575,6 @@ export default {
           });
         }
       });
-      console.log(res.data.customerImg.split(","));
       localStorage.setItem("customerCode", this.customerCode);
       this.publicCustomerName = res.data.name;
       res.data.address != false
@@ -727,13 +723,11 @@ export default {
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
     afterRead(file) {
-      console.log(this.uploader);
       file.status = 'uploading';
       file.message = '上传中...';
       let formData = new FormData();
       this.compressImg(file.file, (base64Codes) => {
         let bl = this.base64UrlToBlob(base64Codes, file.file.name);
-        console.log(bl, "blblbl");
         formData.append("file", bl); // 文件对象
         this.$httpPost({
           url: "/api/upload/attachment",
@@ -758,12 +752,10 @@ export default {
           item.createTime = time;
           this.uploader.splice(this.uploader.length - 1, 1);
           this.uploader.push(item);
-          console.log(11, this.uploader);
         });
       });
     },
     async saveCustomersDemand() {
-      console.log(this.potential_need_type);
       let arr = [];
       this.potential_need_type.forEach((item) => {
         arr.push({
@@ -792,7 +784,6 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     modifyResult() {
@@ -851,7 +842,6 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     deleteRemark(val) {
@@ -882,7 +872,6 @@ export default {
       const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
         (it) => +it.key == val
       );
-      // console.log(findWill);
       return findWill ? findWill.value : "";
     },
   },

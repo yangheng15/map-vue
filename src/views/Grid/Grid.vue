@@ -23,7 +23,6 @@
             position="middle"
             round
             :closeable="true"
-            click-close-icon="ceshi"
             :style="{
                 width: '80%',
                 position: 'absolute',
@@ -445,9 +444,6 @@ export default {
         window.dic_grid_resource_type = this.dic_grid_resource_type;
     },
     methods: {
-        ceshi() {
-            console.log(111);
-        },
         onSearchCancel() {
             this.searchShow = false;
         },
@@ -498,7 +494,6 @@ export default {
                         // 如果当前的 中心点和之前的中心点一样
                         this.$set(this, 'mapCenter', { lng: positionArr[0], lat: positionArr[1] + 0.0001 })
                         this.nearby.center = this.mapCenter;
-                        // console.log(this.map.getZoom());
                         this.zoomNum = this.map.getZoom();
                         return;
                     }
@@ -514,7 +509,6 @@ export default {
             this.markerPostion = { ...this.mapCenter };
         },
         resourceEmit({ localArr }) {
-            console.log(localArr);
             //   if (localArr.length > 0) {
             this.searchKeyword = localArr;
             //   }
@@ -853,7 +847,6 @@ export default {
         },
         //搜索地图地址的回调
         searchcomplete(results) {
-            console.log(results);
             let data = _.cloneDeep(results);
             if (data && data.Hr && this.searchVal) {
                 this.localSearchList = data.Hr;

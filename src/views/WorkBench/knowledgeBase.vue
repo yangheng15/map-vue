@@ -62,7 +62,6 @@ export default {
   },
   methods: {
     onSearch() {
-      console.log(1);
     },
   },
   mounted() {},

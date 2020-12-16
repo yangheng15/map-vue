@@ -252,21 +252,6 @@ export default {
       loadEnd: false, // 滚动加载中
     };
   },
-  // beforeRouteEnter(to, from, next) {
-  //   next((vm) => {
-  //     console.log(from);
-  //     if (from.name !== "ScreenMyCustomers") {
-  //       vm.getMyClients();
-  //     } else {
-  //       console.log(vm.$store.state.screenMyCustomerData);
-  //       if (vm.$store.state.tabId == 0) {
-  //         vm.newCustomerList = vm.$store.state.screenMyCustomerData;
-  //       } else {
-  //         vm.newCustomerList1 = vm.$store.state.screenMyCustomerData;
-  //       }
-  //     }
-  //   });
-  // },
   created() {
     this.typeCN = this.$route.query.title;
     this.tabId = this.$store.state.tabId || 0;
@@ -294,7 +279,6 @@ export default {
     },
     selectHandle() {
       this.pageNo = 1;
-      console.log(this.distanceRange);
       if (this.distanceRange) {
         var u = navigator.userAgent;
         //Android终端
@@ -425,16 +409,13 @@ export default {
           type: 2,
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal = res.count;
         //进行判断
         if (this.dataTotal <= this.pageSize1) {
           this.publicCustomerPool1 = res.data;
-          console.log(this.publicCustomerPool1);
         } else {
           this.currentPage++;
           let arr = res.data;
-          console.log(arr);
           this.publicCustomerPool1 = this.publicCustomerPool1.concat(arr);
         }
         // 加载状态结束
@@ -450,28 +431,24 @@ export default {
       this.$httpGet({
         url: "/dic/type/task_product_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.potential_need_type = transformDara;
       });
       // 所属行业
       this.$httpGet({
         url: "/dic/type/industry_type",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });
-        console.log(transformDara);
         this.industry_typelist = transformDara;
       });
     },
@@ -513,12 +490,10 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        // console.log(res.data);
         this.newCustomerList = res.data;
         this.newCustomerList.forEach((it) => {
           this.star = it.star;
         });
-        // // console.log(this.level);
         // if (this.level) {
         //   this.getdic();
         // }
@@ -535,7 +510,6 @@ export default {
       const findWill = JSON.parse(localStorage.getItem("dic")).find(
         (it) => it.key === val
       );
-      console.log(findWill);
       return findWill ? findWill.value : "";
     },
   },

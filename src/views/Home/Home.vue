@@ -344,16 +344,13 @@ export default {
           limit: this.pageSize2, //每页个数
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal1 = res.count;
         //进行判断
         if (this.dataTotal1 <= this.pageSize2) {
           this.latest_tasks = res.data;
-          console.log(this.latest_tasks);
         } else {
           this.currentPage1++;
           let arr = res.data;
-          console.log(arr);
           this.latest_tasks = this.latest_tasks.concat(arr);
         }
         // 加载状态结束
@@ -375,16 +372,13 @@ export default {
           limit: this.pageSize1, //每页个数
         },
       }).then((res) => {
-        console.log(res);
         this.dataTotal = res.count;
         //进行判断
         if (this.dataTotal <= this.pageSize1) {
           this.recent_contact = res.data;
-          console.log(this.recent_contact);
         } else {
           this.currentPage++;
           let arr = res.data;
-          console.log(arr);
           this.recent_contact = this.recent_contact.concat(arr);
         }
         // 加载状态结束
@@ -400,8 +394,6 @@ export default {
     //   if (typeof WebSocket === "undefined") {
     //     alert("您的浏览器不支持socket");
     //   } else {
-    //     console.log("zouzouzou");
-    //     console.log(new Date().getTime());
     //     // ws://192.168.1.116:12345
     //     // wss://echo.websocket.org
     //     // const wsuri = "ws://112.125.27.140:12345/ws";
@@ -412,8 +404,6 @@ export default {
     //     // 监听socket连接
     //     this.socket.onopen = this.open;
     //     // this.socket.onopen = function() {
-    //     //   console.log('连接成功');
-    //     //   console.log(this.send);
     //     //   // setInterval(() => {
     //     //   //   this.send(JSON.stringify({
     //     //   //   messageText: '123',
@@ -427,7 +417,6 @@ export default {
     //     this.socket.onerror = this.error;
     //     // 监听socket消息
     //     this.socket.onmessage = this.getMessage;
-    //     console.log(this.socket.readyState);
     //   }
     // },
     // appMessage() {
@@ -445,7 +434,6 @@ export default {
     // },
     // open() {
     //   console.log("socket连接成功");
-    //   console.log(this.positionArr);
     //   alert(this.positionArr)
     //   setTimeout(() => {
     //     this.appMessage();
@@ -458,11 +446,9 @@ export default {
     //       sender: username,
     //       time: time,
     //     };
-    //     console.log(JSON.stringify(actions));
     //     this.socket.send(JSON.stringify(actions));
     //   }, 300);
 
-    //   console.log(this.IntervalTime);
     //   // debugger
     //   window.clearInterval(this.timer);
     //   this.timer = setInterval(() => {
@@ -476,7 +462,6 @@ export default {
     //       sender: username,
     //       time: time,
     //     };
-    //     console.log(JSON.stringify(actions));
     //     this.socket.send(JSON.stringify(actions));
     //   }, this.IntervalTime);
     //   // setInterval(function(){ alert("Hello"); }, 3000);

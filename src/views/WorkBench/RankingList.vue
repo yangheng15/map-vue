@@ -169,7 +169,6 @@ export default {
       });
     },
     tab2(ev) {
-      console.log(ev);
       this.tabId1 = ev;
       if (ev === this.tabId1) {
         if (ev == this.taskNum || ev == this.custNum) {

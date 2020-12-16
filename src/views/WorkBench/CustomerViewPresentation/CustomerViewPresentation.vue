@@ -490,7 +490,6 @@ export default {
     enumData(val, data) {
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";

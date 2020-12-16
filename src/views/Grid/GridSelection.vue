@@ -89,7 +89,6 @@ export default {
         this.grid_selection3 = res.data;
 
         for (var item = 0; item < res.data.length; item++) {
-          // console.log(res.data[item].code);
           let lalala = res.data[item].code;
           // this.resource_selection3[item] = res.data[item].code;
         }

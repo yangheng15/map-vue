@@ -558,7 +558,6 @@ export default {
   },
   // watch: {
   //   chosenTopics(val) {
-  //     console.log(val);
   //     let inputArr=[]
   //     val.forEach(index => {
   //       inputArr.push(this.topics[index])

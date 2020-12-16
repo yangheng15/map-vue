@@ -313,7 +313,6 @@ export default {
       this.map = map;
     },
     touchmove() {
-      console.log("move");
       this.moveStatus = true;
     },
     longpress({ type, target, point, pixel }) {
@@ -330,7 +329,6 @@ export default {
       }
       this.markerLongpress(point);
       // alert('123')
-      // console.log(123);
       // clearTimeout(this.timeOutEvent);
       // this.timeOutEvent = 0;
       // this.timeOutEvent = setTimeout(() => {
@@ -362,7 +360,6 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_nation",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
@@ -376,7 +373,6 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_marital_status",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
@@ -389,14 +385,12 @@ export default {
       this.$httpGet({
         url: "/dic/type/dic_education",
       }).then((res) => {
-        // console.log(res.data);
         let transformDara = [];
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.id, text: it.codeText });
           }
         });
-        // console.log(transformDara);
         this.education_level_list = transformDara;
       });
       // 所属网格
@@ -416,7 +410,6 @@ export default {
         });
         this.areaList = transformDara;
         // this.areaList = res.data.length > 0 &&  this.transformData(res.data);
-        // console.log(this.areaList);
       });
     },
     // transformData(data, newArr = []) {
@@ -425,7 +418,6 @@ export default {
     //     newArr.push({ text: data[i]["name"], id: data[i]["id"] });
     //     if (data[i]["children"] && data[i]["children"].length > 0) {
     //       this.transformData(data[i]["children"], (newArr[i]["children"] = []));
-    //       console.log(newArr[i]["children"]);
     //     } else {
     //       newArr[i]["children"] = "";
     //     }
@@ -454,7 +446,6 @@ export default {
       this.education_level = false;
     },
     onRegional_grid(values) {
-      console.log(values);
       this.regional_grid_txt = values;
       // this.regional_grid_txt.text = values.join('/');
       // this.regional_grid_txt.index = index.join(',');
@@ -511,7 +502,6 @@ export default {
           this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     getLocation() {

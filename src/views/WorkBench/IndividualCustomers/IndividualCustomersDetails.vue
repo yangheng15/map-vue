@@ -266,8 +266,6 @@ export default {
       // debugger
       if (val && data.length > 0) {
         const find = data.find((it) => it.index == val);
-        // debugger
-        console.log(find);
         return find ? find.text : "";
       } else {
         return "";
@@ -288,7 +286,6 @@ export default {
         url: "/dic/type/industry_type",
       }).then((res) => {
         let transformDara = [];
-        console.log(res);
         res.data.forEach((it, index) => {
           if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
@@ -326,7 +323,6 @@ export default {
           id: this.id,
         },
       });
-      console.log(res.data.code);
       this.customerCode = res.data.code;
       localStorage.setItem("customerCode", this.customerCode);
       this.publicCustomerName = res.data.name;
@@ -365,7 +361,6 @@ export default {
             const i = this.potential_need_type.findIndex(
               (it) => it.index == item.demandType
             );
-            console.log(i);
             i >= 0 &&
               (this.potential_need_type[
                 i
@@ -374,9 +369,7 @@ export default {
           }
         });
       }
-      console.log(this.potential_need_type);
       //   this.customersDemandList1 = res.data.customersDemandList;
-      //   console.log(this.customersDemandList1);
       //   if (this.customersDemandList1) {
       //     this.customersDemandList1.forEach((it) => {
       //       this.potential_need_type.index = it.demandStatus;
@@ -384,7 +377,6 @@ export default {
       //       if (it.demandType == -1) {
       //         this.otherTxt = it.description;
       //       }
-      //       console.log(this.potential_need_type);
       //     });
       //   }
       if (this.pictureId) {
@@ -410,7 +402,6 @@ export default {
       this.regional_grid = false;
     },
     onIndustryShow(value) {
-      console.log(value);
       this.industry = value["text"];
       this.prospect_detailsEdit.industry = value["index"];
       this.industryShow = false;
@@ -516,7 +507,6 @@ export default {
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        console.log(res.data.pid);
         this.pictureId.push(res.data.pid);
       });
     },
@@ -528,7 +518,6 @@ export default {
       // });
     },
     async saveCustomersDemand() {
-      console.log(this.potential_need_type);
       let arr = [];
       this.potential_need_type.forEach((item) => {
         arr.push({
@@ -557,7 +546,6 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     modifyResult() {
@@ -614,7 +602,6 @@ export default {
           // this.$router.go(-1);
         })
         .catch((err) => {
-          // console.log(err);
         });
     },
     deleteRemark(val) {
@@ -645,7 +632,6 @@ export default {
       const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
         (it) => +it.key == val
       );
-      // console.log(findWill);
       return findWill ? findWill.value : "";
     },
   },
