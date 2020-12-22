@@ -2,16 +2,8 @@
   <div class="remind">
     <child-nav :title="title"></child-nav>
     <van-dropdown-menu>
-      <van-dropdown-item
-        v-model="value1"
-        :options="option1"
-        @change="onLoadList"
-      />
-      <van-dropdown-item
-        v-model="value2"
-        :options="option2"
-        @change="onLoadList"
-      />
+      <van-dropdown-item v-model="value1" :options="option1" @change="searchType" />
+      <van-dropdown-item v-model="value2" :options="option2" @change="searchType" />
     </van-dropdown-menu>
     <van-list
       v-model="loadEnd"
@@ -21,21 +13,11 @@
       @load="onLoadList"
     >
       <div ref="box">
-        <div
-          v-for="(item, index) in recent_contact"
-          :key="index"
-          class="latest_tasks"
-        >
+        <div v-for="(item, index) in recent_contact" :key="index" class="latest_tasks">
           <ul>
             <li style="font-weight: 550">{{ item.typeName }}</li>
             <li class="set_up" @click="updateStatus(item)">
-              {{
-                item.status == 1
-                  ? "设为已读"
-                  : item.status == 2
-                  ? "设为未读"
-                  : ""
-              }}
+              {{ item.status == 1 ? "设为已读" : item.status == 2 ? "设为未读" : "" }}
             </li>
             <li>{{ item.createdTime | transform }}</li>
           </ul>
@@ -69,15 +51,15 @@ export default {
       pageNo: 1, // 当前页码
       pageSize: 10, // 分页大小
       total: 0, // 查询总条数
-      
+
       charityData: [],
       throttleTime: {
         nowTime: 0,
         lastTime: 0,
       },
-      currentPage:1,
-      pageSize1:10,
-      dataTotal:"",
+      currentPage: 1,
+      pageSize1: 10,
+      dataTotal: "",
       loadEnd: false, // 滚动加载中
       finishEnd: false, // 滚动加载完成
     };
@@ -118,6 +100,20 @@ export default {
         }
       });
     },
+    searchType() {
+      this.$httpGet({
+        url: "/api/userMessage/query",
+        params: {
+          userName: localStorage.getItem("username"),
+          page: 1, //页数
+          limit: this.dataTotal, //每页个数
+          type: this.value1,
+          status: this.value2,
+        },
+      }).then((res) => {
+        this.recent_contact = res.data;
+      })
+    },
     alert(msg) {
       this.$toast.showToast({
         msg: msg,
@@ -148,32 +144,32 @@ export default {
         this.option2 = transformDara;
       });
     },
-    screenChange1(val) {
-      this.filterData = {
-        ...this.filterData,
-        type: this.value1,
-        page: 1,
-      };
+    // screenChange1(val) {
+    //   this.filterData = {
+    //     ...this.filterData,
+    //     type: this.value1,
+    //     page: 1,
+    //   };
 
-      this.onLoadList().then((res) => {
-        this.recent_contact = res.recent_contact;
-        this.finished = false;
-        this.pageNo = 1;
-      });
-    },
-    screenChange2(val) {
-      this.filterData = {
-        ...this.filterData,
-        status: this.value2,
-        page: 1,
-      };
+    //   this.onLoadList().then((res) => {
+    //     this.recent_contact = res.recent_contact;
+    //     this.finished = false;
+    //     this.pageNo = 1;
+    //   });
+    // },
+    // screenChange2(val) {
+    //   this.filterData = {
+    //     ...this.filterData,
+    //     status: this.value2,
+    //     page: 1,
+    //   };
 
-      this.onLoadList().then((res) => {
-        this.recent_contact = res.recent_contact;
-        this.finished = false;
-        this.pageNo = 1;
-      });
-    },
+    //   this.onLoadList().then((res) => {
+    //     this.recent_contact = res.recent_contact;
+    //     this.finished = false;
+    //     this.pageNo = 1;
+    //   });
+    // },
     // 设为已读未读
     updateStatus(item) {
       this.throttleTime.nowTime = new Date().getTime();

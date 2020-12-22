@@ -97,7 +97,7 @@
 
                 <p>
                   <van-button
-                    v-if="taskUpdateFlag"
+                    v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')"
                     color="#3d425e"
                     size="mini"
                     @click="deleteRemark(thisItem.id)"
@@ -166,7 +166,7 @@
         "
       >
         <router-link
-          v-if="taskUpdateFlag"
+          v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')"
           tag="span"
           class="add_record"
           :to="{

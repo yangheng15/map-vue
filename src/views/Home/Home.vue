@@ -4,7 +4,8 @@
       <van-nav-bar :title="title">
         <template #right>
           <router-link :to="{ name: 'Remind', query: { title: '提醒' } }">
-            <van-icon name="bell" color="#fff" />
+            <van-icon v-if="messageCount==0" name="bell" color="#fff" badge="" />
+            <van-icon v-else name="bell" color="#fff" :badge="messageCount" />
           </router-link>
         </template>
       </van-nav-bar>
@@ -291,6 +292,7 @@ export default {
       pageSize2: 10,
       dataTotal1: "",
       offset: 5, //滚动条与底部距离小于 offset 时触发load事件，默认300
+      messageCount:NaN
     };
   },
   components: {
@@ -310,6 +312,7 @@ export default {
   created() {
     this.onLoading();
     this.getNum();
+    this.initWebSocket()
   },
   mounted() {},
   methods: {
@@ -323,6 +326,7 @@ export default {
         url: "/api/homePage/countNum",
       }).then((res) => {
         this.countNum = res.data;
+        this.messageCount = res.data.messageCount
       });
     },
     tab(ev) {
@@ -389,36 +393,36 @@ export default {
         }
       });
     },
-    // initWebSocket() {
-    //   //初始化weosocket
-    //   if (typeof WebSocket === "undefined") {
-    //     alert("您的浏览器不支持socket");
-    //   } else {
-    //     // ws://192.168.1.116:12345
-    //     // wss://echo.websocket.org
-    //     // const wsuri = "ws://112.125.27.140:12345/ws";
-    //     // const wsuri = "ws://123.56.238.192:12345/ws";
-    //     const wsuri = "ws://39.106.51.28:12345/ws";
-    //     // 实例化socket
-    //     this.socket = new WebSocket(wsuri);
-    //     // 监听socket连接
-    //     this.socket.onopen = this.open;
-    //     // this.socket.onopen = function() {
-    //     //   // setInterval(() => {
-    //     //   //   this.send(JSON.stringify({
-    //     //   //   messageText: '123',
-    //     //   //   messageType: "MAPLOCUS",
-    //     //   //   sender: '123',
-    //     //   //   time: 123,
-    //     //   // }))
-    //     //   }, 1000);
-    //     // }
-    //     // 监听socket错误信息
-    //     this.socket.onerror = this.error;
-    //     // 监听socket消息
-    //     this.socket.onmessage = this.getMessage;
-    //   }
-    // },
+    initWebSocket() {
+      //初始化weosocket
+      if (typeof WebSocket === "undefined") {
+        alert("您的浏览器不支持socket");
+      } else {
+        // ws://192.168.1.116:12345
+        // wss://echo.websocket.org
+        // const wsuri = "ws://192.168.0.178:12345/ws";
+        const wsuri = "ws://123.56.238.192:12345/ws";
+        // const wsuri = "ws://39.106.51.28:12345/ws";
+        // 实例化socket
+        this.socket = new WebSocket(wsuri);
+        // 监听socket连接
+        this.socket.onopen = this.open;
+        // this.socket.onopen = function() {
+        //   setInterval(() => {
+        //     this.send(JSON.stringify({
+        //     messageText: "",
+        //     messageType: "LOGIN",
+        //     sender: username,
+        //     time: new Date().getTime(),
+        //   }))
+        //   }, 0);
+        // };
+        // 监听socket错误信息
+        this.socket.onerror = this.error;
+        // 监听socket消息
+        this.socket.onmessage = this.getMessage;
+      }
+    },
     // appMessage() {
     //   var u = navigator.userAgent;
     //   //Android终端
@@ -432,51 +436,53 @@ export default {
     //     this.positionArr = window.prompt("getLocation");
     //   }
     // },
-    // open() {
-    //   console.log("socket连接成功");
-    //   alert(this.positionArr)
-    //   setTimeout(() => {
-    //     this.appMessage();
-    //     let time = new Date().getTime();
-    //     let username = localStorage.getItem("username");
-    //     let messageText = this.positionArr;
-    //     let actions = {
-    //       messageText: messageText,
-    //       messageType: "MAPLOCUS",
-    //       sender: username,
-    //       time: time,
-    //     };
-    //     this.socket.send(JSON.stringify(actions));
-    //   }, 300);
+    open() {
+      console.log("socket连接成功");
+      // alert(this.positionArr)
+      setTimeout(() => {
+        // this.appMessage();
+        let time = new Date().getTime();
+        let username = localStorage.getItem("username");
+        // let messageText = this.positionArr;
+        let actions = {
+          messageText: "",
+          messageType: "LOGIN",
+          sender: username,
+          time: time,
+        };
+        this.socket.send(JSON.stringify(actions));
+      }, 0);
 
-    //   // debugger
-    //   window.clearInterval(this.timer);
-    //   this.timer = setInterval(() => {
-    //     this.appMessage();
-    //     let time = new Date().getTime();
-    //     let username = localStorage.getItem("username");
-    //     let messageText = this.positionArr;
-    //     let actions = {
-    //       messageText: messageText,
-    //       messageType: "MAPLOCUS",
-    //       sender: username,
-    //       time: time,
-    //     };
-    //     this.socket.send(JSON.stringify(actions));
-    //   }, this.IntervalTime);
-    //   // setInterval(function(){ alert("Hello"); }, 3000);
-    // },
-    // error() {
-    //   this.initWebSocket();
-    //   console.log("socket连接失败重连");
-    // },
-    // getMessage(msg) {
-    //   // 数据接收
-    //   console.log(msg);
-    // },
-    // close() {
-    //   console.log("socket已经关闭");
-    // },
+      // debugger
+      // window.clearInterval(this.timer);
+      // this.timer = setInterval(() => {
+      //   // this.appMessage();
+      //   let time = new Date().getTime();
+      //   let username = localStorage.getItem("username");
+      //   // let messageText = this.positionArr;
+      //   let actions = {
+      //     messageText: "",
+      //     messageType: "LOGIN",
+      //     sender: username,
+      //     time: time,
+      //   };
+      //   this.socket.send(JSON.stringify(actions));
+      // }, this.IntervalTime);
+      // setInterval(function(){ alert("Hello"); }, 3000);
+    },
+    error() {
+      this.initWebSocket();
+      console.log("socket连接失败重连");
+    },
+    getMessage(msg) {
+      console.info("开始接收到消息推送");
+      console.info(JSON.parse(msg.data));
+      // 数据接收
+      this.messageCount = JSON.parse(msg.data).count;
+    },
+    close() {
+      console.log("socket已经关闭");
+    },
   },
   destroyed() {
     // this.socket.onclose = this.close; //离开路由之后断开websocket连接

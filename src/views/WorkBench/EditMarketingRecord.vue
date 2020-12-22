@@ -184,7 +184,7 @@
               @cancel="showPicker = false"
             />
           </van-popup>
-          <div v-if="taskUpdateFlag" class="save">
+          <div v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')" class="save">
             <van-button type="primary" block @click="modifyResult()">保存</van-button>
           </div>
         </div>
@@ -218,7 +218,7 @@
             />
             <!-- <input type="file" accept="image/*" capture="camera"> -->
           </div>
-          <div v-if="taskUpdateFlag" class="save" style="margin-top: 20px">
+          <div v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')" class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="modifyPicture()">保存</van-button>
           </div>
         </div>
@@ -244,7 +244,7 @@
             label="产品利率："
             placeholder="请填写产品利率（数字）"
           />
-          <div v-if="taskUpdateFlag" class="save" style="margin-top: 20px">
+          <div v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')" class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="modifyCompetitor()">保存</van-button>
           </div>
         </div>

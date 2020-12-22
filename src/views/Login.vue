@@ -26,13 +26,9 @@
           <van-icon v-show="!flag" name="eye-o" @click="changeType()" />
         </template>
       </van-field>
-      <van-checkbox v-model="remember" checked-color="#3d425e"
-        >记住密码</van-checkbox
-      >
+      <van-checkbox v-model="remember" checked-color="#3d425e">记住密码</van-checkbox>
       <div style="margin: 40px 30px 16px 30px">
-        <van-button round block type="info" native-type="submit"
-          >登录</van-button
-        >
+        <van-button round block type="info" native-type="submit">登录</van-button>
       </div>
     </van-form>
   </div>
@@ -84,8 +80,7 @@ export default {
     });
   },
   methods: {
-    onFailed(errorInfo) {
-    },
+    onFailed(errorInfo) {},
     changeType() {
       this.flag = !this.flag;
     },
@@ -94,40 +89,30 @@ export default {
         url: "/dics/tree",
       }).then((res) => {
         //客户等级
-        const data = res.data.find((it) => it.type === "dic_client_grade")
-          .childs;
+        const data = res.data.find((it) => it.type === "dic_client_grade").childs;
         localStorage.setItem("dic", JSON.stringify(data));
-        const product = res.data.find((it) => it.type === "dic_product_type")
-          .childs;
+        const product = res.data.find((it) => it.type === "dic_product_type").childs;
         //客户意向
         localStorage.setItem("dicProduct", JSON.stringify(product));
-        const clientWill = res.data.find((it) => it.type === "dic_client_will")
-          .childs;
+        const clientWill = res.data.find((it) => it.type === "dic_client_will").childs;
         localStorage.setItem("dicClientWill", JSON.stringify(clientWill));
-        const gridResource = res.data.find(
-          (it) => it.type === "dic_grid_resource_type"
-        ).childs;
+        const gridResource = res.data.find((it) => it.type === "dic_grid_resource_type")
+          .childs;
         localStorage.setItem("dicGridResource", JSON.stringify(gridResource));
         // 学历
-        const education = res.data.find((it) => it.type === "dic_education")
-          .childs;
+        const education = res.data.find((it) => it.type === "dic_education").childs;
         localStorage.setItem("dicEducation", JSON.stringify(education));
         // 家庭类型
-        const familyType = res.data.find((it) => it.type === "dic_family_type")
-          .childs;
+        const familyType = res.data.find((it) => it.type === "dic_family_type").childs;
         localStorage.setItem("dicFamilyType", JSON.stringify(familyType));
         // 任务产品类型
         const taskProductType = res.data.find((it) => it.type === "task_product_type")
           .childs;
         localStorage.setItem("dicTaskProductType", JSON.stringify(taskProductType));
         // 潜在客户需求
-        const potentialNeedType = res.data.find(
-          (it) => it.type === "potential_need_type"
-        ).childs;
-        localStorage.setItem(
-          "dicPotentialNeedType",
-          JSON.stringify(potentialNeedType)
-        );
+        const potentialNeedType = res.data.find((it) => it.type === "potential_need_type")
+          .childs;
+        localStorage.setItem("dicPotentialNeedType", JSON.stringify(potentialNeedType));
       });
     },
     locationUpload() {
@@ -153,11 +138,33 @@ export default {
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
       if (isAndroid) {
         let permission = window.android.checkPermission();
-        return permission;
+        if (permission == false) {
+          Dialog.alert({
+            title: "提示",
+            message: "没有定位权限，请在设置中授权",
+          });
+          return;
+        } else if (window.android.checkIsLocServiceEnable() == false) {
+          Dialog.alert({
+            title: "提示",
+            message: "无法定位，请打开定位服务",
+          });
+          return;
+        } else {
+          return permission;
+        }
       }
       if (isiOS) {
         let permission = window.prompt("checkPermission");
-        return permission;
+        if (permission == false) {
+          Dialog.alert({
+            title: "提示",
+            message: "没有定位权限，请在设置中授权",
+          });
+          return;
+        } else {
+          return permission;
+        }
       }
     },
     async onSubmit(values) {
@@ -175,48 +182,44 @@ export default {
         });
         return;
       }
-      // if (this.whetherPermission() != true) {
-      //   Dialog.alert({
-      //     title: "提示",
-      //     message: "没有定位权限，请在设置中授权",
-      //   });
-      //   return;
-      // } else {
-        var bcrypt = require("bcryptjs"); //引入bcryptjs库
-        var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
-        localStorage.clear();
-        this.$httpPost({
-          url: "/oauth/token",
-          data: qs.stringify({
-            username: this.username,
-            password: bcrypt.hashSync(md5(this.password)),
-            grant_type: "password",
-            client_id: "test",
-            client_secret: "test",
-            scope: "all",
-          }),
-        })
-          .then((res) => {
-            if (res.access_token) {
-              let expires_in = moment(new Date()).valueOf() + res.expires_in;
 
-              this.aData = new Date();
-              localStorage.setItem("_token", res.access_token);
-              localStorage.setItem("refresh_token", res.refresh_token);
-              localStorage.setItem("expires_in", expires_in);
-              localStorage.setItem("username", res.username);
-              // localStorage.setItem("passWord", this.password);
-              if (this.remember) {
-                localStorage.setItem("passWord", this.password);
-              }
-              this.getDic();
-              this.$router.push("/home");
-              this.locationUpload();
+      if (this.whetherPermission() != true) {
+        return this.whetherPermission();
+      } else {
+      var bcrypt = require("bcryptjs"); //引入bcryptjs库
+      var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
+      localStorage.clear();
+      this.$httpPost({
+        url: "/oauth/token",
+        data: qs.stringify({
+          username: this.username,
+          password: bcrypt.hashSync(md5(this.password)),
+          grant_type: "password",
+          client_id: "test",
+          client_secret: "test",
+          scope: "all",
+        }),
+      })
+        .then((res) => {
+          if (res.access_token) {
+            let expires_in = moment(new Date()).valueOf() + res.expires_in;
+
+            this.aData = new Date();
+            localStorage.setItem("_token", res.access_token);
+            localStorage.setItem("refresh_token", res.refresh_token);
+            localStorage.setItem("expires_in", expires_in);
+            localStorage.setItem("username", res.username);
+            // localStorage.setItem("passWord", this.password);
+            if (this.remember) {
+              localStorage.setItem("passWord", this.password);
             }
-          })
-          .catch((err) => {
-          });
-      // }
+            this.getDic();
+            this.$router.push("/home");
+            this.locationUpload();
+          }
+        })
+        .catch((err) => {});
+      }
     },
   },
 };

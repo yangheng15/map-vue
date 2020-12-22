@@ -11,8 +11,8 @@ if (process.env.NODE_ENV === 'development') {
   // axios.defaults.baseURL = '/api'
   // axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
   // 测试
-  axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // axios.defaults.baseURL = 'http://192.168.0.178:8091'
+  axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // 正式
   // axios.defaults.baseURL = 'http://39.106.51.28:8091/'
 } else if (process.env.NODE_ENV === 'production') {
@@ -91,19 +91,31 @@ axios.interceptors.response.use(response => {
       //   message: "请重新登录",
       //   position: "middle",
       // });
-      Toast({
-        message: '请重新登录！',
-        position: 'middle',
-      });
-      // android.exit(); //告诉安卓退出了
-      let _username = localStorage.getItem("username");
-      let password = localStorage.getItem("passWord");
-      localStorage.clear();
-      localStorage.setItem("username", _username);
-      if (password) {
-        localStorage.setItem("passWord", password);
-      }
-      router.push('/login')
+
+      if(error.response.data.error_description){}
+      var str = "用户名";
+      var reg = RegExp(error.response.data.error_description);
+      // if(str.match(reg)){
+        // 包含
+        Toast({
+          message: '请重新登录！',
+          position: 'middle',
+        });
+        // android.exit(); //告诉安卓退出了
+        let _username = localStorage.getItem("username");
+        let password = localStorage.getItem("passWord");
+        localStorage.clear();
+        localStorage.setItem("username", _username);
+        if (password) {
+          localStorage.setItem("passWord", password);
+        }
+        router.push('/login')
+      // }else{
+      //   Toast({
+      //     message: error.response.data.error_description,
+      //     position: 'middle',
+      //   });
+      // }
     }
     if (error.response.status == 400) {
       Toast.fail({

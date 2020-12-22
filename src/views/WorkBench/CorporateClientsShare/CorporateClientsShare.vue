@@ -43,9 +43,10 @@
           :offset="offset"
           finished-text="已加载完毕"
           @load="onLoad"
+          v-if="trueOrFalse"
         >
-          <van-checkbox-group v-model="shareList" ref="checkboxGroup">
-            <van-checkbox
+          <van-radio-group v-model="shareList">
+            <van-radio
               v-for="(thisItem, index) in publicCustomerPool"
               :key="index"
               class="corporateList"
@@ -55,8 +56,8 @@
               <p>
                 {{ thisItem.name }}
               </p>
-            </van-checkbox>
-          </van-checkbox-group>
+            </van-radio>
+          </van-radio-group>
         </van-list>
       </div>
 
@@ -143,6 +144,7 @@ export default {
       pageSize1: 10,
       dataTotal: "",
       dataTotal1: "",
+      trueOrFalse:true
     };
   },
   created() {
@@ -156,7 +158,7 @@ export default {
         data: {
           customerCode: this.code,
           shareType: this.checkType,
-          userList: this.checkList,
+          departMentUserId: this.checkList,
         },
       }).then((res) => {
         Toast({
@@ -166,18 +168,18 @@ export default {
       });
     },
     selectManager(el) {
-      this.checkList.push({
-        pid: el,
-      });
+      this.checkList=el
     },
     checkAll(name) {
       this.checkType = name;
-      this.checkList = [];
-      this.$refs.checkboxGroup.toggleAll(true);
+      this.checkList = "";
+      this.trueOrFalse = false
+      // this.$refs.checkboxGroup.toggleAll(true);
     },
     notCheckAll(name) {
+      this.trueOrFalse = true
       this.checkType = name;
-      this.$refs.checkboxGroup.toggleAll(false);
+      // this.$refs.checkboxGroup.toggleAll(false);
     },
     tab(ev) {
       this.tabId = ev;

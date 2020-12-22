@@ -45,7 +45,7 @@
                     <p>网格经理：{{ table.principalName }}</p>
                     <p>认领日期：{{ table.allocateTime | transform }}</p>
                     <p>客户数量：{{ table.recordsNum }}</p>
-                    <p>人口数量(万人)：{{ table.population }}</p>
+                    <p>人口数量(万人)：{{ table.populationDouble }}</p>
                     <p>营销状态：{{ table.marketStatus }}</p>
                 </div>
                 <div style="margin-top: 1.5rem" class="save">
