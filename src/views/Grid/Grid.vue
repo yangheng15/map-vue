@@ -103,12 +103,24 @@
       <!-- 网格经理网格名称 -->
       <template v-for="(item, index) in map_data">
         <my-overlay
+          v-if="item.parentId == null"
           :key="index"
           :show="true"
           :position="item.position"
           :name="item.principalName"
           :address="item.name"
           :data-val="item"
+          :parentId="item.parentId"
+        ></my-overlay>
+        <my-overlay
+          v-if="item.parentId != null"
+          :key="index"
+          :show="true"
+          :position="item.position"
+          :name="item.principalName"
+          :address="item.name"
+          :data-val="item"
+          :parentId="item.parentId"
           @touchEvent="selfOverlayClick(item)"
         ></my-overlay>
       </template>
@@ -613,7 +625,9 @@ export default {
         url: "/api/mapPlaningByApp/query",
       }).then((res) => {
         this.map_data = res.data;
+        console.log(res.data);
         this.map_data.forEach((it) => {
+          console.log(it);
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
         this.polygonDl.forEach((it) => {
