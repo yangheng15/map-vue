@@ -463,8 +463,8 @@ export default {
 
       longitude: "114.654102",
       latitude: "33.623741",
-      mapCenter: { lng: "114.654102", lat: "33.623741" },
-      mapCenter1: { lng: "114.654102", lat: "33.623741" },
+      mapCenter: {},
+      mapCenter1: { },
       zoomNum: 19,
       positionMarker: null,
       longitudeLatitude: false,
@@ -509,6 +509,23 @@ export default {
   },
 
   methods: {
+        currentPositioning() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let positionArr = window.android.getLocation().split(",");
+        let currentPositioning = { lng: positionArr[0], lat: positionArr[1] };
+        return currentPositioning;
+      }
+      if (isiOS) {
+        let positionArr = window.prompt("getLocation").split(",");
+        let currentPositioning = { lng: positionArr[0], lat: positionArr[1] };
+        return currentPositioning;
+      }
+    },
     onClickLeft() {
       this.$router.go(-1);
     },
@@ -665,10 +682,10 @@ export default {
             lng: res.data.location.split(",")[0],
             lat: res.data.location.split(",")[1],
           })
-        : (this.mapCenter = { lng: "114.654102", lat: "33.623741" });
+        : (this.mapCenter = this.currentPositioning());
       res.data.location
         ? (this.mapCenter1 = { ...this.mapCenter })
-        : (this.mapCenter1 = { lng: "114.654102", lat: "33.623741" });
+        : (this.mapCenter1 = this.currentPositioning());
       this.legalPersonName = res.data.legalName;
       this.legalPersonTelephone = res.data.legalPhone;
       this.pictureId = res.data.customerImg ? res.data.customerImg.split(",") : [];

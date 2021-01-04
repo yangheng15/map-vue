@@ -452,8 +452,8 @@ export default {
 
       longitude: "114.654102",
       latitude: "33.623741",
-      mapCenter: { lng: "114.654102", lat: "33.623741" },
-      mapCenter1: { lng: "114.654102", lat: "33.623741" },
+      mapCenter: {},
+      mapCenter1: {},
       zoomNum: 19,
       positionMarker: null,
       longitudeLatitude: false,
@@ -618,14 +618,26 @@ export default {
       //iOS终端
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
       if (isAndroid) {
-        if (window.android.getDetailAddress() != false) {
+        if (
+          window.android.getDetailAddress() != false &&
+          window.android.getLocation() != false
+        ) {
           this.publicCustomerAddress = window.android.getDetailAddress();
+          let positionArr = window.android.getLocation().split(",");
+          this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
           return;
         }
       }
       if (isiOS) {
-        if (window.prompt("getDetailAddress") != false) {
+        if (
+          window.prompt("getDetailAddress") != false &&
+          window.prompt("getLocation") != false
+        ) {
           this.publicCustomerAddress = window.prompt("getDetailAddress");
+          let positionArr = window.prompt("getLocation").split(",");
+          this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
           return;
         }
       }

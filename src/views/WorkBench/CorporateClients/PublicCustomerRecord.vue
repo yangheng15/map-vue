@@ -3,9 +3,15 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '对公客户建档'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">客户需求</li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">营销记录</li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
+          基本信息
+        </li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
+          客户需求
+        </li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
+          营销记录
+        </li>
         <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">资产</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
@@ -183,7 +189,9 @@
           </baidu-map>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
+          <van-button round block type="primary" @click="modifyResult()"
+            >保存</van-button
+          >
         </div>
       </div>
       <div v-show="tabId === 1" class="household_have">
@@ -196,9 +204,15 @@
         >
           <template #input>
             <van-radio-group v-model="item.radio" direction="horizontal">
-              <van-radio name="1" checked-color="rgb(61, 66, 94)">已办</van-radio>
-              <van-radio name="2" checked-color="rgb(61, 66, 94)">未办</van-radio>
-              <van-radio name="3" checked-color="rgb(61, 66, 94)">需办</van-radio>
+              <van-radio name="1" checked-color="rgb(61, 66, 94)"
+                >已办</van-radio
+              >
+              <van-radio name="2" checked-color="rgb(61, 66, 94)"
+                >未办</van-radio
+              >
+              <van-radio name="3" checked-color="rgb(61, 66, 94)"
+                >需办</van-radio
+              >
             </van-radio-group>
           </template>
         </van-field>
@@ -246,7 +260,10 @@
               >
 
               <p>
-                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
                   >删除</van-button
                 >
               </p>
@@ -271,12 +288,18 @@
                 <!-- <span class="approval_Passed">已营销</span> -->
                 <span
                   :class="
-                    thisItem.intention == '1' ? 'approval_Passed' : 'approval_Passed1'
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
                   "
                   >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
-                  :class="thisItem.isSucc == '1' ? 'approval_Passed' : 'approval_Passed1'"
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
                   >{{
                     thisItem.isSucc == "0"
                       ? "失败"
@@ -468,27 +491,10 @@ export default {
   created() {
     this.typeCN = this.$route.query.title;
     this.dic_nation();
-    this.currentPositioning()
   },
 
   methods: {
-    currentPositioning() {
-      var u = navigator.userAgent;
-      //Android终端
-      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
-      //iOS终端
-      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-      if (isAndroid) {
-        let positionArr = window.android.getLocation().split(",");
-        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-      }
-      if (isiOS) {
-        let positionArr = window.prompt("getLocation").split(",");
-        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter1= { lng: positionArr[0], lat: positionArr[1] };
-      }
-    },
+    // currentPos
     onIndustryShow(value) {
       this.industry = value;
       this.industryShow = false;
@@ -608,14 +614,26 @@ export default {
       //iOS终端
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
       if (isAndroid) {
-        if (window.android.getDetailAddress() != false) {
+        if (
+          window.android.getDetailAddress() != false &&
+          window.android.getLocation() != false
+        ) {
           this.publicCustomerAddress = window.android.getDetailAddress();
+          let positionArr = window.android.getLocation().split(",");
+          this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
           return;
         }
       }
       if (isiOS) {
-        if (window.prompt("getDetailAddress") != false) {
+        if (
+          window.prompt("getDetailAddress") != false &&
+          window.prompt("getLocation") != false
+        ) {
           this.publicCustomerAddress = window.prompt("getDetailAddress");
+          let positionArr = window.prompt("getLocation").split(",");
+          this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
           return;
         }
       }
@@ -738,7 +756,11 @@ export default {
         file.message = "上传成功";
         let time = new Date(res.data.createTime);
         this.picCreatedTime =
-          time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
+          time.getFullYear() +
+          "-" +
+          (time.getMonth() + 1) +
+          "-" +
+          time.getDate();
         this.pictureId.push(res.data.pid);
         this.pictureTime.push({
           pid: res.data.pid,
@@ -885,7 +907,9 @@ export default {
     initMap() {
       const AK = "WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e";
       const BMap_URL =
-        "https://api.map.baidu.com/api?v=2.0&ak=" + AK + "&s=1&callback=onBMapCallback";
+        "https://api.map.baidu.com/api?v=2.0&ak=" +
+        AK +
+        "&s=1&callback=onBMapCallback";
       return new Promise((resolve, reject) => {
         // 如果已加载直接返回
         if (typeof BMap !== "undefined") {
