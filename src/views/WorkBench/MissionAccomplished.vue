@@ -78,7 +78,7 @@
         </div>
         <div>
           <p style="font-size: 16px; padding-top: 10px; margin: 0px 10px">
-            近半年业绩趋势：
+            近半年业绩趋势（单位：万元）：
           </p>
           <div
             id="myChart"
@@ -429,7 +429,7 @@ export default {
   display: flex;
   justify-content: space-around;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   * {
     font-size: 13px;
   }

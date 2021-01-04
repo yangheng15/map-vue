@@ -1,14 +1,15 @@
 <template>
-  <div class="EditMarketingRecord">
+  <div class="AddMarketingRecord">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN == '营销记录'">
+    <div v-if="typeCN == '添加营销记录'">
       <ul class="mission_details">
         <li>
           客户：{{ custName }}
           <!-- <img src="../../assets/WorkBench/location.svg" alt /> -->
         </li>
+        <!-- <li>方式：上门</li> -->
         <li v-if="productName">营销产品：{{ productName }}</li>
-        <li v-if="productName">执行时间：{{ editRecords.semTime | transform }}</li>
+        <li v-if="productName">执行时间：2020-08-30 9:00</li>
       </ul>
       <div>
         <ul class="tabList">
@@ -22,15 +23,7 @@
             clickable
             required
             name="picker"
-            :value="
-              editRecords.isSucc == 0
-                ? '失败'
-                : editRecords.isSucc == 1
-                ? '成功'
-                : editRecords.isSucc == 2
-                ? '未成功'
-                : ''
-            "
+            :value="result_txt.text"
             label="结果"
             placeholder="点击选择结果"
             @click="showResult = true"
@@ -48,7 +41,7 @@
             clickable
             required
             name="picker"
-            :value="editRecords.intention"
+            :value="Customer_intention_txt.text"
             label="客户意向"
             placeholder="点击选择客户意向"
             @click="showCustomer_intention = true"
@@ -66,17 +59,9 @@
             clickable
             required
             name="picker"
-            :value="
-              editRecords.semType == 0
-                ? '上门'
-                : editRecords.semType == 1
-                ? '电话'
-                : editRecords.semType == 2
-                ? '网络'
-                : '无'
-            "
-            label="营销方式"
-            placeholder="点击选择营销方式"
+            :value="Marketing_methods_txt.text"
+            label="方式"
+            placeholder="点击选择方式"
             @click="showMarketing_methods = true"
           />
           <van-popup v-model="showMarketing_methods" position="bottom">
@@ -102,7 +87,7 @@
             round
             :closeable="true"
             :style="{
-              width: '55%',
+              width: '50%',
               position: 'absolute',
               left: '50%',
               top: '50%',
@@ -128,17 +113,17 @@
           </van-popup>
           <van-field
             v-if="taskId"
-            v-model="editRecords.marketAmount"
-            required
+            v-model="market_amount"
             rows="2"
             autosize
+            required
             label="金额（万元）"
             type="number"
-            placeholder="请填写金额"
+            placeholder="请填写营销金额"
             show-word-limit
           />
           <van-field
-            v-model="editRecords.actualDemand"
+            v-model="actual_demand"
             rows="2"
             autosize
             label="实际需求"
@@ -148,7 +133,7 @@
             show-word-limit
           />
           <van-field
-            v-model="editRecords.remark"
+            v-model="remarks"
             rows="2"
             autosize
             label="备注"
@@ -158,7 +143,7 @@
             show-word-limit
           />
           <van-field
-            v-model="editRecords.feedback"
+            v-model="customer_feedback"
             rows="2"
             autosize
             label="客户反馈意见"
@@ -172,7 +157,7 @@
             readonly
             clickable
             name="datetimePicker"
-            :value="currentDate1 | transform"
+            :value="currentDate | transform"
             label="到期日期"
             placeholder="点击选择时间"
             @click="showPicker = true"
@@ -186,68 +171,42 @@
               @cancel="showPicker = false"
             />
           </van-popup>
-          <div v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')" class="save">
-            <van-button type="primary" block @click="modifyResult()">保存</van-button>
+          <div class="save">
+            <van-button type="primary" block @click="addResult()">保存</van-button>
           </div>
         </div>
         <div v-show="tabId === 1" style="background: #fff">
-          <div style="padding: 10px; background: #fff; display: flex; flex-wrap: wrap">
-            <van-uploader
-              result-type="dataUrl"
-              :after-read="afterRead"
-              v-model="fileList"
-              multiple
-              @delete="deleteImage"
-              ref="uploadImg"
-            />
-            <!-- <span
-              style="
-                display: inline-block;
-                height: 80px;
-                width: 80px;
-                z-index: 1;
-                background: red;
-              "
-              @click="handleClick"
-            ></span>  -->
-            <van-action-sheet
-              v-model="isconfirm"
-              :actions="actions"
-              @select="onSelect"
-              cancel-text="取消"
-              close-on-click-action
-              @cancel="onCancel"
-            />
-            <!-- <input type="file" accept="image/*" capture="camera"> -->
+          <div style="padding: 10px; background: #fff">
+            <van-uploader :after-read="afterRead" v-model="fileList" multiple />
           </div>
-          <div v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')" class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="modifyPicture()">保存</van-button>
+          <div class="save" style="margin-top: 20px">
+            <van-button type="primary" block @click="addPicture()">保存</van-button>
           </div>
         </div>
         <div v-show="tabId === 2" style="background: #fff; height: 70vh">
           <van-field
-            v-model="editRecords.rivalName"
+            v-model="competitor"
+            required
             name="对手名称："
             label="对手名称："
-            required
             placeholder="请填写对手名称"
           />
           <van-field
-            v-model="editRecords.rivalProduct"
+            v-model="competitive_products"
             required
             name="对手产品："
             label="对手产品："
             placeholder="请填写对手产品"
           />
           <van-field
-            v-model="editRecords.interestRate"
+            v-model="product_rate"
             required
             name="产品利率："
             label="产品利率："
             placeholder="请填写产品利率（数字）"
           />
-          <div v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')" class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="modifyCompetitor()">保存</van-button>
+          <div class="save" style="margin-top: 20px">
+            <van-button type="primary" block @click="addCompetitor()">保存</van-button>
           </div>
         </div>
       </div>
@@ -255,42 +214,49 @@
   </div>
 </template>
 <script>
-import ChildNav from "../../components/Public/ChildNav";
+import ChildNav from "../../../components/Public/ChildNav";
 import { Toast, Dialog } from "vant";
+import qs from "qs";
 export default {
   data() {
     return {
       tabId: 0,
-      editRecords: [],
+      result_txt: {
+        index: 2,
+        text: "未成功",
+      },
       columnsResult: [
         { index: 0, text: "失败" },
         { index: 1, text: "成功" },
         { index: 2, text: "未成功" },
       ],
+      showResult: false,
+      Customer_intention_txt: "",
       columnsCustomer_intention: [],
       showCustomer_intention: false,
+      Marketing_methods_txt: "",
       columnsMarketing_methods: [
         { index: 0, text: "上门" },
         { index: 1, text: "电话" },
         { index: 2, text: "网络" },
       ],
       showMarketing_methods: false,
-      showResult: false,
-      id: "",
-      productName: "",
-      imageInfo: "",
-      resultCode: "",
+      actual_demand: "",
+      market_amount: "",
+      remarks: "",
+      customer_feedback: "",
+      competitor: "",
+      competitive_products: "",
+      product_rate: "",
       customerCode: "",
-      griddingCode: "",
-      products: "",
-      // pictureData:"",
-      fileList: [],
+      gridCode: "",
+      productCode: "",
+      productName: "",
       custName: "",
-      prospect_detailsEdit: {},
+      id: "",
+      resultCode: "",
+      fileList: [],
       pictureId: [],
-      isconfirm: false,
-      capture: ["camera"],
-      actions: [{ name: "相机" }, { name: "相册" }],
       currentDate: "",
       showPicker: false,
       currentDate1: "",
@@ -299,8 +265,10 @@ export default {
       showPopup: false,
       resultArr: [],
       productTypeArr: "",
-      taskUpdateFlag: true,
       taskId: "",
+      modifyId: "",
+      idCompetitor: "",
+      idImage: "",
       modifyResultFlag: true,
       minDate: new Date(),
       maxDate: new Date(2200, 0, 31),
@@ -309,14 +277,15 @@ export default {
   components: {
     ChildNav,
   },
-  async created() {
+  created() {
     this.typeCN = this.$route.query.title;
-    this.id = this.$route.query.id;
+    this.customerCode = this.$route.query.customerCode;
+    this.gridCode = this.$route.query.gridCode;
+    this.productCode = this.$route.query.productCode;
     this.productName = this.$route.query.productName;
-    this.taskId = this.$route.query.taskId;
     this.custName = this.$route.query.custName;
-    this.taskUpdateFlag = this.$route.query.taskUpdateFlag;
-    await this.editRecord();
+    this.id = this.$route.query.id;
+    this.taskId = this.$route.query.taskId;
     this.dic_nation();
   },
   updated() {},
@@ -328,7 +297,6 @@ export default {
       return findWill ? findWill.value : "";
     },
     resultListClick() {
-      this.productTypeArr = [];
       this.resultArr.forEach((it) => {
         this.productTypeArr += this.task_product_type(it) + ",";
       });
@@ -341,39 +309,9 @@ export default {
       this.showPopup = false;
     },
     onConfirm(time) {
-      // this.currentDate = `${time.getFullYear()}-${
-      //   time.getMonth() + 1
-      // }-${time.getDate()}`;
       this.currentDate = time;
       this.currentDate1 = time;
       this.showPicker = false;
-    },
-    deleteImage({ url }) {
-      const index = this.fileList.findIndex((it) => it.url === url);
-      this.pictureId.splice(index, 1);
-    },
-    appMessage(str) {
-      str = String(str);
-      var u = navigator.userAgent,
-        app = navigator.appVersion;
-      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Linux") > -1; //android终端或者uc浏览器
-      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-      if (isAndroid) {
-        window.android.openCamera((el) => {
-        });
-      } else if (isiOS) {
-        window.webkit.messageHandlers.AppModel.postMessage({
-          str: str,
-        });
-      }
-    },
-    enumData(val, data) {
-      if (val && data.length > 0) {
-        const find = data.find((it) => it.index == val);
-        return find ? find.text : "";
-      } else {
-        return "";
-      }
     },
     dic_nation() {
       // 客户意向
@@ -387,10 +325,6 @@ export default {
           }
         });
         this.columnsCustomer_intention = transformDara;
-        this.editRecords.intention = this.enumData(
-          this.editRecords.intention,
-          this.columnsCustomer_intention
-        );
       });
       // 客户需求
       this.$httpGet({
@@ -409,99 +343,79 @@ export default {
       this.$router.go(-1);
     },
     tab(ev) {
-      this.tabId = ev;
-      if (ev == 1) {
-        if (this.editRecords.imageId) {
-          this.editPicture();
+      if (ev != 0) {
+        if (!this.resultCode) {
+          Toast({
+            message: "请先添加结果",
+            position: "middle",
+          });
+          return;
         }
-      } else {
-        this.fileList = [];
       }
+      this.tabId = ev;
     },
-    async editRecord(val) {
-      const res = await this.$httpGet({
-        url: `/api/semCustomersRecords/appGet/${this.id}`,
-        data: {
-          id: this.id,
-        },
-      });
-      this.editRecords = res.data;
-      this.pictureId = res.data.imageInfo ? res.data.imageInfo.split(",") : [];
-      this.customerCode = res.data.customerCode;
-      this.griddingCode = res.data.griddingCode;
-      this.products = res.data.products;
-      this.currentDate1 = res.data.dueTime;
-      if (this.editRecords.isSucc == 1) {
-        this.timeOut = true;
-      } else {
-        this.timeOut = false;
-      }
-      res.data.productTypeName
-        ? (this.productTypeArr = res.data.productTypeName)
-        : (this.productTypeArr = "");
-      res.data.productType
-        ? (this.resultArr = res.data.productType.split(","))
-        : (this.resultArr = "");
-    },
-    onResult(value) {
-      this.editRecords.isSucc = value.index;
-      this.showResult = false;
-      if (value.index == 1) {
-        this.timeOut = true;
-      } else {
-        this.timeOut = false;
-      }
-    },
-    onCustomer_intention(value) {
-      // this.prospect_detailsEdit.intention = value.index;
-      this.editRecords.intention = value.text;
-      this.showCustomer_intention = false;
-    },
-    onMarketing_methods(value) {
-      this.editRecords.semType = value.index;
-      this.showMarketing_methods = false;
-    },
-    modifyResult() {
+    addResult() {
       if (!this.modifyResultFlag) return;
       this.modifyResultFlag = false;
       setTimeout(() => {
         this.modifyResultFlag = true;
       }, 2000);
-      if (this.resultArr) {
-        this.resultArr = this.resultArr.toString();
-      } else {
-        this.resultArr = "";
-      }
-      this.$httpPut({
-        url: "/api/semCustomersRecords/updateRecord",
-        data: {
-          customerCode: this.editRecords.customerCode,
-          griddingCode: this.editRecords.griddingCode,
-          products: this.editRecords.products,
-          code: this.editRecords.code,
-          id: this.id,
-          isSucc: this.editRecords.isSucc,
-          semType: this.editRecords.semType,
-          intention: this.columnsCustomer_intention.find(
-            (it) => it.text === this.editRecords.intention
-          ).index,
-          actualDemand: this.editRecords.actualDemand,
-          marketAmount: this.editRecords.marketAmount,
-          remark: this.editRecords.remark,
-          feedback: this.editRecords.feedback,
-          dueTime: this.currentDate1,
-          productType: this.resultArr,
-        },
-      }).then((res) => {
-        Toast({
-          message: "保存成功",
-          position: "middle",
+      if (!this.modifyId && !this.resultCode) {
+        this.$httpPost({
+          url: "/api/semCustomersFamailyRecords/add",
+          data: {
+            customerCode: this.customerCode,
+            griddingCode: this.gridCode,
+            products: this.productCode,
+            taskId: this.taskId,
+            isSucc: this.result_txt.index,
+            intention: this.Customer_intention_txt.index,
+            semType: this.Marketing_methods_txt.index,
+            actualDemand: this.actual_demand,
+            marketAmount: this.market_amount,
+            remark: this.remarks,
+            feedback: this.customer_feedback,
+            dueTime: this.currentDate1,
+            productType: this.resultArr.toString(),
+          },
+        }).then((res) => {
+          this.resultCode = res.data.code;
+          this.modifyId = res.data.id;
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
         });
-      });
+      } else {
+        this.$httpPut({
+          url: "/api/semCustomersFamailyRecords/update",
+          data: {
+            customerCode: this.customerCode,
+            griddingCode: this.gridCode,
+            products: this.productCode,
+            id: this.modifyId,
+            code: this.resultCode,
+            isSucc: this.result_txt.index,
+            intention: this.Customer_intention_txt.index,
+            semType: this.Marketing_methods_txt.index,
+            actualDemand: this.actual_demand,
+            marketAmount: this.market_amount,
+            remark: this.remarks,
+            feedback: this.customer_feedback,
+            dueTime: this.currentDate1,
+            productType: this.resultArr.toString(),
+          },
+        }).then((res) => {
+          Toast({
+            message: "保存成功",
+            position: "middle",
+          });
+        });
+      }
     },
-    async modifyCompetitor() {
+    async addCompetitor() {
       var reg = /^\d*\.{0,1}\d*$/;
-      if (!reg.test(this.editRecords.interestRate)) {
+      if (!reg.test(this.product_rate)) {
         Dialog.alert({
           title: "提示",
           message: "产品利率必须为数字",
@@ -513,33 +427,33 @@ export default {
       setTimeout(() => {
         this.modifyResultFlag = true;
       }, 2000);
-      if (this.editRecords.competitorId) {
-        this.$httpPut({
-          url: "/api/semCustomersRecords/updateCompetitor",
+      if (!this.idCompetitor) {
+        this.$httpPost({
+          url: "/api/customersFamailyRecords/addCompetitor",
           data: {
-            customerCode: this.editRecords.customerCode,
-            semCode: this.editRecords.code,
-            // semCode: this.resultCode,
-            id: this.editRecords.competitorId,
-            rivalName: this.editRecords.rivalName,
-            rivalProduct: this.editRecords.rivalProduct,
-            interestRate: this.editRecords.interestRate,
+            customerCode: this.customerCode,
+            semCode: this.resultCode,
+            rivalName: this.competitor,
+            rivalProduct: this.competitive_products,
+            interestRate: this.product_rate,
           },
         }).then((res) => {
+          this.idCompetitor = res.data.id;
           Toast({
             message: "保存成功",
             position: "middle",
           });
         });
       } else {
-        this.$httpPost({
-          url: "/api/customersRecords/appAddCompetitor",
+        this.$httpPut({
+          url: "/api/semCustomersFamailyRecords/updateCompetitor",
           data: {
-            customerCode: this.editRecords.customerCode,
-            semCode: this.editRecords.code,
-            rivalName: this.editRecords.rivalName,
-            rivalProduct: this.editRecords.rivalProduct,
-            interestRate: this.editRecords.interestRate,
+            customerCode: this.customerCode,
+            semCode: this.resultCode,
+            rivalName: this.competitor,
+            rivalProduct: this.competitive_products,
+            interestRate: this.product_rate,
+            id: this.idCompetitor,
           },
         }).then((res) => {
           Toast({
@@ -549,35 +463,100 @@ export default {
         });
       }
     },
-    async modifyPicture() {
+    onResult(value) {
+      this.result_txt = value;
+      this.showResult = false;
+      if (value.index == 1) {
+        this.timeOut = true;
+      } else {
+        this.timeOut = false;
+      }
+    },
+    onCustomer_intention(value) {
+      this.Customer_intention_txt = value;
+      this.showCustomer_intention = false;
+    },
+    onMarketing_methods(value) {
+      this.Marketing_methods_txt = value;
+      this.showMarketing_methods = false;
+    },
+    // afterRead(file) {
+    //   let formData = new FormData();
+    //   formData.append("file", file.file);
+    //   this.$httpPost({
+    //     url: "/api/upload/attachment",
+    //     headers: { "Content-Type": "multipart/form-data" },
+    //     data: formData,
+    //   }).then((res) => {
+    //     this.pictureId.push(res.data.pid);
+    //   });
+    // },
+    afterRead(file) {
+      let formData = new FormData();
+      file.status = "uploading";
+      file.message = "上传中...";
+      // if (file.size / 1024 > 1025) {
+      //文件大于1M（根据需求更改），进行压缩上传
+      this.compressImg(file.file, (base64Codes) => {
+        let bl = this.base64UrlToBlob(base64Codes, file.file.name);
+        formData.append("file", bl); // 文件对象
+        this.$httpPost({
+          url: "/api/upload/attachment",
+          headers: { "Content-Type": "multipart/form-data" },
+          data: formData,
+        }).then((res) => {
+          file.status = "done";
+          file.message = "上传成功";
+          this.pictureId.push(res.data.pid);
+        });
+      });
+      // } else {
+      //   formData.append("file", file.file);
+      //   this.$httpPost({
+      //     url: "/api/upload/attachment",
+      //     headers: { "Content-Type": "multipart/form-data" },
+      //     data: formData,
+      //   }).then((res) => {
+      //     this.pictureId.push(res.data.pid);
+      //   });
+      // }
+    },
+    async addPicture() {
+      if (this.pictureId == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请添加客户照片！",
+        });
+        return;
+      }
       if (!this.modifyResultFlag) return;
       this.modifyResultFlag = false;
       setTimeout(() => {
         this.modifyResultFlag = true;
       }, 2000);
-      if (this.editRecords.imageId) {
-        this.$httpPut({
-          url: "/api/semCustomersRecords/updateScreenage",
+      if (!this.idImage) {
+        this.$httpPost({
+          url: "/api/customersFamailyRecords/addScreenage",
           data: {
-            customerCode: this.customerCode,
-            semCode: this.editRecords.code,
-            // semCode: this.resultCode,
-            id: this.editRecords.imageId,
             imageInfo: this.pictureId.join(","),
+            customerCode: this.customerCode,
+            semCode: this.resultCode,
           },
         }).then((res) => {
+          this.idImage = res.data.id;
           Toast({
             message: "保存成功",
             position: "middle",
           });
         });
       } else {
-        this.$httpPost({
-          url: "/api/customersRecords/appAddImage",
+        this.$httpPut({
+          url: "/api/semCustomersFamailyRecords/updateScreenage",
           data: {
+            customerCode: this.customerCode,
+            semCode: this.resultCode,
+            id: this.idImage,
             imageInfo: this.pictureId.join(","),
-            customerCode: this.editRecords.customerCode,
-            semCode: this.editRecords.code,
           },
         }).then((res) => {
           Toast({
@@ -587,66 +566,11 @@ export default {
         });
       }
     },
-    /**
-     * 获取图片接口
-     */
-    async editPicture() {
-      if (this.pictureId) {
-        this.pictureId.forEach((el) => {
-          this.$httpGet({
-            url: "/api/show/image/base64",
-            params: {
-              id: el,
-            },
-          }).then((res) => {
-            this.fileList.push({
-              url: "data:image/jpg;base64," + res.data,
-              isImage: true,
-            });
-          });
-        });
-      }
-    },
-    beforeRead(file) {
-      alert("file");
-    },
-    afterRead(file) {
-      file.status = "uploading";
-      file.message = "上传中...";
-      let formData = new FormData();
-      formData.append("file", file.file);
-      this.$httpPost({
-        url: "/api/upload/attachment",
-        headers: { "Content-Type": "multipart/form-data" },
-        data: formData,
-      }).then((res) => {
-        file.status = "done";
-        file.message = "上传成功";
-        this.pictureId.push(res.data.pid);
-      });
-    },
-    handleClick() {
-      this.isconfirm = true;
-    },
-    onSelect(item) {
-      this.isconfirm = false;
-      // Toast(item.name);
-      if (item.name == "相册") {
-        this.cameraList = "camera";
-        this.$refs.uploadImg.chooseFile();
-      } else if (item.name == "相机") {
-        this.cameraList = null;
-        this.$refs.uploadImg.chooseFile();
-      }
-    },
-    onCancel() {
-      Toast("取消");
-    },
   },
 };
 </script>
 <style scoped>
-.EditMarketingRecord {
+.AddMarketingRecord {
   padding-top: 46px;
 }
 .mission_details {
@@ -663,6 +587,9 @@ export default {
   vertical-align: bottom;
   margin: 0px 0px 0px 20px;
 }
+/* .mission_details li:last-child {
+  padding-bottom: 10px;
+} */
 .tabList {
   display: flex;
   justify-content: space-around;

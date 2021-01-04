@@ -400,7 +400,7 @@ export default {
       } else {
         // ws://192.168.1.116:12345
         // wss://echo.websocket.org
-        // const wsuri = "ws://192.168.0.178:12345/ws";
+        // const wsuri = "ws://172.20.10.7:12345/ws";
         const wsuri = "ws://123.56.238.192:12345/ws";
         // const wsuri = "ws://39.106.51.28:12345/ws";
         // 实例化socket
@@ -620,7 +620,7 @@ export default {
   justify-content: space-between;
   margin: 5px;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px){
   .page-content .data_img dt .img_content {
     width: 40px;
   }
@@ -650,6 +650,11 @@ export default {
   .latest_tasks ul li {
     font-size: 13px;
   }
+}
+@media screen and (max-width: 320px) {
+    body {
+        font-size: 12px;
+    }
 }
 </style>
 <style scoped>

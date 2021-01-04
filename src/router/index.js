@@ -76,6 +76,10 @@ const EditIndividualCustomersRecord = () => import('@/views/WorkBench/Individual
 const IndividualCustomersDetails = () => import('@/views/WorkBench/IndividualCustomers/IndividualCustomersDetails.vue');
 // 对公客户
 const CorporateClients = () => import('@/views/WorkBench/CorporateClients/CorporateClients.vue');
+// 对公客户资产详情
+const AssetsLiabilitiesDetail1 = () => import('@/views/WorkBench/CorporateClients/AssetsLiabilitiesDetail1.vue');
+// 对公客户资产添加
+const AssetsLiabilitiesAdd = () => import('@/views/WorkBench/CorporateClients/AssetsLiabilitiesAdd.vue');
 //对公客户建档
 const PublicCustomerRecord = () => import('@/views/WorkBench/CorporateClients/PublicCustomerRecord.vue');
 //对公客户修改
@@ -100,6 +104,10 @@ const FarmersInformation = () => import('@/views/WorkBench/PeasantHousehold/Farm
 const FarmerMemberDetails = () => import('@/views/WorkBench/PeasantHousehold/FarmerMemberDetails.vue');
 // 农户资产负债详情
 const AssetsLiabilitiesDetail = () => import('@/views/WorkBench/PeasantHousehold/AssetsLiabilitiesDetail.vue');
+// 农户添加营销记录
+const AddMarketedRecord = () => import('@/views/WorkBench/PeasantHousehold/AddMarketedRecord.vue');
+// 农户修改营销记录
+const EditMarkedRecord = () => import('@/views/WorkBench/PeasantHousehold/EditMarkedRecord.vue');
 const User = () => import('@/views/User/User.vue');
 const MyMedal = () => import('@/views/User/MyMedal.vue');
 const UpdatePassword = () => import('@/views/User/UpdatePassword.vue');
@@ -290,6 +298,16 @@ const routes = [{
     component: CorporateClients,
   },
   {
+    path: '/AssetsLiabilitiesDetail1',
+    name: 'AssetsLiabilitiesDetail1',
+    component: AssetsLiabilitiesDetail1,
+  },
+  {
+    path: '/AssetsLiabilitiesAdd',
+    name: 'AssetsLiabilitiesAdd',
+    component: AssetsLiabilitiesAdd,
+  },
+  {
     path: '/PublicCustomerRecord',
     name: 'PublicCustomerRecord',
     component: PublicCustomerRecord,
@@ -363,6 +381,16 @@ const routes = [{
     path: '/AssetsLiabilitiesDetail',
     name: 'AssetsLiabilitiesDetail',
     component: AssetsLiabilitiesDetail,
+  },
+  {
+    path: '/AddMarketedRecord',
+    name: 'AddMarketedRecord',
+    component: AddMarketedRecord,
+  },
+  {
+    path: '/EditMarkedRecord',
+    name: 'EditMarkedRecord',
+    component: EditMarkedRecord,
   },
   {
     path: '/User',

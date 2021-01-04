@@ -86,7 +86,11 @@
                 </p>
               </li>
               <li>{{ item.realName }}</li>
-              <li>{{ item.marketAmount | NumFormat }}</li>
+              <li>
+                {{
+                  item.marketAmount == null ? item.number : item.marketAmount | NumFormat
+                }}
+              </li>
             </ul>
           </dd>
         </dl>
@@ -154,19 +158,34 @@ export default {
       this.getTaskText(ev);
     },
     getTaskText(ele) {
-      this.$httpGet({
-        url: "/api/rankingList/dateType",
-        params: {
-          productType: this.tabId1,
-          dateType: ele,
-        },
-      }).then((res) => {
-        this.achievements_list = res.data;
-        this.achievements_list.forEach((el) => {
-          this.marketAmount = parseFloat(el.marketAmount);
+      if (this.tabId1=='custNum'||this.tabId1=='taskNum') {
+        this.$httpGet({
+          url: "/api/rankingList/otherType",
+          params: {
+            productType: this.tabId1,
+            dateType: ele,
+          },
+        }).then((res) => {
+          this.achievements_list = res.data;
+          this.achievements_list.forEach((el) => {
+            this.marketAmount = parseFloat(el.marketAmount);
+          });
+          this.achievements_list.marketAmount = this.marketAmount;
         });
-        this.achievements_list.marketAmount = this.marketAmount;
-      });
+      } else {
+        this.$httpGet({
+          url: "/api/rankingList/dateType",
+          params: {
+            productType: this.tabId1,
+            dateType: this.tabId,
+          },
+        }).then((res) => {
+          this.achievements_list = res.data;
+          this.achievements_list.forEach((el) => {
+            this.marketAmount = parseFloat(el.number);
+          });
+        });
+      }
     },
     tab2(ev) {
       this.tabId1 = ev;
@@ -181,7 +200,7 @@ export default {
           }).then((res) => {
             this.achievements_list = res.data;
             this.achievements_list.forEach((el) => {
-              this.marketAmount = parseFloat(el.marketAmount);
+              this.marketAmount = parseFloat(el.number);
             });
           });
         } else {
@@ -318,7 +337,7 @@ export default {
 .ranking_list_body ul li:last-child {
   text-align: right;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   * {
     font-size: 13px;
   }

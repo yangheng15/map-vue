@@ -18,9 +18,16 @@
     </div>
     <div v-if="typeCN == '对公客户详情'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">客户需求</li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">营销记录</li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
+          基本信息
+        </li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
+          客户需求
+        </li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
+          营销记录
+        </li>
+        <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">资产</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -96,7 +103,6 @@
           name="营业执照号："
           label="营业执照号："
           placeholder="单行输入"
-          required
         />
         <van-field
           v-model="legalPersonName"
@@ -200,7 +206,9 @@
           </baidu-map>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
+          <van-button round block type="primary" @click="modifyResult()"
+            >保存</van-button
+          >
         </div>
       </div>
       <div v-show="tabId === 1" class="household_have">
@@ -212,9 +220,15 @@
         >
           <template #input>
             <van-radio-group v-model="item.radio" direction="horizontal">
-              <van-radio name="1" checked-color="rgb(61, 66, 94)">已办</van-radio>
-              <van-radio name="2" checked-color="rgb(61, 66, 94)">未办</van-radio>
-              <van-radio name="3" checked-color="rgb(61, 66, 94)">需办</van-radio>
+              <van-radio name="1" checked-color="rgb(61, 66, 94)"
+                >已办</van-radio
+              >
+              <van-radio name="2" checked-color="rgb(61, 66, 94)"
+                >未办</van-radio
+              >
+              <van-radio name="3" checked-color="rgb(61, 66, 94)"
+                >需办</van-radio
+              >
             </van-radio-group>
           </template>
         </van-field>
@@ -257,7 +271,10 @@
               >
 
               <p>
-                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
                   >删除</van-button
                 >
               </p>
@@ -283,12 +300,18 @@
                 <!-- <span class="approval_Passed">已营销</span> -->
                 <span
                   :class="
-                    thisItem.intention == '1' ? 'approval_Passed' : 'approval_Passed1'
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
                   "
                   >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
-                  :class="thisItem.isSucc == '1' ? 'approval_Passed' : 'approval_Passed1'"
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
                   >{{
                     thisItem.isSucc == "0"
                       ? "失败"
@@ -329,6 +352,79 @@
                 taskUpdateFlag: this.taskUpdateFlag,
               },
             }"
+            >+</router-link
+          >
+        </div>
+      </div>
+      <div v-show="tabId === 3">
+        <div
+          class="stock stock_education"
+          v-for="(thisItem, index) in assets"
+          :key="index"
+        >
+          <div style="margin-bottom: 0.5rem">
+            <router-link
+              tag="p"
+              :to="{
+                name: 'AssetsLiabilitiesDetail1',
+                query: {
+                  title: '客户资产负债详情',
+                  customerCode: thisItem.customerCode,
+                  id: thisItem.id,
+                },
+              }"
+              style="color: #000; font-weight: 550"
+            >
+              {{ thisItem.name }}
+              <van-tag
+                class="approval_Passed"
+                v-if="thisItem.type === 1"
+                plain
+                color="#7232dd"
+                size="medium"
+                >资产
+              </van-tag>
+              <van-tag
+                class="approval_Passed1"
+                v-if="thisItem.type === 2"
+                plain
+                color="#7232dd"
+                size="medium"
+                >负债
+              </van-tag>
+            </router-link>
+            <p v-if="thisItem.checkTime">
+              清查日期：{{ thisItem.checkTime | transform }}
+            </p>
+          </div>
+          <p>评估价值（万元）：{{ thisItem.amount | NumFormat }}</p>
+          <p class="delete" @click="deleteFamilyAssets(thisItem.id)">
+            <van-button type="primary" color="rgb(61, 66, 94)" size="mini"
+              >删除</van-button
+            >
+          </p>
+        </div>
+        <div
+          style="
+            margin-left: 85%;
+            position: fixed !important;
+            float: right;
+            z-index: 9999;
+            align-items: right;
+            bottom: 5%;
+            right: 5%;
+          "
+        >
+          <router-link
+            tag="span"
+            :to="{
+              name: 'AssetsLiabilitiesAdd',
+              query: {
+                title: '客户资产负债添加',
+                customerCode: this.customerCode,
+              },
+            }"
+            class="add_record"
             >+</router-link
           >
         </div>
@@ -375,8 +471,8 @@ export default {
 
       longitude: "114.654102",
       latitude: "33.623741",
-      mapCenter: { lng: "114.654102", lat: "33.623741" },
-      mapCenter1: { lng: "114.654102", lat: "33.623741" },
+      mapCenter: {},
+      mapCenter1: {},
       zoomNum: 19,
       positionMarker: null,
       longitudeLatitude: false,
@@ -395,12 +491,50 @@ export default {
       taskUpdateFlag: "",
       customerImgTime: [],
       pictureTime: [],
+      // 资产————————
+      assets: [],
+      isPopupVisibleAssets: false,
+      select_type_txt: "",
+      select_type_list: [
+        {
+          index: 0,
+          text: "资产",
+        },
+        {
+          index: 1,
+          text: "负债",
+        },
+      ],
+      select_type: false,
+      assets_type_info_txt: "",
+      assets_type_info_list: [],
+      assets_type_info: false,
+      liabilities_type_info_txt: "",
+      liabilities_type_info_list: [],
+      liabilities_type_info: false,
+      asset_name_txt: "",
+      asset_type_txt: "",
+      asset_type_list: ["房产", "汽车"],
+      asset_type: false,
+      showInventoryDate: false,
+      evaluation_value: "",
+      message_income: "",
+      inventoryDate: "",
+      inventoryDate1: "",
     };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (from.path === "/EditMarketingRecord" || from.path === "/AddMarketingRecord") {
+      if (
+        from.path === "/EditMarketingRecord" ||
+        from.path === "/AddMarketingRecord"
+      ) {
         vm.tab(2);
+      } else if (
+        from.path === "/AssetsLiabilitiesAdd" ||
+        from.path === "/AssetsLiabilitiesDetail1"
+      ) {
+        vm.tab(3);
       }
     });
   },
@@ -408,12 +542,30 @@ export default {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
     this.taskUpdateFlag = this.$route.query.taskUpdateFlag;
-    await this.dic_nation();
+
     await this.editRecord();
+    await this.dic_nation();
     await this.getIndusty();
   },
 
   methods: {
+    currentPositioning() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let positionArr = window.android.getLocation().split(",");
+        let currentPositioning = { lng: positionArr[0], lat: positionArr[1] };
+        return currentPositioning;
+      }
+      if (isiOS) {
+        let positionArr = window.prompt("getLocation").split(",");
+        let currentPositioning = { lng: positionArr[0], lat: positionArr[1] };
+        return currentPositioning;
+      }
+    },
     onClickLeft() {
       this.$router.go(-1);
     },
@@ -510,7 +662,7 @@ export default {
       this.$httpGet({
         url: "/api/semGridding/query",
         params: {
-          limit: 10,
+          limit: 100,
           page: 1,
         },
       }).then((res) => {
@@ -522,7 +674,10 @@ export default {
             });
         });
         this.areaList = transformDara;
-        this.publicCustomerGrid = this.enumData1(this.publicCustomerGrid, this.areaList);
+        this.publicCustomerGrid = this.enumData1(
+          this.publicCustomerGrid,
+          this.areaList
+        );
       });
       // 获取详细地址
       var u = navigator.userAgent;
@@ -542,6 +697,38 @@ export default {
       //     return;
       //   }
       // }
+      // 客户资产类型
+      this.$httpGet({
+        url: "/dic/type/customers_assets_type_info",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.assets_type_info_list = transformDara;
+        this.assets_type_info_txt = this.enumData(
+          this.assets_type_info_txt,
+          this.assets_type_info_list
+        );
+      });
+      // 客户负债类型
+      this.$httpGet({
+        url: "/dic/type/customers_liabilities_type_info",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.liabilities_type_info_list = transformDara;
+        this.liabilities_type_info_txt = this.enumData(
+          this.liabilities_type_info_txt,
+          this.liabilities_type_info_list
+        );
+      });
     },
     deleteImage(file, item) {
       this.pictureId.splice(item.index, 1);
@@ -590,10 +777,10 @@ export default {
             lng: res.data.location.split(",")[0],
             lat: res.data.location.split(",")[1],
           })
-        : (this.mapCenter = { lng: "114.654102", lat: "33.623741" });
+        : (this.mapCenter = this.currentPositioning());
       res.data.location
         ? (this.mapCenter1 = { ...this.mapCenter })
-        : (this.mapCenter1 = { lng: "114.654102", lat: "33.623741" });
+        : (this.mapCenter1 = this.currentPositioning());
       this.legalPersonName = res.data.legalName;
       this.legalPersonTelephone = res.data.legalPhone;
       // this.pictureId = res.data.customerImg ? res.data.customerImg.split(",") : [];
@@ -602,11 +789,18 @@ export default {
       this.otherContactsTelephone = res.data.otherContactsPhone;
       if (res.data.customersDemandList.length > 0) {
         res.data.customersDemandList.forEach((item) => {
-          for (let index = 0; index < this.potential_need_type.length; index++) {
+          for (
+            let index = 0;
+            index < this.potential_need_type.length;
+            index++
+          ) {
             const i = this.potential_need_type.findIndex(
               (it) => it.index == item.demandType
             );
-            i >= 0 && (this.potential_need_type[i].radio = item.demandStatus.toString());
+            i >= 0 &&
+              (this.potential_need_type[
+                i
+              ].radio = item.demandStatus.toString());
             i < 0 && (this.otherTxt = item.description);
           }
         });
@@ -632,8 +826,88 @@ export default {
       this.tabId = ev;
       if (ev == 2) {
         this.getMarkedRecord();
+      } else if (ev == 3) {
+        this.getFamilyAssets();
       }
     },
+
+    // 资产——————————
+    getFamilyAssets() {
+      const customerCodeBack = localStorage.getItem("customerCode");
+      this.$httpGet({
+        url: "/api/customersAssetsInfo/query",
+        params: {
+          customerCode: this.customerCode || customerCodeBack,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.assets = res.data;
+        // this.peasant_household.forEach((it) => {
+        //   this.familyCode = it.type;
+        // });
+        // this.getDic();
+      });
+    },
+    // AddPopupAssets() {
+    //   this.$httpPost({
+    //     url: "/api/customersFamilyAssetsLiability/add",
+    //     data: {
+    //       name: this.asset_type_txt,
+    //       familyCode: this.farmers_details.familyCode,
+    //       type: this.select_type_txt.index,
+    //       description: this.message_income,
+    //       amount: this.evaluation_value,
+    //       checkTime: this.inventoryDate1,
+    //     },
+    //   }).then((res) => {
+    //     this.getFamilyAssets();
+    //     this.isPopupVisibleAssets = false;
+    //     Toast({
+    //       message: "保存成功",
+    //       position: "middle",
+    //     });
+    //   });
+    // },
+    deleteFamilyAssets(id) {
+      Dialog.confirm({
+        title: "你确定删除这条记录吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customersAssetsInfo/delete",
+            params: {
+              ids: id,
+            },
+          })
+            .then((res) => {
+              this.getFamilyAssets();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    },
+    onSelect_type(value) {
+      this.select_type_txt = value;
+      this.select_type = false;
+    },
+    onliabilities_type_info(value) {
+      this.liabilities_type_info_txt = value;
+      this.liabilities_type_info = false;
+    },
+    onassets_type_info(value) {
+      this.assets_type_info_txt = value;
+      this.assets_type_info = false;
+    },
+    onInventoryDate(time) {
+      this.inventoryDate = `${time.getFullYear()}-${
+        time.getMonth() + 1
+      }-${time.getDate()}`;
+      this.inventoryDate1 = time;
+      this.showInventoryDate = false;
+    },
+
+    // 资产——————————
     getMarkedRecord() {
       const customerCodeBack = localStorage.getItem("customerCode");
       this.$httpGet({
@@ -723,8 +997,8 @@ export default {
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
     afterRead(file) {
-      file.status = 'uploading';
-      file.message = '上传中...';
+      file.status = "uploading";
+      file.message = "上传中...";
       let formData = new FormData();
       this.compressImg(file.file, (base64Codes) => {
         let bl = this.base64UrlToBlob(base64Codes, file.file.name);
@@ -734,8 +1008,8 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
           data: formData,
         }).then((res) => {
-          file.status = 'done';
-        file.message = '上传成功';
+          file.status = "done";
+          file.message = "上传成功";
           let el = res.data.createTime;
           let time =
             new Date(el).getFullYear() +
@@ -783,8 +1057,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     modifyResult() {
       if (this.publicCustomerName == "") {
@@ -808,13 +1081,13 @@ export default {
         });
         return;
       }
-      if (this.businessLicenseNo == "") {
-        Dialog.alert({
-          title: "提示",
-          message: "请输入营业执照号！",
-        });
-        return;
-      }
+      // if (this.businessLicenseNo == "") {
+      //   Dialog.alert({
+      //     title: "提示",
+      //     message: "请输入营业执照号！",
+      //   });
+      //   return;
+      // }
       this.$httpPut({
         url: "/api/publicCustomersInfo/update",
         data: {
@@ -841,8 +1114,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     deleteRemark(val) {
       Dialog.confirm({
@@ -905,6 +1177,9 @@ export default {
 }
 .van-nav-bar >>> .van-icon {
   color: #fff;
+}
+.van-cell >>> .van-field__label {
+  width: 9em;
 }
 .income_expenditure .van-cell >>> .van-field__label {
   width: 75%;
@@ -1087,7 +1362,82 @@ textarea {
   text-align: center;
   background: rgba(0, 0, 0, 0.3);
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+
+/* 资产———————————— */
+.stock {
+  padding: 0rem;
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.stock p {
+  margin: 0.5rem 0rem 0rem;
+}
+.stock:last-child {
+  padding-bottom: 0.5rem;
+}
+.stock_have p {
+  width: 33.3%;
+}
+
+.stock li {
+  width: 60%;
+  /* text-align: right; */
+  margin: 0.5rem 0rem;
+}
+.stock li:nth-child(odd) {
+  width: 38%;
+}
+.stock li input,
+.stock li select {
+  border: 0.05rem solid #bbb;
+  background-color: #fff;
+  height: 2rem;
+  border-radius: 0.3rem;
+  padding-left: 0.5rem;
+  width: 100%;
+}
+.stock_education {
+  position: relative;
+  padding: 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8;
+}
+.stock_education div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.stock_education .delete {
+  color: #1432e3;
+  cursor: pointer;
+}
+.pop_title {
+  background: rgb(61, 66, 94);
+  text-align: center;
+  font-size: 16px;
+  height: 3rem;
+  line-height: 3rem;
+  color: #fff;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  margin: 0;
+}
+.save_pop {
+  background: #fff;
+  text-align: center;
+  padding-bottom: 50px;
+}
+.save_pop button {
+  border: 0.05rem solid #bbb;
+  background: rgb(61, 66, 94);
+  border-radius: 0.4rem;
+  color: #fff;
+  font-size: 14px;
+  width: 6rem;
+  height: 2rem;
+}
+@media screen and (max-width: 359px) {
   li,
   select,
   input,
@@ -1135,6 +1485,28 @@ textarea {
   .add_record {
     width: 3.5rem;
     height: 3.5rem;
+  }
+  /* 资产_____ */
+  .stock li {
+    margin: 0.3rem 0rem;
+  }
+  .stock_education {
+    padding: 0.5rem;
+  }
+  .pop_title {
+    font-size: 1rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+  }
+  .save_pop button {
+    font-size: 0.8rem;
+    line-height: 1.8rem;
+    height: 1.8rem;
+    width: 5rem;
+  }
+  .save_pop {
+    margin-top: 2rem !important;
+    padding-bottom: 2.5rem;
   }
 }
 </style>

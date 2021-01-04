@@ -10,8 +10,9 @@ import router from '../router/index';
 if (process.env.NODE_ENV === 'development') {
   // axios.defaults.baseURL = '/api'
   // axios.defaults.baseURL = 'http://sk935668981.u1.luyouxia.net:53328/'
+  // 开发地址
+  // axios.defaults.baseURL = 'http://172.20.10.7:8091'
   // 测试
-  // axios.defaults.baseURL = 'http://192.168.0.178:8091'
   axios.defaults.baseURL = 'http://123.56.238.192:8199'
   // 正式
   // axios.defaults.baseURL = 'http://39.106.51.28:8091/'

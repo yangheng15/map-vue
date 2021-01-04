@@ -186,7 +186,7 @@
               @cancel="showPicker = false"
             />
           </van-popup>
-          <div v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')" class="save">
+          <div class="save">
             <van-button type="primary" block @click="modifyResult()">保存</van-button>
           </div>
         </div>
@@ -220,7 +220,7 @@
             />
             <!-- <input type="file" accept="image/*" capture="camera"> -->
           </div>
-          <div v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')" class="save" style="margin-top: 20px">
+          <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="modifyPicture()">保存</van-button>
           </div>
         </div>
@@ -246,7 +246,7 @@
             label="产品利率："
             placeholder="请填写产品利率（数字）"
           />
-          <div v-if="taskUpdateFlag && (taskUpdateFlag === true || taskUpdateFlag == 'true')" class="save" style="margin-top: 20px">
+          <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="modifyCompetitor()">保存</van-button>
           </div>
         </div>
@@ -255,7 +255,7 @@
   </div>
 </template>
 <script>
-import ChildNav from "../../components/Public/ChildNav";
+import ChildNav from "../../../components/Public/ChildNav";
 import { Toast, Dialog } from "vant";
 export default {
   data() {
@@ -420,7 +420,7 @@ export default {
     },
     async editRecord(val) {
       const res = await this.$httpGet({
-        url: `/api/semCustomersRecords/appGet/${this.id}`,
+        url: `/api/semCustomersFamailyRecords/get/${this.id}`,
         data: {
           id: this.id,
         },
@@ -473,7 +473,7 @@ export default {
         this.resultArr = "";
       }
       this.$httpPut({
-        url: "/api/semCustomersRecords/updateRecord",
+        url: "/api/semCustomersFamailyRecords/update",
         data: {
           customerCode: this.editRecords.customerCode,
           griddingCode: this.editRecords.griddingCode,
@@ -515,7 +515,7 @@ export default {
       }, 2000);
       if (this.editRecords.competitorId) {
         this.$httpPut({
-          url: "/api/semCustomersRecords/updateCompetitor",
+          url: "/api/semCustomersFamailyRecords/updateCompetitor",
           data: {
             customerCode: this.editRecords.customerCode,
             semCode: this.editRecords.code,
@@ -533,7 +533,7 @@ export default {
         });
       } else {
         this.$httpPost({
-          url: "/api/customersRecords/appAddCompetitor",
+          url: "/api/customersFamailyRecords/addCompetitor",
           data: {
             customerCode: this.editRecords.customerCode,
             semCode: this.editRecords.code,
@@ -557,7 +557,7 @@ export default {
       }, 2000);
       if (this.editRecords.imageId) {
         this.$httpPut({
-          url: "/api/semCustomersRecords/updateScreenage",
+          url: "/api/semCustomersFamailyRecords/updateScreenage",
           data: {
             customerCode: this.customerCode,
             semCode: this.editRecords.code,
@@ -573,7 +573,7 @@ export default {
         });
       } else {
         this.$httpPost({
-          url: "/api/customersRecords/appAddImage",
+          url: "/api/customersFamailyRecords/addScreenage",
           data: {
             imageInfo: this.pictureId.join(","),
             customerCode: this.editRecords.customerCode,

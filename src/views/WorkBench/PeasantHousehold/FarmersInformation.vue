@@ -9,9 +9,7 @@
         <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">成员</li>
         <li @click="tab(4)" :class="tabId == 4 ? 'cur' : 'ordinary'">资产</li>
         <li @click="tab(5)" :class="tabId == 5 ? 'cur' : 'ordinary'">收支</li>
-        <!-- <li @click="tab(6)" :class="tabId == 6 ? 'cur' : 'ordinary'">
-          走访结论
-        </li> -->
+        <li @click="tab(6)" :class="tabId == 6 ? 'cur' : 'ordinary'">营销记录</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -143,7 +141,6 @@
         >
           <template #button>
             <img
-              
               style="opacity: 0.9; margin-right: 15px"
               class=""
               src="../../../assets/grid/sign.svg"
@@ -807,7 +804,7 @@
           >
         </div>
       </div>
-      <div v-show="tabId === 6">
+      <!-- <div v-show="tabId === 6">
         <van-field
           required
           readonly
@@ -859,6 +856,106 @@
         </van-field>
         <div class="save" style="margin-top: 20px">
           <van-button round block type="primary" @click="addResult()">保存</van-button>
+        </div>
+      </div> -->
+      <div v-show="tabId === 6">
+        <ul style="background: #fff">
+          <li
+            v-for="(thisItem, index) in MarketingRecord"
+            :key="index"
+            class="marked_record"
+          >
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarkedRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: farmers_details.houseName,
+                    productName: productName,
+                    taskUpdateFlag: taskUpdateFlag,
+                  },
+                }"
+                style="width: 55%"
+                >{{ thisItem.semTime | transform }}</router-link
+              >
+
+              <p>
+                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
+                  >删除</van-button
+                >
+              </p>
+            </div>
+
+            <div class="positionFixd">
+              <router-link
+                tag="p"
+                :to="{
+                  name: 'EditMarkedRecord',
+                  query: {
+                    title: '营销记录',
+                    id: thisItem.id,
+                    custName: farmers_details.houseName,
+                    productName: productName,
+                    taskUpdateFlag: taskUpdateFlag,
+                  },
+                }"
+                class="dadian"
+                >{{ thisItem.remark }}</router-link
+              >
+              <p style="width: 50%; display: flex" class="approval1">
+                <span
+                  :class="
+                    thisItem.intention == '1' ? 'approval_Passedr' : 'approval_Passed1r'
+                  "
+                  >{{ thisItem.intention | dic_client_will }}</span
+                >
+                <span
+                  :class="thisItem.isSucc == '1' ? 'approval_Passedr' : 'approval_Passed1r'"
+                  >{{
+                    thisItem.isSucc == "0"
+                      ? "失败"
+                      : thisItem.isSucc == "1"
+                      ? "成功"
+                      : thisItem.isSucc == "2"
+                      ? "未成功"
+                      : ""
+                  }}
+                </span>
+              </p>
+            </div>
+          </li>
+        </ul>
+        <div
+          style="
+            margin-left: 85%;
+            position: fixed !important;
+            float: right;
+            z-index: 9999;
+            align-items: right;
+            bottom: 5%;
+            right: 5%;
+          "
+        >
+          <router-link
+            tag="span"
+            class="add_record"
+            :to="{
+              name: 'AddMarketedRecord',
+              query: {
+                title: '添加营销记录',
+                customerCode: this.farmers_details.familyCode,
+                gridCode: this.gridCode,
+                productCode: this.productCode,
+                productName: this.productName,
+                custName: this.farmers_details.houseName,
+                taskUpdateFlag: this.taskUpdateFlag,
+              },
+            }"
+            >+</router-link
+          >
         </div>
       </div>
     </div>
@@ -986,6 +1083,14 @@ export default {
       showBirthDate: false,
       minBirthDate: new Date(1920, 0, 1),
       // maxBirthDate: new Date(2010, 0, 31),
+      // 营销记录————————
+      MarketingRecord: [],
+      customerCode: "",
+      gridCode: "",
+      taskUpdateFlag: "",
+      publicCustomerName: "",
+      productName: "",
+      productCode: "",
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -994,6 +1099,11 @@ export default {
         vm.tab(3);
       } else if (from.path === "/AssetsLiabilitiesDetail") {
         vm.tab(4);
+      } else if (
+        from.path === "/EditMarkedRecord" ||
+        from.path === "/AddMarketedRecord"
+      ) {
+        vm.tab(6);
       }
     });
   },
@@ -1009,6 +1119,20 @@ export default {
   },
 
   methods: {
+    getMarkedRecord() {
+      const familyCode = localStorage.getItem("familyCode");
+      this.$httpGet({
+        url: "/api/semCustomersFamailyRecords/query",
+        params: {
+          customerCode: this.farmers_details.familyCode || familyCode,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.MarketingRecord = res.data;
+      });
+      // }
+    },
     addResult() {
       this.$httpPost({
         url: "/api/semCustomersRecords/add",
@@ -1134,7 +1258,7 @@ export default {
       this.$httpGet({
         url: "/api/semGridding/query",
         params: {
-          limit: 10,
+          limit: 100,
           page: 1,
         },
       }).then((res) => {
@@ -1255,6 +1379,8 @@ export default {
         this.getFamilyAssets();
       } else if (ev == 5) {
         this.getFamilyIncome();
+      } else if (ev == 6) {
+        this.getMarkedRecord();
       }
     },
 
@@ -1585,6 +1711,28 @@ export default {
         })
         .catch((err) => {});
     },
+    deleteRemark(val) {
+      Dialog.confirm({
+        title: "你确定删除吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/semCustomersFamailyRecords/delete",
+            params: {
+              ids: val,
+            },
+          })
+            .then((res) => {
+              Toast({
+                message: "删除成功",
+                position: "middle",
+              });
+              this.getMarkedRecord();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    },
   },
   computed: {
     addExpenditureNum() {
@@ -1629,6 +1777,14 @@ export default {
           Number(this.otherExpend)
         );
       }
+    },
+  },
+  filters: {
+    dic_client_will(val) {
+      const findWill = JSON.parse(localStorage.getItem("dicClientWill")).find(
+        (it) => +it.key == val
+      );
+      return findWill ? findWill.value : "";
     },
   },
 };
@@ -1958,7 +2114,45 @@ textarea {
   width: 1rem;
   height: 1rem;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+/* 下面都是营销记录 */
+.marked_record {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8;
+}
+.marked_record p {
+  margin: 3px 0px;
+}
+.positionFixd {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.approval1 .approval_Passedr {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #3cc8ab;
+  color: #3cc8ab;
+  margin-left: 0.5rem;
+}
+.approval1 .approval_Passed1r {
+  display: inline-block;
+  line-height: 1.6rem;
+  text-align: center;
+  width: 6.5rem;
+  height: 1.6rem;
+  font-size: 0.7rem;
+  border: 1px solid #c1b9b9;
+  color: #c1b9b9;
+  margin-left: 0.5rem;
+}
+@media screen and (max-width: 359px) {
   li,
   select,
   input,

@@ -433,7 +433,7 @@ export default {
   font-size: 14px;
   border-radius: 0;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   li,
   select,
   input,

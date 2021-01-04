@@ -192,7 +192,7 @@ export default {
     selectHandle() {
       let params = {
         page: 1,
-        limit: 10,
+        limit: this.dataTotal1,
         realName: this.search_txt,
       };
       this.$httpGet({
@@ -470,7 +470,7 @@ export default {
   border-radius: 0.4rem;
   height: 2rem;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   * {
     font-size: 13px;
   }

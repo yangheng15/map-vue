@@ -245,11 +245,14 @@ export default {
       });
     },
     getDic() {
-      this.$httpGet({
-        url: `/dic/dic_family_type/${this.familyCode}`,
-      }).then((res) => {
-        this.familyCodeName = res.data.codeText;
-      });
+      // 如果有值再调用接口
+      if(this.familyCode){
+        this.$httpGet({
+          url: `/dic/dic_family_type/${this.familyCode}`,
+        }).then((res) => {
+          this.familyCodeName = res.data.codeText;
+        });
+      }
       this.$httpGet({
         url: "/dic/type/dic_family_type",
       }).then((res) => {
@@ -905,7 +908,7 @@ export default {
   border-radius: 0.4rem;
   height: 2rem;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   * {
     font-size: 13px;
   }

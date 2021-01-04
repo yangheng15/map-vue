@@ -302,7 +302,7 @@ button::-moz-focus-inner {
   background-color: limegreen;
 }
 
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   * {
     font-size: 13px;
   }

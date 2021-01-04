@@ -113,6 +113,27 @@ export default {
         const potentialNeedType = res.data.find((it) => it.type === "potential_need_type")
           .childs;
         localStorage.setItem("dicPotentialNeedType", JSON.stringify(potentialNeedType));
+        // 资产负债类型
+        const customersAssetsType = res.data.find(
+          (it) => it.type === "customers_assets_type"
+        ).childs;
+        localStorage.setItem(
+          "dicCustomersAssetsType",
+          JSON.stringify(customersAssetsType)
+        );
+        // 客户资产类型
+        const assetsTypeInfo = res.data.find(
+          (it) => it.type === "customers_assets_type_info"
+        ).childs;
+        localStorage.setItem("dicAssetsTypeInfo", JSON.stringify(assetsTypeInfo));
+        // 客户负债类型
+        const liabilitiesTypeInfo = res.data.find(
+          (it) => it.type === "customers_liabilities_type_info"
+        ).childs;
+        localStorage.setItem(
+          "dicLiabilitiesTypeInfo",
+          JSON.stringify(liabilitiesTypeInfo)
+        );
       });
     },
     locationUpload() {
@@ -183,9 +204,9 @@ export default {
         return;
       }
 
-      if (this.whetherPermission() != true) {
-        return this.whetherPermission();
-      } else {
+      // if (this.whetherPermission() != true) {
+      //   return this.whetherPermission();
+      // } else {
       var bcrypt = require("bcryptjs"); //引入bcryptjs库
       var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
       localStorage.clear();
@@ -219,8 +240,8 @@ export default {
           }
         })
         .catch((err) => {});
-      }
-    },
+    }
+    // },
   },
 };
 </script>

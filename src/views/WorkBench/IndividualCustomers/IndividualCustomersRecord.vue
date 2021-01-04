@@ -3,15 +3,10 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '个人客户建档'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
-          基本信息
-        </li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
-          客户需求
-        </li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
-          营销记录
-        </li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">客户需求</li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">营销记录</li>
+        <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">资产</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -196,9 +191,7 @@
           </baidu-map>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()"
-            >保存</van-button
-          >
+          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
         </div>
       </div>
       <div v-show="tabId === 1" class="household_have">
@@ -211,15 +204,9 @@
         >
           <template #input>
             <van-radio-group v-model="item.radio" direction="horizontal">
-              <van-radio name="1" checked-color="rgb(61, 66, 94)"
-                >已办</van-radio
-              >
-              <van-radio name="2" checked-color="rgb(61, 66, 94)"
-                >未办</van-radio
-              >
-              <van-radio name="3" checked-color="rgb(61, 66, 94)"
-                >需办</van-radio
-              >
+              <van-radio name="1" checked-color="rgb(61, 66, 94)">已办</van-radio>
+              <van-radio name="2" checked-color="rgb(61, 66, 94)">未办</van-radio>
+              <van-radio name="3" checked-color="rgb(61, 66, 94)">需办</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -267,10 +254,7 @@
               >
 
               <p>
-                <van-button
-                  color="#3d425e"
-                  size="mini"
-                  @click="deleteRemark(thisItem.id)"
+                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
                   >删除</van-button
                 >
               </p>
@@ -295,18 +279,12 @@
                 <!-- <span class="approval_Passed">已营销</span> -->
                 <span
                   :class="
-                    thisItem.intention == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
+                    thisItem.intention == '1' ? 'approval_Passed' : 'approval_Passed1'
                   "
                   >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
-                  :class="
-                    thisItem.isSucc == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
+                  :class="thisItem.isSucc == '1' ? 'approval_Passed' : 'approval_Passed1'"
                   >{{
                     thisItem.isSucc == "0"
                       ? "失败"
@@ -351,6 +329,79 @@
           >
         </div>
         <!-- </van-list> -->
+      </div>
+      <div v-show="tabId === 3">
+        <div
+          class="stock stock_education"
+          v-for="(thisItem, index) in assets"
+          :key="index"
+        >
+          <div style="margin-bottom: 0.5rem">
+            <router-link
+              tag="p"
+              :to="{
+                name: 'AssetsLiabilitiesDetail1',
+                query: {
+                  title: '客户资产负债详情',
+                  customerCode: thisItem.customerCode,
+                  id: thisItem.id,
+                },
+              }"
+              style="color: #000; font-weight: 550"
+            >
+              {{ thisItem.name }}
+              <van-tag
+                class="approval_Passed"
+                v-if="thisItem.type === 1"
+                plain
+                color="#7232dd"
+                size="medium"
+                >资产
+              </van-tag>
+              <van-tag
+                class="approval_Passed1"
+                v-if="thisItem.type === 2"
+                plain
+                color="#7232dd"
+                size="medium"
+                >负债
+              </van-tag>
+            </router-link>
+            <p v-if="thisItem.checkTime">
+              清查日期：{{ thisItem.checkTime | transform }}
+            </p>
+          </div>
+          <p>评估价值（万元）：{{ thisItem.amount | NumFormat }}</p>
+          <p class="delete" @click="deleteFamilyAssets(thisItem.id)">
+            <van-button type="primary" color="rgb(61, 66, 94)" size="mini"
+              >删除</van-button
+            >
+          </p>
+        </div>
+        <div
+          style="
+            margin-left: 85%;
+            position: fixed !important;
+            float: right;
+            z-index: 9999;
+            align-items: right;
+            bottom: 5%;
+            right: 5%;
+          "
+        >
+          <router-link
+            tag="span"
+            :to="{
+              name: 'AssetsLiabilitiesAdd',
+              query: {
+                title: '客户资产负债添加',
+                customerCode: this.judgeReturnValue,
+              },
+            }"
+            class="add_record"
+            >+</router-link
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -418,6 +469,8 @@ export default {
       productCode: "",
       productName: "",
       custName: "",
+      // 资产
+      assets: [],
     };
   },
   created() {
@@ -541,7 +594,7 @@ export default {
       this.$httpGet({
         url: "/api/semGridding/query",
         params: {
-          limit: 10,
+          limit: 100,
           page: 1,
         },
       }).then((res) => {
@@ -721,8 +774,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     async modifyResult() {
       if (this.publicCustomerName == "") {
@@ -742,60 +794,60 @@ export default {
 
       //逆向解析
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
-      if (!this.judgeReturnValue) {this.$httpPost({
-        url: "/api/pulicCustomersInfo/add",
-        data: {
-          type: 2,
-          name: this.publicCustomerName,
-          address: this.publicCustomerAddress,
-          gridding: this.publicCustomerGrid.index,
-          industryType: this.industry.index,
-          location: this.publicCustomerLocation,
-          legalName: this.legalPersonName,
-          legalPhone: this.legalPersonTelephone,
-          customerImg: this.pictureId.join(","),
-          telphone: this.publicCustomerTelephone,
-          identifyNo: this.publicCustomerId,
-          workUnit: this.publicCustomerWorkUnit,
-        },
-      })
-        .then((res) => {
-          this.judgeReturnValue = res.data.code;
-          Toast({
-            message: "保存成功",
-            position: "middle",
-          });
-          // this.$router.go(-1);
+      if (!this.judgeReturnValue) {
+        this.$httpPost({
+          url: "/api/pulicCustomersInfo/add",
+          data: {
+            type: 2,
+            name: this.publicCustomerName,
+            address: this.publicCustomerAddress,
+            gridding: this.publicCustomerGrid.index,
+            industryType: this.industry.index,
+            location: this.publicCustomerLocation,
+            legalName: this.legalPersonName,
+            legalPhone: this.legalPersonTelephone,
+            customerImg: this.pictureId.join(","),
+            telphone: this.publicCustomerTelephone,
+            identifyNo: this.publicCustomerId,
+            workUnit: this.publicCustomerWorkUnit,
+          },
         })
-        .catch((err) => {
-        });}else{
-           this.$httpPut({
-        url: "/api/publicCustomersInfo/update",
-        data: {
-          code: this.judgeReturnValue,
-          name: this.publicCustomerName,
-          address: this.publicCustomerAddress,
-          gridding: this.publicCustomerGrid.index,
-          industryType: this.industry.index,
-          location: this.publicCustomerLocation,
-          legalName: this.legalPersonName,
-          legalPhone: this.legalPersonTelephone,
-          customerImg: this.pictureId.join(","),
-          telphone: this.publicCustomerTelephone,
-          identifyNo: this.publicCustomerId,
-          workUnit: this.publicCustomerWorkUnit,
-        },
-      })
-        .then((res) => {
-          Toast({
-            message: "保存成功",
-            position: "middle",
-          });
-          // this.$router.go(-1);
+          .then((res) => {
+            this.judgeReturnValue = res.data.code;
+            Toast({
+              message: "保存成功",
+              position: "middle",
+            });
+            // this.$router.go(-1);
+          })
+          .catch((err) => {});
+      } else {
+        this.$httpPut({
+          url: "/api/publicCustomersInfo/update",
+          data: {
+            code: this.judgeReturnValue,
+            name: this.publicCustomerName,
+            address: this.publicCustomerAddress,
+            gridding: this.publicCustomerGrid.index,
+            industryType: this.industry.index,
+            location: this.publicCustomerLocation,
+            legalName: this.legalPersonName,
+            legalPhone: this.legalPersonTelephone,
+            customerImg: this.pictureId.join(","),
+            telphone: this.publicCustomerTelephone,
+            identifyNo: this.publicCustomerId,
+            workUnit: this.publicCustomerWorkUnit,
+          },
         })
-        .catch((err) => {
-        });
-        }
+          .then((res) => {
+            Toast({
+              message: "保存成功",
+              position: "middle",
+            });
+            // this.$router.go(-1);
+          })
+          .catch((err) => {});
+      }
     },
     modifyDemand() {
       this.$httpPost({
@@ -805,16 +857,13 @@ export default {
           demandList: this.publicCustomerAddress,
         },
       })
-        .then((res) => {
-        })
+        .then((res) => {})
         .catch((err) => {});
     },
     initMap() {
       const AK = "WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e";
       const BMap_URL =
-        "https://api.map.baidu.com/api?v=2.0&ak=" +
-        AK +
-        "&s=1&callback=onBMapCallback";
+        "https://api.map.baidu.com/api?v=2.0&ak=" + AK + "&s=1&callback=onBMapCallback";
       return new Promise((resolve, reject) => {
         // 如果已加载直接返回
         if (typeof BMap !== "undefined") {
@@ -1016,7 +1065,7 @@ textarea {
   background-color: #3d425e;
   color: #fff;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   li,
   select,
   input,

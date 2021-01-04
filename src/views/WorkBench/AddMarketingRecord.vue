@@ -165,6 +165,8 @@
           <van-popup v-model="showPicker" position="bottom">
             <van-datetime-picker
               type="date"
+              :min-date="minDate"
+              :max-date="maxDate"
               @confirm="onConfirm"
               @cancel="showPicker = false"
             />
@@ -268,6 +270,8 @@ export default {
       idCompetitor: "",
       idImage: "",
       modifyResultFlag: true,
+      minDate: new Date(),
+      maxDate: new Date(2200, 0, 31),
     };
   },
   components: {
@@ -647,7 +651,7 @@ export default {
   overflow: hidden;
   white-space: nowrap;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   li,
   select,
   input,

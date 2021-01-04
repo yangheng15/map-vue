@@ -565,6 +565,9 @@ export default {
           limit: this.pageSize1, //每页个数
           customerType: 1,
           taskId: this.id,
+          isSem: this.marketed,
+          intention: this.product_intention,
+          isSucceed: this.marketing,
         },
       }).then((res) => {
         this.dataTotal1 = res.count;
@@ -595,6 +598,10 @@ export default {
           limit: this.pageSize, //每页个数
           customerType: 2,
           taskId: this.id,
+          isSem: this.marketed,
+          intention: this.product_intention,
+          isSucceed: this.marketing,
+          
         },
       }).then((res) => {
         this.dataTotal = res.count;
@@ -691,7 +698,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 1,
-            isSem: val,
+            isSem: this.marketed,
             taskId: this.id,
           },
         }).then((res) => {
@@ -704,7 +711,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 2,
-            isSem: val,
+            isSem: this.marketed,
             taskId: this.id,
           },
         }).then((res) => {
@@ -717,7 +724,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 3,
-            isSem: val,
+            isSem: this.marketed,
           },
         }).then((res) => {
           this.MarketingRecordPotential = res.data;
@@ -732,7 +739,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 1,
-            intention: val,
+            intention: this.product_intention,
             taskId: this.id,
           },
         }).then((res) => {
@@ -745,7 +752,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 2,
-            intention: val,
+            intention: this.product_intention,
             taskId: this.id,
           },
         }).then((res) => {
@@ -758,7 +765,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 3,
-            intention: val,
+            intention: this.product_intention,
           },
         }).then((res) => {
           this.MarketingRecordPotential = res.data;
@@ -773,7 +780,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 1,
-            isSucceed: val,
+            isSucceed: this.marketing,
             taskId: this.id,
           },
         }).then((res) => {
@@ -786,7 +793,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 2,
-            isSucceed: val,
+            isSucceed: this.marketing,
             taskId: this.id,
           },
         }).then((res) => {
@@ -799,7 +806,7 @@ export default {
             limit: 10,
             page: 1,
             customerType: 3,
-            isSucceed: val,
+            isSucceed: this.marketing,
           },
         }).then((res) => {
           this.MarketingRecordPotential = res.data;
@@ -959,7 +966,7 @@ export default {
   font-size: 14px;
   border-bottom: 1px solid #e8e8e8;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   li,
   select,
   input,

@@ -6,6 +6,7 @@
         <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
         <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">客户需求</li>
         <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">营销记录</li>
+        <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">资产</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -81,7 +82,6 @@
           name="营业执照号："
           label="营业执照号："
           placeholder="单行输入"
-          required
         />
         <van-field
           v-model="legalPersonName"
@@ -322,6 +322,79 @@
         </div>
         <!-- </van-list> -->
       </div>
+      <div v-show="tabId === 3">
+        <div
+          class="stock stock_education"
+          v-for="(thisItem, index) in assets"
+          :key="index"
+        >
+          <div style="margin-bottom: 0.5rem">
+            <router-link
+              tag="p"
+              :to="{
+                name: 'AssetsLiabilitiesDetail1',
+                query: {
+                  title: '客户资产负债详情',
+                  customerCode: thisItem.customerCode,
+                  id: thisItem.id,
+                },
+              }"
+              style="color: #000; font-weight: 550"
+            >
+              {{ thisItem.name }}
+              <van-tag
+                class="approval_Passed"
+                v-if="thisItem.type === 1"
+                plain
+                color="#7232dd"
+                size="medium"
+                >资产
+              </van-tag>
+              <van-tag
+                class="approval_Passed1"
+                v-if="thisItem.type === 2"
+                plain
+                color="#7232dd"
+                size="medium"
+                >负债
+              </van-tag>
+            </router-link>
+            <p v-if="thisItem.checkTime">
+              清查日期：{{ thisItem.checkTime | transform }}
+            </p>
+          </div>
+          <p>评估价值（万元）：{{ thisItem.amount | NumFormat }}</p>
+          <p class="delete" @click="deleteFamilyAssets(thisItem.id)">
+            <van-button type="primary" color="rgb(61, 66, 94)" size="mini"
+              >删除</van-button
+            >
+          </p>
+        </div>
+        <div
+          style="
+            margin-left: 85%;
+            position: fixed !important;
+            float: right;
+            z-index: 9999;
+            align-items: right;
+            bottom: 5%;
+            right: 5%;
+          "
+        >
+          <router-link
+            tag="span"
+            :to="{
+              name: 'AssetsLiabilitiesAdd',
+              query: {
+                title: '客户资产负债添加',
+                customerCode: this.judgeReturnValue,
+              },
+            }"
+            class="add_record"
+            >+</router-link
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -368,8 +441,8 @@ export default {
 
       longitude: "114.654102",
       latitude: "33.623741",
-      mapCenter: { lng: "114.654102", lat: "33.623741" },
-      mapCenter1: { lng: "114.654102", lat: "33.623741" },
+      mapCenter: {},
+      mapCenter1: {},
       zoomNum: 19,
       positionMarker: null,
       longitudeLatitude: false,
@@ -388,14 +461,34 @@ export default {
       pictureTime: [],
       picCreatedTime: "",
       imageTime: [],
+      // 资产
+      assets: [],
     };
   },
   created() {
     this.typeCN = this.$route.query.title;
     this.dic_nation();
+    this.currentPositioning()
   },
 
   methods: {
+    currentPositioning() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let positionArr = window.android.getLocation().split(",");
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      }
+      if (isiOS) {
+        let positionArr = window.prompt("getLocation").split(",");
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.mapCenter1= { lng: positionArr[0], lat: positionArr[1] };
+      }
+    },
     onIndustryShow(value) {
       this.industry = value;
       this.industryShow = false;
@@ -491,7 +584,7 @@ export default {
       this.$httpGet({
         url: "/api/semGridding/query",
         params: {
-          limit: 10,
+          limit: 100,
           page: 1,
         },
       }).then((res) => {
@@ -632,8 +725,8 @@ export default {
       this.pictureTime.splice(item.index, 1);
     },
     afterRead(file) {
-      file.status = 'uploading';
-      file.message = '上传中...';
+      file.status = "uploading";
+      file.message = "上传中...";
       let formData = new FormData();
       formData.append("file", file.file);
       this.$httpPost({
@@ -641,8 +734,8 @@ export default {
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
       }).then((res) => {
-        file.status = 'done';
-        file.message = '上传成功';
+        file.status = "done";
+        file.message = "上传成功";
         let time = new Date(res.data.createTime);
         this.picCreatedTime =
           time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
@@ -687,8 +780,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     async modifyResult() {
       if (this.publicCustomerName == "") {
@@ -712,13 +804,13 @@ export default {
         });
         return;
       }
-      if (this.businessLicenseNo == "") {
-        Dialog.alert({
-          title: "提示",
-          message: "请输入营业执照号！",
-        });
-        return;
-      }
+      // if (this.businessLicenseNo == "") {
+      //   Dialog.alert({
+      //     title: "提示",
+      //     message: "请输入营业执照号！",
+      //   });
+      //   return;
+      // }
       //逆向解析
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
       if (!this.judgeReturnValue) {
@@ -748,8 +840,7 @@ export default {
             });
             // this.$router.go(-1);
           })
-          .catch((err) => {
-          });
+          .catch((err) => {});
       } else {
         this.$httpPut({
           url: "/api/publicCustomersInfo/update",
@@ -777,8 +868,7 @@ export default {
             });
             // this.$router.go(-1);
           })
-          .catch((err) => {
-          });
+          .catch((err) => {});
       }
     },
     modifyDemand() {
@@ -789,8 +879,7 @@ export default {
           demandList: this.publicCustomerAddress,
         },
       })
-        .then((res) => {
-        })
+        .then((res) => {})
         .catch((err) => {});
     },
     initMap() {
@@ -1009,7 +1098,7 @@ textarea {
   text-align: center;
   background: rgba(0, 0, 0, 0.3);
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   li,
   select,
   input,

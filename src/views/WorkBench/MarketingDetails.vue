@@ -502,7 +502,7 @@ export default {
   padding: 0 8px;
   font-size: 12px;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   li,
   select,
   input,

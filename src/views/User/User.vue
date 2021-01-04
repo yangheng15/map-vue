@@ -1,22 +1,17 @@
 <template>
-  <div class="User" style="background-color: rgb(245, 245, 245);height:100vh">
+  <div class="User" style="background-color: rgb(245, 245, 245); height: 100vh">
     <div>
       <div class="head_portrait">
-        <img
+        <!-- <img
           style="width: 60px; border-radius: 50%"
           :src="userNameSex == 2 ? women : men"
-        />
+        /> -->
+        <img style="width: 64px; border-radius: 50%" :src="men_heard" />
         <div style="font-size: 18px; color: #fff; margin: 4px 0px">
           {{ userNameTxt.realName }}
         </div>
         <div class="have_star">
-          <!-- v-model="userNameTxt.level" -->
-          <van-rate
-            v-model="level"
-            color="#fff"
-            void-color="#fff"
-            readonly
-          />
+          <van-rate v-model="userNameTxt.level" color="#fff" void-color="#fff" readonly />
         </div>
         <div v-show="MedalOwner != 0" class="personal_introduction">
           <div v-for="(item, index) in MedalOwner" :key="index">
@@ -27,7 +22,7 @@
             tag="div"
             class="see_more"
             :to="{ name: 'MyMedal', query: { title: '我的勋章' } }"
-            >查看更多</router-link
+            >查看更多></router-link
           >
         </div>
         <van-empty
@@ -99,6 +94,7 @@ import MyNav from "../../components/Public/MyNav";
 import MyTabbar from "../../components/Public/MyTabbar";
 import icon1 from "../../assets/User/men.png";
 import icon2 from "../../assets/User/men1.jpg";
+import men_heard from "../../assets/User/men_heard.svg";
 import { Dialog } from "vant";
 export default {
   name: "WorkBench",
@@ -112,9 +108,10 @@ export default {
       MedalOwner: [],
       userNameSex: "",
       women: icon1,
+      men_heard: men_heard,
       men: icon2,
       versionNo: "",
-      level:5
+      level: 5,
     };
   },
   created() {
@@ -196,7 +193,13 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        this.MedalOwner = res.data;
+        // console.log(res.data.slice(0, 3));
+        // console.log(res.data.length);
+        if (res.data.length > 3) {
+          this.MedalOwner = res.data.slice(0, 3);
+        } else {
+          this.MedalOwner = res.data;
+        }
       });
     },
   },
@@ -239,6 +242,7 @@ export default {
 .head_portrait .personal_introduction {
   position: absolute;
   display: flex;
+  flex-wrap: wrap;
   top: 176px;
   z-index: 12;
   background-color: #fff;
@@ -265,6 +269,7 @@ export default {
   position: absolute;
   right: 0;
   bottom: 13px;
+  font-weight: 600;
 }
 .calendar {
   display: flex;
@@ -294,7 +299,7 @@ export default {
   height: 40px;
 }
 
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   * {
     font-size: 13px;
   }

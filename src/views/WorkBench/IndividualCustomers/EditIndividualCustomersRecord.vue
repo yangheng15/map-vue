@@ -18,15 +18,10 @@
     </div>
     <div v-if="typeCN == '个人客户详情'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
-          基本信息
-        </li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
-          客户需求
-        </li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
-          营销记录
-        </li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">客户需求</li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">营销记录</li>
+        <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">资产</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -45,17 +40,17 @@
           placeholder="请输入手机号"
           required
         >
-        <!-- <template #button>
+          <!-- <template #button>
             <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
           </template> -->
-          </van-field>
-          <van-field
+        </van-field>
+        <van-field
           v-model="publicCustomerId"
           name="身份证："
           label="身份证："
           placeholder="请输入身份证"
         />
-        
+
         <van-field
           readonly
           clickable
@@ -218,9 +213,7 @@
           </baidu-map>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()"
-            >保存</van-button
-          >
+          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
         </div>
       </div>
       <div v-show="tabId === 1" class="household_have">
@@ -232,15 +225,9 @@
         >
           <template #input>
             <van-radio-group v-model="item.radio" direction="horizontal">
-              <van-radio name="1" checked-color="rgb(61, 66, 94)"
-                >已办</van-radio
-              >
-              <van-radio name="2" checked-color="rgb(61, 66, 94)"
-                >未办</van-radio
-              >
-              <van-radio name="3" checked-color="rgb(61, 66, 94)"
-                >需办</van-radio
-              >
+              <van-radio name="1" checked-color="rgb(61, 66, 94)">已办</van-radio>
+              <van-radio name="2" checked-color="rgb(61, 66, 94)">未办</van-radio>
+              <van-radio name="3" checked-color="rgb(61, 66, 94)">需办</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -283,10 +270,7 @@
               >
 
               <p>
-                <van-button
-                  color="#3d425e"
-                  size="mini"
-                  @click="deleteRemark(thisItem.id)"
+                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
                   >删除</van-button
                 >
               </p>
@@ -312,18 +296,12 @@
                 <!-- <span class="approval_Passed">已营销</span> -->
                 <span
                   :class="
-                    thisItem.intention == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
+                    thisItem.intention == '1' ? 'approval_Passed' : 'approval_Passed1'
                   "
                   >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
-                  :class="
-                    thisItem.isSucc == '1'
-                      ? 'approval_Passed'
-                      : 'approval_Passed1'
-                  "
+                  :class="thisItem.isSucc == '1' ? 'approval_Passed' : 'approval_Passed1'"
                   >{{
                     thisItem.isSucc == "0"
                       ? "失败"
@@ -368,6 +346,79 @@
           >
         </div>
       </div>
+      <div v-show="tabId === 3">
+        <div
+          class="stock stock_education"
+          v-for="(thisItem, index) in assets"
+          :key="index"
+        >
+          <div style="margin-bottom: 0.5rem">
+            <router-link
+              tag="p"
+              :to="{
+                name: 'AssetsLiabilitiesDetail1',
+                query: {
+                  title: '客户资产负债详情',
+                  customerCode: thisItem.customerCode,
+                  id: thisItem.id,
+                },
+              }"
+              style="color: #000; font-weight: 550"
+            >
+              {{ thisItem.name }}
+              <van-tag
+                class="approval_Passed"
+                v-if="thisItem.type === 1"
+                plain
+                color="#7232dd"
+                size="medium"
+                >资产
+              </van-tag>
+              <van-tag
+                class="approval_Passed1"
+                v-if="thisItem.type === 2"
+                plain
+                color="#7232dd"
+                size="medium"
+                >负债
+              </van-tag>
+            </router-link>
+            <p v-if="thisItem.checkTime">
+              清查日期：{{ thisItem.checkTime | transform }}
+            </p>
+          </div>
+          <p>评估价值（万元）：{{ thisItem.amount | NumFormat }}</p>
+          <p class="delete" @click="deleteFamilyAssets(thisItem.id)">
+            <van-button type="primary" color="rgb(61, 66, 94)" size="mini"
+              >删除</van-button
+            >
+          </p>
+        </div>
+        <div
+          style="
+            margin-left: 85%;
+            position: fixed !important;
+            float: right;
+            z-index: 9999;
+            align-items: right;
+            bottom: 5%;
+            right: 5%;
+          "
+        >
+          <router-link
+            tag="span"
+            :to="{
+              name: 'AssetsLiabilitiesAdd',
+              query: {
+                title: '客户资产负债添加',
+                customerCode: this.customerCode,
+              },
+            }"
+            class="add_record"
+            >+</router-link
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -378,9 +429,9 @@ export default {
   data() {
     return {
       publicCustomerName: "",
-      publicCustomerTelephone:"",
-      publicCustomerId:"",
-      publicCustomerWorkUnit:"",
+      publicCustomerTelephone: "",
+      publicCustomerId: "",
+      publicCustomerWorkUnit: "",
       publicCustomerAddress: "",
       publicCustomerGrid: "",
       industry_list: [],
@@ -429,16 +480,21 @@ export default {
       productCode: "",
       productName: "",
       custName: "",
-      taskUpdateFlag:"",
+      taskUpdateFlag: "",
+      // 资产
+      assets: [],
     };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (
-        from.path === "/EditMarketingRecord" ||
-        from.path === "/AddMarketingRecord"
-      ) {
+      if (from.path === "/EditMarketingRecord" || from.path === "/AddMarketingRecord") {
         vm.tab(2);
+      } 
+       if (
+        from.path === "/AssetsLiabilitiesAdd" ||
+        from.path === "/AssetsLiabilitiesDetail1"
+      ) {
+        vm.tab(3);
       }
     });
   },
@@ -446,9 +502,10 @@ export default {
     this.typeCN = this.$route.query.title;
     this.id = this.$route.query.id;
     this.taskUpdateFlag = this.$route.query.taskUpdateFlag;
-    await this.dic_nation();
+
     await this.editRecord();
-    await this.getIndusty()
+    await this.dic_nation();
+    await this.getIndusty();
   },
 
   methods: {
@@ -548,7 +605,7 @@ export default {
       this.$httpGet({
         url: "/api/semGridding/query",
         params: {
-          limit: 10,
+          limit: 100,
           page: 1,
         },
       }).then((res) => {
@@ -560,10 +617,7 @@ export default {
             });
         });
         this.areaList = transformDara;
-        this.publicCustomerGrid = this.enumData1(
-          this.publicCustomerGrid,
-          this.areaList
-        );
+        this.publicCustomerGrid = this.enumData1(this.publicCustomerGrid, this.areaList);
       });
       // 获取详细地址
       var u = navigator.userAgent;
@@ -606,33 +660,28 @@ export default {
       this.publicCustomerLocation = res.data.location;
       this.sourceClues = res.data.source;
       this.sourceCluesName = res.data.shareName;
-      res.data.location?this.mapCenter = {
-        lng: res.data.location.split(",")[0],
-        lat: res.data.location.split(",")[1],
-      }:this.mapCenter={lng: "114.654102", lat: "33.623741"}
-      res.data.location?this.mapCenter1 = { ...this.mapCenter }:this.mapCenter1 = { lng: "114.654102", lat: "33.623741" }
+      res.data.location
+        ? (this.mapCenter = {
+            lng: res.data.location.split(",")[0],
+            lat: res.data.location.split(",")[1],
+          })
+        : (this.mapCenter = { lng: "114.654102", lat: "33.623741" });
+      res.data.location
+        ? (this.mapCenter1 = { ...this.mapCenter })
+        : (this.mapCenter1 = { lng: "114.654102", lat: "33.623741" });
       this.legalPersonName = res.data.legalName;
       this.legalPersonTelephone = res.data.legalPhone;
-      this.pictureId = res.data.customerImg
-        ? res.data.customerImg.split(",")
-        : [];
+      this.pictureId = res.data.customerImg ? res.data.customerImg.split(",") : [];
       this.publicCustomerTelephone = res.data.telphone;
       this.publicCustomerId = res.data.identifyNo;
       this.publicCustomerWorkUnit = res.data.workUnit;
       if (res.data.customersDemandList.length > 0) {
         res.data.customersDemandList.forEach((item) => {
-          for (
-            let index = 0;
-            index < this.potential_need_type.length;
-            index++
-          ) {
+          for (let index = 0; index < this.potential_need_type.length; index++) {
             const i = this.potential_need_type.findIndex(
               (it) => it.index == item.demandType
             );
-            i >= 0 &&
-              (this.potential_need_type[
-                i
-              ].radio = item.demandStatus.toString());
+            i >= 0 && (this.potential_need_type[i].radio = item.demandStatus.toString());
             i < 0 && (this.otherTxt = item.description);
           }
         });
@@ -670,10 +719,50 @@ export default {
       this.zoom = 15;
     },
     tab(ev) {
+      console.log(ev);
       this.tabId = ev;
       if (ev == 2) {
         this.getMarkedRecord();
+      } 
+      if (ev == 3) {
+        this.getFamilyAssets();
       }
+    },
+    getFamilyAssets() {
+      const customerCodeBack = localStorage.getItem("customerCode");
+
+      this.$httpGet({
+        url: "/api/customersAssetsInfo/query",
+        params: {
+          customerCode: this.customerCode || customerCodeBack,
+          limit: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        this.assets = res.data;
+        // this.peasant_household.forEach((it) => {
+        //   this.familyCode = it.type;
+        // });
+        // this.getDic();
+      });
+    },
+    deleteFamilyAssets(id) {
+      Dialog.confirm({
+        title: "你确定删除这条记录吗",
+      })
+        .then(() => {
+          this.$httpDelete({
+            url: "/api/customersAssetsInfo/delete",
+            params: {
+              ids: id,
+            },
+          })
+            .then((res) => {
+              this.getFamilyAssets();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
     },
     getMarkedRecord() {
       const customerCodeBack = localStorage.getItem("customerCode");
@@ -786,7 +875,7 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
           data: formData,
         }).then((res) => {
-          this.pictureId.push(res.data.pid)
+          this.pictureId.push(res.data.pid);
         });
       });
       // } else {
@@ -828,8 +917,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     modifyResult() {
       if (this.publicCustomerName == "") {
@@ -870,8 +958,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     deleteRemark(val) {
       Dialog.confirm({
@@ -1105,7 +1192,56 @@ textarea {
   background-color: #3d425e;
   color: #fff;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+/* 资产———————————— */
+.stock {
+  padding: 0rem;
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.stock p {
+  margin: 0.5rem 0rem 0rem;
+}
+.stock:last-child {
+  padding-bottom: 0.5rem;
+}
+.stock_have p {
+  width: 33.3%;
+}
+
+.stock li {
+  width: 60%;
+  /* text-align: right; */
+  margin: 0.5rem 0rem;
+}
+.stock li:nth-child(odd) {
+  width: 38%;
+}
+.stock li input,
+.stock li select {
+  border: 0.05rem solid #bbb;
+  background-color: #fff;
+  height: 2rem;
+  border-radius: 0.3rem;
+  padding-left: 0.5rem;
+  width: 100%;
+}
+.stock_education {
+  position: relative;
+  padding: 0.5rem;
+  border-bottom: 0.001rem solid #e8e8e8;
+}
+.stock_education div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.stock_education .delete {
+  color: #1432e3;
+  cursor: pointer;
+}
+@media screen and (max-width: 359px) {
   li,
   select,
   input,

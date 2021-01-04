@@ -235,7 +235,7 @@ export default {
 .van-cell >>> .van-field__label {
   width: 43%;
 }
-@media screen and (min-width: 320px) and (max-width: 374px) {
+@media screen and (max-width: 359px) {
   li,
   select,
   input,
