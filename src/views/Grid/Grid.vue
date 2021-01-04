@@ -507,10 +507,12 @@ export default {
     if (isAndroid) {
       let positionArr = window.android.getLocation().split(",");
       this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+      this.nearby.center = this.mapCenter;
     }
     if (isiOS) {
       let positionArr = window.prompt("getLocation").split(",");
       this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+      this.nearby.center = this.mapCenter;
     }
   },
   methods: {
