@@ -18,9 +18,15 @@
     </div>
     <div v-if="typeCN == '个人客户详情'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">客户需求</li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">营销记录</li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
+          基本信息
+        </li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
+          客户需求
+        </li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
+          营销记录
+        </li>
         <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">资产</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
@@ -213,7 +219,9 @@
           </baidu-map>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
+          <van-button round block type="primary" @click="modifyResult()"
+            >保存</van-button
+          >
         </div>
       </div>
       <div v-show="tabId === 1" class="household_have">
@@ -225,9 +233,15 @@
         >
           <template #input>
             <van-radio-group v-model="item.radio" direction="horizontal">
-              <van-radio name="1" checked-color="rgb(61, 66, 94)">已办</van-radio>
-              <van-radio name="2" checked-color="rgb(61, 66, 94)">未办</van-radio>
-              <van-radio name="3" checked-color="rgb(61, 66, 94)">需办</van-radio>
+              <van-radio name="1" checked-color="rgb(61, 66, 94)"
+                >已办</van-radio
+              >
+              <van-radio name="2" checked-color="rgb(61, 66, 94)"
+                >未办</van-radio
+              >
+              <van-radio name="3" checked-color="rgb(61, 66, 94)"
+                >需办</van-radio
+              >
             </van-radio-group>
           </template>
         </van-field>
@@ -270,7 +284,10 @@
               >
 
               <p>
-                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
                   >删除</van-button
                 >
               </p>
@@ -296,12 +313,18 @@
                 <!-- <span class="approval_Passed">已营销</span> -->
                 <span
                   :class="
-                    thisItem.intention == '1' ? 'approval_Passed' : 'approval_Passed1'
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
                   "
                   >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
-                  :class="thisItem.isSucc == '1' ? 'approval_Passed' : 'approval_Passed1'"
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
                   >{{
                     thisItem.isSucc == "0"
                       ? "失败"
@@ -464,7 +487,7 @@ export default {
       longitude: "114.654102",
       latitude: "33.623741",
       mapCenter: {},
-      mapCenter1: { },
+      mapCenter1: {},
       zoomNum: 19,
       positionMarker: null,
       longitudeLatitude: false,
@@ -487,10 +510,13 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (from.path === "/EditMarketingRecord" || from.path === "/AddMarketingRecord") {
+      if (
+        from.path === "/EditMarketingRecord" ||
+        from.path === "/AddMarketingRecord"
+      ) {
         vm.tab(2);
-      } 
-       if (
+      }
+      if (
         from.path === "/AssetsLiabilitiesAdd" ||
         from.path === "/AssetsLiabilitiesDetail1"
       ) {
@@ -509,7 +535,7 @@ export default {
   },
 
   methods: {
-        currentPositioning() {
+    currentPositioning() {
       var u = navigator.userAgent;
       //Android终端
       var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
@@ -538,6 +564,15 @@ export default {
     markerDragend({ point }) {
       const { lng, lat } = point;
       this.publicCustomerLocation = `${lng},${lat}`;
+      this.$httpGet({
+        url: "/api/customersMapLocus/getAddress",
+        params: {
+          location: this.publicCustomerLocation,
+        },
+      }).then((res) => {
+        this.publicCustomerAddress = res.data;
+        console.log(res.data);
+      });
     },
     markerLongpress(point) {
       Dialog.confirm({
@@ -549,6 +584,15 @@ export default {
           this.mapCenter = point;
           this.mapCenter1 = point;
           this.publicCustomerLocation = `${lng},${lat}`;
+          this.$httpGet({
+            url: "/api/customersMapLocus/getAddress",
+            params: {
+              location: this.publicCustomerLocation,
+            },
+          }).then((res) => {
+            this.publicCustomerAddress = res.data;
+            console.log(res.data);
+          });
         })
         .catch(() => {
           // on cancel
@@ -634,7 +678,10 @@ export default {
             });
         });
         this.areaList = transformDara;
-        this.publicCustomerGrid = this.enumData1(this.publicCustomerGrid, this.areaList);
+        this.publicCustomerGrid = this.enumData1(
+          this.publicCustomerGrid,
+          this.areaList
+        );
       });
       // 获取详细地址
       var u = navigator.userAgent;
@@ -688,17 +735,26 @@ export default {
         : (this.mapCenter1 = this.currentPositioning());
       this.legalPersonName = res.data.legalName;
       this.legalPersonTelephone = res.data.legalPhone;
-      this.pictureId = res.data.customerImg ? res.data.customerImg.split(",") : [];
+      this.pictureId = res.data.customerImg
+        ? res.data.customerImg.split(",")
+        : [];
       this.publicCustomerTelephone = res.data.telphone;
       this.publicCustomerId = res.data.identifyNo;
       this.publicCustomerWorkUnit = res.data.workUnit;
       if (res.data.customersDemandList.length > 0) {
         res.data.customersDemandList.forEach((item) => {
-          for (let index = 0; index < this.potential_need_type.length; index++) {
+          for (
+            let index = 0;
+            index < this.potential_need_type.length;
+            index++
+          ) {
             const i = this.potential_need_type.findIndex(
               (it) => it.index == item.demandType
             );
-            i >= 0 && (this.potential_need_type[i].radio = item.demandStatus.toString());
+            i >= 0 &&
+              (this.potential_need_type[
+                i
+              ].radio = item.demandStatus.toString());
             i < 0 && (this.otherTxt = item.description);
           }
         });
@@ -740,7 +796,7 @@ export default {
       this.tabId = ev;
       if (ev == 2) {
         this.getMarkedRecord();
-      } 
+      }
       if (ev == 3) {
         this.getFamilyAssets();
       }
@@ -836,9 +892,19 @@ export default {
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1;
+        this.publicCustomerLocation = `${positionArr[0]},${positionArr[1]}`;
         // this.zoomNum = 20;
         this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
+        this.$httpGet({
+          url: "/api/customersMapLocus/getAddress",
+          params: {
+            location: this.publicCustomerLocation,
+          },
+        }).then((res) => {
+          this.publicCustomerAddress = res.data;
+          console.log(res.data);
+        });
       }
       if (isiOS) {
         let positionArr = window.prompt("getLocation").split(",");
@@ -857,9 +923,19 @@ export default {
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1;
+        this.publicCustomerLocation = `${positionArr[0]},${positionArr[1]}`;
         // this.zoomNum = 20;
         this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
+        this.$httpGet({
+          url: "/api/customersMapLocus/getAddress",
+          params: {
+            location: this.publicCustomerLocation,
+          },
+        }).then((res) => {
+          this.publicCustomerAddress = res.data;
+          console.log(res.data);
+        });
       }
     },
     createMarker(position) {

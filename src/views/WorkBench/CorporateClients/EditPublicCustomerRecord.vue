@@ -578,6 +578,16 @@ export default {
     markerDragend({ point }) {
       const { lng, lat } = point;
       this.publicCustomerLocation = `${lng},${lat}`;
+      this.$httpGet({
+        url: "/api/customersMapLocus/getAddress",
+        params: {
+          location: this.publicCustomerLocation,
+        },
+      }).then((res) => {
+        this.publicCustomerAddress = res.data;
+        console.log(res.data);
+        
+      });
     },
     markerLongpress(point) {
       Dialog.confirm({
@@ -589,6 +599,15 @@ export default {
           this.mapCenter = point;
           this.mapCenter1 = point;
           this.publicCustomerLocation = `${lng},${lat}`;
+          this.$httpGet({
+          url: "/api/customersMapLocus/getAddress",
+          params: {
+            location: this.publicCustomerLocation,
+          },
+        }).then((res) => {
+          this.publicCustomerAddress = res.data;
+          console.log(res.data);
+        });
         })
         .catch(() => {
           // on cancel
@@ -963,9 +982,19 @@ export default {
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1;
+        this.publicCustomerLocation = `${positionArr[0]},${positionArr[1]}`;
         // this.zoomNum = 20;
         this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
+        this.$httpGet({
+          url: "/api/customersMapLocus/getAddress",
+          params: {
+            location: this.publicCustomerLocation,
+          },
+        }).then((res) => {
+          this.publicCustomerAddress = res.data;
+          console.log(res.data);
+        });
       }
       if (isiOS) {
         let positionArr = window.prompt("getLocation").split(",");
@@ -984,9 +1013,19 @@ export default {
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
         this.mapCenter = this.mapCenter1;
+        this.publicCustomerLocation = `${positionArr[0]},${positionArr[1]}`;
         // this.zoomNum = 20;
         this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
+        this.$httpGet({
+          url: "/api/customersMapLocus/getAddress",
+          params: {
+            location: this.publicCustomerLocation,
+          },
+        }).then((res) => {
+          this.publicCustomerAddress = res.data;
+          console.log(res.data);
+        });
       }
     },
     createMarker(position) {

@@ -3,13 +3,19 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '农户'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
+          基本信息
+        </li>
         <!-- <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">联系</li> -->
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">三有三无</li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
+          三有三无
+        </li>
         <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">成员</li>
         <li @click="tab(4)" :class="tabId == 4 ? 'cur' : 'ordinary'">资产</li>
         <li @click="tab(5)" :class="tabId == 5 ? 'cur' : 'ordinary'">收支</li>
-        <li @click="tab(6)" :class="tabId == 6 ? 'cur' : 'ordinary'">营销记录</li>
+        <li @click="tab(6)" :class="tabId == 6 ? 'cur' : 'ordinary'">
+          营销记录
+        </li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
         <van-field
@@ -96,7 +102,9 @@
           v-model="farmers_details.address"
           name="详细地址："
           label="详细地址："
-          placeholder="单行输入"
+          placeholder="请输入详细地址"
+          type="textarea"
+          autosize
         />
         <van-field
           v-model="farmers_details.houseName"
@@ -210,7 +218,11 @@
           "
         >
           <input
-            style="border: 0.05rem solid #bbb; width: 100%; padding: 0rem 0.5rem"
+            style="
+              border: 0.05rem solid #bbb;
+              width: 100%;
+              padding: 0rem 0.5rem;
+            "
             type="text"
             placeholder="网格名称"
           />
@@ -297,14 +309,19 @@
           </div>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
+          <van-button round block type="primary" @click="modifyResult()"
+            >保存</van-button
+          >
         </div>
       </div>
       <div v-show="tabId === 1"></div>
       <div v-show="tabId === 2" class="household_have">
         <van-field name="radio" label="有无固定场所：">
           <template #input>
-            <van-radio-group v-model="farmers_details.hasFixPlace" direction="horizontal">
+            <van-radio-group
+              v-model="farmers_details.hasFixPlace"
+              direction="horizontal"
+            >
               <van-radio checked-color="rgb(61, 66, 94)" name="1">有</van-radio>
               <van-radio checked-color="rgb(61, 66, 94)" name="0">无</van-radio>
             </van-radio-group>
@@ -312,7 +329,10 @@
         </van-field>
         <van-field name="radio" label="有无不良资信：">
           <template #input>
-            <van-radio-group v-model="farmers_details.hasBadAsset" direction="horizontal">
+            <van-radio-group
+              v-model="farmers_details.hasBadAsset"
+              direction="horizontal"
+            >
               <van-radio checked-color="rgb(61, 66, 94)" name="1">有</van-radio>
               <van-radio checked-color="rgb(61, 66, 94)" name="0">无</van-radio>
             </van-radio-group>
@@ -320,7 +340,10 @@
         </van-field>
         <van-field name="radio" label="有无稳定工作：">
           <template #input>
-            <van-radio-group v-model="farmers_details.hasIncome" direction="horizontal">
+            <van-radio-group
+              v-model="farmers_details.hasIncome"
+              direction="horizontal"
+            >
               <van-radio checked-color="rgb(61, 66, 94)" name="1">有</van-radio>
               <van-radio checked-color="rgb(61, 66, 94)" name="0">无</van-radio>
             </van-radio-group>
@@ -360,7 +383,9 @@
           </template>
         </van-field>
         <div class="save" style="padding-top: 2rem">
-          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
+          <van-button round block type="primary" @click="modifyResult()"
+            >保存</van-button
+          >
         </div>
       </div>
       <div v-show="tabId === 3">
@@ -728,7 +753,9 @@
             name="合计（自动计算）（万元）："
             label="合计（自动计算）（万元）："
             placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写合计（自动计算）（万元）' }]"
+            :rules="[
+              { required: true, message: '请填写合计（自动计算）（万元）' },
+            ]"
           />
           <p>收入信息</p>
           <van-field
@@ -737,7 +764,9 @@
             name="总收入（自动计算）（万元）："
             label="总收入（自动计算）（万元）："
             placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写总收入（自动计算）（万元）' }]"
+            :rules="[
+              { required: true, message: '请填写总收入（自动计算）（万元）' },
+            ]"
           />
           <van-field
             v-model="householdIncome"
@@ -760,7 +789,9 @@
             name="总支出（自动计算）（万元）："
             label="总支出（自动计算）（万元）："
             placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写总支出（自动计算）（万元）：' }]"
+            :rules="[
+              { required: true, message: '请填写总支出（自动计算）（万元）：' },
+            ]"
           />
           <van-field
             v-model="mortgage"
@@ -883,7 +914,10 @@
               >
 
               <p>
-                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
                   >删除</van-button
                 >
               </p>
@@ -908,12 +942,18 @@
               <p style="width: 50%; display: flex" class="approval1">
                 <span
                   :class="
-                    thisItem.intention == '1' ? 'approval_Passedr' : 'approval_Passed1r'
+                    thisItem.intention == '1'
+                      ? 'approval_Passedr'
+                      : 'approval_Passed1r'
                   "
                   >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
-                  :class="thisItem.isSucc == '1' ? 'approval_Passedr' : 'approval_Passed1r'"
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passedr'
+                      : 'approval_Passed1r'
+                  "
                   >{{
                     thisItem.isSucc == "0"
                       ? "失败"
@@ -985,7 +1025,8 @@ export default {
       position: "",
       family_type_list: [],
       family_type: false,
-      business_opening: "活期存款、定期存款、网上银行、手机银行、支付宝支付、信用卡",
+      business_opening:
+        "活期存款、定期存款、网上银行、手机银行、支付宝支付、信用卡",
       household_name: "",
       household_age: "",
       annual_income: "",
@@ -1112,10 +1153,6 @@ export default {
     this.id = this.$route.query.id;
     await this.editFarmers();
     this.dic_nation();
-
-    if (this.farmers_details.location == "") {
-      this.appMessage();
-    }
   },
 
   methods: {
@@ -1154,7 +1191,9 @@ export default {
       return `${date.getMonth() + 1}-${date.getDate()}`;
     },
     onBirthDate(time) {
-      this.birthDate = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`;
+      this.birthDate = `${time.getFullYear()}-${
+        time.getMonth() + 1
+      }-${time.getDate()}`;
       this.birthDate1 = time;
       this.showBirthDate = false;
     },
@@ -1172,6 +1211,15 @@ export default {
     markerDragend({ point }) {
       const { lng, lat } = point;
       this.farmers_details.location = `${lng},${lat}`;
+      this.$httpGet({
+        url: "/api/customersMapLocus/getAddress",
+        params: {
+          location: this.farmers_details.location,
+        },
+      }).then((res) => {
+        this.farmers_details.address = res.data;
+        console.log(res.data);
+      });
     },
     markerLongpress(point) {
       Dialog.confirm({
@@ -1183,12 +1231,22 @@ export default {
           this.mapCenter = point;
           this.mapCenter1 = point;
           this.farmers_details.location = `${lng},${lat}`;
+          this.$httpGet({
+            url: "/api/customersMapLocus/getAddress",
+            params: {
+              location: this.farmers_details.location,
+            },
+          }).then((res) => {
+            this.farmers_details.address = res.data;
+            console.log(res.data);
+          });
         })
         .catch(() => {
           // on cancel
         });
     },
     longpress({ point }) {
+      // const zoom = 19;
       const zoom = this.map.getZoom();
       if (Math.abs(zoom - this.zoom) > 0) {
         this.zoom = zoom;
@@ -1502,6 +1560,23 @@ export default {
     closePopupWork() {
       this.isPopupVisibleWork = false;
     },
+    currentPositioning() {
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        let positionArr = window.android.getLocation().split(",");
+        let currentPositioning = `${positionArr[0]},${positionArr[1]}`
+        return currentPositioning;
+      }
+      if (isiOS) {
+        let positionArr = window.prompt("getLocation").split(",");
+        let currentPositioning = `${positionArr[0]},${positionArr[1]}`
+        return currentPositioning;
+      }
+    },
     async editFarmers() {
       // debugger
       const res = await this.$httpGet({
@@ -1513,34 +1588,29 @@ export default {
       this.farmers_details = res.data;
       localStorage.setItem("familyCode", this.farmers_details.familyCode);
       this.prospect_detailsEdit.type = res.data.type;
-      if (this.farmers_details.location) {
-        const positionArr = this.farmers_details.location.split(",");
-        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-      } else {
-        this.appMessage();
-      }
+      // res.data.location?(this.farmers_details.location = res.data.location):""
+      // res.data.location
+      //   ? (this.mapCenter = {
+      //       lng: res.data.location.split(",")[0],
+      //       lat: res.data.location.split(",")[1],
+      //     })
+      //   : (this.mapCenter = this.currentPositioning());
+      // res.data.location
+      //   ? (this.mapCenter1 = { ...this.mapCenter })
+      //   : (this.mapCenter1 = this.currentPositioning());
+      // if (this.farmers_details.location) {
+      //   const positionArr = this.farmers_details.location.split(",");
+      //   this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+      //   this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
+      // } else {
+      //   this.appMessage1();
+      // }
     },
     getLongitudeLatitude() {
       this.longitudeLatitude = !this.longitudeLatitude;
-    },
-    appMessage() {
-      var u = navigator.userAgent;
-      //Android终端
-      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
-      //iOS终端
-      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-      if (isAndroid) {
-        let positionArr = window.android.getLocation().split(",");
-        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-        this.prospect_details.location = positionArr.toString();
-      }
-      if (isiOS) {
-        let positionArr = window.prompt("getLocation").split(",");
-        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-        this.prospect_details.location = positionArr.toString();
+
+      if (this.farmers_details.location == "") {
+       this.farmers_details.location = this.currentPositioning()
       }
     },
     appMessage1() {
@@ -1549,6 +1619,7 @@ export default {
       var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
       //iOS终端
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      console.log(this.map);
       if (isAndroid) {
         let positionArr = window.android.getLocation().split(",");
         // let positionArr = [124.281873, 45.514322]
@@ -1557,15 +1628,29 @@ export default {
           positionArr[1] === this.mapCenter1.lat
         ) {
           // 如果当前的 中心点和之前的中心点一样
-          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] + 0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.mapCenter1 = {
+            lng: positionArr[0],
+            lat: positionArr[1] + 0.0001,
+          }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          // this.zoomNum = 20;
           this.zoomNum = this.map.getZoom();
           return;
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter = this.mapCenter1;
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.farmers_details.location = `${positionArr[0]},${positionArr[1]}`;
         // this.zoomNum = 20;
         this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
+        this.$httpGet({
+          url: "/api/customersMapLocus/getAddress",
+          params: {
+            location: this.farmers_details.location,
+          },
+        }).then((res) => {
+          this.farmers_details.address = res.data;
+          console.log(res.data);
+        });
       }
       if (isiOS) {
         let positionArr = window.prompt("getLocation").split(",");
@@ -1575,15 +1660,29 @@ export default {
           positionArr[1] === this.mapCenter1.lat
         ) {
           // 如果当前的 中心点和之前的中心点一样
-          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] + 0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.mapCenter1 = {
+            lng: positionArr[0],
+            lat: positionArr[1] + 0.0001,
+          }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          //  this.zoomNum = 20;
           this.zoomNum = this.map.getZoom();
           return;
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter = this.mapCenter1;
+        this.mapCenter = { lng: positionArr[0], lat: positionArr[1] };
+        this.farmers_details.location = `${positionArr[0]},${positionArr[1]}`;
         // this.zoomNum = 20;
         this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
+        this.$httpGet({
+          url: "/api/customersMapLocus/getAddress",
+          params: {
+            location: this.farmers_details.location,
+          },
+        }).then((res) => {
+          this.farmers_details.address = res.data;
+          console.log(res.data);
+        });
       }
     },
     createMarker(position) {

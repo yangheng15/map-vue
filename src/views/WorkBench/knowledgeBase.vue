@@ -12,27 +12,37 @@
           <div @click="onSearch">搜索</div>
         </template></van-search
       >
-      <router-link
-        class="knowledgeBody"
-        tag="ul"
-        :to="{ name: 'knowledgeBaseDetail', query: { title: '知识库详情' } }"
+      <van-list
+              v-model="loadEnd"
+              :finished="finishEnd"
+              :offset="offset"
+              finished-text="已加载完毕"
+              @load="onLoadList"
+              class="customer_list"
       >
-        <li class="knowledge" v-for="(item, index) in knowledge" :key="index">
-          <p>{{ item.name }}</p>
-          <p>{{ item.date }}</p>
-          <p class="right_cursor">
-            <van-icon name="arrow" />
-          </p>
-        </li>
-      </router-link>
-      <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
+        <ul>
+          <router-link
+            class="knowledgeBody"
+            tag="ul"
+            :to="{ name: 'knowledgeBaseDetail', query: { title: '知识库详情', id: item.id } }"
+            v-for="(item, index) in MarketingRecord"
+            :key="index"
+          >
+            <li class="knowledge">
+              <p>{{ item.name }}</p>
+              <p>{{ item.createdTime | transform }}</p>
+              <p class="right_cursor">
+                <van-icon name="arrow" />
+              </p>
+            </li>
+          </router-link>
+        </ul>
+      </van-list>
     </div>
   </div>
 </template>
 <script>
 import ChildNav from "../../components/Public/ChildNav";
-import echarts from "echarts";
-import { option } from "./gauge-option";
 export default {
   name: "knowledgeBase",
   components: {
@@ -42,18 +52,13 @@ export default {
     return {
       title: "",
       typeCN: "",
-      knowledge: [
-        {
-          name: "营销网格",
-          date: "发布时间:2020-10-24",
-          id: 1,
-        },
-        // {
-        //   name: "企业贷",
-        //   date: "发布时间:2020-08-24",
-        //   id: 2,
-        // },
-      ],
+      MarketingRecord: [],
+      loadEnd: false, // 滚动加载中
+      finishEnd: false, // 滚动加载完成
+      offset: 5, //滚动条与底部距离小于 offset 时触发load事件，默认300
+      currentPage: 1,
+      pageSize1: 10,
+      dataTotal: "",
       search_txt: "",
     };
   },
@@ -61,7 +66,50 @@ export default {
     this.typeCN = this.$route.query.title;
   },
   methods: {
+    onLoadList() {
+      this.getMyClients();
+    },
+    getMyClients() {
+      this.$httpGet({
+        url: "/api/knowledgeBase/query",
+        params: {
+          page: this.currentPage, //页数
+          limit: this.pageSize1, //每页个数
+          publishStatus: 1,
+          name: this.search_txt,
+        },
+      }).then((res) => {
+        this.dataTotal = res.count;
+        //进行判断
+        if (this.dataTotal <= this.pageSize1) {
+          this.MarketingRecord = res.data;
+        } else {
+          this.currentPage++;
+          let arr = res.data;
+          this.MarketingRecord = this.MarketingRecord.concat(arr);
+        }
+        // 加载状态结束
+        this.loadEnd = false;
+        // 数据全部加载完成
+        if (this.MarketingRecord.length >= this.dataTotal) {
+          this.finishEnd = true; //结束，显示我也是有底线的
+        }
+      });
+    },
     onSearch() {
+      this.currentPage = 1;
+      this.pageSize1 = 10;
+      this.$httpGet({
+        url: "/api/knowledgeBase/query",
+        params: {
+          page: this.currentPage, //页数
+          limit: this.pageSize1, //每页个数
+          publishStatus: 1,
+          name: this.search_txt,
+        },
+      }).then((res) => {
+        this.MarketingRecord = res.data;
+      });
     },
   },
   mounted() {},

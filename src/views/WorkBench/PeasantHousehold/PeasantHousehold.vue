@@ -258,7 +258,7 @@ export default {
       }).then((res) => {
         let transformDara = [];
         res.data.forEach((it, index) => {
-          if (it.code !== null) {
+          if (it.parentId !== null) {
             transformDara.push({ index: it.code, text: it.codeText });
           }
         });

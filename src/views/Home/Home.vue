@@ -398,11 +398,15 @@ export default {
       if (typeof WebSocket === "undefined") {
         alert("您的浏览器不支持socket");
       } else {
-        // ws://192.168.1.116:12345
-        // wss://echo.websocket.org
-        // const wsuri = "ws://172.20.10.7:12345/ws";
+        // 开发环境
+        // const wsuri = "ws://192.168.0.178:12345/ws";
+        // 测试环境
         const wsuri = "ws://123.56.238.192:12345/ws";
+        // 生产环境
         // const wsuri = "ws://39.106.51.28:12345/ws";
+        // 腾讯云环境
+        // const wsuri = "ws://119.45.182.120:12345/ws";
+
         // 实例化socket
         this.socket = new WebSocket(wsuri);
         // 监听socket连接
