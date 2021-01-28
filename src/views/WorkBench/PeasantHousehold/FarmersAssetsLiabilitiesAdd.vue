@@ -1,10 +1,7 @@
 <template>
   <div class="AssetsLiabilitiesDetail">
-    <!-- <child-nav :title="typeCN"></child-nav> -->
-    <div class="public_nav">
-      <van-nav-bar :title="typeCN" left-arrow @click-left="onClickLeft" />
-    </div>
-    <div v-if="typeCN == '客户资产负债添加'">
+    <child-nav :title="typeCN"></child-nav>
+    <div v-if="typeCN == '农户资产负债添加'">
       <van-field
         required
         readonly
@@ -157,7 +154,7 @@ export default {
       title: "",
       typeCN: "",
       value: "",
-      customerCode: "",
+      familyCode: "",
       assets_type_txt: "",
       assets_type_list: [],
       assets_type: false,
@@ -186,21 +183,11 @@ export default {
   },
   async created() {
     this.typeCN = this.$route.query.title;
-    this.customerCode = this.$route.query.customerCode;
+    this.familyCode = this.$route.query.familyCode;
     this.dic_nation();
   },
   updated() {},
   methods: {
-    onClickLeft() {
-      this.$router.replace({
-        path: "EditPublicCustomerRecord",
-        query: {
-          title: "对公客户详情",
-          id: this.customerCode,
-          taskUpdateFlag: true,
-        },
-      });
-    },
     onassets_type(value) {
       this.assets_type_txt = value;
       this.assets_type = false;
@@ -367,7 +354,7 @@ export default {
         });
         return;
       }
-      if (this.uploader == "") {
+      if (this.uploader == "" || this.assetsImg == "") {
         Dialog.alert({
           title: "提示",
           message: "请选择资产或者负债照片！",
@@ -381,9 +368,9 @@ export default {
       }
 
       this.$httpPost({
-        url: "/api/customersAssetsInfo/add",
+        url: "/api/customersFamilyAssetsLiability/add",
         data: {
-          customerCode: this.customerCode,
+          familyCode: this.familyCode,
           type: this.assets_type_txt.index,
           assetsType: this.assetsType,
           name: this.asset_name_txt,
@@ -399,8 +386,7 @@ export default {
             message: "添加成功",
             position: "middle",
           });
-          // this.$router.go(-2);
-          this.onClickLeft()
+          this.$router.go(-1);
         })
         .catch((err) => {});
     },

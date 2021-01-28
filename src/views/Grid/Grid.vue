@@ -625,9 +625,7 @@ export default {
         url: "/api/mapPlaningByApp/query",
       }).then((res) => {
         this.map_data = res.data;
-        console.log(res.data);
         this.map_data.forEach((it) => {
-          console.log(it);
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
         });
         this.polygonDl.forEach((it) => {
@@ -737,7 +735,7 @@ export default {
     },
     deleteBut(index) {
       Dialog.confirm({
-        title: "你确定删除吗",
+        title: "你确定删除吗？",
       })
         .then(() => {
           this.$httpDelete({

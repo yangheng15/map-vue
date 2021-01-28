@@ -45,9 +45,9 @@
         type="info"
         native-type="submit"
         color="#3D425E"
-        style="margin-top: 60px"
+        style=" width: 40%; height: 38px;transform: translate(-50%, 30px);margin-left: 50%;"
       >
-        提交
+        提&nbsp;&nbsp;&nbsp;&nbsp;交
       </van-button>
     </van-form>
   </div>

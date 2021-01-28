@@ -196,9 +196,9 @@ export default {
       productName: "",
       custName: "",
 
-      publicCustomerTelephone:"",
-      publicCustomerId:"",
-      publicCustomerWorkUnit:""
+      publicCustomerTelephone: "",
+      publicCustomerId: "",
+      publicCustomerWorkUnit: "",
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -397,9 +397,11 @@ export default {
       this.customersDemandList = res.data.customersDemandList;
     },
     onRegional_grid(value) {
-      this.publicCustomerGrid = value["text"];
-      this.prospect_detailsEdit.publicCustomerGrid = value["index"];
-      this.regional_grid = false;
+      if (value) {
+        this.publicCustomerGrid = value["text"];
+        this.prospect_detailsEdit.publicCustomerGrid = value["index"];
+        this.regional_grid = false;
+      }
     },
     onIndustryShow(value) {
       this.industry = value["text"];
@@ -545,8 +547,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     modifyResult() {
       if (this.publicCustomerName == "") {
@@ -601,12 +602,11 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     deleteRemark(val) {
       Dialog.confirm({
-        title: "你确定删除吗",
+        title: "你确定删除吗？",
       })
         .then(() => {
           this.$httpDelete({

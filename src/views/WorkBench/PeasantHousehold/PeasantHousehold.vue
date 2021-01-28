@@ -68,11 +68,11 @@
           <p class="pop_title">添加</p>
           <div class="pop_content">
             <van-field
+              required
               v-model="householder_name"
               name="户主姓名："
               label="户主姓名："
-              placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写户主姓名' }]"
+              placeholder="请填写户主姓名"
             />
             <!-- <van-field
               v-model="householder_code"
@@ -82,6 +82,7 @@
               :rules="[{ required: true, message: '请填写家庭户号' }]"
             /> -->
             <van-field
+              required
               readonly
               clickable
               name="picker"
@@ -109,8 +110,9 @@
               v-model="residential_address"
               name="详细地址："
               label="详细地址："
-              placeholder="单行输入"
-              :rules="[{ required: true, message: '请填写详细地址' }]"
+              placeholder="请填写详细地址"
+              type="textarea"
+          autosize
             />
             <!-- 
             <van-field
@@ -213,6 +215,28 @@ export default {
     },
     showPopupFamily() {
       this.isPopupVisibleFamily = true;
+      // 获取详细地址
+      var u = navigator.userAgent;
+      //Android终端
+      var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+      //iOS终端
+      var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if (isAndroid) {
+        if (
+          window.android.getDetailAddress() != false
+        ) {
+          this.residential_address = window.android.getDetailAddress();
+          return; 
+        }
+      }
+      if (isiOS) {
+        if (
+          window.prompt("getDetailAddress") != false 
+        ) {
+          this.residential_address = window.prompt("getDetailAddress");
+          return;
+        }
+      }
     },
     closePopupFamily() {
       this.isPopupVisibleFamily = false;
@@ -246,7 +270,7 @@ export default {
     },
     getDic() {
       // 如果有值再调用接口
-      if(this.familyCode){
+      if (this.familyCode) {
         this.$httpGet({
           url: `/dic/dic_family_type/${this.familyCode}`,
         }).then((res) => {
@@ -285,7 +309,7 @@ export default {
     },
     deleteCustomer(val) {
       Dialog.confirm({
-        title: "你确定移除吗",
+        title: "你确定移除吗？",
       })
         .then(() => {
           this.$httpDelete({

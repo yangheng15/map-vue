@@ -6,27 +6,27 @@
         v-model="customer_name"
         name="客户名称："
         label="客户名称："
-        placeholder="单行输入"
+        placeholder="请输入客户名称"
         required
       />
       <van-field
         v-model="phone_number"
         name="手机号："
         label="手机号："
-        placeholder="单行输入"
+        placeholder="请输入手机号"
         required
       />
       <van-field
         v-model="card_number"
         name="证件号码："
         label="证件号码："
-        placeholder="单行输入"
+        placeholder="请输入证件号码"
       />
       <van-field
         v-model="weChat"
         name="微信："
         label="微信："
-        placeholder="单行输入"
+        placeholder="请输入微信"
       />
       <van-field
         readonly
@@ -84,25 +84,25 @@
         v-model="work_unit"
         name="工作单位："
         label="工作单位："
-        placeholder="单行输入"
+        placeholder="请输入工作单位"
       />
       <van-field
         v-model="contact_address"
         name="联系地址："
         label="联系地址："
-        placeholder="单行输入"
+        placeholder="请输入联系地址"
       />
       <van-field
         v-model="annual_income"
         name="年收入："
         label="年收入："
-        placeholder="单行输入"
+        placeholder="请输入年收入"
       />
       <van-field
         v-model="qq_number"
         name="QQ："
         label="QQ："
-        placeholder="单行输入"
+        placeholder="请输入QQ"
       />
       <van-field
         readonly
@@ -143,13 +143,13 @@
         v-model="residential_address"
         name="居住地址："
         label="居住地址："
-        placeholder="单行输入"
+        placeholder="请输入居住地址"
       />
       <van-field
         v-model="work_address"
         name="工作地址："
         label="工作地址："
-        placeholder="单行输入"
+        placeholder="请输入工作地址"
       />
       <van-field
         readonly
@@ -172,7 +172,7 @@
         v-model="car_number"
         name="车牌号："
         label="车牌号："
-        placeholder="单行输入"
+        placeholder="请输入车牌号"
       />
       <van-field
         v-model="user_positioning"
@@ -446,12 +446,14 @@ export default {
       this.education_level = false;
     },
     onRegional_grid(values) {
-      this.regional_grid_txt = values;
-      // this.regional_grid_txt.text = values.join('/');
-      // this.regional_grid_txt.index = index.join(',');
-      // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
-      // this.regional_grid_txt.index = `${this.areaList[[index[1]]].id}`;
-      this.regional_grid = false;
+      if (values) {
+        this.regional_grid_txt = values;
+        // this.regional_grid_txt.text = values.join('/');
+        // this.regional_grid_txt.index = index.join(',');
+        // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
+        // this.regional_grid_txt.index = `${this.areaList[[index[1]]].id}`;
+        this.regional_grid = false;
+      }
     },
     getLongitudeLatitude() {
       this.longitudeLatitude = !this.longitudeLatitude;
@@ -501,8 +503,7 @@ export default {
           });
           this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     getLocation() {
       var u = navigator.userAgent;

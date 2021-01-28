@@ -3,9 +3,15 @@
     <child-nav :title="typeCN"></child-nav>
     <div v-if="typeCN == '个人客户建档'">
       <ul class="tabList">
-        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">基本信息</li>
-        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">客户需求</li>
-        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">营销记录</li>
+        <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">
+          基本信息
+        </li>
+        <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">
+          客户需求
+        </li>
+        <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
+          营销记录
+        </li>
         <li @click="tab(3)" :class="tabId == 3 ? 'cur' : 'ordinary'">资产</li>
       </ul>
       <div v-show="tabId === 0" class="household_base">
@@ -23,7 +29,6 @@
           name="手机号："
           label="手机号："
           placeholder="请输入手机号"
-          required
         >
           <!-- <template #button>
             <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
@@ -191,7 +196,9 @@
           </baidu-map>
         </div>
         <div class="save">
-          <van-button round block type="primary" @click="modifyResult()">保存</van-button>
+          <van-button round block type="primary" @click="modifyResult()"
+            >保存</van-button
+          >
         </div>
       </div>
       <div v-show="tabId === 1" class="household_have">
@@ -204,9 +211,15 @@
         >
           <template #input>
             <van-radio-group v-model="item.radio" direction="horizontal">
-              <van-radio name="1" checked-color="rgb(61, 66, 94)">已办</van-radio>
-              <van-radio name="2" checked-color="rgb(61, 66, 94)">未办</van-radio>
-              <van-radio name="3" checked-color="rgb(61, 66, 94)">需办</van-radio>
+              <van-radio name="1" checked-color="rgb(61, 66, 94)"
+                >已办</van-radio
+              >
+              <van-radio name="2" checked-color="rgb(61, 66, 94)"
+                >未办</van-radio
+              >
+              <van-radio name="3" checked-color="rgb(61, 66, 94)"
+                >需办</van-radio
+              >
             </van-radio-group>
           </template>
         </van-field>
@@ -254,7 +267,10 @@
               >
 
               <p>
-                <van-button color="#3d425e" size="mini" @click="deleteRemark(thisItem.id)"
+                <van-button
+                  color="#3d425e"
+                  size="mini"
+                  @click="deleteRemark(thisItem.id)"
                   >删除</van-button
                 >
               </p>
@@ -279,12 +295,18 @@
                 <!-- <span class="approval_Passed">已营销</span> -->
                 <span
                   :class="
-                    thisItem.intention == '1' ? 'approval_Passed' : 'approval_Passed1'
+                    thisItem.intention == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
                   "
                   >{{ thisItem.intention | dic_client_will }}</span
                 >
                 <span
-                  :class="thisItem.isSucc == '1' ? 'approval_Passed' : 'approval_Passed1'"
+                  :class="
+                    thisItem.isSucc == '1'
+                      ? 'approval_Passed'
+                      : 'approval_Passed1'
+                  "
                   >{{
                     thisItem.isSucc == "0"
                       ? "失败"
@@ -314,7 +336,7 @@
             tag="span"
             class="add_record"
             :to="{
-              name: 'AddMarketingRecord',
+              name: 'IndividualAddMarketingRecord',
               query: {
                 title: '添加营销记录',
                 customerCode: this.judgeReturnValue,
@@ -325,6 +347,7 @@
                 id: this.id,
               },
             }"
+            replace
             >+</router-link
           >
         </div>
@@ -392,13 +415,14 @@
           <router-link
             tag="span"
             :to="{
-              name: 'AssetsLiabilitiesAdd',
+              name: 'AssetsLiabilitiesAddIn',
               query: {
                 title: '客户资产负债添加',
                 customerCode: this.judgeReturnValue,
               },
             }"
             class="add_record"
+            replace
             >+</router-link
           >
         </div>
@@ -519,8 +543,6 @@ export default {
         },
       }).then((res) => {
         this.publicCustomerAddress = res.data;
-        console.log(res.data);
-        
       });
     },
     markerLongpress(point) {
@@ -540,7 +562,6 @@ export default {
             },
           }).then((res) => {
             this.publicCustomerAddress = res.data;
-            console.log(res.data);
           });
         })
         .catch(() => {
@@ -663,8 +684,10 @@ export default {
     },
 
     onRegional_grid(value) {
-      this.publicCustomerGrid = value;
-      this.regional_grid = false;
+      if (value) {
+        this.publicCustomerGrid = value;
+        this.regional_grid = false;
+      }
     },
     handler({ BMap, map }) {
       this.center.lng = 116.404;
@@ -739,7 +762,6 @@ export default {
           },
         }).then((res) => {
           this.publicCustomerAddress = res.data;
-          console.log(res.data);
         });
       }
       if (isiOS) {
@@ -770,7 +792,6 @@ export default {
           },
         }).then((res) => {
           this.publicCustomerAddress = res.data;
-          console.log(res.data);
         });
       }
     },
@@ -835,13 +856,13 @@ export default {
         });
         return;
       }
-      if (this.publicCustomerTelephone == "") {
-        Dialog.alert({
-          title: "提示",
-          message: "请输入手机号！",
-        });
-        return;
-      }
+      // if (this.publicCustomerTelephone == "") {
+      //   Dialog.alert({
+      //     title: "提示",
+      //     message: "请输入手机号！",
+      //   });
+      //   return;
+      // }
 
       //逆向解析
       // this.publicCustomerAddress = this.publicCustomerAddress && await this.analysIsAddress(this.publicCustomerAddress)
@@ -914,7 +935,9 @@ export default {
     initMap() {
       const AK = "WjS3NqjeiRpXVIQiWp2WiHhFyEcYz90e";
       const BMap_URL =
-        "https://api.map.baidu.com/api?v=2.0&ak=" + AK + "&s=1&callback=onBMapCallback";
+        "https://api.map.baidu.com/api?v=2.0&ak=" +
+        AK +
+        "&s=1&callback=onBMapCallback";
       return new Promise((resolve, reject) => {
         // 如果已加载直接返回
         if (typeof BMap !== "undefined") {

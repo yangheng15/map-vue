@@ -177,7 +177,7 @@
         </div>
         <div v-show="tabId === 1" style="background: #fff">
           <div style="padding: 10px; background: #fff">
-            <van-uploader :after-read="afterRead" v-model="fileList" multiple />
+            <van-uploader :after-read="afterRead" v-model="fileList" />
           </div>
           <div class="save" style="margin-top: 20px">
             <van-button type="primary" block @click="addPicture()">保存</van-button>
@@ -226,9 +226,9 @@ export default {
         text: "未成功",
       },
       columnsResult: [
+        { index: 2, text: "未成功" },
         { index: 0, text: "失败" },
         { index: 1, text: "成功" },
-        { index: 2, text: "未成功" },
       ],
       showResult: false,
       Customer_intention_txt: "",
@@ -297,6 +297,7 @@ export default {
       return findWill ? findWill.value : "";
     },
     resultListClick() {
+      this.productTypeArr = [];
       this.resultArr.forEach((it) => {
         this.productTypeArr += this.task_product_type(it) + ",";
       });
@@ -419,6 +420,27 @@ export default {
         Dialog.alert({
           title: "提示",
           message: "产品利率必须为数字",
+        });
+        return;
+      }
+      if (!this.competitor) {
+        Dialog.alert({
+          title: "提示",
+          message: "请填写对手名称",
+        });
+        return;
+      }
+      if (!this.competitive_products) {
+        Dialog.alert({
+          title: "提示",
+          message: "请填写对手产品",
+        });
+        return;
+      }
+      if (!this.product_rate) {
+        Dialog.alert({
+          title: "提示",
+          message: "请填写产品利率（数字）",
         });
         return;
       }

@@ -55,7 +55,13 @@
       </van-popup>
       <van-field readonly name="uploader" label="客户照片">
         <template #input>
-          <van-image v-for="(item,index) in uploader" :key="index" width="80" height="80" :src="item.url" />
+          <van-image
+            v-for="(item, index) in uploader"
+            :key="index"
+            width="80"
+            height="80"
+            :src="item.url"
+          />
         </template>
       </van-field>
       <van-field
@@ -158,7 +164,7 @@
 </template>
 <script>
 import { Toast, Dialog } from "vant";
-import { Image as VanImage } from 'vant';
+import { Image as VanImage } from "vant";
 import moment from "moment";
 export default {
   data() {
@@ -410,9 +416,11 @@ export default {
       this.customersDemandList = res.data.customersDemandList;
     },
     onRegional_grid(value) {
-      this.publicCustomerGrid = value["text"];
-      this.prospect_detailsEdit.publicCustomerGrid = value["index"];
-      this.regional_grid = false;
+      if (value) {
+        this.publicCustomerGrid = value["text"];
+        this.prospect_detailsEdit.publicCustomerGrid = value["index"];
+        this.regional_grid = false;
+      }
     },
     onIndustryShow(value) {
       this.industry = value["text"];
@@ -558,8 +566,7 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     modifyResult() {
       if (this.publicCustomerName == "") {
@@ -614,12 +621,11 @@ export default {
           });
           // this.$router.go(-1);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     deleteRemark(val) {
       Dialog.confirm({
-        title: "你确定删除吗",
+        title: "你确定删除吗？",
       })
         .then(() => {
           this.$httpDelete({

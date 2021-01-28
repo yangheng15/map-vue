@@ -279,7 +279,7 @@ export default {
     },
     deleteRemark(val) {
       Dialog.confirm({
-        title: "你确定删除吗",
+        title: "你确定删除吗？",
       })
         .then(() => {
           this.$httpDelete({

@@ -90,13 +90,12 @@
         label="负债金额（万元）："
         placeholder="请输入负债金额（万元）"
       />
-      <van-field name="uploader" label="客户照片" required>
+      <van-field name="uploader" label="资产负债照片" required>
         <template #input>
           <van-uploader
             :after-read="afterRead"
             v-model="uploader"
             @delete="deleteImage"
-            multiple
           >
             <template #preview-cover="uploader">
               <div class="preview-cover van-ellipsis">
@@ -141,7 +140,7 @@
 </template>
 <script>
 import ChildNav from "../../../components/Public/ChildNav";
-import { Toast } from "vant";
+import { Toast, Dialog } from "vant";
 export default {
   name: "AssetsLiabilitiesDetail",
   components: {
@@ -313,8 +312,6 @@ export default {
       this.showInventoryDate = false;
     },
     modifyResult() {
-      console.log(this.assets_type_txt);
-      console.log(this.assets_type_txt);
       if (this.assets_type_txt == "") {
         Dialog.alert({
           title: "提示",
@@ -322,14 +319,14 @@ export default {
         });
         return;
       }
-      if (this.assets_type_txt == "资产" && this.assets_type_info_txt == "") {
+      if (this.assets_type_txt == "资产" && this.assets_type_info_txt == undefined) {
         Dialog.alert({
           title: "提示",
           message: "请选择资产类型！",
         });
         return;
       }
-      if (this.assets_type_txt == "负债" && this.liabilities_type_info_txt == "") {
+      if (this.assets_type_txt == "负债" && this.liabilities_type_info_txt == undefined) {
         Dialog.alert({
           title: "提示",
           message: "请选择负债类型！",

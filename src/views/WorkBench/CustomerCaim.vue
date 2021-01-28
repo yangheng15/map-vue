@@ -45,7 +45,7 @@
               v-model="grid_name"
               name="网格名称"
               label="网格名称"
-              placeholder="单行输入"
+              placeholder="请填写网格名称"
               :rules="[{ required: true, message: '请填写网格名称' }]"
             />
             <van-field

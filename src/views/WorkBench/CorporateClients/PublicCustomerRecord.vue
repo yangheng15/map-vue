@@ -19,7 +19,7 @@
           v-model="publicCustomerName"
           name="名称："
           label="名称："
-          placeholder="单行输入"
+          placeholder="请输入名称"
           required
           type="textarea"
           autosize
@@ -28,7 +28,7 @@
           v-model="publicCustomerAddress"
           name="地址："
           label="地址："
-          placeholder="单行输入"
+          placeholder="请输入地址"
           required
           type="textarea"
           autosize
@@ -73,7 +73,6 @@
               :after-read="afterRead"
               v-model="uploader"
               @delete="deleteImage"
-              multiple
             >
               <template #preview-cover="uploader">
                 <div class="preview-cover van-ellipsis">
@@ -87,19 +86,19 @@
           v-model="businessLicenseNo"
           name="营业执照号："
           label="营业执照号："
-          placeholder="单行输入"
+          placeholder="请输入营业执照号"
         />
         <van-field
           v-model="legalPersonName"
           name="法人姓名："
           label="法人姓名："
-          placeholder="单行输入"
+          placeholder="请输入法人姓名"
         />
         <van-field
           v-model="legalPersonTelephone"
           name="法人联系方式："
           label="法人联系方式："
-          placeholder="单行输入"
+          placeholder="请输入法人联系方式"
         >
           <!-- <template #button>
             <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
@@ -109,13 +108,13 @@
           v-model="otherContactsName"
           name="其他联系人姓名："
           label="其他联系人姓名："
-          placeholder="单行输入"
+          placeholder="请输入其他联系人姓名"
         />
         <van-field
           v-model="otherContactsTelephone"
           name="其他联系方式："
           label="其他联系方式："
-          placeholder="单行输入"
+          placeholder="请输入其他联系方式"
         >
           <!-- <template #button>
             <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
@@ -142,7 +141,7 @@
           v-model="sourceClues"
           name="线索来源："
           label="线索来源："
-          placeholder="单行输入"
+          placeholder=""
         /> -->
         <div
           style="width: 99%; margin: 0.5rem auto; position: relative"
@@ -329,7 +328,7 @@
             tag="span"
             class="add_record"
             :to="{
-              name: 'AddMarketingRecord',
+              name: 'PublicAddMarketingRecord',
               query: {
                 title: '添加营销记录',
                 customerCode: this.judgeReturnValue,
@@ -340,6 +339,7 @@
                 id: this.id,
               },
             }"
+            replace
             >+</router-link
           >
         </div>
@@ -414,6 +414,7 @@
               },
             }"
             class="add_record"
+            replace
             >+</router-link
           >
         </div>
@@ -507,7 +508,6 @@ export default {
     },
     markerDragend({ point }) {
       const { lng, lat } = point;
-      console.log(point);
       this.publicCustomerLocation = `${lng},${lat}`;
       this.$httpGet({
         url: "/api/customersMapLocus/getAddress",
@@ -516,8 +516,6 @@ export default {
         },
       }).then((res) => {
         this.publicCustomerAddress = res.data;
-        console.log(res.data);
-        
       });
     },
     markerLongpress(point) {
@@ -531,14 +529,13 @@ export default {
           this.mapCenter1 = point;
           this.publicCustomerLocation = `${lng},${lat}`;
           this.$httpGet({
-          url: "/api/customersMapLocus/getAddress",
-          params: {
-            location: this.publicCustomerLocation,
-          },
-        }).then((res) => {
-          this.publicCustomerAddress = res.data;
-          console.log(res.data);
-        });
+            url: "/api/customersMapLocus/getAddress",
+            params: {
+              location: this.publicCustomerLocation,
+            },
+          }).then((res) => {
+            this.publicCustomerAddress = res.data;
+          });
         })
         .catch(() => {
           // on cancel
@@ -660,8 +657,10 @@ export default {
     },
 
     onRegional_grid(value) {
-      this.publicCustomerGrid = value;
-      this.regional_grid = false;
+      if (value) {
+        this.publicCustomerGrid = value;
+        this.regional_grid = false;
+      }
     },
     handler({ BMap, map }) {
       this.center.lng = 116.404;
@@ -736,7 +735,6 @@ export default {
           },
         }).then((res) => {
           this.publicCustomerAddress = res.data;
-          console.log(res.data);
         });
       }
       if (isiOS) {
@@ -767,7 +765,6 @@ export default {
           },
         }).then((res) => {
           this.publicCustomerAddress = res.data;
-          console.log(res.data);
         });
       }
     },
@@ -816,6 +813,13 @@ export default {
       // });
     },
     async saveCustomersDemand() {
+      // if (this.potential_need_type == [] || this.otherTxt=="") {
+      //   Dialog.alert({
+      //     title: "提示",
+      //     message: "请输入名称！",
+      //   });
+      //   return;
+      // }
       this.potential_need_type.forEach((item) => {
         this.customersDemandList1.push({
           demandStatus: item.radio,

@@ -34,7 +34,7 @@
           v-model="publicCustomerName"
           name="名称："
           label="名称："
-          placeholder="单行输入"
+          placeholder="请输入名称"
           required
           type="textarea"
           autosize
@@ -43,7 +43,7 @@
           v-model="publicCustomerAddress"
           name="地址："
           label="地址："
-          placeholder="单行输入"
+          placeholder="请输入地址"
           required
           type="textarea"
           autosize
@@ -88,7 +88,6 @@
               :after-read="afterRead"
               v-model="uploader"
               @delete="deleteImage"
-              multiple
             >
               <template #preview-cover="uploader">
                 <div class="preview-cover van-ellipsis">
@@ -102,19 +101,19 @@
           v-model="businessLicenseNo"
           name="营业执照号："
           label="营业执照号："
-          placeholder="单行输入"
+          placeholder="请输入营业执照号"
         />
         <van-field
           v-model="legalPersonName"
           name="法人姓名："
           label="法人姓名："
-          placeholder="单行输入"
+          placeholder="请输入法人姓名"
         />
         <van-field
           v-model="legalPersonTelephone"
           name="法人联系方式："
           label="法人联系方式："
-          placeholder="单行输入"
+          placeholder="请输入法人联系方式"
         >
           <!-- <template #button>
             <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
@@ -124,13 +123,13 @@
           v-model="otherContactsName"
           name="其他联系人姓名："
           label="其他联系人姓名："
-          placeholder="单行输入"
+          placeholder="请输入其他联系人姓名"
         />
         <van-field
           v-model="otherContactsTelephone"
           name="其他联系方式："
           label="其他联系方式："
-          placeholder="单行输入"
+          placeholder="请输入其他联系方式"
         >
           <!-- <template #button>
             <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
@@ -527,7 +526,8 @@ export default {
     next((vm) => {
       if (
         from.path === "/EditMarketingRecord" ||
-        from.path === "/AddMarketingRecord"
+        from.path === "/AddMarketingRecord" ||
+        from.path === "/PublicAddMarketingRecord"
       ) {
         vm.tab(2);
       } else if (
@@ -540,7 +540,7 @@ export default {
   },
   async created() {
     this.typeCN = this.$route.query.title;
-    this.id = this.$route.query.id;
+    this.id = this.$route.query.id || this.$route.query.customerCode;
     this.taskUpdateFlag = this.$route.query.taskUpdateFlag;
 
     await this.editRecord();
@@ -585,8 +585,6 @@ export default {
         },
       }).then((res) => {
         this.publicCustomerAddress = res.data;
-        console.log(res.data);
-        
       });
     },
     markerLongpress(point) {
@@ -600,14 +598,13 @@ export default {
           this.mapCenter1 = point;
           this.publicCustomerLocation = `${lng},${lat}`;
           this.$httpGet({
-          url: "/api/customersMapLocus/getAddress",
-          params: {
-            location: this.publicCustomerLocation,
-          },
-        }).then((res) => {
-          this.publicCustomerAddress = res.data;
-          console.log(res.data);
-        });
+            url: "/api/customersMapLocus/getAddress",
+            params: {
+              location: this.publicCustomerLocation,
+            },
+          }).then((res) => {
+            this.publicCustomerAddress = res.data;
+          });
         })
         .catch(() => {
           // on cancel
@@ -661,22 +658,6 @@ export default {
       }
     },
     dic_nation() {
-      // 潜在客户需求
-      this.$httpGet({
-        url: "/dic/type/task_product_type",
-      }).then((res) => {
-        let transformDara = [];
-        res.data.forEach((it, index) => {
-          if (it.parentId !== null) {
-            transformDara.push({
-              index: it.code,
-              text: it.codeText,
-              radio: "",
-            });
-            this.potential_need_type = transformDara;
-          }
-        });
-      });
       // 所属网格
       this.$httpGet({
         url: "/api/semGridding/query",
@@ -755,81 +736,101 @@ export default {
       this.customerImgTime.splice(item.index, 1);
     },
     async editRecord(val) {
+      // 潜在客户需求
+      this.$httpGet({
+        url: "/dic/type/task_product_type",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({
+              index: it.code,
+              text: it.codeText,
+              radio: "",
+            });
+            this.potential_need_type = transformDara;
+          }
+        });
+      });
       const res = await this.$httpGet({
         url: `/api/publicCustomerPool/get/${this.id}`,
         data: {
           id: this.id,
         },
       });
-      this.customerCode = res.data.code;
-      this.customerImgTime = res.data.customerImgInfoList;
-      this.customerImgTime.forEach((it) => {
-        this.pictureId.push(it.pid);
-        // this.pictureIdTime = it.createTime;
-        if (it.pid) {
-          this.$httpGet({
-            url: "/api/show/image/base64",
-            params: {
-              id: it.pid,
-            },
-          }).then((res) => {
-            this.uploader.push({
-              url: "data:image/jpg;base64," + res.data,
-              isImage: true,
-              createTime: it.createTime,
+      if (res.data) {
+        this.customerCode = res.data.code;
+        this.customerImgTime = res.data.customerImgInfoList;
+        this.customerImgTime.forEach((it) => {
+          this.pictureId.push(it.pid);
+          // this.pictureIdTime = it.createTime;
+          if (it.pid) {
+            this.$httpGet({
+              url: "/api/show/image/base64",
+              params: {
+                id: it.pid,
+              },
+            }).then((res) => {
+              this.uploader.push({
+                url: "data:image/jpg;base64," + res.data,
+                isImage: true,
+                createTime: it.createTime,
+              });
             });
-          });
-        }
-      });
-      localStorage.setItem("customerCode", this.customerCode);
-      this.publicCustomerName = res.data.name;
-      res.data.address != false
-        ? (this.publicCustomerAddress = res.data.address)
-        : (this.publicCustomerAddress = this.detailAddress);
-      this.publicCustomerGrid = res.data.gridding;
-      this.industry = res.data.industryType;
-      this.publicCustomerLocation = res.data.location;
-      this.sourceClues = res.data.source;
-      this.sourceCluesName = res.data.shareName;
-      res.data.location
-        ? (this.mapCenter = {
-            lng: res.data.location.split(",")[0],
-            lat: res.data.location.split(",")[1],
-          })
-        : (this.mapCenter = this.currentPositioning());
-      res.data.location
-        ? (this.mapCenter1 = { ...this.mapCenter })
-        : (this.mapCenter1 = this.currentPositioning());
-      this.legalPersonName = res.data.legalName;
-      this.legalPersonTelephone = res.data.legalPhone;
-      // this.pictureId = res.data.customerImg ? res.data.customerImg.split(",") : [];
-      this.businessLicenseNo = res.data.businessLicenseNo;
-      this.otherContactsName = res.data.otherContactsName;
-      this.otherContactsTelephone = res.data.otherContactsPhone;
-      if (res.data.customersDemandList.length > 0) {
-        res.data.customersDemandList.forEach((item) => {
-          for (
-            let index = 0;
-            index < this.potential_need_type.length;
-            index++
-          ) {
-            const i = this.potential_need_type.findIndex(
-              (it) => it.index == item.demandType
-            );
-            i >= 0 &&
-              (this.potential_need_type[
-                i
-              ].radio = item.demandStatus.toString());
-            i < 0 && (this.otherTxt = item.description);
           }
         });
+        localStorage.setItem("customerCode", this.customerCode);
+        this.publicCustomerName = res.data.name;
+        res.data.address != false
+          ? (this.publicCustomerAddress = res.data.address)
+          : (this.publicCustomerAddress = this.detailAddress);
+        this.publicCustomerGrid = res.data.gridding;
+        this.industry = res.data.industryType;
+        this.publicCustomerLocation = res.data.location;
+        this.sourceClues = res.data.source;
+        this.sourceCluesName = res.data.shareName;
+        res.data.location
+          ? (this.mapCenter = {
+              lng: res.data.location.split(",")[0],
+              lat: res.data.location.split(",")[1],
+            })
+          : (this.mapCenter = this.currentPositioning());
+        res.data.location
+          ? (this.mapCenter1 = { ...this.mapCenter })
+          : (this.mapCenter1 = this.currentPositioning());
+        this.legalPersonName = res.data.legalName;
+        this.legalPersonTelephone = res.data.legalPhone;
+        // this.pictureId = res.data.customerImg ? res.data.customerImg.split(",") : [];
+        this.businessLicenseNo = res.data.businessLicenseNo;
+        this.otherContactsName = res.data.otherContactsName;
+        this.otherContactsTelephone = res.data.otherContactsPhone;
+        if (res.data.customersDemandList.length > 0) {
+          res.data.customersDemandList.forEach((item) => {
+            for (
+              let index = 0;
+              index < this.potential_need_type.length;
+              index++
+            ) {
+              const i = this.potential_need_type.findIndex(
+                (it) => it.index == item.demandType
+              );
+              i >= 0 &&
+                (this.potential_need_type[
+                  i
+                ].radio = item.demandStatus.toString());
+              i < 0 && (this.otherTxt = item.description);
+            }
+          });
+        }
+        this.customersDemandList = res.data.customersDemandList;
       }
-      this.customersDemandList = res.data.customersDemandList;
     },
     onRegional_grid(value) {
-      this.publicCustomerGrid = value["text"];
-      this.prospect_detailsEdit.publicCustomerGrid = value["index"];
-      this.regional_grid = false;
+      if (value) {
+        this.publicCustomerGrid = value["text"];
+        this.prospect_detailsEdit.publicCustomerGrid = value["index"];
+        this.regional_grid = false;
+      }
     },
     onIndustryShow(value) {
       this.industry = value["text"];
@@ -856,7 +857,7 @@ export default {
       this.$httpGet({
         url: "/api/customersAssetsInfo/query",
         params: {
-          customerCode: this.customerCode || customerCodeBack,
+          customerCode: this.id || customerCodeBack,
           limit: 10,
           page: 1,
         },
@@ -890,7 +891,7 @@ export default {
     // },
     deleteFamilyAssets(id) {
       Dialog.confirm({
-        title: "你确定删除这条记录吗",
+        title: "你确定删除这条记录吗？",
       })
         .then(() => {
           this.$httpDelete({
@@ -932,7 +933,7 @@ export default {
       this.$httpGet({
         url: "/api/publicCustomersInfo/marketRecord",
         params: {
-          customerCode: this.customerCode || customerCodeBack,
+          customerCode: this.id || customerCodeBack,
           limit: 10,
           page: 1,
         },
@@ -993,7 +994,6 @@ export default {
           },
         }).then((res) => {
           this.publicCustomerAddress = res.data;
-          console.log(res.data);
         });
       }
       if (isiOS) {
@@ -1024,7 +1024,6 @@ export default {
           },
         }).then((res) => {
           this.publicCustomerAddress = res.data;
-          console.log(res.data);
         });
       }
     },
@@ -1157,7 +1156,7 @@ export default {
     },
     deleteRemark(val) {
       Dialog.confirm({
-        title: "你确定删除吗",
+        title: "你确定删除吗？",
       })
         .then(() => {
           this.$httpDelete({

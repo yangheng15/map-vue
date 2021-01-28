@@ -467,7 +467,7 @@ export default {
     },
     showBack(code) {
       Dialog.confirm({
-        title: "你确定认领吗",
+        title: "你确定认领吗？",
       })
         .then(() => {
           this.$httpPost({

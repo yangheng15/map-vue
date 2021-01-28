@@ -72,6 +72,8 @@ const IndividualCustomers = () => import('@/views/WorkBench/IndividualCustomers/
 const IndividualCustomersRecord = () => import('@/views/WorkBench/IndividualCustomers/IndividualCustomersRecord.vue');
 // 个人客户建档修改
 const EditIndividualCustomersRecord = () => import('@/views/WorkBench/IndividualCustomers/EditIndividualCustomersRecord.vue');
+// 个人客户添加营销记录
+const IndividualAddMarketingRecord = () => import('@/views/WorkBench/IndividualCustomers/IndividualAddMarketingRecord.vue');
 // 个人客户池详情
 const IndividualCustomersDetails = () => import('@/views/WorkBench/IndividualCustomers/IndividualCustomersDetails.vue');
 // 对公客户
@@ -80,10 +82,14 @@ const CorporateClients = () => import('@/views/WorkBench/CorporateClients/Corpor
 const AssetsLiabilitiesDetail1 = () => import('@/views/WorkBench/CorporateClients/AssetsLiabilitiesDetail1.vue');
 // 对公客户资产添加
 const AssetsLiabilitiesAdd = () => import('@/views/WorkBench/CorporateClients/AssetsLiabilitiesAdd.vue');
+// 个人客户资产添加
+const AssetsLiabilitiesAddIn = () => import('@/views/WorkBench/IndividualCustomers/AssetsLiabilitiesAddIn.vue');
 //对公客户建档
 const PublicCustomerRecord = () => import('@/views/WorkBench/CorporateClients/PublicCustomerRecord.vue');
 //对公客户修改
 const EditPublicCustomerRecord = () => import('@/views/WorkBench/CorporateClients/EditPublicCustomerRecord.vue');
+//对公客户添加营销记录
+const PublicAddMarketingRecord = () => import('@/views/WorkBench/CorporateClients/PublicAddMarketingRecord.vue');
 //对公客户客户池详情
 const CustomerPoolCustomerDetails = () => import('@/views/WorkBench/CorporateClients/CustomerPoolCustomerDetails.vue');
 // 我的客户筛选
@@ -100,6 +106,8 @@ const ScreenCustomerPool = () => import('@/views/WorkBench/CustomerPool/ScreenCu
 const PeasantHousehold = () => import('@/views/WorkBench/PeasantHousehold/PeasantHousehold.vue');
 // 农户信息
 const FarmersInformation = () => import('@/views/WorkBench/PeasantHousehold/FarmersInformation.vue');
+// 农户资产负债添加
+const FarmersAssetsLiabilitiesAdd = () => import('@/views/WorkBench/PeasantHousehold/FarmersAssetsLiabilitiesAdd.vue');
 // 农户成员详情
 const FarmerMemberDetails = () => import('@/views/WorkBench/PeasantHousehold/FarmerMemberDetails.vue');
 // 农户资产负债详情
@@ -308,6 +316,11 @@ const routes = [{
     component: AssetsLiabilitiesAdd,
   },
   {
+    path: '/AssetsLiabilitiesAddIn',
+    name: 'AssetsLiabilitiesAddIn',
+    component: AssetsLiabilitiesAddIn,
+  },
+  {
     path: '/PublicCustomerRecord',
     name: 'PublicCustomerRecord',
     component: PublicCustomerRecord,
@@ -316,6 +329,11 @@ const routes = [{
     path: '/EditPublicCustomerRecord',
     name: 'EditPublicCustomerRecord',
     component: EditPublicCustomerRecord,
+  },
+  {
+    path: '/PublicAddMarketingRecord',
+    name: 'PublicAddMarketingRecord',
+    component: PublicAddMarketingRecord,
   },
   {
     path: '/CustomerPoolCustomerDetails',
@@ -341,6 +359,11 @@ const routes = [{
     path: '/EditIndividualCustomersRecord',
     name: 'EditIndividualCustomersRecord',
     component: EditIndividualCustomersRecord,
+  },
+  {
+    path: '/IndividualAddMarketingRecord',
+    name: 'IndividualAddMarketingRecord',
+    component: IndividualAddMarketingRecord,
   },
   {
     path: '/IndividualCustomersDetails',
@@ -371,6 +394,11 @@ const routes = [{
     path: '/FarmersInformation',
     name: 'FarmersInformation',
     component: FarmersInformation,
+  },
+  {
+    path: '/FarmersAssetsLiabilitiesAdd',
+    name: 'FarmersAssetsLiabilitiesAdd',
+    component: FarmersAssetsLiabilitiesAdd,
   },
   {
     path: '/FarmerMemberDetails',

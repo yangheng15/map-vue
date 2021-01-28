@@ -23,7 +23,7 @@
           v-model="farmers_details.familyCode"
           name="家庭户号："
           label="家庭户号："
-          placeholder="单行输入"
+          placeholder="请输入家庭户号"
         />
         <van-field
           readonly
@@ -46,37 +46,37 @@
           v-model="farmers_details.houseProperty"
           name="家庭拥有房产情况："
           label="家庭拥有房产情况："
-          placeholder="单行输入"
+          placeholder="请输入家庭拥有房产情况"
         />
         <van-field
           v-model="farmers_details.cars"
           name="家庭自用车辆情况："
           label="家庭自用车辆情况："
-          placeholder="单行输入"
+          placeholder="请输入家庭自用车辆情况"
         />
         <van-field
           v-model="farmers_details.rufsBehalf"
           name="授信代表："
           label="授信代表："
-          placeholder="单行输入"
+          placeholder="请输入授信代表"
         />
         <van-field
           v-model="farmers_details.rufsAmount"
           name="授信金额："
           label="授信金额："
-          placeholder="单行输入"
+          placeholder="请输入授信金额"
         />
         <van-field
           v-model="farmers_details.creditBehalf"
           name="用信金额："
           label="用信金额："
-          placeholder="单行输入"
+          placeholder="请输入用信金额"
         />
         <van-field
           v-model="farmers_details.num"
           name="家庭人数："
           label="家庭人数："
-          placeholder="单行输入"
+          placeholder="请输入家庭人数"
         />
         <!-- <van-field
           v-model="business_opening"
@@ -110,16 +110,16 @@
           v-model="farmers_details.houseName"
           name="联系人："
           label="联系人："
-          placeholder="单行输入"
+          placeholder="请输入联系人"
         />
         <van-field
           v-model="farmers_details.telphone"
           name="手机号："
           label="手机号："
-          placeholder="单行输入"
+          placeholder="请输入手机号"
         >
           <template #button>
-            <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
+            <a v-if="farmers_details.telphone" class="img4" :href="'tel:' + farmers_details.telphone"></a>
           </template>
         </van-field>
         <van-field
@@ -466,13 +466,14 @@
               v-model="household_name"
               name="姓名"
               label="姓名"
-              placeholder="单行输入"
+              placeholder="请输入姓名"
+              required
             />
             <!-- <van-field
               v-model="household_age"
               name="年龄"
               label="年龄"
-              placeholder="单行输入"
+              placeholder="请输入"
             /> -->
             <van-field
               readonly
@@ -496,7 +497,7 @@
               v-model="relationship_householder_txt"
               name="与户主关系"
               label="与户主关系"
-              placeholder="单行输入"
+              placeholder="请输入与户主关系"
             />
             <!-- <van-field
               readonly
@@ -519,19 +520,20 @@
               v-model="customer_id"
               name="身份证号："
               label="身份证号："
-              placeholder="单行输入"
+              placeholder="请输入身份证号"
+              required
             />
             <van-field
               v-model="phone_number"
               name="手机号码："
               label="手机号码："
-              placeholder="单行输入"
+              placeholder="请输入手机号码"
             />
             <van-field
               v-model="annual_income"
               name="年收入："
               label="年收入："
-              placeholder="单行输入"
+              placeholder="请输入年收入"
             />
             <div style="margin-top: 3rem" class="save_pop">
               <van-button
@@ -596,7 +598,19 @@
             >
           </p>
         </div>
-        <span class="add_record" @click="showPopupAssets()">+</span>
+        <router-link
+          tag="span"
+          :to="{
+            name: 'FarmersAssetsLiabilitiesAdd',
+            query: {
+              title: '农户资产负债添加',
+              familyCode: this.farmers_details.familyCode,
+            },
+          }"
+          class="add_record"
+          >+</router-link
+        >
+        <!-- <span class="add_record" @click="showPopupAssets()">+</span> -->
         <div
           v-show="isPopupVisibleAssets"
           style="
@@ -622,83 +636,91 @@
           >
             <p class="pop_title">资产添加</p>
             <van-field
+              required
               readonly
               clickable
               name="picker"
-              :value="select_type_txt.text"
+              :value="assets_type_txt.text"
               label="类型："
               placeholder="点击选择类型"
-              @click="select_type = true"
+              @click="assets_type = true"
             />
-            <van-popup v-model="select_type" position="bottom">
+            <van-popup v-model="assets_type" position="bottom">
               <van-picker
                 show-toolbar
-                :columns="select_type_list"
-                @confirm="onSelect_type"
-                @cancel="select_type = false"
+                :columns="assets_type_list"
+                @confirm="onassets_type"
+                @cancel="assets_type = false"
               />
             </van-popup>
             <van-field
-              v-if="select_type_txt.index == 1"
-              v-model="asset_type_txt"
-              name="资产类型："
-              label="资产类型："
-              placeholder="单行输入"
-            />
-            <van-field
-              v-if="select_type_txt.index !== 1"
-              v-model="asset_type_txt"
-              name="负债类型："
-              label="负债类型："
-              placeholder="单行输入"
-            />
-            <!-- <van-field
+              required
+              v-if="assets_type_txt.index == 1"
               readonly
               clickable
-              name="picker"
-              :value="asset_type_txt"
+              name="资产"
+              :value="assets_type_info_txt.text"
               label="资产类型："
               placeholder="点击选择资产类型"
-              @click="asset_type = true"
+              @click="assets_type_info = true"
             />
-            <van-popup v-model="asset_type" position="bottom">
+            <van-popup v-model="assets_type_info" position="bottom">
               <van-picker
                 show-toolbar
-                :columns="asset_type_list"
-                @confirm="onAsset_type"
-                @cancel="asset_type = false"
+                :columns="assets_type_info_list"
+                @confirm="onassets_type_info"
+                @cancel="assets_type_info = false"
               />
             </van-popup>
             <van-field
+              required
+              v-if="assets_type_txt.index == 2"
               readonly
               clickable
-              name="picker"
-              :value="debt_type_txt"
+              name="负债"
+              :value="liabilities_type_info_txt.text"
               label="负债类型："
               placeholder="点击选择负债类型"
-              @click="debt_type = true"
+              @click="liabilities_type_info = true"
             />
-            <van-popup v-model="debt_type" position="bottom">
+            <van-popup v-model="liabilities_type_info" position="bottom">
               <van-picker
                 show-toolbar
-                :columns="debt_type_list"
-                @confirm="onDebt_type"
-                @cancel="debt_type = false"
+                :columns="liabilities_type_info_list"
+                @confirm="onliabilities_type_info"
+                @cancel="liabilities_type_info = false"
               />
-            </van-popup> -->
+            </van-popup>
             <van-field
-              v-if="select_type_txt.index == 1"
+              required
+              v-if="assets_type_txt.index == 1"
+              v-model="asset_name_txt"
+              name="资产名称："
+              label="资产名称："
+              placeholder="请输入资产名称"
+            />
+            <van-field
+              required
+              v-if="assets_type_txt.index == 2"
+              v-model="asset_name_txt"
+              name="负债名称："
+              label="负债名称："
+              placeholder="请输入负债名称"
+            />
+
+            <van-field
+              v-if="assets_type_txt.index == 1"
               v-model="evaluation_value"
               name="评估价值："
               label="评估价值："
-              placeholder="单行输入"
+              placeholder="请输入评估价值（万元）"
             />
             <van-field
-              v-if="select_type_txt.index !== 1"
+              v-if="assets_type_txt.index == 2"
               v-model="evaluation_value"
               name="负债金额："
               label="负债金额："
-              placeholder="单行输入"
+              placeholder="请输入负债金额（万元）"
             />
             <van-field
               v-model="message_income"
@@ -752,10 +774,7 @@
             v-model="addAllNum"
             name="合计（自动计算）（万元）："
             label="合计（自动计算）（万元）："
-            placeholder="单行输入"
-            :rules="[
-              { required: true, message: '请填写合计（自动计算）（万元）' },
-            ]"
+            placeholder="自动计算"
           />
           <p>收入信息</p>
           <van-field
@@ -763,24 +782,19 @@
             v-model="addIncomeNum"
             name="总收入（自动计算）（万元）："
             label="总收入（自动计算）（万元）："
-            placeholder="单行输入"
-            :rules="[
-              { required: true, message: '请填写总收入（自动计算）（万元）' },
-            ]"
+            placeholder="自动计算"
           />
           <van-field
             v-model="householdIncome"
             name="家庭年收入（万元）："
             label="家庭年收入（万元）："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写家庭年收入（万元）' }]"
+            placeholder="请填写家庭年收入（万元）"
           />
           <van-field
             v-model="otherIncome"
             name="其他收入（万元）："
             label="其他收入（万元）："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写其他收入（万元）' }]"
+            placeholder="请填写其他收入（万元）"
           />
           <p>支出信息</p>
           <van-field
@@ -788,45 +802,37 @@
             v-model="addExpenditureNum"
             name="总支出（自动计算）（万元）："
             label="总支出（自动计算）（万元）："
-            placeholder="单行输入"
-            :rules="[
-              { required: true, message: '请填写总支出（自动计算）（万元）：' },
-            ]"
+            placeholder="自动计算"
           />
           <van-field
             v-model="mortgage"
             name="按揭（万元）："
             label="按揭（万元）："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写按揭（万元）：' }]"
+            placeholder="请填写按揭（万元）："
           />
           <van-field
             v-model="businessExpend"
             name="经营性支出（万元）："
             label="经营性支出（万元）："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写经营性支出（万元）' }]"
+            placeholder="请填写经营性支出（万元）"
           />
           <van-field
             v-model="utilities"
             name="水电气（万元）："
             label="水电气（万元）："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写水电气（万元）' }]"
+            placeholder="请填写水电气（万元）"
           />
           <van-field
             v-model="lcme"
             name="教育医疗（万元）："
             label="教育医疗（万元）："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写教育医疗（万元）' }]"
+            placeholder="请填写教育医疗（万元）"
           />
           <van-field
             v-model="otherExpend"
             name="其他支出（万元）："
             label="其他支出（万元）："
-            placeholder="单行输入"
-            :rules="[{ required: true, message: '请填写其他支出（万元）' }]"
+            placeholder="请填写其他支出（万元）"
           />
         </ul>
         <div class="save" style="padding-top: 2rem">
@@ -1045,12 +1051,21 @@ export default {
         },
       ],
       select_type: false,
+      assets_type_txt: "",
+      assets_type_list: [],
+      assets_type: false,
       asset_type_txt: "",
       asset_type_list: ["房产", "汽车"],
       asset_type: false,
+      assets_type_info_txt: "",
+      assets_type_info_list: [],
+      assets_type_info: false,
       debt_type_txt: "",
       debt_type_list: ["房产", "汽车"],
       debt_type: false,
+      liabilities_type_info_txt: "",
+      liabilities_type_info_list: [],
+      liabilities_type_info: false,
       evaluation_value: "",
       message_income: "",
       tabId: 0,
@@ -1132,13 +1147,17 @@ export default {
       publicCustomerName: "",
       productName: "",
       productCode: "",
+      assetsType: "",
     };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (from.path === "/FarmerMemberDetails") {
         vm.tab(3);
-      } else if (from.path === "/AssetsLiabilitiesDetail") {
+      } else if (
+        from.path === "/AssetsLiabilitiesDetail" ||
+        from.path === "/FarmersAssetsLiabilitiesAdd"
+      ) {
         vm.tab(4);
       } else if (
         from.path === "/EditMarkedRecord" ||
@@ -1156,6 +1175,11 @@ export default {
   },
 
   methods: {
+    onassets_type(value) {
+      this.assets_type_txt = value;
+      this.assets_type = false;
+      this.asset_name_txt = "";
+    },
     getMarkedRecord() {
       const familyCode = localStorage.getItem("familyCode");
       this.$httpGet({
@@ -1218,7 +1242,6 @@ export default {
         },
       }).then((res) => {
         this.farmers_details.address = res.data;
-        console.log(res.data);
       });
     },
     markerLongpress(point) {
@@ -1238,7 +1261,6 @@ export default {
             },
           }).then((res) => {
             this.farmers_details.address = res.data;
-            console.log(res.data);
           });
         })
         .catch(() => {
@@ -1287,7 +1309,7 @@ export default {
     dic_nation() {
       // 产品
       this.$httpGet({
-        url: "/dic/type/dic_product_type",
+        url: "/dic/type/task_product_type",
       }).then((res) => {
         let transformDara = [];
         res.data.forEach((it, index) => {
@@ -1337,6 +1359,54 @@ export default {
         // const arrIndex = this.prospect_details.gridding.split(',');
         // this.prospect_details.gridding = `${this.areaList[arrIndex[0]].text}/${this.areaList[arrIndex[0]]['children'][arrIndex[1]].text}`
       });
+      // 资产负债类型
+      this.$httpGet({
+        url: "/dic/type/customers_assets_type",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.assets_type_list = transformDara;
+        this.assets_type_txt = this.enumData(
+          this.assets_type_txt,
+          this.assets_type_list
+        );
+      });
+      // 客户资产类型
+      this.$httpGet({
+        url: "/dic/type/customers_assets_type_info",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.assets_type_info_list = transformDara;
+        this.assets_type_info_txt = this.enumData(
+          this.assets_type_info_txt,
+          this.assets_type_info_list
+        );
+      });
+      // 客户负债类型
+      this.$httpGet({
+        url: "/dic/type/customers_liabilities_type_info",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({ index: it.code, text: it.codeText });
+          }
+        });
+        this.liabilities_type_info_list = transformDara;
+        this.liabilities_type_info_txt = this.enumData(
+          this.liabilities_type_info_txt,
+          this.liabilities_type_info_list
+        );
+      });
     },
     onFamily_type(value) {
       this.prospect_detailsEdit.type = value["index"];
@@ -1359,9 +1429,17 @@ export default {
       this.asset_type_txt = value;
       this.asset_type = false;
     },
+    onassets_type_info(value) {
+      this.assets_type_info_txt = value;
+      this.assets_type_info = false;
+    },
     onDebt_type(value) {
       this.debt_type_txt = value;
       this.debt_type = false;
+    },
+    onliabilities_type_info(value) {
+      this.liabilities_type_info_txt = value;
+      this.liabilities_type_info = false;
     },
     onVehicle_condition(value) {
       this.vehicle_condition_txt = value;
@@ -1410,11 +1488,13 @@ export default {
       this.showInventoryDate = false;
     },
     onRegional_grid(value) {
-      this.prospect_detailsEdit.gridding = value.index;
-      this.farmers_details.gridding = value.text;
-      // this.regional_grid_txt.text = values.join('/');
-      // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
-      this.regional_grid = false;
+      if (value) {
+        this.prospect_detailsEdit.gridding = value.index;
+        this.farmers_details.gridding = value.text;
+        // this.regional_grid_txt.text = values.join('/');
+        // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
+        this.regional_grid = false;
+      }
     },
 
     prev() {
@@ -1484,12 +1564,80 @@ export default {
       });
     },
     AddPopupAssets() {
+      if (this.assets_type_txt == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请选择类型！",
+        });
+        return;
+      }
+      if (
+        this.assets_type_txt.index == 1 &&
+        this.assets_type_info_txt.text == undefined
+      ) {
+        Dialog.alert({
+          title: "提示",
+          message: "请选择资产类型！",
+        });
+        return;
+      }
+      if (
+        this.assets_type_txt.index == 2 &&
+        this.liabilities_type_info_txt.text == undefined
+      ) {
+        Dialog.alert({
+          title: "提示",
+          message: "请选择负债类型！",
+        });
+        return;
+      }
+      if (this.assets_type_txt.index == 1 && this.asset_name_txt == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入资产名称！",
+        });
+        return;
+      }
+      if (this.assets_type_txt.index == 2 && this.asset_name_txt == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入负债名称！",
+        });
+        return;
+      }
+      if (this.assets_type_txt.index == 1 && this.evaluation_value == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入评估价值（万元）！",
+        });
+        return;
+      }
+      if (this.assets_type_txt.index == 2 && this.evaluation_value == "") {
+        Dialog.alert({
+          title: "提示",
+          message: "请输入负债金额（万元）！",
+        });
+        return;
+      }
+      // if (this.uploader == "") {
+      //   Dialog.alert({
+      //     title: "提示",
+      //     message: "请选择资产或者负债照片！",
+      //   });
+      //   return;
+      // }
+      if (this.assets_type_txt.index == 1) {
+        this.assetsType = this.assets_type_info_txt.index;
+      } else if (this.assets_type_txt.index == 2) {
+        this.assetsType = this.liabilities_type_info_txt.index;
+      }
       this.$httpPost({
         url: "/api/customersFamilyAssetsLiability/add",
         data: {
           name: this.asset_type_txt,
           familyCode: this.farmers_details.familyCode,
-          type: this.select_type_txt.index,
+          type: this.assets_type_txt.index,
+          assetsType: this.assetsType,
           description: this.message_income,
           amount: this.evaluation_value,
           checkTime: this.inventoryDate1,
@@ -1508,7 +1656,7 @@ export default {
     },
     deleteFamilyPeople(id) {
       Dialog.confirm({
-        title: "你确定删除这条记录吗",
+        title: "你确定删除这条记录吗？",
       })
         .then(() => {
           this.$httpDelete({
@@ -1526,7 +1674,7 @@ export default {
     },
     deleteFamilyAssets(id) {
       Dialog.confirm({
-        title: "你确定删除这条记录吗",
+        title: "你确定删除这条记录吗？",
       })
         .then(() => {
           this.$httpDelete({
@@ -1568,12 +1716,12 @@ export default {
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
       if (isAndroid) {
         let positionArr = window.android.getLocation().split(",");
-        let currentPositioning = `${positionArr[0]},${positionArr[1]}`
+        let currentPositioning = `${positionArr[0]},${positionArr[1]}`;
         return currentPositioning;
       }
       if (isiOS) {
         let positionArr = window.prompt("getLocation").split(",");
-        let currentPositioning = `${positionArr[0]},${positionArr[1]}`
+        let currentPositioning = `${positionArr[0]},${positionArr[1]}`;
         return currentPositioning;
       }
     },
@@ -1610,7 +1758,7 @@ export default {
       this.longitudeLatitude = !this.longitudeLatitude;
 
       if (this.farmers_details.location == "") {
-       this.farmers_details.location = this.currentPositioning()
+        this.farmers_details.location = this.currentPositioning();
       }
     },
     appMessage1() {
@@ -1619,7 +1767,6 @@ export default {
       var isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
       //iOS终端
       var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-      console.log(this.map);
       if (isAndroid) {
         let positionArr = window.android.getLocation().split(",");
         // let positionArr = [124.281873, 45.514322]
@@ -1649,7 +1796,6 @@ export default {
           },
         }).then((res) => {
           this.farmers_details.address = res.data;
-          console.log(res.data);
         });
       }
       if (isiOS) {
@@ -1681,7 +1827,6 @@ export default {
           },
         }).then((res) => {
           this.farmers_details.address = res.data;
-          console.log(res.data);
         });
       }
     },
@@ -1812,7 +1957,7 @@ export default {
     },
     deleteRemark(val) {
       Dialog.confirm({
-        title: "你确定删除吗",
+        title: "你确定删除吗？",
       })
         .then(() => {
           this.$httpDelete({

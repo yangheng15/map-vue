@@ -102,7 +102,7 @@ export default {
     },
     deleteCustomer(val) {
       Dialog.confirm({
-        title: "你确定移除吗",
+        title: "你确定移除吗？",
       })
         .then(() => {
           this.$httpDelete({

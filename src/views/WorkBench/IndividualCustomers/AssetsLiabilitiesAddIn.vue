@@ -93,7 +93,7 @@
         label="负债金额（万元）："
         placeholder="请输入负债金额（万元）"
       />
-      <van-field name="uploader" label="资产负债照片" required>
+      <van-field name="uploader" label="资产照片" required>
         <template #input>
           <van-uploader
             :after-read="afterRead"
@@ -193,9 +193,9 @@ export default {
   methods: {
     onClickLeft() {
       this.$router.replace({
-        path: "EditPublicCustomerRecord",
+        path: "EditIndividualCustomersRecord",
         query: {
-          title: "对公客户详情",
+          title: "个人客户详情",
           id: this.customerCode,
           taskUpdateFlag: true,
         },
@@ -319,6 +319,8 @@ export default {
         });
         return;
       }
+      console.log(this.assets_type_txt.index);
+      console.log(this.assets_type_info_txt.text);
       if (
         this.assets_type_txt.index == 1 &&
         this.assets_type_info_txt.text == undefined
@@ -399,7 +401,6 @@ export default {
             message: "添加成功",
             position: "middle",
           });
-          // this.$router.go(-2);
           this.onClickLeft()
         })
         .catch((err) => {});

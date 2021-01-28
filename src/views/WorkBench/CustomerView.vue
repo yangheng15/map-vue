@@ -279,14 +279,15 @@
             label="位置："
             placeholder="单行输入"
           >
-          <template #button>
-            <img
-              @click="getLongitudeLatitude"
-              style="opacity: 0.9; margin-right: 15px"
-              class=""
-              src="../../assets/grid/sign.svg"
-              alt=""
-            /> </template>
+            <template #button>
+              <img
+                @click="getLongitudeLatitude"
+                style="opacity: 0.9; margin-right: 15px"
+                class=""
+                src="../../assets/grid/sign.svg"
+                alt=""
+              />
+            </template>
           </van-field>
           <div
             style="width: 99%; margin: 0.5rem auto; position: relative"
@@ -702,7 +703,7 @@ export default {
       mapCenter: { lng: "114.654102", lat: "33.623741" },
       mapCenter1: { lng: "114.654102", lat: "33.623741" },
       zoomNum: 19,
-      zoom: 20
+      zoom: 20,
     };
   },
   async created() {
@@ -711,7 +712,7 @@ export default {
     await this.getCustomerView();
     this.dic_nation();
     if (this.CustomerViewDetails.location == "") {
-      debugger
+      debugger;
       this.appMessage();
     }
   },
@@ -735,29 +736,43 @@ export default {
       if (isAndroid) {
         let positionArr = window.android.getLocation().split(",");
         // let positionArr = [124.281873, 45.514322]
-        if(positionArr[0] === this.mapCenter1.lng && positionArr[1] === this.mapCenter1.lat) {// 如果当前的 中心点和之前的中心点一样
-          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
-          this.zoomNum = this.map.getZoom()
-          return
+        if (
+          positionArr[0] === this.mapCenter1.lng &&
+          positionArr[1] === this.mapCenter1.lat
+        ) {
+          // 如果当前的 中心点和之前的中心点一样
+          this.mapCenter1 = {
+            lng: positionArr[0],
+            lat: positionArr[1] + 0.0001,
+          }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.zoomNum = this.map.getZoom();
+          return;
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter = this.mapCenter1
+        this.mapCenter = this.mapCenter1;
         // this.zoomNum = 20;
-        this.zoomNum = this.map.getZoom()
+        this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
       }
       if (isiOS) {
         let positionArr = window.prompt("getLocation").split(",");
         // let positionArr = [124.281873, 45.514322]
-        if(positionArr[0] === this.mapCenter1.lng && positionArr[1] === this.mapCenter1.lat) {// 如果当前的 中心点和之前的中心点一样
-          this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1]+0.0001 }; //直接将中心点回传不生效，需要稍微改动一下中心点
-          this.zoomNum = this.map.getZoom()
-          return
+        if (
+          positionArr[0] === this.mapCenter1.lng &&
+          positionArr[1] === this.mapCenter1.lat
+        ) {
+          // 如果当前的 中心点和之前的中心点一样
+          this.mapCenter1 = {
+            lng: positionArr[0],
+            lat: positionArr[1] + 0.0001,
+          }; //直接将中心点回传不生效，需要稍微改动一下中心点
+          this.zoomNum = this.map.getZoom();
+          return;
         }
         this.mapCenter1 = { lng: positionArr[0], lat: positionArr[1] };
-        this.mapCenter = this.mapCenter1
+        this.mapCenter = this.mapCenter1;
         // this.zoomNum = 20;
-        this.zoomNum = this.map.getZoom()
+        this.zoomNum = this.map.getZoom();
         this.createMarker(positionArr);
       }
     },
@@ -773,11 +788,11 @@ export default {
     },
     longpress({ point }) {
       const zoom = this.map.getZoom();
-      if( Math.abs(zoom - this.zoom) > 0) {
-          this.zoom = zoom
-          return;
+      if (Math.abs(zoom - this.zoom) > 0) {
+        this.zoom = zoom;
+        return;
       }
-      this.markerLongpress(point)
+      this.markerLongpress(point);
       // clearTimeout(this.timeOutEvent);
       // // this.timeOutEvent = 0;
       // this.timeOutEvent = setTimeout(() => {
@@ -1069,8 +1084,7 @@ export default {
       this.vehicle_condition_txt = value;
       this.vehicle_condition = false;
     },
-    onSubmit(values) {
-    },
+    onSubmit(values) {},
     onChoose_gender(value) {
       this.choose_gender_txt = value;
       this.choose_gender = false;
@@ -1114,11 +1128,13 @@ export default {
       this.showGraduation_time = false;
     },
     onRegional_grid(value) {
-      this.prospect_detailsEdit.gridding = value.index;
-      this.CustomerViewDetails.gridding = value.text;
-      // this.regional_grid_txt.text = values.join('/');
-      // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
-      this.regional_grid = false;
+      if (value) {
+        this.prospect_detailsEdit.gridding = value.index;
+        this.CustomerViewDetails.gridding = value.text;
+        // this.regional_grid_txt.text = values.join('/');
+        // this.regional_grid_txt.index = `${this.areaList[index[0]].id},${this.areaList[[index[1]]].id}`;
+        this.regional_grid = false;
+      }
     },
 
     prev() {
@@ -1175,8 +1191,7 @@ export default {
     closePopup() {
       this.isPopupVisible = false;
     },
-    handleChange(value) {
-    },
+    handleChange(value) {},
     //选中一个item
     selectItem(thisItem) {
       if (typeof thisItem.checked == "undefined") {
@@ -1219,12 +1234,11 @@ export default {
           this.getCustomersAcademic();
           this.isPopupVisibleEducation = false;
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     deleteCustomersAcademic(val) {
       Dialog.confirm({
-        title: "你确定移除吗",
+        title: "你确定移除吗？",
       })
         .then(() => {
           this.$httpDelete({
@@ -1259,12 +1273,11 @@ export default {
           this.getCustomersWor();
           this.isPopupVisibleWork = false;
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     },
     deleteCustomersWork(val) {
       Dialog.confirm({
-        title: "你确定移除吗",
+        title: "你确定移除吗？",
       })
         .then(() => {
           this.$httpDelete({

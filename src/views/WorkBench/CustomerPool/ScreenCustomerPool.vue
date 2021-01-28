@@ -7,13 +7,13 @@
           v-model="screen_name"
           name="姓名："
           label="姓名："
-          placeholder="单行输入"
+          placeholder="请输入姓名"
         />
         <van-field
           v-model="screen_number"
           name="编号："
           label="编号："
-          placeholder="单行输入"
+          placeholder="请输入编号"
         />
         <van-field
           readonly
@@ -36,7 +36,7 @@
           v-model="customer_base"
           name="客户群体："
           label="客户群体："
-          placeholder="单行输入"
+          placeholder="请输入客户群体"
         />
         <van-field
           readonly
@@ -59,7 +59,7 @@
           v-model="recommended_products"
           name="推荐产品："
           label="推荐产品："
-          placeholder="单行输入"
+          placeholder="请输入推荐产品"
         />
         <van-field
           readonly
@@ -99,7 +99,7 @@
           v-model="screen_age"
           name="年龄："
           label="年龄："
-          placeholder="单行输入"
+          placeholder="请输入年龄"
         />
         <van-field
           readonly
@@ -163,11 +163,11 @@
         />
         <van-popup v-model="regional_grid" position="bottom">
           <van-picker
-          show-toolbar
-          :columns="areaList"
-          @cancel="regional_grid = false"
-          @confirm="onRegional_grid"
-        />
+            show-toolbar
+            :columns="areaList"
+            @cancel="regional_grid = false"
+            @confirm="onRegional_grid"
+          />
         </van-popup>
         <div class="save" style="margin: 16px">
           <van-button round block type="primary" @click="sceenPool()"
@@ -273,26 +273,26 @@ export default {
       showPicker: false,
     };
   },
-  beforeRouteLeave (to, from, next) {
-    this.$store.commit('SCREENING', {
-          limit: 10,
-          page: 1,
-          name: this.screen_name,
-          code: this.screen_number,
-          branchCode: this.organization_txt.index,
-          isPpoint: this.key_customers_txt.index,
-          customer_base:this.customer_base,
-          level: this.custome_level_txt.index,
-          recommended_products:this.recommended_products,
-          education: this.education_level_txt.index,
-          gridding: this.regional_grid_txt.index,
-          gender: this.choose_gender_txt.index,
-          age:this.screen_age,
-          profession: this.occupation_category_txt.index,
-          products_held_txt:this.products_held_txt.index,
-          regional_grid_txt:this.regional_grid_txt.index,
-        })
-        next();
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit("SCREENING", {
+      limit: 10,
+      page: 1,
+      name: this.screen_name,
+      code: this.screen_number,
+      branchCode: this.organization_txt.index,
+      isPpoint: this.key_customers_txt.index,
+      customer_base: this.customer_base,
+      level: this.custome_level_txt.index,
+      recommended_products: this.recommended_products,
+      education: this.education_level_txt.index,
+      gridding: this.regional_grid_txt.index,
+      gender: this.choose_gender_txt.index,
+      age: this.screen_age,
+      profession: this.occupation_category_txt.index,
+      products_held_txt: this.products_held_txt.index,
+      regional_grid_txt: this.regional_grid_txt.index,
+    });
+    next();
   },
   created() {
     this.typeCN = this.$route.query.title;
@@ -357,9 +357,10 @@ export default {
       }).then((res) => {
         let transformDara = [];
         res.data.forEach((it, index) => {
-          it.children&&it.children.forEach((ele, index1) => {
-            transformDara.push({ index: ele.code, text: ele.name });
-          });
+          it.children &&
+            it.children.forEach((ele, index1) => {
+              transformDara.push({ index: ele.code, text: ele.name });
+            });
         });
         this.areaList = transformDara;
       });
@@ -393,33 +394,37 @@ export default {
       this.products_held = false;
     },
     onRegional_grid(values) {
-      this.regional_grid_txt = values;
-      this.regional_grid = false;
+      if (values) {
+        this.regional_grid_txt = values;
+        this.regional_grid = false;
+      }
     },
     onSubmit(values) {
       // console.log("submit", values);
     },
     sceenPool() {
-      this.$store.dispatch('UPDATESCREEN', {
+      this.$store
+        .dispatch("UPDATESCREEN", {
           limit: 10,
           page: 1,
           name: this.screen_name,
           code: this.screen_number,
           branchCode: this.organization_txt.index,
           isPpoint: this.key_customers_txt.index,
-          customer_base:this.customer_base,
+          customer_base: this.customer_base,
           level: this.custome_level_txt.index,
-          recommended_products:this.recommended_products,
+          recommended_products: this.recommended_products,
           education: this.education_level_txt.index,
           gridding: this.regional_grid_txt.index,
           gender: this.choose_gender_txt.index,
-          age:this.screen_age,
+          age: this.screen_age,
           profession: this.occupation_category_txt.index,
-          products_held_txt:this.products_held_txt.index,
-          regional_grid_txt:this.regional_grid_txt.index,
-        }).then(() => {
-          this.$router.back();
+          products_held_txt: this.products_held_txt.index,
+          regional_grid_txt: this.regional_grid_txt.index,
         })
+        .then(() => {
+          this.$router.back();
+        });
     },
   },
 };

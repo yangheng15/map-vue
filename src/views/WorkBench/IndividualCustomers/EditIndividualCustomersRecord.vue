@@ -34,7 +34,7 @@
           v-model="publicCustomerName"
           name="名称："
           label="名称："
-          placeholder="单行输入"
+          placeholder="请输入名称"
           required
           type="textarea"
           autosize
@@ -44,7 +44,6 @@
           name="手机号："
           label="手机号："
           placeholder="请输入手机号"
-          required
         >
           <!-- <template #button>
             <a class="img4" :href="'tel:' + farmers_details.telphone"></a>
@@ -431,7 +430,7 @@
           <router-link
             tag="span"
             :to="{
-              name: 'AssetsLiabilitiesAdd',
+              name: 'AssetsLiabilitiesAddIn',
               query: {
                 title: '客户资产负债添加',
                 customerCode: this.customerCode,
@@ -512,12 +511,13 @@ export default {
     next((vm) => {
       if (
         from.path === "/EditMarketingRecord" ||
-        from.path === "/AddMarketingRecord"
+        from.path === "/AddMarketingRecord" ||
+        from.path === "/IndividualAddMarketingRecord"
       ) {
         vm.tab(2);
       }
       if (
-        from.path === "/AssetsLiabilitiesAdd" ||
+        from.path === "/AssetsLiabilitiesAddIn" ||
         from.path === "/AssetsLiabilitiesDetail1"
       ) {
         vm.tab(3);
@@ -571,7 +571,6 @@ export default {
         },
       }).then((res) => {
         this.publicCustomerAddress = res.data;
-        console.log(res.data);
       });
     },
     markerLongpress(point) {
@@ -591,7 +590,6 @@ export default {
             },
           }).then((res) => {
             this.publicCustomerAddress = res.data;
-            console.log(res.data);
           });
         })
         .catch(() => {
@@ -646,22 +644,6 @@ export default {
       }
     },
     dic_nation() {
-      // 潜在客户需求
-      this.$httpGet({
-        url: "/dic/type/task_product_type",
-      }).then((res) => {
-        let transformDara = [];
-        res.data.forEach((it, index) => {
-          if (it.parentId !== null) {
-            transformDara.push({
-              index: it.code,
-              text: it.codeText,
-              radio: "",
-            });
-            this.potential_need_type = transformDara;
-          }
-        });
-      });
       // 所属网格
       this.$httpGet({
         url: "/api/semGridding/query",
@@ -707,6 +689,23 @@ export default {
       this.pictureId.splice(index, 1);
     },
     async editRecord(val) {
+      // 潜在客户需求
+      this.$httpGet({
+        url: "/dic/type/task_product_type",
+      }).then((res) => {
+        let transformDara = [];
+        res.data.forEach((it, index) => {
+          if (it.parentId !== null) {
+            transformDara.push({
+              index: it.code,
+              text: it.codeText,
+              radio: "",
+            });
+            this.potential_need_type = transformDara;
+          }
+        });
+      });
+
       const res = await this.$httpGet({
         url: `/api/publicCustomerPool/get/${this.id}`,
         data: {
@@ -777,9 +776,11 @@ export default {
       this.customersDemandList = res.data.customersDemandList;
     },
     onRegional_grid(value) {
-      this.publicCustomerGrid = value["text"];
-      this.prospect_detailsEdit.publicCustomerGrid = value["index"];
-      this.regional_grid = false;
+      if (value) {
+        this.publicCustomerGrid = value["text"];
+        this.prospect_detailsEdit.publicCustomerGrid = value["index"];
+        this.regional_grid = false;
+      }
     },
     onIndustryShow(value) {
       this.industry = value["text"];
@@ -792,7 +793,6 @@ export default {
       this.zoom = 15;
     },
     tab(ev) {
-      console.log(ev);
       this.tabId = ev;
       if (ev == 2) {
         this.getMarkedRecord();
@@ -803,25 +803,20 @@ export default {
     },
     getFamilyAssets() {
       const customerCodeBack = localStorage.getItem("customerCode");
-
       this.$httpGet({
         url: "/api/customersAssetsInfo/query",
         params: {
-          customerCode: this.customerCode || customerCodeBack,
+          customerCode: this.id || customerCodeBack,
           limit: 10,
           page: 1,
         },
       }).then((res) => {
         this.assets = res.data;
-        // this.peasant_household.forEach((it) => {
-        //   this.familyCode = it.type;
-        // });
-        // this.getDic();
       });
     },
     deleteFamilyAssets(id) {
       Dialog.confirm({
-        title: "你确定删除这条记录吗",
+        title: "你确定删除这条记录吗？",
       })
         .then(() => {
           this.$httpDelete({
@@ -842,14 +837,13 @@ export default {
       this.$httpGet({
         url: "/api/publicCustomersInfo/marketRecord",
         params: {
-          customerCode: this.customerCode || customerCodeBack,
+          customerCode: this.id || customerCodeBack,
           limit: 10,
           page: 1,
         },
       }).then((res) => {
         this.MarketingRecord = res.data;
       });
-      // }
     },
     //选中一个item
     selectItem(thisItem) {
@@ -903,7 +897,6 @@ export default {
           },
         }).then((res) => {
           this.publicCustomerAddress = res.data;
-          console.log(res.data);
         });
       }
       if (isiOS) {
@@ -934,7 +927,6 @@ export default {
           },
         }).then((res) => {
           this.publicCustomerAddress = res.data;
-          console.log(res.data);
         });
       }
     },
@@ -945,17 +937,6 @@ export default {
       this.positionMarker = new BMap.Marker(new BMap.Point(...position)); // 创建标注
       this.map.addOverlay(this.positionMarker); // 将标注添加到地图中
     },
-    // afterRead(file) {
-    //   let formData = new FormData();
-    //   formData.append("file", file.file);
-    //   this.$httpPost({
-    //     url: "/api/upload/attachment",
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //     data: formData,
-    //   }).then((res) => {
-    //     this.pictureId.push(res.data.pid);
-    //   });
-    // },
     afterRead(file) {
       let formData = new FormData();
       // if (file.size / 1024 > 1025) {
@@ -971,16 +952,6 @@ export default {
           this.pictureId.push(res.data.pid);
         });
       });
-      // } else {
-      //   formData.append("file", file.file);
-      //   this.$httpPost({
-      //     url: "/api/upload/attachment",
-      //     headers: { "Content-Type": "multipart/form-data" },
-      //     data: formData,
-      //   }).then((res) => {
-      //     this.pictureId.push(res.data.pid);
-      //   });
-      // }
     },
     async saveCustomersDemand() {
       let arr = [];
@@ -1020,13 +991,6 @@ export default {
         });
         return;
       }
-      if (this.publicCustomerTelephone == "") {
-        Dialog.alert({
-          title: "提示",
-          message: "请输入电话！",
-        });
-        return;
-      }
       this.$httpPut({
         url: "/api/publicCustomersInfo/update",
         data: {
@@ -1049,13 +1013,12 @@ export default {
             message: "保存成功",
             position: "middle",
           });
-          // this.$router.go(-1);
         })
         .catch((err) => {});
     },
     deleteRemark(val) {
       Dialog.confirm({
-        title: "你确定删除吗",
+        title: "你确定删除吗？",
       })
         .then(() => {
           this.$httpDelete({

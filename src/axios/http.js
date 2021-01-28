@@ -53,7 +53,6 @@ axios.interceptors.request.use(
               localStorage.setItem('_token', res.access_token)
               localStorage.setItem("refresh_token", res.refresh_token);
               token = res.access_token
-              console.log(token);
               let expires_in = moment(new Date()).valueOf() + res.expires_in
               localStorage.setItem("expires_in", expires_in);
               flag = true;

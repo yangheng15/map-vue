@@ -15,14 +15,15 @@
             tag="li"
             :to="{
               name: 'ProductCatalogDetail',
-              query: { title: '产品目录详情', id: thisItem.id },
+              query: { title: '产品详情', id: thisItem.id },
             }"
             v-for="(thisItem, index) in MarketingRecord"
             :key="index"
           >
+
             <p style="font-size: 1rem; font-weight: 600">{{ thisItem.name }}</p>
-            <p class="schedule_star">支付工具</p>
-            <p class="schedule_star">{{ thisItem.type }}</p>
+            <p class="schedule_star">{{ thisItem.type | task_product_type }}</p>
+            <p class="schedule_star"></p>
             <p class="schedule_star">{{ thisItem.createdTime | transform }}</p>
           </router-link>
         </ul>
@@ -78,7 +79,7 @@ export default {
     },
     dic_nation() {
       this.$httpGet({
-        url: "/dic/type/dic_product_type",
+        url: "/dic/type/task_product_type",
       }).then((res) => {
         let transformDara = [];
         transformDara.push({value: "", text: '全部'})
@@ -87,8 +88,17 @@ export default {
             transformDara.push({value: it.code, text: it.codeText})
           }
         })
+        console.info(transformDara);
         this.product_option = transformDara;
       });
+    },
+  },
+  filters: {
+    task_product_type(val) {
+      const findWill = JSON.parse(localStorage.getItem("dicTaskProductType")).find(
+              (it) => +it.key == val
+      );
+      return findWill ? findWill.value : "";
     },
   },
   mounted() {},

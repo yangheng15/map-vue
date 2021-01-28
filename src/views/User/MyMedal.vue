@@ -13,7 +13,7 @@ productCode<template>
       </div>
       <van-divider :style="{ borderColor: '#fff' }">已加载完毕</van-divider>
     </div>
-    <div v-if="typeCN == '我的足迹'">
+    <div v-if="typeCN == '上门拜访记录'">
       <!-- <ul class="time_vant">
         <li>
           <van-cell title="选择日期区间" :value="date" @click="show = true" />
@@ -24,15 +24,15 @@ productCode<template>
         </li>
       </ul> -->
       <router-link
-            tag="div"
-            :to="{
-              name: 'MapAddressDisplay',
-              query: {
-                title: '地址',
-                location: thisItem.location,
-                custName: thisItem.realName,
-              },
-            }"
+        tag="div"
+        :to="{
+          name: 'MapAddressDisplay',
+          query: {
+            title: '地址',
+            location: thisItem.location,
+            custName: thisItem.realName,
+          },
+        }"
         class="Footprint_list"
         style="padding-top: 10px"
         v-for="(thisItem, index) in Footprintlist"
@@ -77,7 +77,7 @@ export default {
     this.typeCN = this.$route.query.title;
     if (this.typeCN == "我的勋章") {
       this.getMedalOwner();
-    } else if (this.typeCN == "我的足迹") {
+    } else if (this.typeCN == "上门拜访记录") {
       this.getCustomersRecords();
     }
   },
@@ -123,6 +123,9 @@ export default {
 </script>
 
 <style scoped>
+*{
+  font-size: 14px;
+}
 .MyMedal {
   margin-top: 46px;
 }
@@ -141,13 +144,16 @@ export default {
 }
 .customer_list ul {
   background: #fff;
-  padding-top: 10px;
+  /* padding-top: 10px; */
   border-bottom: 1px solid #e8e8e8 !important;
 }
 .customer_list ul li {
   display: flex;
   flex-wrap: wrap;
-  padding: 15px;
+  align-items: center;
+  height: 48px;
+  padding: 0px;
+  padding-left: 10px;
 }
 .customer_list ul li p {
   width: 40%;
@@ -167,8 +173,8 @@ export default {
   vertical-align: middle;
 }
 .customer_list ul .li_img {
-  width: 24px;
-  margin-top: -10px;
+  width: 30px;
+  /* margin-top: -10px; */
 }
 .time_vant {
   padding: 10px;
@@ -215,13 +221,18 @@ export default {
     font-size: 13px;
   }
   .customer_list ul li {
-    padding: 10px;
+    padding: 0px;
+    height: 40px;
+    padding-left: 10px;
   }
   .latest_tasks ul li {
     font-size: 13px;
   }
   .latest_tasks ul {
     margin: 0;
+  }
+  .customer_list ul .li_img {
+    width: 24px;
   }
 }
 </style>

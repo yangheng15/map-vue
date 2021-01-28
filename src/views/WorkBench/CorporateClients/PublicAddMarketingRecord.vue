@@ -1,6 +1,9 @@
 <template>
   <div class="AddMarketingRecord">
-    <child-nav :title="typeCN"></child-nav>
+    <!-- <child-nav :title="typeCN"></child-nav> -->
+    <div class="public_nav">
+      <van-nav-bar :title="typeCN" left-arrow @click-left="onClickLeft" />
+    </div>
     <div v-if="typeCN == '添加营销记录'">
       <ul class="mission_details">
         <li>
@@ -15,7 +18,9 @@
         <ul class="tabList">
           <li @click="tab(0)" :class="tabId == 0 ? 'cur' : 'ordinary'">结果</li>
           <li @click="tab(1)" :class="tabId == 1 ? 'cur' : 'ordinary'">影像</li>
-          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">竞争对手</li>
+          <li @click="tab(2)" :class="tabId == 2 ? 'cur' : 'ordinary'">
+            竞争对手
+          </li>
         </ul>
         <div v-show="tabId === 0" style="background: #fff">
           <van-field
@@ -172,7 +177,9 @@
             />
           </van-popup>
           <div class="save">
-            <van-button type="primary" block @click="addResult()">保存</van-button>
+            <van-button type="primary" block @click="addResult()"
+              >保存</van-button
+            >
           </div>
         </div>
         <div v-show="tabId === 1" style="background: #fff">
@@ -180,7 +187,9 @@
             <van-uploader :after-read="afterRead" v-model="fileList" />
           </div>
           <div class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="addPicture()">保存</van-button>
+            <van-button type="primary" block @click="addPicture()"
+              >保存</van-button
+            >
           </div>
         </div>
         <div v-show="tabId === 2" style="background: #fff; height: 70vh">
@@ -206,7 +215,9 @@
             placeholder="请填写产品利率（数字）"
           />
           <div class="save" style="margin-top: 20px">
-            <van-button type="primary" block @click="addCompetitor()">保存</van-button>
+            <van-button type="primary" block @click="addCompetitor()"
+              >保存</van-button
+            >
           </div>
         </div>
       </div>
@@ -214,7 +225,7 @@
   </div>
 </template>
 <script>
-import ChildNav from "../../components/Public/ChildNav";
+import ChildNav from "../../../components/Public/ChildNav";
 import { Toast, Dialog } from "vant";
 import qs from "qs";
 export default {
@@ -290,10 +301,20 @@ export default {
   },
   updated() {},
   methods: {
+    onClickLeft() {
+      this.$router.replace({
+        path: "EditPublicCustomerRecord",
+        query: {
+          title: "对公客户详情",
+          id: this.customerCode,
+          taskUpdateFlag: true,
+        },
+      });
+    },
     task_product_type(val) {
-      const findWill = JSON.parse(localStorage.getItem("dicTaskProductType")).find(
-        (it) => +it.key == val
-      );
+      const findWill = JSON.parse(
+        localStorage.getItem("dicTaskProductType")
+      ).find((it) => +it.key == val);
       return findWill ? findWill.value : "";
     },
     resultListClick() {
@@ -672,6 +693,27 @@ export default {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+.public_nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000000;
+}
+.van-nav-bar {
+  background-color: rgb(61, 66, 94);
+}
+.van-nav-bar >>> .van-nav-bar__title {
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 600;
+}
+.van-nav-bar__right img {
+  width: 20px;
+}
+.van-nav-bar >>> .van-icon {
+  color: #fff;
 }
 @media screen and (max-width: 359px) {
   li,

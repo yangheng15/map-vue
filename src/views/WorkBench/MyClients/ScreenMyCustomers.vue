@@ -7,13 +7,13 @@
           v-model="screen_name"
           name="姓名："
           label="姓名："
-          placeholder="单行输入"
+          placeholder="请输入姓名"
         />
         <van-field
           v-model="screen_number"
           name="编号："
           label="编号："
-          placeholder="单行输入"
+          placeholder="请输入编号"
         />
         <van-field
           readonly
@@ -36,7 +36,7 @@
           v-model="customer_base"
           name="客户群体："
           label="客户群体："
-          placeholder="单行输入"
+          placeholder="请输入客户群体"
         />
         <van-field
           readonly
@@ -59,7 +59,7 @@
           v-model="recommended_products"
           name="推荐产品："
           label="推荐产品："
-          placeholder="单行输入"
+          placeholder="请输入推荐产品"
         />
         <van-field
           readonly
@@ -99,7 +99,7 @@
           v-model="screen_age"
           name="年龄："
           label="年龄："
-          placeholder="单行输入"
+          placeholder="请输入年龄"
         />
         <van-field
           readonly
@@ -373,11 +373,12 @@ export default {
       this.products_held = false;
     },
     onRegional_grid(values) {
-      this.regional_grid_txt = values;
-      this.regional_grid = false;
+      if (values) {
+        this.regional_grid_txt = values;
+        this.regional_grid = false;
+      }
     },
-    onSubmit(values) {
-    },
+    onSubmit(values) {},
     // sceenPool() {
     // this.$httpGet({
     //   url: "/api/customer/appOwner",
@@ -425,7 +426,7 @@ export default {
           regional_grid_txt: this.regional_grid_txt.index,
         })
         .then(() => {
-          this.$router.go(-1)
+          this.$router.go(-1);
         });
     },
   },

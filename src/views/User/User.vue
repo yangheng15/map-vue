@@ -11,7 +11,12 @@
           {{ userNameTxt.realName }}
         </div>
         <div class="have_star">
-          <van-rate v-model="userNameTxt.level" color="#fff" void-color="#fff" readonly />
+          <van-rate
+            v-model="userNameTxt.level"
+            color="#fff"
+            void-color="#fff"
+            readonly
+          />
         </div>
         <div v-show="MedalOwner != 0" class="personal_introduction">
           <div v-for="(item, index) in MedalOwner" :key="index">
@@ -34,10 +39,7 @@
       </div>
     </div>
     <div class="new_item_body">
-      <!-- <div
-        class="calendar"
-        @click="$router.push('/LGBUserCenter/MyMedal?title=我的足迹')"
-      >
+      <!--
         <p>
           <img src="../../assets/User/calendar.svg" alt />
           我的日历
@@ -47,11 +49,11 @@
       <router-link
         tag="div"
         class="calendar"
-        :to="{ name: 'MyMedal', query: { title: '我的足迹' } }"
+        :to="{ name: 'MyMedal', query: { title: '上门拜访记录' } }"
       >
         <p>
           <img src="../../assets/User/footprint.svg" alt />
-          我的足迹
+          上门拜访记录
         </p>
         <van-icon name="arrow" />
       </router-link>
@@ -193,8 +195,6 @@ export default {
           page: 1,
         },
       }).then((res) => {
-        // console.log(res.data.slice(0, 3));
-        // console.log(res.data.length);
         if (res.data.length > 3) {
           this.MedalOwner = res.data.slice(0, 3);
         } else {
@@ -224,7 +224,7 @@ export default {
   color: #666666;
 }
 .new_item_body {
-  margin-top: 120px;
+  margin-top: 102px;
   width: 96%;
   margin-left: 2%;
 }
@@ -236,7 +236,7 @@ export default {
   position: relative;
 }
 .head_portrait .have_star {
-  padding: 7px 0px 56px 0px;
+  padding: 0px 0px 56px 0px;
   font-size: 10px;
 }
 .head_portrait .personal_introduction {
@@ -249,19 +249,19 @@ export default {
   width: 96%;
   border: 1px solid #ededed;
   border-radius: 10px;
-  left: 2%;
+  left: 1.8%;
 }
 .head_portrait .personal_introduction div {
   width: 26%;
   margin: 7px 0px 0px;
 }
 .head_portrait .personal_introduction div img {
-  width: 56px;
+  width: 80%;
 }
 .head_portrait .personal_introduction div p {
   font-size: 14px;
   color: #2a2a2a;
-  margin-top: 0;
+  margin-top: -10px;
 }
 .head_portrait .see_more {
   font-size: 14px;
@@ -315,10 +315,16 @@ export default {
     width: 48px;
   }
   .new_item_body {
-    margin-top: 85px;
+    margin-top: 48px;
+  }
+  .new_item_body {
+    /* margin-top: 120px; */
   }
   .van-button {
     height: 36px;
+  }
+  .head_portrait .personal_introduction div p {
+    margin-top: 5px;
   }
 }
 </style>

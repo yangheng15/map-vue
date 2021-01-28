@@ -196,7 +196,6 @@
               result-type="dataUrl"
               :after-read="afterRead"
               v-model="fileList"
-              multiple
               @delete="deleteImage"
               ref="uploadImg"
             />
@@ -263,9 +262,9 @@ export default {
       tabId: 0,
       editRecords: [],
       columnsResult: [
+        { index: 2, text: "未成功" },
         { index: 0, text: "失败" },
         { index: 1, text: "成功" },
-        { index: 2, text: "未成功" },
       ],
       columnsCustomer_intention: [],
       showCustomer_intention: false,
@@ -298,7 +297,7 @@ export default {
       potential_need_type: [],
       showPopup: false,
       resultArr: [],
-      productTypeArr: "",
+      productTypeArr: [],
       taskUpdateFlag: true,
       taskId: "",
       modifyResultFlag: true,
@@ -438,10 +437,11 @@ export default {
       }
       res.data.productTypeName
         ? (this.productTypeArr = res.data.productTypeName)
-        : (this.productTypeArr = "");
+        : (this.productTypeArr = []);
+        console.log(typeof res.data.productType );
       res.data.productType
         ? (this.resultArr = res.data.productType.split(","))
-        : (this.resultArr = "");
+        : (this.resultArr = []);
     },
     onResult(value) {
       this.editRecords.isSucc = value.index;
@@ -505,6 +505,27 @@ export default {
         Dialog.alert({
           title: "提示",
           message: "产品利率必须为数字",
+        });
+        return;
+      }
+      if (!this.editRecords.rivalName) {
+        Dialog.alert({
+          title: "提示",
+          message: "请填写对手名称",
+        });
+        return;
+      }
+      if (!this.editRecords.rivalProduct) {
+        Dialog.alert({
+          title: "提示",
+          message: "请填写对手产品",
+        });
+        return;
+      }
+      if (!this.editRecords.interestRate) {
+        Dialog.alert({
+          title: "提示",
+          message: "请填写产品利率（数字）",
         });
         return;
       }

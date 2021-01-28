@@ -1,8 +1,9 @@
 <template>
   <div class="ProductCatalogDetail">
     <child-nav :title="typeCN"></child-nav>
-    <div v-if="typeCN == '产品目录详情'" style="background: #f5f5f5">
+    <div v-if="typeCN == '产品详情'" style="background: #f5f5f5">
       <p class="productName">产品名称：{{ productInformation.name }}</p>
+      <p class="productName">产品类型：{{ productInformation.type | task_product_type }}</p>
       <p class="productTitle">产品描述</p>
       <van-field
         v-model="productInformation.productDesc"
@@ -164,6 +165,14 @@ export default {
         });
         this.productInformation = res.data;
       }); 
+    },
+  },
+  filters: {
+    task_product_type(val) {
+      const findWill = JSON.parse(localStorage.getItem("dicTaskProductType")).find(
+              (it) => +it.key == val
+      );
+      return findWill ? findWill.value : "";
     },
   },
   beforeDestroy() {},

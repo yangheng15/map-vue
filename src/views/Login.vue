@@ -91,9 +91,7 @@ export default {
         //客户等级
         const data = res.data.find((it) => it.type === "dic_client_grade").childs;
         localStorage.setItem("dic", JSON.stringify(data));
-        const product = res.data.find((it) => it.type === "dic_product_type").childs;
         //客户意向
-        localStorage.setItem("dicProduct", JSON.stringify(product));
         const clientWill = res.data.find((it) => it.type === "dic_client_will").childs;
         localStorage.setItem("dicClientWill", JSON.stringify(clientWill));
         const gridResource = res.data.find((it) => it.type === "dic_grid_resource_type")

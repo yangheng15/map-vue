@@ -13,18 +13,21 @@
         </template></van-search
       >
       <van-list
-              v-model="loadEnd"
-              :finished="finishEnd"
-              :offset="offset"
-              finished-text="已加载完毕"
-              @load="onLoadList"
-              class="customer_list"
+        v-model="loadEnd"
+        :finished="finishEnd"
+        :offset="offset"
+        finished-text="已加载完毕"
+        @load="onLoadList"
+        class="customer_list"
       >
         <ul>
           <router-link
             class="knowledgeBody"
             tag="ul"
-            :to="{ name: 'knowledgeBaseDetail', query: { title: '知识库详情', id: item.id } }"
+            :to="{
+              name: 'knowledgeBaseDetail',
+              query: { title: '知识库详情', id: item.id },
+            }"
             v-for="(item, index) in MarketingRecord"
             :key="index"
           >
@@ -128,8 +131,14 @@ p {
 .knowledgeBase {
   padding-top: 46px;
 }
+.knowledgeBody {
+  /* border-bottom: 1px solid #e8e8e8!important; */
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #e8e8e8;
+}
 .knowledgeBody .knowledge {
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid #e8e8e8 !important;
   padding: 5px 10px;
   position: relative;
 }
