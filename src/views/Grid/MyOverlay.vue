@@ -8,7 +8,16 @@
     :offset="{ width: -35, height: 30 }"
   >
     <div class="introduce_content" @touchstart="registerEvent">
-      <p :class="name ? 'introduce_address' : parentId?'introduce_address_lv':'father_introduce'">
+      <p
+        :class="
+          name
+            ? 'introduce_address'
+            : parentId
+            ? 'introduce_address_lv'
+            : 'father_introduce'
+        "
+        :style="{color:colorChange,backgroundColor:colorNoChange,borderColor:colorChange}"
+      >
         {{ address }}
       </p>
       <p v-if="name" class="introduce_name">{{ name }}</p>
@@ -19,7 +28,26 @@
 
 <script>
 export default {
-  props: ["position", "active", "name", "address", "img", "show", "touchEvent","parentId"],
+  data() {
+    return {
+      // styleObject: {
+      //   color: this.props[8],
+      //   backgroundColor:this.props[9],
+      // },
+    };
+  },
+  props: [
+    "position",
+    "active",
+    "name",
+    "address",
+    "img",
+    "show",
+    "touchEvent",
+    "parentId",
+    "colorNoChange",
+    "colorChange",
+  ],
   watch: {
     position: {
       handler(newVal) {
@@ -120,15 +148,15 @@ export default {
   text-align: center;
   border: 0.01rem solid #0fb38f;
 }
-.father_introduce{
+.father_introduce {
   color: #fff;
-    font-size: 0.8rem;
-    font-weight: 600;
-    width: 95px;
-    line-height: 1.5rem;
-    background: transparent;
-    margin: 0;
-    text-align: center;
-    border: 2px solid #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 95px;
+  line-height: 1.5rem;
+  background: transparent;
+  margin: 0;
+  text-align: center;
+  border: 2px solid #fff;
 }
 </style>

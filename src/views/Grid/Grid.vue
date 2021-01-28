@@ -111,6 +111,8 @@
           :address="item.name"
           :data-val="item"
           :parentId="item.parentId"
+          :colorNoChange="colorNoChange"
+          :colorChange="colorChange"
         ></my-overlay>
         <my-overlay
           v-if="item.parentId != null"
@@ -475,6 +477,8 @@ export default {
         center: { lng: 114.654102, lat: 33.623741 },
         radius: 1000,
       },
+      colorChange: "",
+      colorNoChange: "",
     };
   },
   watch: {
@@ -627,12 +631,35 @@ export default {
         this.map_data = res.data;
         this.map_data.forEach((it) => {
           it.mapPlaning = it.mapPlaning && JSON.parse(it.mapPlaning);
+          if (it.parentId == null) {
+            this.colorNoChange = it.fillColor;
+            this.colorChange = this.HEX2RGB(this.colorNoChange);
+            console.log(this.colorChange);
+          }
         });
         this.polygonDl.forEach((it) => {
           this.map.removeOverlay(it);
         });
         this.createPolygon(this.map);
       });
+    },
+    HEX2RGB(hex) {
+      if (!hex) {
+        return;
+      }
+      hex = hex.substring(1);
+      if (hex.length === 3) {
+        hex += hex;
+      }
+      return (
+        "rgb(" +
+        (255 - parseInt(hex.substring(0, 2), 16).toString()) +
+        "," +
+        (255 - parseInt(hex.substring(2, 4), 16).toString()) +
+        "," +
+        (255 - parseInt(hex.substring(4), 16).toString()) +
+        ")"
+      );
     },
     /**
      * 筛选资源数据
@@ -827,6 +854,10 @@ export default {
             ids: item.id,
           },
         }).then((res) => {
+          Toast({
+            message: "归还成功！",
+            position: "middle",
+          });
           this.mapPlaning();
           // const index = this.map_data.findIndex((it) => it === item);
           // this.map_data.splice(index, 1)
@@ -868,6 +899,10 @@ export default {
         //   ...this.mapCenter,
         //   lat: this.mapCenter.lat + 0.001,
         // };
+        Toast({
+          message: "认领成功！",
+          position: "middle",
+        });
         this.introduce = false; //关闭弹窗
       });
     },

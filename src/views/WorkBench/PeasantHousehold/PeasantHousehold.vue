@@ -401,7 +401,7 @@ export default {
   left: 0rem;
   width: 100%;
   height: 100vh;
-  padding: 0.5rem 0.5rem;
+  /* padding: 0.5rem 0.5rem; */
   background: rgba(193, 185, 185, 0.7);
 }
 .isPopupVisibleSign_content {

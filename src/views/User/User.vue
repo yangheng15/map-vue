@@ -206,6 +206,9 @@ export default {
 };
 </script>
 <style scoped>
+.van-empty {
+  padding: 26px 0;
+}
 .personal_introduction >>> .van-empty__image {
   width: 90px;
   height: 78px;
@@ -302,6 +305,9 @@ export default {
 @media screen and (max-width: 359px) {
   * {
     font-size: 13px;
+  }
+  .van-empty {
+    padding: 13px 0;
   }
   .personal_introduction >>> .van-empty__image {
     width: 90px;
