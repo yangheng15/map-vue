@@ -9,6 +9,7 @@
         v-model="productInformation.productDesc"
         rows="10"
         autosize
+        readonly
         label
         type="textarea"
         maxlength="500"
@@ -20,6 +21,7 @@
         v-model="productInformation.talk"
         rows="10"
         autosize
+        readonly
         label
         type="textarea"
         maxlength="500"

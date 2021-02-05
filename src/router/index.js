@@ -56,6 +56,12 @@ const Calculator = () => import('@/views/WorkBench/Calculator.vue');
 const RankingList = () => import('@/views/WorkBench/RankingList.vue');
 // 最近联系
 const RecentContact = () => import('@/views/WorkBench/RecentContact.vue');
+// 商机发现
+const BusinessOpportunityDiscovery = () => import('@/views/WorkBench/BusinessOpportunityDiscovery/BusinessOpportunityDiscovery.vue');
+// 商机发现详情
+const BusinessOpportunityDiscoveryDetails = () => import('@/views/WorkBench/BusinessOpportunityDiscovery/BusinessOpportunityDiscoveryDetails.vue');
+// 主营产品
+const MainProducts = () => import('@/views/WorkBench/BusinessOpportunityDiscovery/MainProducts.vue');
 // 任务完成
 const MissionAccomplished = () => import('@/views/WorkBench/MissionAccomplished.vue');
 // 任务管理
@@ -269,6 +275,21 @@ const routes = [{
     path: '/RecentContact',
     name: 'RecentContact',
     component: RecentContact,
+  },
+  {
+    path: '/BusinessOpportunityDiscovery',
+    name: 'BusinessOpportunityDiscovery',
+    component: BusinessOpportunityDiscovery,
+  },
+  {
+    path: '/BusinessOpportunityDiscoveryDetails',
+    name: 'BusinessOpportunityDiscoveryDetails',
+    component: BusinessOpportunityDiscoveryDetails,
+  },
+  {
+    path: '/MainProducts',
+    name: 'MainProducts',
+    component: MainProducts,
   },
   {
     path: '/MissionAccomplished',

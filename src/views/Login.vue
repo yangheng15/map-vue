@@ -202,9 +202,9 @@ export default {
         return;
       }
 
-      if (this.whetherPermission() != true) {
-        return this.whetherPermission();
-      } else {
+      // if (this.whetherPermission() != true) {
+      //   return this.whetherPermission();
+      // } else {
       var bcrypt = require("bcryptjs"); //引入bcryptjs库
       var hash = bcrypt.hashSync(md5(this.password)); //把自己的密码(this.registerForm.passWord)带进去,变量hash就是加密后的密码
       localStorage.clear();
@@ -240,7 +240,7 @@ export default {
         .catch((err) => {});
     }
     },
-  },
+  // },
 };
 </script>
 

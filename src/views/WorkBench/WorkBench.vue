@@ -71,6 +71,17 @@
           </span>
           <p class="function_name">最近联系</p>
         </router-link>
+        <router-link
+          tag="div"
+          class="function_men"
+          style="margin-top: 10px;"
+          :to="{ name: 'BusinessOpportunityDiscovery', query: { title: '商机发现' } }"
+        >
+          <span class="c-link-card" style="background: #1432E3">
+            <img src="../../assets/WorkBench/shangji.svg" alt />
+          </span>
+          <p class="function_name">商机发现</p>
+        </router-link>
         <!-- <router-link
           tag="div"
           class="function_men"
